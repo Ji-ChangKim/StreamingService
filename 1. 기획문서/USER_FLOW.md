@@ -9,25 +9,17 @@
 
 ## 1. 주요 사용자 여정 (User Journeys)
 
-### 1.1. 스트리머/에이전시 데뷔 등록 & 소유권 인증 여정
+### 1.1 자유 데뷔 일정 제보 & 오픈 등록 여정 (누구나 가능)
 ```mermaid
 graph TD
-    Start([1. 서비스 접속 및 회원가입/로그인]) --> CreateProfile[2. Creator 프로필 생성 - 활동명, 언어, 아바타]
-    CreateProfile --> LinkPlatform[3. 방송 플랫폼 채널 URL 연동 - YouTube, CHZZK, SOOP 등]
-    LinkPlatform --> Verification{4. 소유권 인증 방식 선택}
+    Start([1. 메인 서비스 접속]) --> ClickSubmit[2. '➕ 데뷔 일정 등록' 버튼 클릭]
+    ClickSubmit --> InputInfo[3. 데뷔 정보 입력 - 버튜버 이름, 방송 플랫폼 URL, 날짜/시간, 원본 시간대]
+    InputInfo --> PreviewTZ[4. 글로벌 시간대 변환 실시간 확인 - KST / PST / UTC 등]
+    PreviewTZ --> Submit[5. 데뷔 일정 제출 / 즉시 등록]
+    Submit --> ReviewResult{6. 노출 및 검수 정책}
     
-    Verification -->|OAuth 연결| OAuthDone[5.1. 즉시 인증 완료 - Owner Verified]
-    Verification -->|공지 코드 게시| CodeCheck[5.2. 프로필/공지 일회용 코드 확인 - Source Verified]
-    
-    OAuthDone --> InputEvent[6. 데뷔 이벤트 정보 입력 - 날짜, 시간, 원래 시간대, 소개]
-    CodeCheck --> InputEvent
-    
-    InputEvent --> PreviewTZ[7. 글로벌 시간대 변환 미리보기 - KST / PST / UTC 동시 확인]
-    PreviewTZ --> Submit[8. 데뷔 제출 및 검수 큐 전송]
-    Submit --> ReviewResult{9. 운영자 검수 결과}
-    
-    ReviewResult -->|승인| Published([10. 공개 캘린더 등재 - 카운트다운 & 공유 카드 발급])
-    ReviewResult -->|보완 요청| EditDraft[11. 정보 수정 후 재제출]
+    ReviewResult -->|즉시 노출| Published([7.1 공개 캘린더 등재 - 카운트다운 & 공유 카드 발급])
+    ReviewResult -->|스팸 검수| ReviewQueue[7.2 운영자 신속 확인 후 공개 전환]
 ```
 
 ---

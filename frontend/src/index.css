@@ -1,27 +1,53 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inconsolata:wght@400;500&family=JetBrains+Mono:wght@500;600&family=Outfit:wght@500;600&display=swap');
 
 :root {
-  --bg-primary: #0A0C16;
-  --bg-surface: #121526;
-  --bg-glass: rgba(18, 21, 38, 0.7);
-  --bg-card: rgba(255, 255, 255, 0.03);
-  --border-glass: rgba(255, 255, 255, 0.08);
+  /* Webflow Visual Design System Color Palette */
+  --colors-primary: #080808;          /* Ink Black - Canonical Conversion Primary CTA */
+  --colors-on-primary: #FFFFFF;
 
-  --accent-purple: #8B5CF6;
-  --accent-cyan: #06B6D4;
-  --accent-pink: #EC4899;
-  --accent-live: #EF4444;
+  /* 5-Stop Chromatic Category Palette (Used ONLY as Card Fills) */
+  --colors-accent-purple: #7A3DFF;
+  --colors-accent-pink: #ED52CB;
+  --colors-accent-blue: #3B89FF;
+  --colors-accent-blue-deep: #006ACC;
+  --colors-accent-blue-info: #146EF5;
+  --colors-accent-orange: #FF6B00;
+  --colors-accent-green: #00D722;
+  --colors-accent-yellow: #FFAE13;
+  --colors-accent-red: #EE1D36;
 
-  --text-main: #F1F5F9;
-  --text-muted: #94A3B8;
-  --text-dim: #64748B;
+  /* Surface & Hairline */
+  --colors-canvas: #FFFFFF;
+  --colors-canvas-soft: #F8FAFC;
+  --colors-hairline: #D8D8D8;
 
-  --radius-lg: 16px;
-  --radius-md: 12px;
-  --radius-sm: 8px;
+  /* Text Typography Roles */
+  --colors-ink: #080808;
+  --colors-ink-strong: #222222;
+  --colors-body: #363636;
+  --colors-body-mid: #5A5A5A;
+  --colors-mute: #898989;
+  --colors-mute-soft: #ABABAB;
 
-  --glow-purple: 0 0 25px rgba(139, 92, 246, 0.35);
-  --glow-cyan: 0 0 25px rgba(6, 182, 212, 0.35);
+  /* Shape System Scale */
+  --rounded-sm: 4px;                  /* Buttons, Inputs, Badges */
+  --rounded-md: 8px;                  /* Cards Chrome & Modals */
+  --rounded-full: 9999px;              /* Circular Icon Buttons ONLY */
+
+  /* Layered Multi-Stop Shadows */
+  --shadow-layered-level2: 
+    0 84px 24px rgba(0, 0, 0, 0),
+    0 54px 22px rgba(0, 0, 0, 0.01),
+    0 30px 18px rgba(0, 0, 0, 0.04),
+    0 13px 13px rgba(0, 0, 0, 0.08),
+    0 3px 7px rgba(0, 0, 0, 0.09);
+  
+  --shadow-layered-level3: 
+    0 84px 24px rgba(0, 0, 0, 0.02),
+    0 54px 22px rgba(0, 0, 0, 0.03),
+    0 30px 18px rgba(0, 0, 0, 0.06),
+    0 13px 13px rgba(0, 0, 0, 0.1),
+    0 3px 7px rgba(0, 0, 0, 0.12);
 }
 
 * {
@@ -32,108 +58,148 @@
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--bg-primary);
-  color: var(--text-main);
+  background-color: var(--colors-canvas-soft);
+  color: var(--colors-ink);
   min-height: 100vh;
   overflow-x: hidden;
-  background-image: 
-    radial-gradient(circle at 15% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
-    radial-gradient(circle at 85% 80%, rgba(6, 182, 212, 0.12) 0%, transparent 40%);
-  background-attachment: fixed;
+  line-height: 1.6;
 }
 
-/* Glass Card */
-.glass-panel {
-  background: var(--bg-glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+/* Typography Hierarchy (Weight Ceiling at 600) */
+h1, .display-xxl {
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-size: 2.25rem; /* 36px */
+  font-weight: 600; /* Weight ceiling 600 */
+  line-height: 1.2;
+  letter-spacing: -0.8px; /* Signature Negative Tracking */
+  color: var(--colors-ink);
 }
 
-/* Buttons */
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: var(--radius-md);
+h2, .display-lg {
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-size: 1.5rem; /* 24px */
   font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.4px;
+  color: var(--colors-ink);
+}
+
+h3, .display-md {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.125rem; /* 18px */
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.16px;
+  color: var(--colors-ink);
+}
+
+/* Uppercase Eyebrow Tag Signature */
+.eyebrow-uppercase {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px; /* Signature Positive Tracking */
+  color: var(--colors-body-mid);
+}
+
+/* Buttons (Tight 4px Radius Geometry - NO PILL CTAs) */
+.btn-primary {
+  background-color: var(--colors-primary); /* #080808 Near Black */
+  color: var(--colors-on-primary);
+  border: 1px solid var(--colors-primary);
+  padding: 10px 18px;
+  border-radius: var(--rounded-sm); /* 4px Tight Radius */
+  font-size: 0.9375rem; /* 15px */
+  font-weight: 500;
+  letter-spacing: -0.16px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--glow-purple);
+  background-color: #222222;
+  border-color: #222222;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(8, 8, 8, 0.15);
 }
 
 .btn-secondary {
-  background: var(--bg-card);
-  color: var(--text-main);
-  border: 1px solid var(--border-glass);
-  padding: 10px 20px;
-  border-radius: var(--radius-md);
+  background-color: var(--colors-canvas);
+  color: var(--colors-ink);
+  border: 1px solid var(--colors-hairline); /* 1px Hairline #D8D8D8 */
+  padding: 10px 18px;
+  border-radius: var(--rounded-sm); /* 4px Tight Radius */
+  font-size: 0.9375rem;
   font-weight: 500;
+  letter-spacing: -0.16px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
+  background-color: #F1F5F9;
+  border-color: #ABABAB;
+  transform: translateY(-1px);
 }
 
-/* Badges */
-.badge {
-  padding: 4px 10px;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+/* 5-Stop Chromatic Category Cards (Full Fills ONLY - 8px Radius) */
+.category-card-purple {
+  background-color: var(--colors-accent-purple);
+  color: #FFFFFF;
+  border-radius: var(--rounded-md);
 }
-.badge-owner {
-  background: rgba(139, 92, 246, 0.2);
-  color: #C084FC;
-  border: 1px solid rgba(139, 92, 246, 0.4);
+.category-card-pink {
+  background-color: var(--colors-accent-pink);
+  color: #FFFFFF;
+  border-radius: var(--rounded-md);
 }
-.badge-official {
-  background: rgba(6, 182, 212, 0.2);
-  color: #22D3EE;
-  border: 1px solid rgba(6, 182, 212, 0.4);
+.category-card-blue {
+  background-color: var(--colors-accent-blue);
+  color: #FFFFFF;
+  border-radius: var(--rounded-md);
 }
-.badge-live {
-  background: rgba(239, 68, 68, 0.2);
-  color: #F87171;
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  animation: pulse 1.5s infinite;
+.category-card-orange {
+  background-color: var(--colors-accent-orange);
+  color: #FFFFFF;
+  border-radius: var(--rounded-md);
+}
+.category-card-green {
+  background-color: var(--colors-accent-green);
+  color: var(--colors-primary); /* Ink Black text for green legibility */
+  border-radius: var(--rounded-md);
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+/* Cards & Modals Chrome */
+.card-chrome {
+  background-color: var(--colors-canvas);
+  border: 1px solid var(--colors-hairline);
+  border-radius: var(--rounded-md); /* 8px Radius */
+  box-shadow: var(--shadow-layered-level2);
+}
+
+/* Mono Code / Timer Fonts */
+.font-mono-timer {
+  font-family: 'Inconsolata', 'JetBrains Mono', monospace;
+  font-feature-settings: "zero", "ss02";
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: var(--colors-canvas-soft);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
+  background: var(--colors-hairline);
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--colors-mute);
 }
+
+
