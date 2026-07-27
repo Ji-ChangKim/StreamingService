@@ -1,0 +1,22 @@
+{
+  "name": "v-debut-hub-backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev --env dev",
+    "dev:live": "wrangler dev --env production",
+    "deploy:dev": "wrangler deploy --env dev",
+    "deploy:live": "wrangler deploy --env production",
+    "db:migrate:dev": "wrangler d1 migrations apply v-debut-hub-db-dev --local",
+    "db:migrate:live": "wrangler d1 migrations apply v-debut-hub-db-live --remote",
+    "db:sync:live-to-dev": "node scripts/sync_live_to_dev.js"
+  },
+  "dependencies": {
+    "hono": "^4.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231025.0",
+    "typescript": "^5.0.0",
+    "wrangler": "^3.15.0"
+  }
+}
