@@ -5,6 +5,19 @@ type Bindings = {
   DB: D1Database;
 };
 
+// Cloudflare Durable Object Class Preservation
+export class ChzzkSessionDO {
+  state: any;
+  env: any;
+  constructor(state: any, env: any) {
+    this.state = state;
+    this.env = env;
+  }
+  async fetch(request: Request) {
+    return new Response('ChzzkSessionDO Active', { status: 200 });
+  }
+}
+
 const app = new Hono<{ Bindings: Bindings }>();
 
 // Enable CORS
