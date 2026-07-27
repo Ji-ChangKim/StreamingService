@@ -12,6 +12,7 @@
     "db:sync:live-to-dev": "node scripts/sync_live_to_dev.js"
   },
   "dependencies": {
+    "@cloudflare/kv-asset-handler": "^0.5.0",
     "hono": "^4.0.0"
   },
   "devDependencies": {
