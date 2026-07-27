@@ -1,22 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
-import { SidebarLeft } from './components/SidebarLeft';
-import { SidebarRight } from './components/SidebarRight';
-import { HeroCountdownBanner } from './components/HeroCountdownBanner';
-import { FilterBar } from './components/FilterBar';
-import { CalendarView } from './components/CalendarView';
+import { HeroHeader } from './components/HeroHeader';
 import { MonthlyCalendarGrid } from './components/MonthlyCalendarGrid';
+import { FooterBanner } from './components/FooterBanner';
+import { Footer } from './components/Footer';
 import { StudioSubmitModal } from './components/StudioSubmitModal';
-import { AdminQueue } from './components/AdminQueue';
-import { CLIENT_VERSION, fetchWithVersion } from './config';
+import { fetchWithVersion } from './config';
 import { DebutEvent } from './types';
 import { generateICSContent, triggerFileDownload } from './utils/dateUtils';
 import { filterEventsByPlatform, filterEventsByQuery } from './utils/eventUtils';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<'calendar' | 'studio' | 'admin'>('calendar');
-  const [viewMode, setViewMode] = useState<'GRID' | 'LIST'>('GRID');
-  
+  const [activeNav, setActiveNav] = useState<string>('schedule');
   const [selectedTimezone, setSelectedTimezone] = useState<string>(() => {
     try {
       return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Seoul';
@@ -28,17 +23,9 @@ export function App() {
   const [selectedPlatform, setSelectedPlatform] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [events, setEvents] = useState<DebutEvent[]>([]);
-  const [serverVersion, setServerVersion] = useState<string>('v0.1.0-latest');
   const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
-  const [savedNotificationCount, setSavedNotificationCount] = useState<number>(0);
 
   useEffect(() => {
-    fetchWithVersion('/system/version')
-      .then((data) => {
-        if (data?.serverVersion) setServerVersion(data.serverVersion);
-      })
-      .catch(() => {});
-
     fetchWithVersion('/events')
       .then((data) => {
         if (data?.events && Array.isArray(data.events) && data.events.length > 0) {
@@ -140,116 +127,53 @@ export function App() {
     searchQuery
   );
 
-  const nearestEvent = events.length > 0 ? events[0] : null;
-
   const handleDownloadICS = (evt: DebutEvent) => {
     const icsContent = generateICSContent(evt);
     triggerFileDownload(`V-DEBUT_${evt.creator.displayName}.ics`, icsContent);
-    setSavedNotificationCount((prev) => prev + 1);
   };
 
   const handleAddEvent = (newEvent: DebutEvent) => {
     setEvents((prev) => [newEvent, ...prev]);
   };
 
-  const handleApproveEvent = (id: string) => {
-    setEvents((prev) =>
-      prev.map((e) => (e.id === id ? { ...e, verificationStatus: 'OFFICIAL_VERIFIED' } : e))
-    );
-  };
-
-  const handleRejectEvent = (id: string) => {
-    setEvents((prev) => prev.filter((e) => e.id !== id));
-  };
-
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#080808] flex flex-col font-['Inter'] selection:bg-[#080808] selection:text-white">
-      {/* Header Bar */}
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-['Inter'] selection:bg-[#2563EB] selection:text-white">
+      {/* 1. Header Bar */}
       <Navbar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        selectedTimezone={selectedTimezone}
-        setSelectedTimezone={setSelectedTimezone}
+        activeNav={activeNav}
+        setActiveNav={setActiveNav}
         onOpenSubmitModal={() => setShowSubmitModal(true)}
       />
 
-      {/* 3-Column Sandwich Body Layout: SideL | Main | SideR */}
-      <div className="flex-grow max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-6">
-        {/* SideL: Left Sidebar */}
-        <SidebarLeft
+      {/* 2. Main Content Container */}
+      <main className="flex-grow max-w-[1280px] w-full mx-auto px-4 sm:px-6">
+        {/* Hero Section */}
+        <HeroHeader
+          totalDebutsThisMonth={filteredEvents.length}
+          todayLiveCount={0}
+          agencyDebutCount={1}
+        />
+
+        {/* Main Monthly Calendar Grid Section */}
+        <MonthlyCalendarGrid
+          events={filteredEvents}
+          selectedTimezone={selectedTimezone}
+          setSelectedTimezone={setSelectedTimezone}
           selectedPlatform={selectedPlatform}
           setSelectedPlatform={setSelectedPlatform}
-          savedNotificationCount={savedNotificationCount}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onDownloadICS={handleDownloadICS}
         />
 
-        {/* Main Content Area */}
-        <main className="flex-1 min-w-0">
-          {activeTab === 'calendar' && (
-            <>
-              <HeroCountdownBanner
-                event={nearestEvent}
-                selectedTimezone={selectedTimezone}
-                onDownloadICS={handleDownloadICS}
-              />
+        {/* Creator Callout Banner */}
+        <FooterBanner onOpenSubmitModal={() => setShowSubmitModal(true)} />
+      </main>
 
-              <FilterBar
-                selectedPlatform={selectedPlatform}
-                setSelectedPlatform={setSelectedPlatform}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                totalCount={filteredEvents.length}
-                viewMode={viewMode}
-                setViewMode={setViewMode}
-              />
+      {/* 3. Footer */}
+      <Footer />
 
-              {viewMode === 'GRID' ? (
-                <MonthlyCalendarGrid
-                  events={filteredEvents}
-                  selectedTimezone={selectedTimezone}
-                  onDownloadICS={handleDownloadICS}
-                />
-              ) : (
-                <CalendarView
-                  events={filteredEvents}
-                  selectedTimezone={selectedTimezone}
-                  onDownloadICS={handleDownloadICS}
-                />
-              )}
-            </>
-          )}
-
-          {activeTab === 'admin' && (
-            <AdminQueue
-              events={events}
-              onApproveEvent={handleApproveEvent}
-              onRejectEvent={handleRejectEvent}
-            />
-          )}
-        </main>
-
-        {/* SideR: Right Sidebar */}
-        <SidebarRight
-          events={events}
-          selectedTimezone={selectedTimezone}
-          onOpenSubmitModal={() => setShowSubmitModal(true)}
-        />
-      </div>
-
-      {/* Footer */}
-      <footer className="bg-white border-t border-[#D8D8D8] py-8 text-center text-xs text-[#5A5A5A]">
-        <div className="max-w-[1440px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="font-normal">
-            V-DEBUT HUB © 2026 • Visual Web Development Platform for Global VTubers
-          </p>
-          <div className="flex items-center gap-3 text-[11px] font-mono-timer text-[#898989]">
-            <span>Client: {CLIENT_VERSION}</span>
-            <span>•</span>
-            <span>Server: {serverVersion}</span>
-          </div>
-        </div>
-      </footer>
-
-      {/* 10초 초간편 데뷔 제보 모달 */}
+      {/* 4. Studio Submit Modal */}
       <StudioSubmitModal
         isOpen={showSubmitModal}
         onClose={() => setShowSubmitModal(false)}
