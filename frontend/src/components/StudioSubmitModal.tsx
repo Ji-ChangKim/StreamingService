@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Sparkles, Send, Globe, CheckCircle2 } from 'lucide-react';
 import { DebutEvent } from '../types';
+import { getAvatarUrl } from '../utils/avatarUtils';
 
 interface StudioSubmitModalProps {
   isOpen: boolean;
@@ -57,7 +58,7 @@ export function StudioSubmitModal({
         creator: {
           id: `cr-${Date.now()}`,
           displayName,
-          avatarUrl: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80`,
+          avatarUrl: getAvatarUrl(displayName),
           agency: agency || 'Indie',
           countryCode: 'KR',
           languages: ['ko'],
@@ -67,53 +68,59 @@ export function StudioSubmitModal({
         status: 'PUBLISHED',
         verificationStatus: 'COMMUNITY_SUBMITTED',
         links: [{ platform, url: watchUrl, isPrimary: true }],
-        description: description || '누구나 자유롭게 제보한 VTuber 데뷔 일정입니다.',
+        description: description || `${displayName} 버튜버의 공식 데뷔 방송입니다.`,
       };
 
+      onSubmitSuccess(newEvt);
       setIsSubmitting(false);
       setSubmitted(true);
       setTimeout(() => {
-        onSubmitSuccess(newEvt);
         setSubmitted(false);
         onClose();
-      }, 1200);
-    }, 600);
+      }, 1500);
+    }, 800);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in">
-      <div className="bg-white rounded-[8px] max-w-lg w-full p-6 sm:p-8 border border-[#D8D8D8] shadow-layered-level3 relative">
-        <button
-          onClick={onClose}
-          className="absolute top-5 right-5 text-[#898989] hover:text-[#080808] bg-[#F8FAFC] p-1.5 rounded-[4px] border border-[#D8D8D8] transition-colors"
-        >
-          <X className="w-4 h-4" />
-        </button>
-
-        <div className="flex items-center gap-2 mb-2">
-          <span className="eyebrow-uppercase bg-[#F8FAFC] text-[#080808] border border-[#D8D8D8] px-2.5 py-0.5 rounded-[4px]">
-            <Sparkles className="w-3 h-3 text-[#7A3DFF] inline mr-1" />
-            OPEN SUBMISSION
-          </span>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
+      <div className="bg-white rounded-[20px] max-w-[540px] w-full shadow-2xl border border-[#CBD5E1] overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="bg-[#0F172A] text-white p-5 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 bg-[#2563EB] rounded-[8px]">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-base sm:text-lg font-bold font-['Outfit']">
+                데뷔 일정 제출하기
+              </h3>
+              <p className="text-xs text-slate-300">
+                버튜버 본인 또는 에이전시/팬 커뮤니티 등록
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 hover:bg-white/20 rounded-full text-white transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
-        <h2 className="text-2xl font-semibold text-[#080808] font-['Outfit'] mb-1 tracking-[-0.4px]">
-          데뷔 일정 등록하기
-        </h2>
-        <p className="text-xs text-[#5A5A5A] mb-6 font-normal">
-          로그인 없이 누구나 자유롭게 새로운 버튜버 데뷔 일정을 공유할 수 있습니다.
-        </p>
 
         {submitted ? (
-          <div className="py-10 text-center space-y-3">
-            <CheckCircle2 className="w-12 h-12 text-[#00D722] mx-auto" />
-            <h3 className="text-lg font-semibold text-[#080808]">제보해 주셔서 감사합니다!</h3>
-            <p className="text-xs text-[#5A5A5A]">메인 캘린더에 즉시 등록되었습니다.</p>
+          <div className="p-8 text-center flex flex-col items-center justify-center gap-3">
+            <CheckCircle2 className="w-12 h-12 text-[#10B981] animate-bounce" />
+            <h4 className="text-lg font-bold text-[#0F172A]">제출이 완료되었습니다!</h4>
+            <p className="text-xs text-[#64748B]">
+              검수 후 캘린더에 즉시 등재됩니다. 등록해 주셔서 감사합니다.
+            </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4 text-xs font-medium text-[#0F172A]">
+            {/* Display Name */}
             <div>
-              <label className="block text-xs font-medium text-[#080808] mb-1.5">
-                버튜버 / 크리에이터 이름 <span className="text-[#EE1D36]">*</span>
+              <label className="block font-bold mb-1 text-[#334155]">
+                버튜버 / 스트리머 활동명 <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -121,118 +128,131 @@ export function StudioSubmitModal({
                 placeholder="예: 나비야 (Nabiya)"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className="w-full bg-[#F8FAFC] border border-[#D8D8D8] rounded-[4px] px-3.5 py-2 text-xs font-medium text-[#080808] focus:bg-white focus:border-[#080808] focus:outline-none transition-all"
+                className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all"
               />
             </div>
 
+            {/* Platform & Watch URL */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-xs font-medium text-[#080808] mb-1.5">방송 플랫폼</label>
+                <label className="block font-bold mb-1 text-[#334155]">방송 플랫폼</label>
                 <select
                   value={platform}
                   onChange={(e) => setPlatform(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#D8D8D8] rounded-[4px] px-3 py-2 text-xs font-medium text-[#080808] focus:bg-white focus:border-[#080808] focus:outline-none"
+                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-bold"
                 >
-                  <option value="CHZZK">치지직 (CHZZK)</option>
-                  <option value="YOUTUBE">유튜브 (YouTube)</option>
-                  <option value="SOOP">숲 (SOOP)</option>
-                  <option value="TWITCH">트위치 (Twitch)</option>
+                  <option value="CHZZK">CHZZK (치지직)</option>
+                  <option value="SOOP">SOOP (숲)</option>
+                  <option value="YOUTUBE">YouTube</option>
+                  <option value="TWITCH">Twitch</option>
                 </select>
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-xs font-medium text-[#080808] mb-1.5">
-                  방송 URL <span className="text-[#EE1D36]">*</span>
+                <label className="block font-bold mb-1 text-[#334155]">
+                  방송 / 프로필 URL <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="url"
                   required
-                  placeholder="https://..."
+                  placeholder="https://chzzk.naver.com/live/..."
                   value={watchUrl}
                   onChange={(e) => setWatchUrl(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#D8D8D8] rounded-[4px] px-3.5 py-2 text-xs font-medium text-[#080808] focus:bg-white focus:border-[#080808] focus:outline-none transition-all"
+                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {/* Date & Time */}
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-[#080808] mb-1.5">데뷔 날짜</label>
+                <label className="block font-bold mb-1 text-[#334155]">데뷔 날짜</label>
                 <input
                   type="date"
                   required
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#D8D8D8] rounded-[4px] px-3 py-2 text-xs font-medium text-[#080808] focus:bg-white focus:border-[#080808] focus:outline-none"
+                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[#080808] mb-1.5">시각</label>
+                <label className="block font-bold mb-1 text-[#334155]">데뷔 시각</label>
                 <input
                   type="time"
                   required
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#D8D8D8] rounded-[4px] px-3 py-2 text-xs font-medium text-[#080808] focus:bg-white focus:border-[#080808] focus:outline-none"
+                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
                 />
               </div>
+            </div>
+
+            {/* Timezone & Agency */}
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-[#080808] mb-1.5">기준 시간대</label>
+                <label className="block font-bold mb-1 text-[#334155]">기준 시간대</label>
                 <select
                   value={timezone}
                   onChange={(e) => setTimezone(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#D8D8D8] rounded-[4px] px-2 py-2 text-xs font-medium text-[#080808] focus:bg-white focus:border-[#080808] focus:outline-none"
+                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
                 >
-                  <option value="Asia/Seoul">KST (한국)</option>
-                  <option value="Asia/Tokyo">JST (일본)</option>
-                  <option value="America/Los_Angeles">PST (태평양)</option>
-                  <option value="UTC">UTC (세계시)</option>
+                  <option value="Asia/Seoul">Asia/Seoul (KST)</option>
+                  <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
+                  <option value="America/Los_Angeles">America/Los_Angeles (PST)</option>
+                  <option value="UTC">UTC</option>
                 </select>
               </div>
-            </div>
-
-            <div className="bg-[#F8FAFC] border border-[#D8D8D8] rounded-[4px] p-2.5 flex items-center justify-between text-xs">
-              <span className="font-medium text-[#080808] flex items-center gap-1.5">
-                <Globe className="w-3.5 h-3.5 text-[#080808]" />
-                등록될 예상 시각:
-              </span>
-              <span className="font-semibold text-[#080808]">{previewLocalTime} ({timezone})</span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-[#080808] mb-1.5">소속 (옵션)</label>
+                <label className="block font-bold mb-1 text-[#334155]">소속 (선택)</label>
                 <input
                   type="text"
-                  placeholder="예: Indie, V-PRO 등"
+                  placeholder="예: 개인세 / V-PRO"
                   value={agency}
                   onChange={(e) => setAgency(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#D8D8D8] rounded-[4px] px-3.5 py-2 text-xs font-medium text-[#080808] focus:bg-white focus:border-[#080808] focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-[#080808] mb-1.5">소개글 (옵션)</label>
-                <input
-                  type="text"
-                  placeholder="한 줄 한마디..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#D8D8D8] rounded-[4px] px-3.5 py-2 text-xs font-medium text-[#080808] focus:bg-white focus:border-[#080808] focus:outline-none"
+                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all"
                 />
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full btn-primary justify-center py-2.5 text-sm font-medium mt-4"
-            >
-              <Send className="w-4 h-4" />
-              {isSubmitting ? '제보 등록 중...' : '즉시 캘린더에 등록하기'}
-            </button>
+            {/* Description */}
+            <div>
+              <label className="block font-bold mb-1 text-[#334155]">데뷔 인사말 & 소식</label>
+              <textarea
+                rows={2}
+                placeholder="안녕하세요! 신입 버튜버 데뷔 방송에서 만나요!"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all"
+              />
+            </div>
+
+            {/* Preview Box */}
+            <div className="bg-[#F0F9FF] border border-[#BFDBFE] rounded-[8px] p-3 text-[11px] text-[#1E40AF] flex items-center justify-between">
+              <span className="flex items-center gap-1.5 font-bold">
+                <Globe className="w-3.5 h-3.5 text-[#2563EB]" /> 표출 변환 시각:
+              </span>
+              <span className="font-mono font-extrabold">{previewLocalTime} ({timezone})</span>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E2E8F0]">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 rounded-[8px] font-semibold bg-[#F1F5F9] text-[#0F172A] hover:bg-[#E2E8F0] transition-colors"
+              >
+                취소
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="px-5 py-2 rounded-[8px] font-bold bg-[#0F172A] text-white hover:bg-[#1E293B] transition-colors flex items-center gap-1.5 shadow-xs"
+              >
+                {isSubmitting ? '제출 중...' : '등록 제출'} <Send className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </form>
         )}
       </div>
     </div>
   );
 }
-

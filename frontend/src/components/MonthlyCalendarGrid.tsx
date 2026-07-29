@@ -15,7 +15,7 @@ import {
   UserCheck
 } from 'lucide-react';
 import { DebutEvent } from '../types';
-import { formatTimeOnly, formatLocalTime } from '../utils/dateUtils';
+import { formatLocalTime } from '../utils/dateUtils';
 import { 
   getCalendarGridCells, 
   buildEventsByDateMap, 
@@ -83,23 +83,24 @@ export function MonthlyCalendarGrid({
     { id: 'SOOP', label: 'SOOP', dot: '🔵' },
   ];
 
-  const getPlatformBarColor = (platform: string) => {
+  // Minimal platform badge style (Clean & Non-overlapping)
+  const getPlatformChipStyle = (platform: string) => {
     switch (platform.toUpperCase()) {
       case 'CHZZK':
-        return 'border-l-4 border-l-[#00D98B] bg-[#F0FDF4]';
+        return 'bg-[#F0FDF4] text-[#047857] border-l-2 border-l-[#00D98B]';
       case 'SOOP':
-        return 'border-l-4 border-l-[#2979FF] bg-[#EFF6FF]';
+        return 'bg-[#EFF6FF] text-[#1D4ED8] border-l-2 border-l-[#2979FF]';
       case 'YOUTUBE':
-        return 'border-l-4 border-l-[#FF0000] bg-[#FEF2F2]';
+        return 'bg-[#FEF2F2] text-[#B91C1C] border-l-2 border-l-[#FF0000]';
       case 'TWITCH':
-        return 'border-l-4 border-l-[#9146FF] bg-[#F5F3FF]';
+        return 'bg-[#F5F3FF] text-[#6D28D9] border-l-2 border-l-[#9146FF]';
       default:
-        return 'border-l-4 border-l-slate-400 bg-slate-50';
+        return 'bg-slate-50 text-slate-700 border-l-2 border-l-slate-400';
     }
   };
 
   return (
-    <div className="bg-white rounded-[16px] border border-[#CBD5E1] shadow-xs p-4 sm:p-6 mb-8">
+    <div className="bg-white rounded-[16px] border border-[#CBD5E1] shadow-xs p-4 sm:p-6 mb-8 select-none">
       {/* 1. Top Control Bar: Date Nav & Search Input */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-[#E2E8F0]">
         {/* Left: Year & Month Switcher */}
@@ -134,7 +135,7 @@ export function MonthlyCalendarGrid({
           <Search className="w-4 h-4 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="버튜버 이름/언어/이벤트 검색"
+            placeholder="버튜버 이름/언어 검색"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-[#F8FAFC] focus:bg-white text-xs font-medium text-[#0F172A] placeholder-[#94A3B8] pl-9 pr-3 py-2 rounded-[8px] border border-[#CBD5E1] focus:border-[#2563EB] focus:outline-none transition-all"
@@ -174,7 +175,7 @@ export function MonthlyCalendarGrid({
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>🌱 개인세 버튜버만 보기</span>
+            <span>개인세만 보기</span>
           </button>
         </div>
 
@@ -194,7 +195,7 @@ export function MonthlyCalendarGrid({
         </div>
       </div>
 
-      {/* 3. Weekday Header */}
+      {/* 3. Weekday Header (Fixed Grid Header) */}
       <div className="grid grid-cols-7 border border-[#CBD5E1] rounded-t-[10px] bg-[#F8FAFC] text-center font-bold text-xs text-[#475569] divide-x divide-[#CBD5E1]">
         <div className="py-2.5 text-[#EF4444]">일</div>
         <div className="py-2.5">월</div>
@@ -205,14 +206,14 @@ export function MonthlyCalendarGrid({
         <div className="py-2.5 text-[#2563EB]">토</div>
       </div>
 
-      {/* 4. 7x5 Calendar Grid */}
+      {/* 4. Strict Fixed Height Calendar Grid (No Scrollbars, No Layout Shifts) */}
       <div className="grid grid-cols-7 border-x border-b border-[#CBD5E1] rounded-b-[10px] divide-x divide-y divide-[#CBD5E1] bg-[#F1F5F9]">
         {calendarCells.map((cell, idx) => {
           if (!cell.date) {
             return (
               <div
                 key={`empty-${idx}`}
-                className="min-h-[110px] bg-[#F8FAFC]/40"
+                className="h-[115px] bg-[#F8FAFC]/40"
               />
             );
           }
@@ -226,16 +227,16 @@ export function MonthlyCalendarGrid({
               key={dateKey}
               onClick={() => {
                 if (dayEvents.length > 0) {
-                  // Sort chronologically for debut relay timeline
                   const sorted = [...dayEvents].sort((a, b) => new Date(a.startAtUtc).getTime() - new Date(b.startAtUtc).getTime());
                   setSelectedDayEvents({ dateStr: dateKey, events: sorted });
                 }
               }}
-              className={`min-h-[110px] p-2 bg-white transition-all flex flex-col justify-between ${
+              className={`h-[115px] p-2 bg-white flex flex-col justify-between overflow-hidden transition-colors ${
                 isToday ? 'bg-[#F0F9FF] ring-2 ring-inset ring-[#2563EB]' : 'hover:bg-[#F8FAFC]'
               } ${dayEvents.length > 0 ? 'cursor-pointer' : ''}`}
             >
-              <div className="flex items-center justify-between mb-1.5">
+              {/* Day Header */}
+              <div className="flex items-center justify-between mb-1 shrink-0">
                 <span
                   className={`text-xs font-bold font-mono px-1.5 py-0.5 rounded-[4px] ${
                     isToday
@@ -251,50 +252,38 @@ export function MonthlyCalendarGrid({
                 </span>
 
                 {dayEvents.length > 0 && (
-                  <span className="text-[10px] font-extrabold bg-[#2563EB] text-white px-1.5 py-0.2 rounded-full">
+                  <span className="text-[10px] font-extrabold bg-[#0F172A] text-white px-1.5 py-0.2 rounded-full">
                     {dayEvents.length}
                   </span>
                 )}
               </div>
 
-              {/* Event Cards inside Cell */}
-              <div className="space-y-1.5 flex-grow overflow-y-auto max-h-[85px] custom-scrollbar">
+              {/* Clean Event List (No Internal Scrollbars, Fixed Space for Max 2 items) */}
+              <div className="space-y-1 shrink-0">
                 {dayEvents.slice(0, 2).map((evt) => {
                   const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
-                  const timeFormatted = formatTimeOnly(evt.startAtUtc, selectedTimezone);
-                  const isIndie = evt.creator.agency.toLowerCase().includes('indie') || evt.creator.agency === '개인세';
 
                   return (
                     <div
                       key={evt.id}
-                      className={`p-1.5 rounded-[6px] border border-[#CBD5E1] shadow-2xs flex items-center justify-between gap-1.5 transition-all hover:scale-[1.02] ${getPlatformBarColor(
+                      className={`px-1.5 py-1 rounded-[5px] border border-[#CBD5E1]/60 flex items-center gap-1.5 min-w-0 transition-transform ${getPlatformChipStyle(
                         primaryLink?.platform || 'OTHER'
                       )}`}
                     >
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <img
-                          src={evt.creator.avatarUrl}
-                          alt={evt.creator.displayName}
-                          className="w-5 h-5 rounded-full object-cover shrink-0 border border-white shadow-xs"
-                        />
-                        <span className="text-[11px] font-bold text-[#0F172A] truncate">
-                          {evt.creator.displayName}
-                        </span>
-                        {isIndie && (
-                          <span className="text-[9px] font-extrabold text-[#059669] bg-[#D1FAE5] px-1 rounded shrink-0">
-                            🌱
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-[10px] font-mono font-semibold text-[#475569] shrink-0">
-                        {timeFormatted}
+                      <img
+                        src={evt.creator.avatarUrl}
+                        alt={evt.creator.displayName}
+                        className="w-4 h-4 rounded-full object-cover shrink-0 border border-white shadow-2xs"
+                      />
+                      <span className="text-[11px] font-bold truncate tracking-tight">
+                        {evt.creator.displayName}
                       </span>
                     </div>
                   );
                 })}
 
                 {dayEvents.length > 2 && (
-                  <div className="text-[10px] font-bold text-[#2563EB] text-center bg-[#EFF6FF] py-0.5 rounded-[4px] border border-[#BFDBFE]">
+                  <div className="text-[9px] font-bold text-[#2563EB] text-center bg-[#EFF6FF] py-0.5 rounded-[4px] border border-[#BFDBFE]">
                     +{dayEvents.length - 2}개 더보기
                   </div>
                 )}
@@ -318,11 +307,11 @@ export function MonthlyCalendarGrid({
         </button>
       </div>
 
-      {/* Expanded & Widened Selected Day Event Modal (960px width) */}
+      {/* Expanded Selected Day Event Modal */}
       {selectedDayEvents && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-[20px] max-w-[960px] w-full max-h-[90vh] overflow-hidden shadow-2xl border border-[#CBD5E1] flex flex-col">
-            {/* Modal Header: Time & Overlapped Avatars */}
+            {/* Modal Header */}
             <div className="bg-[#0F172A] text-white p-5 sm:p-6 flex items-center justify-between border-b border-slate-800">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-[#1E293B] rounded-xl border border-slate-700 hidden sm:flex items-center justify-center">
@@ -339,7 +328,6 @@ export function MonthlyCalendarGrid({
               </div>
 
               <div className="flex items-center gap-3">
-                {/* Overlapped Avatar Gallery Ring */}
                 <div className="hidden md:flex -space-x-3 overflow-hidden bg-[#1E293B] p-1.5 rounded-full border border-slate-700">
                   {selectedDayEvents.events.map((evt) => (
                     <img
@@ -361,7 +349,7 @@ export function MonthlyCalendarGrid({
               </div>
             </div>
 
-            {/* Event List in Chronological Relay Order (2-Column Grid) */}
+            {/* Event List in 2-Column Grid Layout */}
             <div className="p-5 sm:p-7 overflow-y-auto max-h-[72vh] bg-[#F8FAFC]">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {selectedDayEvents.events.map((evt) => {
@@ -375,7 +363,6 @@ export function MonthlyCalendarGrid({
                       className="bg-white border border-[#E2E8F0] rounded-[16px] p-5 flex flex-col justify-between gap-4 hover:border-[#2563EB] hover:shadow-md transition-all group"
                     >
                       <div className="flex items-start gap-4">
-                        {/* Avatar with Zoom Hover Icon (80px Larger) */}
                         <div className="relative group/avatar shrink-0">
                           <img
                             src={evt.creator.avatarUrl}
@@ -401,7 +388,6 @@ export function MonthlyCalendarGrid({
                               {primaryLink?.platform}
                             </span>
 
-                            {/* Highlight Indie VTuber Tag */}
                             {isIndie ? (
                               <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-[6px] bg-[#ECFDF5] text-[#047857] border border-[#A7F3D0] flex items-center gap-1">
                                 🌱 개인세
@@ -423,7 +409,6 @@ export function MonthlyCalendarGrid({
                         </div>
                       </div>
 
-                      {/* Action Buttons */}
                       <div className="flex items-center gap-2 pt-2 border-t border-[#F1F5F9] mt-1">
                         <a
                           href={primaryLink?.url}
