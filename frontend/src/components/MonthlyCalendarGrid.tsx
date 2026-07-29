@@ -9,7 +9,8 @@ import {
   Download, 
   X,
   CheckCircle2,
-  ZoomIn
+  ZoomIn,
+  Calendar as CalendarIcon
 } from 'lucide-react';
 import { DebutEvent } from '../types';
 import { formatTimeOnly, formatLocalTime } from '../utils/dateUtils';
@@ -288,118 +289,133 @@ export function MonthlyCalendarGrid({
         </button>
       </div>
 
-      {/* Selected Day Event Modal */}
+      {/* Expanded & Widened Selected Day Event Modal (960px width) */}
       {selectedDayEvents && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white rounded-[16px] max-w-[650px] w-full max-h-[85vh] overflow-hidden shadow-2xl border border-[#CBD5E1] flex flex-col">
-            {/* Header with Avatar Ring */}
-            <div className="bg-[#0F172A] text-white p-4 sm:p-5 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white rounded-[20px] max-w-[960px] w-full max-h-[90vh] overflow-hidden shadow-2xl border border-[#CBD5E1] flex flex-col">
+            {/* Modal Header: Time & Overlapped Avatars */}
+            <div className="bg-[#0F172A] text-white p-5 sm:p-6 flex items-center justify-between border-b border-slate-800">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-[#1E293B] rounded-xl border border-slate-700 hidden sm:flex items-center justify-center">
+                  <CalendarIcon className="w-7 h-7 text-[#38BDF8]" />
+                </div>
+                <div>
+                  <h3 className="text-lg sm:text-xl font-extrabold font-['Outfit'] flex items-center gap-2">
+                    {selectedDayEvents.dateStr} 데뷔 스케줄
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-300 mt-0.5">
+                    총 <span className="font-bold text-[#38BDF8]">{selectedDayEvents.events.length}명</span>의 VTuber / 스트리머가 데뷔 라이브를 진행합니다
+                  </p>
+                </div>
+              </div>
+
               <div className="flex items-center gap-3">
                 {/* Overlapped Avatar Gallery Ring */}
-                <div className="flex -space-x-3 overflow-hidden">
+                <div className="hidden md:flex -space-x-3 overflow-hidden bg-[#1E293B] p-1.5 rounded-full border border-slate-700">
                   {selectedDayEvents.events.map((evt) => (
                     <img
                       key={evt.id}
                       src={evt.creator.avatarUrl}
                       alt={evt.creator.displayName}
                       onClick={() => setPreviewAvatar({ url: evt.creator.avatarUrl, name: evt.creator.displayName })}
-                      className="inline-block h-10 w-10 rounded-full ring-2 ring-white object-cover cursor-pointer hover:scale-110 hover:z-10 transition-transform shadow-md"
+                      className="inline-block h-11 w-11 rounded-full ring-2 ring-[#0F172A] object-cover cursor-pointer hover:scale-115 hover:z-10 transition-all shadow-md"
                       title={`${evt.creator.displayName} 프로필 크게보기`}
                     />
                   ))}
                 </div>
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold font-['Outfit']">
-                    {selectedDayEvents.dateStr} 데뷔 일정
-                  </h3>
-                  <p className="text-xs text-slate-300">
-                    총 {selectedDayEvents.events.length}명의 VTuber 데뷔 라이브
-                  </p>
-                </div>
+                <button
+                  onClick={() => setSelectedDayEvents(null)}
+                  className="p-2 hover:bg-white/10 rounded-full text-slate-300 hover:text-white transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
               </div>
-              <button
-                onClick={() => setSelectedDayEvents(null)}
-                className="p-1.5 hover:bg-white/20 rounded-full text-white transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
             </div>
 
-            {/* Event List with Larger Avatars */}
-            <div className="p-4 sm:p-6 overflow-y-auto space-y-4 max-h-[60vh]">
-              {selectedDayEvents.events.map((evt) => {
-                const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
-                const fullFormatted = formatLocalTime(evt.startAtUtc, selectedTimezone);
+            {/* Event List in 2-Column Grid Layout for Large Screen */}
+            <div className="p-5 sm:p-7 overflow-y-auto max-h-[72vh] bg-[#F8FAFC]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {selectedDayEvents.events.map((evt) => {
+                  const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
+                  const fullFormatted = formatLocalTime(evt.startAtUtc, selectedTimezone);
 
-                return (
-                  <div
-                    key={evt.id}
-                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[12px] p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:border-[#CBD5E1] transition-all shadow-xs"
-                  >
-                    <div className="flex items-center gap-4 min-w-0">
-                      {/* Avatar with Zoom Hover Icon */}
-                      <div className="relative group shrink-0">
-                        <img
-                          src={evt.creator.avatarUrl}
-                          alt={evt.creator.displayName}
-                          onClick={() => setPreviewAvatar({ url: evt.creator.avatarUrl, name: evt.creator.displayName })}
-                          className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md cursor-pointer group-hover:opacity-90 transition-opacity"
-                        />
-                        <button
-                          onClick={() => setPreviewAvatar({ url: evt.creator.avatarUrl, name: evt.creator.displayName })}
-                          className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity"
-                          title="프로필 크게보기"
+                  return (
+                    <div
+                      key={evt.id}
+                      className="bg-white border border-[#E2E8F0] rounded-[16px] p-5 flex flex-col justify-between gap-4 hover:border-[#2563EB] hover:shadow-md transition-all group"
+                    >
+                      <div className="flex items-start gap-4">
+                        {/* Avatar with Zoom Hover Icon (80px Larger) */}
+                        <div className="relative group/avatar shrink-0">
+                          <img
+                            src={evt.creator.avatarUrl}
+                            alt={evt.creator.displayName}
+                            onClick={() => setPreviewAvatar({ url: evt.creator.avatarUrl, name: evt.creator.displayName })}
+                            className="w-20 h-20 rounded-full object-cover border-2 border-[#E2E8F0] shadow-sm cursor-pointer group-hover/avatar:scale-105 transition-transform"
+                          />
+                          <button
+                            onClick={() => setPreviewAvatar({ url: evt.creator.avatarUrl, name: evt.creator.displayName })}
+                            className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center text-white transition-opacity"
+                            title="프로필 이미지 확대하기"
+                          >
+                            <ZoomIn className="w-6 h-6" />
+                          </button>
+                        </div>
+
+                        <div className="min-w-0 flex-grow">
+                          <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
+                            <span className="text-base font-extrabold text-[#0F172A] truncate">
+                              {evt.creator.displayName}
+                            </span>
+                            <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-[6px] bg-[#0F172A] text-white">
+                              {primaryLink?.platform}
+                            </span>
+                            <span className="text-[11px] font-semibold px-2 py-0.5 rounded-[6px] bg-[#F1F5F9] text-[#475569] border border-[#CBD5E1]">
+                              {evt.creator.agency || 'Indie'}
+                            </span>
+                          </div>
+                          
+                          <p className="text-xs font-mono font-bold text-[#2563EB] flex items-center gap-1.5 mb-2">
+                            <Clock className="w-3.5 h-3.5" /> {fullFormatted}
+                          </p>
+
+                          <p className="text-xs text-[#475569] line-clamp-2 leading-relaxed bg-[#F8FAFC] p-2.5 rounded-[8px] border border-[#F1F5F9]">
+                            {evt.description || evt.title}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex items-center gap-2 pt-2 border-t border-[#F1F5F9] mt-1">
+                        <a
+                          href={primaryLink?.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-bold bg-[#0F172A] text-white hover:bg-[#2563EB] rounded-[10px] transition-colors shadow-xs"
                         >
-                          <ZoomIn className="w-5 h-5" />
+                          방송 보러가기 <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                        <button
+                          onClick={() => onDownloadICS(evt)}
+                          className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-bold bg-white border border-[#CBD5E1] text-[#0F172A] hover:bg-[#F1F5F9] rounded-[10px] transition-colors"
+                        >
+                          ICS 저장 <Download className="w-3.5 h-3.5" />
                         </button>
                       </div>
-
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-base font-bold text-[#0F172A] truncate">
-                            {evt.creator.displayName}
-                          </span>
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-[4px] bg-[#0F172A] text-white">
-                            {primaryLink?.platform}
-                          </span>
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-[4px] bg-[#E2E8F0] text-[#334155]">
-                            {evt.creator.agency || 'Indie'}
-                          </span>
-                        </div>
-                        <p className="text-xs text-[#64748B] flex items-center gap-1 font-mono mb-1">
-                          <Clock className="w-3.5 h-3.5 text-[#2563EB]" /> {fullFormatted}
-                        </p>
-                        <p className="text-xs text-[#334155] line-clamp-2">
-                          {evt.description || evt.title}
-                        </p>
-                      </div>
                     </div>
-
-                    <div className="flex sm:flex-col items-center gap-2 w-full sm:w-auto justify-end shrink-0">
-                      <a
-                        href={primaryLink?.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-bold bg-[#0F172A] text-white hover:bg-[#1E293B] rounded-[8px] transition-colors"
-                      >
-                        방송 보러가기 <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                      <button
-                        onClick={() => onDownloadICS(evt)}
-                        className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold bg-white border border-[#CBD5E1] text-[#0F172A] hover:bg-[#F1F5F9] rounded-[8px] transition-colors"
-                      >
-                        ICS 저장 <Download className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
 
-            <div className="bg-[#F8FAFC] border-t border-[#E2E8F0] p-3 text-center">
+            {/* Modal Footer */}
+            <div className="bg-white border-t border-[#E2E8F0] p-4 text-center flex items-center justify-between px-6">
+              <span className="text-xs text-[#64748B] font-medium hidden sm:inline">
+                프로필 사진을 클릭하면 고화질 원본 이미지로 확대됩니다.
+              </span>
               <button
                 onClick={() => setSelectedDayEvents(null)}
-                className="px-5 py-1.5 text-xs font-semibold bg-[#CBD5E1] text-[#0F172A] hover:bg-[#94A3B8] rounded-[6px] transition-colors"
+                className="px-6 py-2 text-xs font-bold bg-[#F1F5F9] text-[#0F172A] hover:bg-[#E2E8F0] rounded-[8px] transition-colors border border-[#CBD5E1] mx-auto sm:mx-0"
               >
                 닫기
               </button>
@@ -408,31 +424,31 @@ export function MonthlyCalendarGrid({
         </div>
       )}
 
-      {/* Large Profile Image Lightbox Modal */}
+      {/* Larger Profile Lightbox Modal (500px Width) */}
       {previewAvatar && (
         <div 
           className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
           onClick={() => setPreviewAvatar(null)}
         >
           <div 
-            className="bg-white rounded-[20px] p-5 max-w-[400px] w-full flex flex-col items-center relative shadow-2xl border border-white/20"
+            className="bg-white rounded-[24px] p-6 max-w-[480px] w-full flex flex-col items-center relative shadow-2xl border border-white/20"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setPreviewAvatar(null)}
-              className="absolute top-3 right-3 p-1.5 rounded-full bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0F172A] transition-colors"
+              className="absolute top-4 right-4 p-2 rounded-full bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0F172A] transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
-            <h4 className="text-base font-bold text-[#0F172A] mb-3 font-['Outfit']">
+            <h4 className="text-lg font-bold text-[#0F172A] mb-4 font-['Outfit']">
               {previewAvatar.name} 프로필 이미지
             </h4>
             <img
               src={previewAvatar.url}
               alt={previewAvatar.name}
-              className="w-64 h-64 rounded-full object-cover border-4 border-[#2563EB] shadow-lg mb-3"
+              className="w-72 h-72 rounded-full object-cover border-4 border-[#2563EB] shadow-xl mb-4"
             />
-            <p className="text-xs text-[#64748B] font-medium">클릭하거나 [X] 버튼을 눌러 닫기</p>
+            <p className="text-xs text-[#64748B] font-medium">배경이나 [X] 버튼을 눌러 닫으실 수 있습니다.</p>
           </div>
         </div>
       )}
