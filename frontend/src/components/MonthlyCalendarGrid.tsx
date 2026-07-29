@@ -10,7 +10,9 @@ import {
   X,
   CheckCircle2,
   ZoomIn,
-  Calendar as CalendarIcon
+  Calendar as CalendarIcon,
+  Sparkles,
+  UserCheck
 } from 'lucide-react';
 import { DebutEvent } from '../types';
 import { formatTimeOnly, formatLocalTime } from '../utils/dateUtils';
@@ -41,7 +43,8 @@ export function MonthlyCalendarGrid({
   setSearchQuery,
   onDownloadICS,
 }: MonthlyCalendarGridProps) {
-  const [currentDate, setCurrentDate] = useState(new Date()); // 오늘 날짜 기본값
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [showIndieOnly, setShowIndieOnly] = useState<boolean>(false);
   const [selectedDayEvents, setSelectedDayEvents] = useState<{
     dateStr: string;
     events: DebutEvent[];
@@ -63,16 +66,21 @@ export function MonthlyCalendarGrid({
     setCurrentDate(new Date());
   };
 
+  // Filter by Indie status if toggled
+  const filteredEvents = showIndieOnly
+    ? events.filter((e) => e.creator.agency.toLowerCase().includes('indie') || e.creator.agency === '개인세')
+    : events;
+
   const calendarCells = getCalendarGridCells(year, month);
-  const eventsByDateMap = buildEventsByDateMap(events, selectedTimezone);
+  const eventsByDateMap = buildEventsByDateMap(filteredEvents, selectedTimezone);
   const todayStr = getTodayDateKey(selectedTimezone);
 
   const platforms = [
     { id: 'ALL', label: '전체 플랫폼', color: 'bg-[#0F172A]' },
-    { id: 'YOUTUBE', label: 'YouTube', iconColor: 'bg-[#FF0000]', dot: '🔴' },
-    { id: 'TWITCH', label: 'Twitch', iconColor: 'bg-[#9146FF]', dot: '🟣' },
-    { id: 'CHZZK', label: 'CHZZK', iconColor: 'bg-[#00FFA3]', dot: '🟢' },
-    { id: 'SOOP', label: 'SOOP', iconColor: 'bg-[#2979FF]', dot: '🔵' },
+    { id: 'YOUTUBE', label: 'YouTube', dot: '🔴' },
+    { id: 'TWITCH', label: 'Twitch', dot: '🟣' },
+    { id: 'CHZZK', label: 'CHZZK', dot: '🟢' },
+    { id: 'SOOP', label: 'SOOP', dot: '🔵' },
   ];
 
   const getPlatformBarColor = (platform: string) => {
@@ -126,7 +134,7 @@ export function MonthlyCalendarGrid({
           <Search className="w-4 h-4 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="버튜버 이름/언어 검색"
+            placeholder="버튜버 이름/언어/이벤트 검색"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-[#F8FAFC] focus:bg-white text-xs font-medium text-[#0F172A] placeholder-[#94A3B8] pl-9 pr-3 py-2 rounded-[8px] border border-[#CBD5E1] focus:border-[#2563EB] focus:outline-none transition-all"
@@ -134,10 +142,10 @@ export function MonthlyCalendarGrid({
         </div>
       </div>
 
-      {/* 2. Platform Filter Tabs & Timezone Bar */}
+      {/* 2. Platform Filter Tabs, Indie Filter & Timezone Bar */}
       <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 mb-4">
-        {/* Platform Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
+        {/* Platform Tabs & Indie Toggle */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
           {platforms.map((p) => {
             const isActive = selectedPlatform === p.id;
             return (
@@ -155,6 +163,19 @@ export function MonthlyCalendarGrid({
               </button>
             );
           })}
+
+          {/* Dedicated Indie Filter Button */}
+          <button
+            onClick={() => setShowIndieOnly(!showIndieOnly)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] text-xs font-extrabold transition-all border ${
+              showIndieOnly
+                ? 'bg-[#10B981] text-white border-[#059669] shadow-xs'
+                : 'bg-[#ECFDF5] text-[#047857] hover:bg-[#D1FAE5] border-[#A7F3D0]'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>🌱 개인세 버튜버만 보기</span>
+          </button>
         </div>
 
         {/* Timezone Info */}
@@ -205,7 +226,9 @@ export function MonthlyCalendarGrid({
               key={dateKey}
               onClick={() => {
                 if (dayEvents.length > 0) {
-                  setSelectedDayEvents({ dateStr: dateKey, events: dayEvents });
+                  // Sort chronologically for debut relay timeline
+                  const sorted = [...dayEvents].sort((a, b) => new Date(a.startAtUtc).getTime() - new Date(b.startAtUtc).getTime());
+                  setSelectedDayEvents({ dateStr: dateKey, events: sorted });
                 }
               }}
               className={`min-h-[110px] p-2 bg-white transition-all flex flex-col justify-between ${
@@ -239,6 +262,7 @@ export function MonthlyCalendarGrid({
                 {dayEvents.slice(0, 2).map((evt) => {
                   const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
                   const timeFormatted = formatTimeOnly(evt.startAtUtc, selectedTimezone);
+                  const isIndie = evt.creator.agency.toLowerCase().includes('indie') || evt.creator.agency === '개인세';
 
                   return (
                     <div
@@ -256,6 +280,11 @@ export function MonthlyCalendarGrid({
                         <span className="text-[11px] font-bold text-[#0F172A] truncate">
                           {evt.creator.displayName}
                         </span>
+                        {isIndie && (
+                          <span className="text-[9px] font-extrabold text-[#059669] bg-[#D1FAE5] px-1 rounded shrink-0">
+                            🌱
+                          </span>
+                        )}
                       </div>
                       <span className="text-[10px] font-mono font-semibold text-[#475569] shrink-0">
                         {timeFormatted}
@@ -279,7 +308,7 @@ export function MonthlyCalendarGrid({
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mt-4 pt-3 border-t border-[#E2E8F0] text-xs text-[#64748B]">
         <div className="flex items-center gap-1.5">
           <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
-          <span><strong className="text-[#0F172A]">검증된 일정:</strong> 공식 인스타그램, X(트위터) 출처만 검토후 등재합니다.</span>
+          <span><strong className="text-[#0F172A]">검증된 일정:</strong> 개인세 및 공식 출처 검토 후 등재합니다.</span>
         </div>
         <button
           onClick={() => alert('오정보 제보 및 피드백 문의: support@vdebut.hub')}
@@ -301,10 +330,10 @@ export function MonthlyCalendarGrid({
                 </div>
                 <div>
                   <h3 className="text-lg sm:text-xl font-extrabold font-['Outfit'] flex items-center gap-2">
-                    {selectedDayEvents.dateStr} 데뷔 스케줄
+                    {selectedDayEvents.dateStr} 데뷔 릴레이 타임라인 ⏱️
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-300 mt-0.5">
-                    총 <span className="font-bold text-[#38BDF8]">{selectedDayEvents.events.length}명</span>의 VTuber / 스트리머가 데뷔 라이브를 진행합니다
+                    총 <span className="font-bold text-[#38BDF8]">{selectedDayEvents.events.length}명</span>의 VTuber / 스트리머가 데뷔 방송을 진행합니다
                   </p>
                 </div>
               </div>
@@ -332,12 +361,13 @@ export function MonthlyCalendarGrid({
               </div>
             </div>
 
-            {/* Event List in 2-Column Grid Layout for Large Screen */}
+            {/* Event List in Chronological Relay Order (2-Column Grid) */}
             <div className="p-5 sm:p-7 overflow-y-auto max-h-[72vh] bg-[#F8FAFC]">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {selectedDayEvents.events.map((evt) => {
                   const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
                   const fullFormatted = formatLocalTime(evt.startAtUtc, selectedTimezone);
+                  const isIndie = evt.creator.agency.toLowerCase().includes('indie') || evt.creator.agency === '개인세';
 
                   return (
                     <div
@@ -370,9 +400,17 @@ export function MonthlyCalendarGrid({
                             <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-[6px] bg-[#0F172A] text-white">
                               {primaryLink?.platform}
                             </span>
-                            <span className="text-[11px] font-semibold px-2 py-0.5 rounded-[6px] bg-[#F1F5F9] text-[#475569] border border-[#CBD5E1]">
-                              {evt.creator.agency || 'Indie'}
-                            </span>
+
+                            {/* Highlight Indie VTuber Tag */}
+                            {isIndie ? (
+                              <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-[6px] bg-[#ECFDF5] text-[#047857] border border-[#A7F3D0] flex items-center gap-1">
+                                🌱 개인세
+                              </span>
+                            ) : (
+                              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-[6px] bg-[#F1F5F9] text-[#475569] border border-[#CBD5E1] flex items-center gap-1">
+                                <UserCheck className="w-3 h-3 text-[#2563EB]" /> {evt.creator.agency}
+                              </span>
+                            )}
                           </div>
                           
                           <p className="text-xs font-mono font-bold text-[#2563EB] flex items-center gap-1.5 mb-2">
@@ -393,13 +431,13 @@ export function MonthlyCalendarGrid({
                           rel="noreferrer"
                           className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-bold bg-[#0F172A] text-white hover:bg-[#2563EB] rounded-[10px] transition-colors shadow-xs"
                         >
-                          방송 보러가기 <ExternalLink className="w-3.5 h-3.5" />
+                          방송 보러가기 / 팔로우 <ExternalLink className="w-3.5 h-3.5" />
                         </a>
                         <button
                           onClick={() => onDownloadICS(evt)}
                           className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-bold bg-white border border-[#CBD5E1] text-[#0F172A] hover:bg-[#F1F5F9] rounded-[10px] transition-colors"
                         >
-                          ICS 저장 <Download className="w-3.5 h-3.5" />
+                          ICS 캘린더 저장 <Download className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
@@ -411,7 +449,7 @@ export function MonthlyCalendarGrid({
             {/* Modal Footer */}
             <div className="bg-white border-t border-[#E2E8F0] p-4 text-center flex items-center justify-between px-6">
               <span className="text-xs text-[#64748B] font-medium hidden sm:inline">
-                프로필 사진을 클릭하면 고화질 원본 이미지로 확대됩니다.
+                시간순 데뷔 릴레이 라인업입니다. 프로필을 클릭하면 확대 이미지가 제공됩니다.
               </span>
               <button
                 onClick={() => setSelectedDayEvents(null)}
@@ -424,7 +462,7 @@ export function MonthlyCalendarGrid({
         </div>
       )}
 
-      {/* Larger Profile Lightbox Modal (500px Width) */}
+      {/* Larger Profile Lightbox Modal */}
       {previewAvatar && (
         <div 
           className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"

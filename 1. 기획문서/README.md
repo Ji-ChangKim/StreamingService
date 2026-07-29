@@ -8,8 +8,11 @@
 
 ### 1. 제품 기획 및 브랜딩 사양 (Product Specifications)
 - 📄 **[PRD_v0.1_V-DEBUT.md](file:///j:/개인 프로젝트/WEB/StreamingService/1.%20기획문서/PRD_v0.1_V-DEBUT.md)**
-  - **제품 정의서 (Product Requirement Document)**
-  - 배경, 목적, 코어 타겟 사용자 (글로벌 버튜버/스트리머 시청자 및 크리에이터), 페르소나, 핵심 기능 명세.
+  - **제품 정의서 v0.1 (MVP Scope)**
+  - 배경, 목적, 코어 타겟 사용자, 초기 핵심 기능 명세.
+- 📄 **[PRD_v0.2_V-DEBUT.md](file:///j:/개인 프로젝트/WEB/StreamingService/1.%20기획문서/PRD_v0.2_V-DEBUT.md)** `[본질 집중 갱신]`
+  - **제품 정의서 v0.2 (Core Focus: Who ➡️ Where ➡️ When ➡️ Outbound)**
+  - 본질(누가/어디서/언제 ➡️ 외부 이동)에 집중하고, 불필요한 과도한 기능(푸시 알림, 실시간 라이브 연동, 복잡한 OAuth 등)을 철저히 배제한 핵심 명세서.
 - 📄 **[V-DEBUT_HUB_Planning_Package_v0.1.md](file:///j:/개인 프로젝트/WEB/StreamingService/1.%20기획문서/V-DEBUT_HUB_Planning_Package_v0.1.md)**
   - **기획 패키지 종합 요약**
   - 핵심 가치 제안, 로드맵, 서비스 마일스톤 및 런칭 전략.
@@ -22,7 +25,7 @@
   - 사용자-프론트엔드-API 서버-Cloudflare D1 DB 간 데이터 요청, 처리, 렌더링 세부 데이터 플로우.
 - 📄 **[USER_FLOW.md](file:///j:/개인 프로젝트/WEB/StreamingService/1.%20기획문서/USER_FLOW.md)**
   - **사용자 시나리오 & 유저 플로우 (User Flow & Scenarios)**
-  - 시청자(데뷔 일정 검색/타임존 변경/캘린더 저장) 및 크리에이터(데뷔 등록 제출) 경로.
+  - 시청자(데뷔 일정 검색/타임존 변경/캘린더 저장/외부 이동) 및 크리에이터(데뷔 등록 제출) 경로.
 
 ---
 

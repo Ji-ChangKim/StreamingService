@@ -1,27 +1,137 @@
 export const MOCK_EVENTS = [
   {
-    id: 'evt_01',
-    title: '나비야 (Nabiya) 1st Global Debut Stream',
+    id: 'evt_2026_1',
+    title: '아롱띠 데뷔 방송',
     type: 'FIRST_DEBUT',
     creator: {
-      id: 'cr_01',
-      slug: 'nabiya',
-      displayName: '나비야 (Nabiya)',
+      id: 'cr_2026_1',
+      displayName: '아롱띠',
       avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-      agency: 'Indie Creator',
+      agency: '개인세',
       countryCode: 'KR',
-      languages: ['ko', 'en']
+      languages: ['ko'],
     },
-    startAtUtc: new Date(Date.now() + 86400000 * 2).toISOString(),
+    startAtUtc: '2026-07-01T12:00:00.000Z',
     originalTimezone: 'Asia/Seoul',
     status: 'PUBLISHED',
-    verificationStatus: 'OWNER_VERIFIED',
-    lastVerifiedAt: new Date().toISOString(),
-    links: [
-      { platform: 'CHZZK', url: 'https://chzzk.naver.com/live/nabiya_official', isPrimary: true }
-    ],
-    description: '안녕하세요! 꿈과 노래를 전달하는 버튜버 나비야의 첫 공식 데뷔 방송입니다.'
-  }
+    verificationStatus: 'SOURCE_VERIFIED',
+    links: [{ platform: 'SOOP', url: 'https://www.sooplive.co.kr/station/memo/a0714/post/166790429', isPrimary: true }],
+    description: '웰컴버추얼 데뷔 방송',
+  },
+  {
+    id: 'evt_2026_2',
+    title: '헤티 데뷔 방송',
+    type: 'FIRST_DEBUT',
+    creator: {
+      id: 'cr_2026_2',
+      displayName: '헤티',
+      avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
+      agency: '개인세',
+      countryCode: 'KR',
+      languages: ['ko'],
+    },
+    startAtUtc: '2026-07-02T20:00:00.000Z',
+    originalTimezone: 'Asia/Seoul',
+    status: 'PUBLISHED',
+    verificationStatus: 'SOURCE_VERIFIED',
+    links: [{ platform: 'SOOP', url: 'https://www.sooplive.co.kr/station/memo/bps1017/post/166829897', isPrimary: true }],
+    description: '소통 및 첫 데뷔 라이브',
+  },
+  {
+    id: 'evt_2026_3',
+    title: '마테 데뷔 방송',
+    type: 'FIRST_DEBUT',
+    creator: {
+      id: 'cr_2026_3',
+      displayName: '마테',
+      avatarUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80',
+      agency: '개인세',
+      countryCode: 'KR',
+      languages: ['ko'],
+    },
+    startAtUtc: '2026-07-03T14:00:00.000Z',
+    originalTimezone: 'Asia/Seoul',
+    status: 'PUBLISHED',
+    verificationStatus: 'SOURCE_VERIFIED',
+    links: [{ platform: 'SOOP', url: 'https://www.sooplive.co.kr/station/mate4077', isPrimary: true }],
+    description: '첫 소통 데뷔 라이브',
+  },
+  {
+    id: 'evt_2026_4',
+    title: '담하로 데뷔 방송',
+    type: 'FIRST_DEBUT',
+    creator: {
+      id: 'cr_2026_4',
+      displayName: '담하로',
+      avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
+      agency: '개인세',
+      countryCode: 'KR',
+      languages: ['ko'],
+    },
+    startAtUtc: '2026-07-04T17:00:00.000Z',
+    originalTimezone: 'Asia/Seoul',
+    status: 'PUBLISHED',
+    verificationStatus: 'SOURCE_VERIFIED',
+    links: [{ platform: 'SOOP', url: 'https://www.sooplive.co.kr/station/memo/harobangil/post/166904326', isPrimary: true }],
+    description: '담하로 첫 공식 데뷔 스트림',
+  },
+  {
+    id: 'evt_2026_5',
+    title: '바쿠 데뷔 방송',
+    type: 'FIRST_DEBUT',
+    creator: {
+      id: 'cr_2026_5',
+      displayName: '바쿠',
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      agency: '개인세',
+      countryCode: 'KR',
+      languages: ['ko'],
+    },
+    startAtUtc: '2026-07-04T19:00:00.000Z',
+    originalTimezone: 'Asia/Seoul',
+    status: 'PUBLISHED',
+    verificationStatus: 'SOURCE_VERIFIED',
+    links: [{ platform: 'CHZZK', url: 'https://x.com/orbitaofbehind', isPrimary: true }],
+    description: '치지직 신입 버튜버 바쿠 데뷔',
+  },
+  {
+    id: 'evt_2026_32',
+    title: '루하 데뷔 방송',
+    type: 'FIRST_DEBUT',
+    creator: {
+      id: 'cr_2026_32',
+      displayName: '루하',
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      agency: '개인세',
+      countryCode: 'KR',
+      languages: ['ko'],
+    },
+    startAtUtc: '2026-07-29T14:00:00.000Z',
+    originalTimezone: 'Asia/Seoul',
+    status: 'PUBLISHED',
+    verificationStatus: 'SOURCE_VERIFIED',
+    links: [{ platform: 'SOOP', url: 'https://www.sooplive.co.kr/station/memo/ruha0612/post/168012350', isPrimary: true }],
+    description: '루하 SOOP 데뷔 생방송',
+  },
+  {
+    id: 'evt_2026_33',
+    title: '치즈치즈 데뷔 방송',
+    type: 'REDEBUT',
+    creator: {
+      id: 'cr_2026_33',
+      displayName: '치즈치즈',
+      avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
+      agency: '개인세',
+      countryCode: 'KR',
+      languages: ['ko'],
+    },
+    startAtUtc: '2026-07-30T14:00:00.000Z',
+    originalTimezone: 'Asia/Seoul',
+    status: 'PUBLISHED',
+    verificationStatus: 'SOURCE_VERIFIED',
+    links: [{ platform: 'SOOP', url: 'https://www.sooplive.co.kr/station/memo/cheesezz/post/168054144', isPrimary: true }],
+    description: '치즈치즈 재데뷔 방송 무대',
+  },
 ];
 
 /**
@@ -108,7 +218,7 @@ export async function insertEventToD1(db: D1Database, body: any): Promise<string
 
   const displayName = body.displayName || '신입 VTuber';
   const avatarUrl = body.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
-  const agency = body.agency || 'Indie';
+  const agency = body.agency || '개인세';
   const title = body.title || `${displayName} 데뷔 방송`;
   const startAtUtc = body.startAtUtc || new Date(Date.now() + 86400000 * 3).toISOString();
   const platform = body.platform || 'CHZZK';
