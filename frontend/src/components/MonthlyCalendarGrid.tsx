@@ -8,10 +8,16 @@ import {
   ExternalLink, 
   Download, 
   X,
-  CheckCircle2
+  CheckCircle2,
+  ZoomIn
 } from 'lucide-react';
 import { DebutEvent } from '../types';
 import { formatTimeOnly, formatLocalTime } from '../utils/dateUtils';
+import { 
+  getCalendarGridCells, 
+  buildEventsByDateMap, 
+  getTodayDateKey 
+} from '../utils/calendarUtils';
 
 interface MonthlyCalendarGridProps {
   events: DebutEvent[];
@@ -39,6 +45,7 @@ export function MonthlyCalendarGrid({
     dateStr: string;
     events: DebutEvent[];
   } | null>(null);
+  const [previewAvatar, setPreviewAvatar] = useState<{ url: string; name: string } | null>(null);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -55,53 +62,9 @@ export function MonthlyCalendarGrid({
     setCurrentDate(new Date());
   };
 
-  const firstDayOfMonth = new Date(year, month, 1);
-  const startingDayOfWeek = firstDayOfMonth.getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  const calendarCells: { date: Date | null; dayNumber: number }[] = [];
-
-  for (let i = 0; i < startingDayOfWeek; i++) {
-    calendarCells.push({ date: null, dayNumber: 0 });
-  }
-
-  for (let day = 1; day <= daysInMonth; day++) {
-    calendarCells.push({
-      date: new Date(year, month, day),
-      dayNumber: day,
-    });
-  }
-
-  const getEventDateKey = (utcString: string): string => {
-    try {
-      const d = new Date(utcString);
-      const formatter = new Intl.DateTimeFormat('en-CA', {
-        timeZone: selectedTimezone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      });
-      return formatter.format(d);
-    } catch {
-      return utcString.split('T')[0];
-    }
-  };
-
-  const eventsByDateMap = new Map<string, DebutEvent[]>();
-  events.forEach((evt) => {
-    const key = getEventDateKey(evt.startAtUtc);
-    if (!eventsByDateMap.has(key)) {
-      eventsByDateMap.set(key, []);
-    }
-    eventsByDateMap.get(key)!.push(evt);
-  });
-
-  const todayStr = new Intl.DateTimeFormat('en-CA', {
-    timeZone: selectedTimezone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(new Date());
+  const calendarCells = getCalendarGridCells(year, month);
+  const eventsByDateMap = buildEventsByDateMap(events, selectedTimezone);
+  const todayStr = getTodayDateKey(selectedTimezone);
 
   const platforms = [
     { id: 'ALL', label: '전체 플랫폼', color: 'bg-[#0F172A]' },
@@ -270,7 +233,7 @@ export function MonthlyCalendarGrid({
                 )}
               </div>
 
-              {/* Event Cards inside Cell (Matching Screenshot Card Style) */}
+              {/* Event Cards inside Cell */}
               <div className="space-y-1.5 flex-grow overflow-y-auto max-h-[85px] custom-scrollbar">
                 {dayEvents.slice(0, 2).map((evt) => {
                   const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
@@ -311,7 +274,7 @@ export function MonthlyCalendarGrid({
         })}
       </div>
 
-      {/* 5. Bottom Info & Feedback Link (Matching Screenshot Footer) */}
+      {/* 5. Bottom Info & Feedback Link */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mt-4 pt-3 border-t border-[#E2E8F0] text-xs text-[#64748B]">
         <div className="flex items-center gap-1.5">
           <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
@@ -328,15 +291,31 @@ export function MonthlyCalendarGrid({
       {/* Selected Day Event Modal */}
       {selectedDayEvents && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white rounded-[16px] max-w-[600px] w-full max-h-[85vh] overflow-hidden shadow-2xl border border-[#CBD5E1] flex flex-col">
+          <div className="bg-white rounded-[16px] max-w-[650px] w-full max-h-[85vh] overflow-hidden shadow-2xl border border-[#CBD5E1] flex flex-col">
+            {/* Header with Avatar Ring */}
             <div className="bg-[#0F172A] text-white p-4 sm:p-5 flex items-center justify-between">
-              <div>
-                <h3 className="text-base sm:text-lg font-bold font-['Outfit']">
-                  {selectedDayEvents.dateStr} 데뷔 일정
-                </h3>
-                <p className="text-xs text-slate-300">
-                  총 {selectedDayEvents.events.length}명의 VTuber가 데뷔 라이브를 진행합니다
-                </p>
+              <div className="flex items-center gap-3">
+                {/* Overlapped Avatar Gallery Ring */}
+                <div className="flex -space-x-3 overflow-hidden">
+                  {selectedDayEvents.events.map((evt) => (
+                    <img
+                      key={evt.id}
+                      src={evt.creator.avatarUrl}
+                      alt={evt.creator.displayName}
+                      onClick={() => setPreviewAvatar({ url: evt.creator.avatarUrl, name: evt.creator.displayName })}
+                      className="inline-block h-10 w-10 rounded-full ring-2 ring-white object-cover cursor-pointer hover:scale-110 hover:z-10 transition-transform shadow-md"
+                      title={`${evt.creator.displayName} 프로필 크게보기`}
+                    />
+                  ))}
+                </div>
+                <div>
+                  <h3 className="text-base sm:text-lg font-bold font-['Outfit']">
+                    {selectedDayEvents.dateStr} 데뷔 일정
+                  </h3>
+                  <p className="text-xs text-slate-300">
+                    총 {selectedDayEvents.events.length}명의 VTuber 데뷔 라이브
+                  </p>
+                </div>
               </div>
               <button
                 onClick={() => setSelectedDayEvents(null)}
@@ -346,6 +325,7 @@ export function MonthlyCalendarGrid({
               </button>
             </div>
 
+            {/* Event List with Larger Avatars */}
             <div className="p-4 sm:p-6 overflow-y-auto space-y-4 max-h-[60vh]">
               {selectedDayEvents.events.map((evt) => {
                 const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
@@ -354,46 +334,61 @@ export function MonthlyCalendarGrid({
                 return (
                   <div
                     key={evt.id}
-                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[12px] p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:border-[#CBD5E1] transition-all"
+                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[12px] p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:border-[#CBD5E1] transition-all shadow-xs"
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <img
-                        src={evt.creator.avatarUrl}
-                        alt={evt.creator.displayName}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-xs shrink-0"
-                      />
+                    <div className="flex items-center gap-4 min-w-0">
+                      {/* Avatar with Zoom Hover Icon */}
+                      <div className="relative group shrink-0">
+                        <img
+                          src={evt.creator.avatarUrl}
+                          alt={evt.creator.displayName}
+                          onClick={() => setPreviewAvatar({ url: evt.creator.avatarUrl, name: evt.creator.displayName })}
+                          className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md cursor-pointer group-hover:opacity-90 transition-opacity"
+                        />
+                        <button
+                          onClick={() => setPreviewAvatar({ url: evt.creator.avatarUrl, name: evt.creator.displayName })}
+                          className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity"
+                          title="프로필 크게보기"
+                        >
+                          <ZoomIn className="w-5 h-5" />
+                        </button>
+                      </div>
+
                       <div className="min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <span className="text-sm font-bold text-[#0F172A] truncate">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-base font-bold text-[#0F172A] truncate">
                             {evt.creator.displayName}
                           </span>
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded-[4px] bg-[#0F172A] text-white">
                             {primaryLink?.platform}
                           </span>
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-[4px] bg-[#E2E8F0] text-[#334155]">
+                            {evt.creator.agency || 'Indie'}
+                          </span>
                         </div>
-                        <p className="text-xs text-[#64748B] flex items-center gap-1 font-mono">
-                          <Clock className="w-3 h-3 text-[#2563EB]" /> {fullFormatted}
+                        <p className="text-xs text-[#64748B] flex items-center gap-1 font-mono mb-1">
+                          <Clock className="w-3.5 h-3.5 text-[#2563EB]" /> {fullFormatted}
                         </p>
-                        <p className="text-xs text-[#334155] line-clamp-1 mt-1">
+                        <p className="text-xs text-[#334155] line-clamp-2">
                           {evt.description || evt.title}
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex sm:flex-col items-center gap-2 w-full sm:w-auto justify-end">
+                    <div className="flex sm:flex-col items-center gap-2 w-full sm:w-auto justify-end shrink-0">
                       <a
                         href={primaryLink?.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-[#0F172A] text-white hover:bg-[#1E293B] rounded-[6px] transition-colors"
+                        className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-bold bg-[#0F172A] text-white hover:bg-[#1E293B] rounded-[8px] transition-colors"
                       >
-                        방송 보러가기 <ExternalLink className="w-3 h-3" />
+                        방송 보러가기 <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                       <button
                         onClick={() => onDownloadICS(evt)}
-                        className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-[#CBD5E1] text-[#0F172A] hover:bg-[#F1F5F9] rounded-[6px] transition-colors"
+                        className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold bg-white border border-[#CBD5E1] text-[#0F172A] hover:bg-[#F1F5F9] rounded-[8px] transition-colors"
                       >
-                        ICS 저장 <Download className="w-3 h-3" />
+                        ICS 저장 <Download className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
@@ -409,6 +404,35 @@ export function MonthlyCalendarGrid({
                 닫기
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Large Profile Image Lightbox Modal */}
+      {previewAvatar && (
+        <div 
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
+          onClick={() => setPreviewAvatar(null)}
+        >
+          <div 
+            className="bg-white rounded-[20px] p-5 max-w-[400px] w-full flex flex-col items-center relative shadow-2xl border border-white/20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setPreviewAvatar(null)}
+              className="absolute top-3 right-3 p-1.5 rounded-full bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#0F172A] transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h4 className="text-base font-bold text-[#0F172A] mb-3 font-['Outfit']">
+              {previewAvatar.name} 프로필 이미지
+            </h4>
+            <img
+              src={previewAvatar.url}
+              alt={previewAvatar.name}
+              className="w-64 h-64 rounded-full object-cover border-4 border-[#2563EB] shadow-lg mb-3"
+            />
+            <p className="text-xs text-[#64748B] font-medium">클릭하거나 [X] 버튼을 눌러 닫기</p>
           </div>
         </div>
       )}

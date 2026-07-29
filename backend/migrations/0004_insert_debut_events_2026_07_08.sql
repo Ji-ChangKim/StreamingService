@@ -3,7 +3,7 @@
 
 INSERT OR IGNORE INTO creator_profiles (id, slug, display_name, country_code, languages, agency_id, avatar_url) VALUES ('cr_2026_No.', 'slug_No.', '버튜버', 'KR', '["ko"]', 'Indie', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80');
 INSERT OR IGNORE INTO debut_events (id, creator_id, type, title, description, start_at_utc, original_timezone, status, verification_status) VALUES ('evt_2026_No.', 'cr_2026_No.', 'FIRST_DEBUT', '버튜버 데뷔 방송', '소속·비고', '날짜T시간.000Z', 'Asia/Seoul', 'PUBLISHED', 'SOURCE_VERIFIED');
-INSERT OR IGNORE INTO debut_event_links (id, event_id, platform, watch_url, is_primary) VALUES ('link_2026_No.', 'evt_2026_No.', 'CHZZK', '출처 URL', 1);
+INSERT OR IGNORE INTO debut_event_links (id, event_id, platform, watch_url, is_primary) VALUES ('link_2026_No.', 'evt_2026_No.', 'CHZZK', 'https://chzzk.naver.com/94a9dfe3124fb22f4b889e50b1e54382', 1);
 
 INSERT OR IGNORE INTO creator_profiles (id, slug, display_name, country_code, languages, agency_id, avatar_url) VALUES ('cr_2026_1', 'slug_1', '아롱띠', 'KR', '["ko"]', 'Indie', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80');
 INSERT OR IGNORE INTO debut_events (id, creator_id, type, title, description, start_at_utc, original_timezone, status, verification_status) VALUES ('evt_2026_1', 'cr_2026_1', 'FIRST_DEBUT', '아롱띠 데뷔 방송', '웰컴버추얼', '2026-07-01T12:00:00.000Z', 'Asia/Seoul', 'PUBLISHED', 'SOURCE_VERIFIED');
