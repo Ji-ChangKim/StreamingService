@@ -209,6 +209,77 @@ export async function fetchSoopProfile(userIdOrUrl: string): Promise<PlatformPro
 }
 
 /**
+ * 3. YouTube 외부 프로필 파서 (채널 URL / Handle @username / 영상 URL 통합 처리)
+ */
+export async function fetchYoutubeProfile(channelUrlOrHandle: string): Promise<PlatformProfileResult> {
+  let targetUrl = channelUrlOrHandle.trim();
+  if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
+    if (targetUrl.startsWith('@')) {
+      targetUrl = `https://www.youtube.com/${targetUrl}`;
+    } else {
+      targetUrl = `https://www.youtube.com/@${targetUrl}`;
+    }
+  }
+
+  try {
+    const response = await fetch(targetUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'
+      }
+    });
+
+    if (response.ok) {
+      const html = await response.text();
+      const titleMatch = html.match(/<meta property="og:title" content="([^"]+)">/i) || html.match(/<title>([^<]+)<\/title>/i);
+      const imageMatch = html.match(/<meta property="og:image" content="([^"]+)">/i);
+      const descMatch = html.match(/<meta property="og:description" content="([^"]+)">/i);
+
+      if (titleMatch || imageMatch) {
+        let title = titleMatch ? titleMatch[1] : '유튜브 크리에이터';
+        title = title.replace(/ - YouTube$/, '').trim();
+
+        const profileImg = imageMatch ? imageMatch[1] : '';
+        const desc = descMatch ? descMatch[1] : `${title}의 공식 유튜브 채널입니다.`;
+
+        return {
+          success: true,
+          platform: 'YOUTUBE',
+          channelId: targetUrl,
+          creatorName: title,
+          profileImageUrl: profileImg,
+          channelUrl: targetUrl,
+          description: desc,
+          verified: true
+        };
+      }
+    }
+
+    return {
+      success: false,
+      platform: 'YOUTUBE',
+      channelId: targetUrl,
+      creatorName: '',
+      profileImageUrl: '',
+      channelUrl: targetUrl,
+      verified: false,
+      error: '유튜브 채널 정보를 찾을 수 없습니다.'
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      platform: 'YOUTUBE',
+      channelId: targetUrl,
+      creatorName: '',
+      profileImageUrl: '',
+      channelUrl: targetUrl,
+      verified: false,
+      error: err.message || '네트워크 오류'
+    };
+  }
+}
+
+/**
  * 플랫폼 프로필 통합 파서 (URL 기반 자동 인식 보완)
  */
 export async function fetchPlatformProfile(platform: string, inputUrl: string): Promise<PlatformProfileResult> {
@@ -219,12 +290,16 @@ export async function fetchPlatformProfile(platform: string, inputUrl: string): 
     upper = 'SOOP';
   } else if (lowerUrl.includes('chzzk.naver.com')) {
     upper = 'CHZZK';
+  } else if (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be')) {
+    upper = 'YOUTUBE';
   }
 
   if (upper === 'CHZZK') {
     return await fetchChzzkProfile(inputUrl);
   } else if (upper === 'SOOP' || upper === 'AFREECA') {
     return await fetchSoopProfile(inputUrl);
+  } else if (upper === 'YOUTUBE') {
+    return await fetchYoutubeProfile(inputUrl);
   }
 
   return {
