@@ -7,8 +7,6 @@ interface NavbarProps {
 export function Navbar({ activeNav, setActiveNav, onOpenSubmitModal }: NavbarProps) {
   const navItems = [
     { id: 'schedule', label: '데뷔 일정' },
-    { id: 'audition', label: '오디션 탐색' },
-    { id: 'guide', label: '데뷔 가이드' },
   ];
 
   return (

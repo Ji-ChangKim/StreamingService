@@ -11,12 +11,8 @@ export function Footer() {
           <p className="text-[11px]">전 세계 VTuber의 첫 순간을 알리는 글로벌 캘린더 플랫폼입니다.</p>
         </div>
 
-        <div className="flex items-center gap-4 text-[11px] font-medium text-[#64748B]">
-          <button className="hover:text-[#0F172A]">공지 사항</button>
-          <span>•</span>
-          <button className="hover:text-[#0F172A]">이용 약관</button>
-          <span>•</span>
-          <button className="hover:text-[#0F172A]">문의하기</button>
+        <div className="text-[11px] font-medium text-[#64748B]">
+          © 2026 GameTPS. All rights reserved.
         </div>
       </div>
     </footer>
