@@ -104,7 +104,7 @@ app.get('/api/v1/platform/profile', async (c) => {
 app.all('*', async (c) => {
   const assetManifest = JSON.parse(manifestJSON || '{}');
   try {
-    const page = await getAssetFromKV(
+    return await getAssetFromKV(
       {
         request: c.req.raw,
         waitUntil: (promise) => c.executionCtx.waitUntil(promise),
@@ -114,27 +114,23 @@ app.all('*', async (c) => {
         ASSET_MANIFEST: assetManifest,
       }
     );
-    return page;
   } catch (e) {
-    if (e instanceof NotFoundError) {
-      try {
-        const url = new URL(c.req.url);
-        const spaRequest = new Request(`${url.origin}/index.html`, c.req.raw);
-        return await getAssetFromKV(
-          {
-            request: spaRequest,
-            waitUntil: (promise) => c.executionCtx.waitUntil(promise),
-          },
-          {
-            ASSET_NAMESPACE: c.env.__STATIC_CONTENT,
-            ASSET_MANIFEST: assetManifest,
-          }
-        );
-      } catch (spaErr) {
-        return c.text('SPA Index Fallback Error', 404);
-      }
+    try {
+      const url = new URL(c.req.url);
+      const indexRequest = new Request(`${url.origin}/index.html`);
+      return await getAssetFromKV(
+        {
+          request: indexRequest,
+          waitUntil: (promise) => c.executionCtx.waitUntil(promise),
+        },
+        {
+          ASSET_NAMESPACE: c.env.__STATIC_CONTENT,
+          ASSET_MANIFEST: assetManifest,
+        }
+      );
+    } catch (spaErr: any) {
+      return c.text(`SPA Index Serve Error: ${spaErr?.message || 'Asset NotFound'}`, 500);
     }
-    return c.text('Asset Serve Internal Error', 500);
   }
 });
 

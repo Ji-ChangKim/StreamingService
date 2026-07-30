@@ -30,15 +30,12 @@ export function MonthlyCalendarGrid({
   onDownloadICS,
   onOpenSubmitModal,
 }: MonthlyCalendarGridProps) {
-  // 광고 활성화 제어 플래그
   const ENABLE_ADS = false;
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showIndieOnly, setShowIndieOnly] = useState<boolean>(false);
-  const [selectedDateStr, setSelectedDateStr] = useState<string>(() => {
-    const today = new Date();
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  });
+  // 처음 진입 시 캘린더가 전면에 100% 나오며, 일자 클릭 시에만 패널이 오픈됨
+  const [selectedDateStr, setSelectedDateStr] = useState<string | null>(null);
   const [previewAvatar, setPreviewAvatar] = useState<{ url: string; name: string } | null>(null);
 
   const year = currentDate.getFullYear();
@@ -52,20 +49,19 @@ export function MonthlyCalendarGrid({
     setSelectedDateStr(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`);
   };
 
-  // 1. 개인세 필터링
   const filteredEvents = showIndieOnly
     ? events.filter((e) => e.creator.agency.toLowerCase().includes('indie') || e.creator.agency === '개인세')
     : events;
 
-  // 2. 날짜 셀 및 데뷔 이벤트 Map 계산
   const calendarCells = getCalendarGridCells(year, month);
   const eventsByDateMap = buildEventsByDateMap(filteredEvents, selectedTimezone);
   const todayStr = getTodayDateKey(selectedTimezone);
 
-  // 3. 선택 날짜의 스케줄 리스트 정렬
-  const currentSelectedEvents = (eventsByDateMap.get(selectedDateStr) || []).sort(
-    (a, b) => new Date(a.startAtUtc).getTime() - new Date(b.startAtUtc).getTime()
-  );
+  const currentSelectedEvents = selectedDateStr
+    ? (eventsByDateMap.get(selectedDateStr) || []).sort(
+        (a, b) => new Date(a.startAtUtc).getTime() - new Date(b.startAtUtc).getTime()
+      )
+    : [];
 
   const handleChangeTimezone = () => {
     const tz = prompt('시간대 입력 (예: Asia/Seoul, UTC)', selectedTimezone);
@@ -74,15 +70,17 @@ export function MonthlyCalendarGrid({
 
   return (
     <div className="space-y-4 mb-8">
-      {/* 🎯 ZONE 1: 상단 와이드 광고 배너 슬롯 */}
       <AdBannerSlot zone="ZONE1_TOP" enableAds={ENABLE_ADS} />
 
-      {/* Main Split Grid Container */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        {/* Left (7 Cols): Calendar View Container */}
-        <div className="lg:col-span-7 bg-white rounded-[16px] border border-[#CBD5E1] shadow-xs p-4 sm:p-5 flex flex-col justify-between">
+      {/* Main Container: selectedDateStr 유무에 따라 100% 전면 뷰 ↔ Split 패널 뷰 전환 */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 transition-all">
+        {/* Calendar View: 선택된 날짜가 없을 땐 12Cols (100% 전면), 선택되었을 땐 7Cols */}
+        <div
+          className={`${
+            selectedDateStr ? 'lg:col-span-7' : 'lg:col-span-12'
+          } bg-white rounded-[16px] border border-[#CBD5E1] shadow-xs p-4 sm:p-5 flex flex-col justify-between transition-all`}
+        >
           <div>
-            {/* Top Controls & Search Bar */}
             <CalendarControlBar
               year={year}
               month={month}
@@ -99,42 +97,40 @@ export function MonthlyCalendarGrid({
               onChangeTimezone={handleChangeTimezone}
             />
 
-            {/* Fixed Height Month Grid */}
             <CalendarMonthGrid
               year={year}
               month={month}
               calendarCells={calendarCells}
               eventsByDateMap={eventsByDateMap}
-              selectedDateStr={selectedDateStr}
+              selectedDateStr={selectedDateStr || ''}
               todayStr={todayStr}
-              onSelectDate={setSelectedDateStr}
+              onSelectDate={(dateStr) => setSelectedDateStr(dateStr)}
             />
           </div>
         </div>
 
-        {/* Right (5 Cols): Side Inspector Panel Container */}
-        <div className="lg:col-span-5 bg-white rounded-[16px] border border-[#CBD5E1] shadow-xs p-4 sm:p-5 flex flex-col justify-between">
-          <div>
-            {/* 🎯 ZONE 2: 사이드 패널 상단 Pinned 광고 */}
-            <AdBannerSlot zone="ZONE2_PINNED" enableAds={ENABLE_ADS} />
+        {/* Side Inspector Panel Modal/Panel: selectedDateStr가 있을 때만 우측에 노출 */}
+        {selectedDateStr && (
+          <div className="lg:col-span-5 bg-white rounded-[16px] border border-[#CBD5E1] shadow-xs p-4 sm:p-5 flex flex-col justify-between animate-fadeIn">
+            <div>
+              <AdBannerSlot zone="ZONE2_PINNED" enableAds={ENABLE_ADS} />
 
-            {/* Schedule Inspector Panel */}
-            <ScheduleInspectorPanel
-              selectedDateStr={selectedDateStr}
-              events={currentSelectedEvents}
-              selectedTimezone={selectedTimezone}
-              onOpenSubmitModal={onOpenSubmitModal}
-              onDownloadICS={onDownloadICS}
-              onPreviewAvatar={(url, name) => setPreviewAvatar({ url, name })}
-            />
+              <ScheduleInspectorPanel
+                selectedDateStr={selectedDateStr}
+                events={currentSelectedEvents}
+                selectedTimezone={selectedTimezone}
+                onOpenSubmitModal={onOpenSubmitModal}
+                onDownloadICS={onDownloadICS}
+                onPreviewAvatar={(url, name) => setPreviewAvatar({ url, name })}
+                onClosePanel={() => setSelectedDateStr(null)}
+              />
+            </div>
+
+            <AdBannerSlot zone="ZONE4_STICKY" enableAds={ENABLE_ADS} />
           </div>
-
-          {/* 🎯 ZONE 4: 사이드 패널 하단 스티키 광고 */}
-          <AdBannerSlot zone="ZONE4_STICKY" enableAds={ENABLE_ADS} />
-        </div>
+        )}
       </div>
 
-      {/* Profile Image Lightbox Modal */}
       <ProfileLightboxModal
         previewAvatar={previewAvatar}
         onClose={() => setPreviewAvatar(null)}
