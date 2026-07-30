@@ -34,8 +34,10 @@ export function StudioSubmitModal({
   const [agencyType, setAgencyType] = useState<'INDIE' | 'AGENCY'>('INDIE');
   const [agencyName, setAgencyName] = useState('');
 
-  // editEvent가 주어지면 기존 데이터로 폼 상태 동기화
+  // isOpen 및 editEvent 상태 변경 시 폼 필드 동기화 또는 신규 작성 리셋
   useEffect(() => {
+    if (!isOpen) return;
+
     if (editEvent) {
       const primaryLink = editEvent.links.find((l) => l.isPrimary) || editEvent.links[0];
       setWatchUrl(primaryLink?.url || '');
@@ -44,6 +46,8 @@ export function StudioSubmitModal({
       setAvatarUrl(editEvent.creator.avatarUrl || '');
       setDescription(editEvent.description || '');
       setTimezone(editEvent.originalTimezone || 'Asia/Seoul');
+      setIsFetchedSuccess(true);
+      setFetchMessage(`✏️ [기존 데뷔 일정 수정 모드]`);
 
       if (editEvent.creator.agency && !editEvent.creator.agency.toLowerCase().includes('indie') && editEvent.creator.agency !== '개인세') {
         setAgencyType('AGENCY');
@@ -67,8 +71,23 @@ export function StudioSubmitModal({
       } catch {
         // fallback
       }
+    } else {
+      // 신규 등록 모드: 이전 잔여 데이터 깨끗이 리셋!
+      setWatchUrl('');
+      setPlatform('CHZZK');
+      setDisplayName('');
+      setAvatarUrl('');
+      setIsEditingName(false);
+      setDate('2026-08-01');
+      setTime('20:00');
+      setTimezone('Asia/Seoul');
+      setDescription('');
+      setAgencyType('INDIE');
+      setAgencyName('');
+      setIsFetchedSuccess(false);
+      setFetchMessage('');
     }
-  }, [editEvent]);
+  }, [isOpen, editEvent]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFetchingProfile, setIsFetchingProfile] = useState(false);
   const [fetchMessage, setFetchMessage] = useState('');
