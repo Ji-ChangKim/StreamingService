@@ -44,7 +44,11 @@ export function FilterBar({
               }`}
             >
               {p.id === 'CHZZK' && (
-                <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-3.5 h-3.5 object-contain" />
+                <img
+                  src={isActive ? '/icons/chzzk/chzzklogo_Combi(White).png' : '/icons/chzzk/chzzklogo_Combi(Black).png'}
+                  alt="CHZZK"
+                  className="h-4 object-contain shrink-0"
+                />
               )}
               {p.id === 'YOUTUBE' && (
                 <img src="/icons/youtube_icon.png" alt="YouTube" className="w-3.5 h-3.5 object-contain" />

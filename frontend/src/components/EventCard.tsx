@@ -39,19 +39,24 @@ export function EventCard({
     <div className="bg-white rounded-[8px] p-5 border border-[#D8D8D8] shadow-layered-level2 flex flex-col justify-between hover:border-[#080808] transition-all">
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span
-            className={`eyebrow-uppercase text-[10px] font-medium px-2.5 py-0.5 rounded-[4px] uppercase tracking-[1px] flex items-center gap-1.5 ${getPlatformBadgeStyle(
-              primaryPlatform
-            )}`}
-          >
-            {primaryPlatform === 'CHZZK' && (
-              <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
-            )}
-            {primaryPlatform === 'YOUTUBE' && (
-              <img src="/icons/youtube_icon.png" alt="YouTube" className="w-4 h-4 object-contain shrink-0" />
-            )}
-            <span>{primaryPlatform}</span>
-          </span>
+          {primaryPlatform === 'CHZZK' ? (
+            <img
+              src="/icons/chzzk/chzzklogo_Combi(Black).png"
+              alt="치지직 CHZZK"
+              className="h-5.5 object-contain shrink-0"
+            />
+          ) : (
+            <span
+              className={`eyebrow-uppercase text-[10px] font-medium px-2.5 py-0.5 rounded-[4px] uppercase tracking-[1px] flex items-center gap-1.5 ${getPlatformBadgeStyle(
+                primaryPlatform
+              )}`}
+            >
+              {primaryPlatform === 'YOUTUBE' && (
+                <img src="/icons/youtube_icon.png" alt="YouTube" className="w-4 h-4 object-contain shrink-0" />
+              )}
+              <span>{primaryPlatform}</span>
+            </span>
+          )}
 
           <div className="flex items-center gap-1.5">
             {isLive ? (

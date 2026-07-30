@@ -99,25 +99,22 @@ export function ScheduleInspectorPanel({
                       <span className="text-sm font-extrabold text-[#0F172A] truncate">
                         {evt.creator.displayName}
                       </span>
-                      <span
-                        className={`text-[11px] font-extrabold px-2.5 py-1 rounded-[4px] flex items-center gap-1.5 shrink-0 ${
-                          primaryLink?.platform === 'CHZZK'
-                            ? 'bg-[#00FFA3] text-[#000000]'
-                            : primaryLink?.platform === 'YOUTUBE'
-                            ? 'bg-[#FF0000] text-white'
-                            : primaryLink?.platform === 'SOOP'
-                            ? 'bg-[#FF6B00] text-white'
-                            : 'bg-[#0F172A] text-white'
-                        }`}
-                      >
-                        {primaryLink?.platform === 'CHZZK' && (
-                          <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
-                        )}
-                        {primaryLink?.platform === 'YOUTUBE' && (
+                      {primaryLink?.platform === 'CHZZK' ? (
+                        <img
+                          src="/icons/chzzk/chzzklogo_Combi(Black).png"
+                          alt="치지직 CHZZK"
+                          className="h-5.5 object-contain shrink-0"
+                        />
+                      ) : primaryLink?.platform === 'YOUTUBE' ? (
+                        <span className="text-[11px] font-extrabold px-2.5 py-1 rounded-[4px] bg-[#FF0000] text-white flex items-center gap-1.5 shrink-0">
                           <img src="/icons/youtube_icon.png" alt="YouTube" className="w-4 h-4 object-contain shrink-0" />
-                        )}
-                        <span>{primaryLink?.platform}</span>
-                      </span>
+                          <span>YouTube</span>
+                        </span>
+                      ) : (
+                        <span className="text-[11px] font-extrabold px-2.5 py-1 rounded-[4px] bg-[#0F172A] text-white flex items-center gap-1.5 shrink-0">
+                          <span>{primaryLink?.platform}</span>
+                        </span>
+                      )}
                       {/* 개인세 표시는 제외하고 기업/에이전시일 때만 노출 */}
                       {!isIndie && evt.creator.agency && (
                         <span className="text-[10px] font-semibold px-2 py-0.5 rounded-[4px] bg-[#F1F5F9] text-[#475569] border border-[#CBD5E1]">
