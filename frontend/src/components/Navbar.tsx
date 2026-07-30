@@ -46,20 +46,7 @@ export function Navbar({
         {/* Left: Brand Logo & Left-aligned Nav Links */}
         <div className="flex items-center gap-6 sm:gap-8 h-full">
           <div className="flex items-center cursor-pointer py-1" onClick={() => setActiveNav('schedule')}>
-            <img src="/favicon.svg" alt="VDébut Symbol" className="w-8 h-8 mr-2 drop-shadow-xs" />
-            <div className="flex flex-col justify-center">
-              <div className="flex items-center font-extrabold text-xl tracking-tight text-[#0F172A] font-['Sora',sans-serif] leading-none">
-                V<span className="text-[#0F172A]">D</span>
-                <span className="relative text-[#0F172A]">
-                  e
-                  <span className="absolute -top-1.5 left-1/2 -translate-x-1/2 text-[#FF5C8A] text-xs">✦</span>
-                </span>
-                <span className="text-[#0F172A]">but</span>
-              </div>
-              <span className="text-[9px] font-bold tracking-[0.2em] text-[#64748B] font-['Sora',sans-serif] mt-0.5 uppercase">
-                VTuber Debut Calendar
-              </span>
-            </div>
+            <img src="/logo.png" alt="VDébut Logo" className="h-9 w-auto object-contain" />
           </div>
 
           {/* 좌측 로고 옆으로 이동한 데뷔 일정 탭 (언어 변경 시 밀림 현상 방지) */}
