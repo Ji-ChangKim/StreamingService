@@ -56,9 +56,8 @@ export function App() {
       <main className="flex-grow max-w-[1280px] w-full mx-auto px-4 sm:px-6">
         {/* Hero Section */}
         <HeroHeader
-          totalDebutsThisMonth={filteredEvents.length}
-          todayLiveCount={0}
-          agencyDebutCount={1}
+          allEvents={events}
+          selectedTimezone={selectedTimezone}
         />
 
         {/* Main Monthly Calendar Grid Section */}
