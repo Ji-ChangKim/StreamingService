@@ -37,6 +37,10 @@ export function formatTimeOnly(utcIso: string, timezone: string): string {
   }
 }
 
+export function formatTimeInTimezone(utcIso: string, timezone: string): string {
+  return formatTimeOnly(utcIso, timezone);
+}
+
 /**
  * 이벤트 타겟 시각까지의 남은 시/분/초를 계산하는 단일 기능 함수
  */
