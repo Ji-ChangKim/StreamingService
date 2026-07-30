@@ -10,32 +10,32 @@ export interface SeoMetadata {
 
 export const SEO_DATA: Record<Language, SeoMetadata> = {
   ko: {
-    title: '버튜버 데뷔 일정 캘린더 | V-DEBUT - 치지직·SOOP·유튜브 버츄얼 스트리머 데뷔 방송 일정',
-    description: '전 세계 다양한 VTuber(버츄얼 스트리머)의 데뷔 일정을 내 시간대에 맞춰 한눈에 확인하세요! 치지직·SOOP·유튜브 신입 버튜버 라이브 일정 집계 중.',
-    keywords: '버튜버, VTuber, 데뷔 일정, 치지직, SOOP, 아프리카TV, 유튜브, 버츄얼 스트리머, 이적, 캘린더, V-DEBUT',
-    ogTitle: 'V-DEBUT | 글로벌 버튜버 데뷔 일정 캘린더',
-    ogDescription: '치지직·SOOP·유튜브 신입 버튜버 및 이적 스트리머의 데뷔 일정을 내 타임존 시각으로 한눈에 확인하세요!'
+    title: 'VDébut | 버튜버 데뷔 캘린더 - 버츄얼 스트리머 첫 무대 방송 일정',
+    description: '새로운 버튜버의 첫 무대를 가장 먼저 만나보세요. 치지직·SOOP·유튜브 신입 버튜버 데뷔 일정을 실시간 통합 제공합니다.',
+    keywords: 'VDébut, 버튜버, VTuber, 데뷔 캘린더, 치지직, SOOP, 아프리카TV, 유튜브, 버츄얼 스트리머, 이적, 캘린더',
+    ogTitle: 'VDébut | 버튜버 데뷔 캘린더',
+    ogDescription: '새로운 버튜버의 첫 무대를 가장 먼저 만나보세요! 치지직·SOOP·유튜브 신입 버튜버 라이브 일정 집계 중.'
   },
   ja: {
-    title: 'VTuber デビュー スケジュール カレンダー | V-DEBUT - 初配信・移籍・ライブ日程',
-    description: '世界中のVTuber(バーチャルYouTuber)のデビュー・初配信・移籍日程をあなたのタイムゾーンに合わせて visual に確認！YouTube・CHZZK・SOOP 対応。',
-    keywords: 'VTuber, デビュー, 初配信, スケジュール, カレンダー, バーチャルYouTuber, 移籍, YouTube, CHZZK, SOOP, V-DEBUT',
-    ogTitle: 'V-DEBUT | グローバル VTuber デビューカレンダー',
-    ogDescription: 'YouTube・CHZZK・SOOPの新人VTuber初配信 및 移籍日程をローカルタイムゾーンで一目でチェック！'
+    title: 'VDébut | VTuber デビューカレンダー - 初配信・移籍・ライブ日程',
+    description: '新しいVTuberの初舞台を一番最初にチェックしよう。世界中のVTuber(YouTube・CHZZK・SOOP)のデビュー日程をタイムゾーンに合わせて提供。',
+    keywords: 'VDébut, VTuber, デビュー, 初配信, スケジュール, カレンダー, バーチャルYouTuber, 移籍, YouTube, CHZZK, SOOP',
+    ogTitle: 'VDébut | グローバル VTuber デビューカレンダー',
+    ogDescription: '新しいVTuberの初舞台を一番最初にチェックしよう！YouTube・CHZZK・SOOPの新人VTuber初配信日程を一目でチェック。'
   },
   en: {
-    title: 'VTuber Debut Calendar | V-DEBUT - Global VTuber Debut & Transfer Schedule',
-    description: 'Track upcoming VTuber debuts, first streams, and platform transfers worldwide in your local timezone. Supports YouTube, CHZZK, and SOOP!',
-    keywords: 'VTuber, Debut Calendar, First Stream, Virtual YouTuber, Schedule, YouTube, CHZZK, SOOP, V-DEBUT',
-    ogTitle: 'V-DEBUT | Global VTuber Debut Schedule Calendar',
-    ogDescription: 'Never miss a VTuber first stream! Check upcoming debuts worldwide converted into your local timezone.'
+    title: 'VDébut | VTuber Debut Calendar - Every debut deserves an audience',
+    description: 'Every debut deserves an audience. Track upcoming VTuber debuts, first streams, and platform transfers worldwide in your local timezone.',
+    keywords: 'VDébut, VTuber, Debut Calendar, First Stream, Virtual YouTuber, Schedule, YouTube, CHZZK, SOOP',
+    ogTitle: 'VDébut | Global VTuber Debut Schedule Calendar',
+    ogDescription: 'Every debut deserves an audience. Check upcoming debuts worldwide converted into your local timezone.'
   }
 };
 
 export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
   ko: {
-    heroTitle: '세상에 처음 발을 내딛는 버튜버들의 순간',
-    heroSubtitle: '전 세계 VTuber의 데뷔 일정을 내 시간대에 맞춰 한눈에 확인하세요.',
+    heroTitle: '새로운 버튜버의 첫 무대를 가장 먼저 만나보세요.',
+    heroSubtitle: '전 세계 다양한 VTuber의 데뷔 일정을 내 시간대에 맞춰 한눈에 확인하세요.',
     scheduleTab: '데뷔 일정',
     submitButton: '데뷔 일정 등록',
     editButton: '수정',
@@ -53,7 +53,7 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     copyright: '© 2026 GameTPS. All rights reserved.'
   },
   ja: {
-    heroTitle: '世界へ初めて一歩を踏み出すVTuberたちの瞬間',
+    heroTitle: '新しいVTuberの初舞台を一番最初にチェックしよう。',
     heroSubtitle: '世界中のVTuberのデビュー日程を、あなたのタイムゾーンに合わせて一目で確認しましょう。',
     scheduleTab: 'デビュー日程',
     submitButton: 'デビュー日程を登録',
@@ -68,11 +68,11 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     allPlatforms: '全プラットフォーム',
     forCreators: 'FOR NEW CREATORS',
     bannerTitle: 'まもなくデビュー予定ですか？',
-    bannerDesc: '日時、配信プラットフォーム、告知リンクを登録すると掲載されます。',
+    bannerDesc: '日時、配信プラットフォーム、告知リンクを登録すると掲載されます.',
     copyright: '© 2026 GameTPS. All rights reserved.'
   },
   en: {
-    heroTitle: 'The Moment VTubers Step Into the World',
+    heroTitle: 'Every debut deserves an audience.',
     heroSubtitle: 'Check global VTuber debut schedules at a glance, aligned to your timezone.',
     scheduleTab: 'Debut Schedule',
     submitButton: 'Register Debut',
