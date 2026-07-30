@@ -109,16 +109,7 @@ export function CalendarWeekGrid({
                   >
                     {matchingEvents.map((evt) => {
                       const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
-                      const platformDot =
-                        primaryLink?.platform === 'CHZZK'
-                          ? '🟢'
-                          : primaryLink?.platform === 'SOOP'
-                          ? '🔵'
-                          : primaryLink?.platform === 'YOUTUBE'
-                          ? '🔴'
-                          : '🟣';
                       const formattedTime = formatTimeInTimezone(evt.startAtUtc, selectedTimezone);
-
                       return (
                         <div
                           key={evt.id}
@@ -126,7 +117,15 @@ export function CalendarWeekGrid({
                         >
                           <div className="flex items-center justify-between text-[10px] font-bold">
                             <span className="text-[#38BDF8]">{formattedTime}</span>
-                            <span>{platformDot}</span>
+                            {primaryLink?.platform === 'CHZZK' && (
+                              <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
+                            )}
+                            {primaryLink?.platform === 'YOUTUBE' && (
+                              <img src="/icons/youtube_icon.png" alt="YouTube" className="w-4 h-4 object-contain shrink-0" />
+                            )}
+                            {primaryLink?.platform === 'SOOP' && (
+                              <span className="text-[9px] shrink-0">🔵</span>
+                            )}
                           </div>
                           <div className="flex items-center gap-1">
                             <img

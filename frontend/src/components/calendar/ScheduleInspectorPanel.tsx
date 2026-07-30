@@ -100,21 +100,16 @@ export function ScheduleInspectorPanel({
                         {evt.creator.displayName}
                       </span>
                       {primaryLink?.platform === 'CHZZK' ? (
-                        <span className="bg-[#00FFA3] text-black font-extrabold text-[11px] px-2.5 py-0.5 rounded-[6px] shadow-2xs border border-[#00E592] flex items-center gap-1.5 shrink-0">
-                          <img
-                            src="/icons/chzzk_icon.png"
-                            alt="치지직 N"
-                            className="w-3.5 h-3.5 object-contain shrink-0"
-                          />
+                        <span className="bg-[#00FFA3] text-[#000000] font-extrabold text-[11px] px-2.5 py-1 rounded-[4px] flex items-center gap-1.5 shrink-0">
+                          <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
                           <span>CHZZK</span>
                         </span>
                       ) : primaryLink?.platform === 'YOUTUBE' ? (
-                        <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-[6px] bg-[#FF0000] text-white flex items-center gap-1.5 shrink-0 shadow-2xs">
-                          <img src="/icons/youtube_icon.png" alt="YouTube" className="w-3.5 h-3.5 object-contain shrink-0" />
-                          <span>YouTube</span>
-                        </span>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <img src="/icons/youtube_icon.png" alt="YouTube" className="h-4 object-contain shrink-0" />
+                        </div>
                       ) : (
-                        <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-[6px] bg-[#0F172A] text-white flex items-center gap-1.5 shrink-0 shadow-2xs">
+                        <span className="text-[11px] font-extrabold px-2.5 py-1 rounded-[4px] bg-[#0F172A] text-white flex items-center gap-1.5 shrink-0">
                           <span>{primaryLink?.platform}</span>
                         </span>
                       )}
