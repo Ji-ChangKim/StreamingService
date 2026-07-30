@@ -34,6 +34,8 @@ export const SEO_DATA: Record<Language, SeoMetadata> = {
 
 export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
   ko: {
+    heroTitle: '세상에 처음 발을 내딛는 버튜버들의 순간',
+    heroSubtitle: '전 세계 VTuber의 데뷔 일정을 내 시간대에 맞춰 한눈에 확인하세요.',
     scheduleTab: '데뷔 일정',
     submitButton: '데뷔 일정 등록',
     editButton: '수정',
@@ -51,8 +53,10 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     copyright: '© 2026 GameTPS. All rights reserved.'
   },
   ja: {
+    heroTitle: '世界へ初めて一歩を踏み出すVTuberたちの瞬間',
+    heroSubtitle: '世界中のVTuberのデビュー日程を、あなたのタイムゾーンに合わせて一目で確認しましょう。',
     scheduleTab: 'デビュー日程',
-    submitButton: 'デビュー日程を registered',
+    submitButton: 'デビュー日程を登録',
     editButton: '編集',
     liveNow: 'LIVE NOW',
     agency: '所属',
@@ -60,14 +64,16 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     watchStream: '配信を見る',
     saveIcs: 'カレンダー保存',
     tzLabel: 'タイムゾーン',
-    searchPlaceholder: 'VTuber名、プラットフォーム、事務所を search...',
+    searchPlaceholder: 'VTuber名、プラットフォーム、事務所を検索...',
     allPlatforms: '全プラットフォーム',
     forCreators: 'FOR NEW CREATORS',
     bannerTitle: 'まもなくデビュー予定ですか？',
-    bannerDesc: '日時、配信プラットフォーム、告知リンクを registered すると掲載されます。',
+    bannerDesc: '日時、配信プラットフォーム、告知リンクを登録すると掲載されます。',
     copyright: '© 2026 GameTPS. All rights reserved.'
   },
   en: {
+    heroTitle: 'The Moment VTubers Step Into the World',
+    heroSubtitle: 'Check global VTuber debut schedules at a glance, aligned to your timezone.',
     scheduleTab: 'Debut Schedule',
     submitButton: 'Register Debut',
     editButton: 'Edit',

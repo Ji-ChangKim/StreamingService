@@ -117,6 +117,7 @@ export function App() {
         <HeroHeader
           allEvents={events}
           selectedTimezone={selectedTimezone}
+          currentLang={currentLang}
         />
 
         {/* Main Monthly Calendar Grid Section */}

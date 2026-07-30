@@ -1,15 +1,19 @@
 import { DebutEvent } from '../types';
 import { getEventDateKey } from '../utils/calendarUtils';
+import { Language, UI_TRANSLATIONS } from '../utils/i18n';
 
 interface HeroHeaderProps {
   allEvents: DebutEvent[];
   selectedTimezone: string;
+  currentLang: Language;
 }
 
 export function HeroHeader({
   allEvents = [],
   selectedTimezone,
+  currentLang,
 }: HeroHeaderProps) {
+  const t = UI_TRANSLATIONS[currentLang];
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonthNum = now.getMonth() + 1; // 1 ~ 12
@@ -71,13 +75,13 @@ export function HeroHeader({
 
   return (
     <div className="py-6 sm:py-8 flex flex-col items-center justify-center text-center space-y-6 max-w-4xl mx-auto">
-      {/* 1. 히어로 타이틀 & 설명글 (가운데 정렬) */}
+      {/* 1. 히어로 타이틀 & 설명글 (다국어 바인딩 적용) */}
       <div className="space-y-2">
         <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0F172A] tracking-tight font-['Outfit']">
-          이번 달, 새롭게 시작하는 <span className="text-[#2563EB]">목소리들을 만나보세요.</span>
+          {t.heroTitle || '세상에 처음 발을 내딛는 버튜버들의 순간'}
         </h1>
         <h3 className="text-xs sm:text-sm text-[#64748B] font-medium leading-relaxed max-w-2xl mx-auto">
-          전 세계 다양한 VTuber의 데뷔 일정을 내 시간대에 맞춰 한눈에 확인합니다.
+          {t.heroSubtitle || '전 세계 VTuber의 데뷔 일정을 내 시간대에 맞춰 한눈에 확인하세요.'}
         </h3>
       </div>
 
