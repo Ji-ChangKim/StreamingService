@@ -50,7 +50,7 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     forCreators: 'FOR NEW CREATORS',
     bannerTitle: '곧 데뷔를 준비하고 있나요?',
     bannerDesc: '날짜, 방송 플랫폼, 공지 링크를 등록하면 검토 후 소개됩니다.',
-    copyright: '© 2026 GameTPS. All rights reserved.'
+    copyright: '© 2026 VDebut. All rights reserved.'
   },
   ja: {
     heroTitle: '新しいVTuberの初舞台を一番最初にチェックしよう。',
@@ -69,7 +69,7 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     forCreators: 'FOR NEW CREATORS',
     bannerTitle: 'まもなくデビュー予定ですか？',
     bannerDesc: '日時、配信プラットフォーム、告知リンクを登録すると掲載されます.',
-    copyright: '© 2026 GameTPS. All rights reserved.'
+    copyright: '© 2026 VDebut. All rights reserved.'
   },
   en: {
     heroTitle: 'Every debut deserves an audience.',
@@ -88,6 +88,6 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     forCreators: 'FOR NEW CREATORS',
     bannerTitle: 'Preparing for your debut?',
     bannerDesc: 'Submit your debut date, platform, and link to be featured on our calendar.',
-    copyright: '© 2026 GameTPS. All rights reserved.'
+    copyright: '© 2026 VDebut. All rights reserved.'
   }
 };

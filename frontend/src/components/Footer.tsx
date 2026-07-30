@@ -9,7 +9,7 @@ export function Footer() {
         </div>
 
         <div className="text-[11px] font-medium text-[#64748B]">
-          © 2026 GameTPS. All rights reserved.
+          © 2026 VDebut. All rights reserved.
         </div>
       </div>
     </footer>
