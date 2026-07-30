@@ -51,13 +51,18 @@ export function FilterBar({
                 />
               )}
               {p.id === 'YOUTUBE' && (
-                <img src="/icons/logo_youtube.svg" alt="YouTube" className="h-4.5 w-auto object-contain shrink-0" />
-              )}
-              {p.id === 'SOOP' && (
-                <img src="/icons/logo_soop.svg" alt="SOOP" className="h-4.5 w-auto object-contain shrink-0" />
+                <img
+                  src={isActive ? '/icons/youtube/YouTube_Logo/Digital/01 Full Color/yt_logo_fullcolor_white_digital.png' : '/icons/youtube/YouTube_Logo/Digital/01 Full Color/yt_logo_fullcolor_almostblack_digital.png'}
+                  alt="YouTube"
+                  className="h-4.5 w-auto object-contain shrink-0"
+                />
               )}
               {p.id === 'TWITCH' && (
-                <img src="/icons/logo_twitch.svg" alt="Twitch" className="h-4.5 w-auto object-contain shrink-0" />
+                <img
+                  src={isActive ? '/icons/Twitch Logos/01. Twitch Wordmark/02. Flat Wordmark/04. White/twitch_wordmark_flat_white.png' : '/icons/Twitch Logos/01. Twitch Wordmark/02. Flat Wordmark/01. Twitch Purple/twitch_wordmark_flat_purple.png'}
+                  alt="Twitch"
+                  className="h-4.5 w-auto object-contain shrink-0"
+                />
               )}
               <span>{p.label}</span>
             </button>
