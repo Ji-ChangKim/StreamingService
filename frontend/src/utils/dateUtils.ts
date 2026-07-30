@@ -3,9 +3,14 @@ import { DebutEvent } from '../types';
 /**
  * UTC 시각을 사용자가 선택한 타임존의 로컬 시각 문자열로 변환하는 단일 기능 함수
  */
+function safeDate(isoStr: string): Date {
+  const normalized = isoStr.includes('T') ? isoStr : isoStr.trim().replace(' ', 'T') + 'Z';
+  return new Date(normalized);
+}
+
 export function formatLocalTime(utcIso: string, timezone: string): string {
   try {
-    const date = new Date(utcIso);
+    const date = safeDate(utcIso);
     return new Intl.DateTimeFormat('ko-KR', {
       timeZone: timezone,
       month: 'long',
@@ -25,7 +30,7 @@ export function formatLocalTime(utcIso: string, timezone: string): string {
  */
 export function formatTimeOnly(utcIso: string, timezone: string): string {
   try {
-    const date = new Date(utcIso);
+    const date = safeDate(utcIso);
     return new Intl.DateTimeFormat('ko-KR', {
       timeZone: timezone,
       hour: '2-digit',

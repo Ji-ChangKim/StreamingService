@@ -208,3 +208,7 @@ playground.xcworkspace
 *.moved-aside
 *.xcuserstate
 *.xcscmblueprint
+
+# Wrangler
+.wrangler/
+

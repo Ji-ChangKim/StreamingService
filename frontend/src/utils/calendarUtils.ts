@@ -34,7 +34,13 @@ export function getCalendarGridCells(year: number, month: number): CalendarCell[
  */
 export function getEventDateKey(utcString: string, timezone: string): string {
   try {
-    const d = new Date(utcString);
+    const normalizedIso = utcString.includes('T')
+      ? utcString
+      : utcString.trim().replace(' ', 'T') + 'Z';
+    const d = new Date(normalizedIso);
+    if (isNaN(d.getTime())) {
+      throw new Error('Invalid Date');
+    }
     const formatter = new Intl.DateTimeFormat('en-CA', {
       timeZone: timezone,
       year: 'numeric',
@@ -43,7 +49,8 @@ export function getEventDateKey(utcString: string, timezone: string): string {
     });
     return formatter.format(d);
   } catch {
-    return utcString.split('T')[0];
+    const rawDatePart = utcString.trim().split(' ')[0].split('T')[0];
+    return rawDatePart;
   }
 }
 
