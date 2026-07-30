@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { getAssetFromKV, NotFoundError } from '@cloudflare/kv-asset-handler';
+import { getAssetFromKV, serveSinglePageApp } from '@cloudflare/kv-asset-handler';
 // @ts-ignore
 import manifestJSON from '__STATIC_CONTENT_MANIFEST';
 import { fetchEventsFromD1, insertEventToD1, updateEventInD1, MOCK_EVENTS } from './services/eventDbService';
@@ -137,25 +137,11 @@ app.all('*', async (c) => {
       {
         ASSET_NAMESPACE: c.env.__STATIC_CONTENT,
         ASSET_MANIFEST: assetManifest,
+        mapRequestToAsset: serveSinglePageApp,
       }
     );
-  } catch (e) {
-    try {
-      const url = new URL(c.req.url);
-      const indexRequest = new Request(`${url.origin}/index.html`);
-      return await getAssetFromKV(
-        {
-          request: indexRequest,
-          waitUntil: (promise) => c.executionCtx.waitUntil(promise),
-        },
-        {
-          ASSET_NAMESPACE: c.env.__STATIC_CONTENT,
-          ASSET_MANIFEST: assetManifest,
-        }
-      );
-    } catch (spaErr: any) {
-      return c.text(`SPA Index Serve Error: ${spaErr?.message || 'Asset NotFound'}`, 500);
-    }
+  } catch (e: any) {
+    return c.text(`SPA Asset Error: ${e?.message || 'Asset NotFound'}`, 404);
   }
 });
 
