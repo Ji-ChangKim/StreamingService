@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Sparkles, Send, Globe, CheckCircle2, Search, Edit2, Check, Building2, User } from 'lucide-react';
 import { DebutEvent } from '../types';
 import { getAvatarUrl } from '../utils/avatarUtils';
+import { createDebutEvent } from '../services/eventService';
 
 interface StudioSubmitModalProps {
   isOpen: boolean;
@@ -121,13 +122,13 @@ export function StudioSubmitModal({
     }
   })();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!watchUrl || !displayName) return;
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    try {
       const utcIso = new Date(`${date}T${time}:00`).toISOString();
       const finalAgency = agencyType === 'AGENCY' ? (agencyName || '소속사') : 'Indie';
       const finalAvatar = avatarUrl || getAvatarUrl(displayName);
@@ -152,6 +153,9 @@ export function StudioSubmitModal({
         description: description || `${displayName} 버튜버의 공식 데뷔 방송입니다.`,
       };
 
+      // 백엔드 API (POST /api/v1/events) 호출하여 Cloudflare D1 DB에 보관!
+      await createDebutEvent(newEvt);
+
       onSubmitSuccess(newEvt);
       setIsSubmitting(false);
       setSubmitted(true);
@@ -160,7 +164,10 @@ export function StudioSubmitModal({
         setSubmitted(false);
         onClose();
       }, 1500);
-    }, 800);
+    } catch (err) {
+      console.error('Submit Error:', err);
+      setIsSubmitting(false);
+    }
   };
 
   return (

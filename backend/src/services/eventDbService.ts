@@ -212,17 +212,21 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
  * Cloudflare D1 데이터베이스에 신규 데뷔 이벤트를 추가하는 전용 서비스 함수
  */
 export async function insertEventToD1(db: D1Database, body: any): Promise<string> {
-  const eventId = `evt_${Date.now()}`;
-  const creatorId = `cr_${Date.now()}`;
+  const eventId = body.id || `evt_${Date.now()}`;
+  const creatorId = body.creator?.id || `cr_${Date.now()}`;
   const linkId = `link_${Date.now()}`;
 
-  const displayName = body.displayName || '신입 VTuber';
-  const avatarUrl = body.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
-  const agency = body.agency || '개인세';
+  const displayName = body.creator?.displayName || body.displayName || '신입 VTuber';
+  const avatarUrl = body.creator?.avatarUrl || body.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
+  const agency = body.creator?.agency || body.agency || '개인세';
   const title = body.title || `${displayName} 데뷔 방송`;
   const startAtUtc = body.startAtUtc || new Date(Date.now() + 86400000 * 3).toISOString();
-  const platform = body.platform || 'CHZZK';
-  const watchUrl = body.watchUrl || 'https://chzzk.naver.com';
+  const timezone = body.originalTimezone || 'Asia/Seoul';
+  const description = body.description || `${displayName} 버튜버의 데뷔 방송입니다.`;
+  
+  const primaryLink = (body.links && body.links[0]) ? body.links[0] : null;
+  const platform = primaryLink?.platform || body.platform || 'CHZZK';
+  const watchUrl = primaryLink?.url || body.watchUrl || 'https://chzzk.naver.com';
 
   try {
     await db.prepare(`
@@ -232,8 +236,8 @@ export async function insertEventToD1(db: D1Database, body: any): Promise<string
 
     await db.prepare(`
       INSERT INTO debut_events (id, creator_id, type, title, description, start_at_utc, original_timezone, status, verification_status)
-      VALUES (?, ?, 'FIRST_DEBUT', ?, ?, ?, 'Asia/Seoul', 'PUBLISHED', 'COMMUNITY_SUBMITTED')
-    `).bind(eventId, creatorId, title, body.description || '데뷔 일정입니다.', startAtUtc).run();
+      VALUES (?, ?, 'FIRST_DEBUT', ?, ?, ?, ?, 'PUBLISHED', 'COMMUNITY_SUBMITTED')
+    `).bind(eventId, creatorId, title, description, startAtUtc, timezone).run();
 
     await db.prepare(`
       INSERT INTO debut_event_links (id, event_id, platform, watch_url, is_primary)
