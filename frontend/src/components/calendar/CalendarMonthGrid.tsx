@@ -68,26 +68,19 @@ export function CalendarMonthGrid({
               >
                 {/* Date Header */}
                 <div className="flex items-center justify-between mb-1">
-                  <div className="flex items-center gap-1">
-                    <span
-                      className={`text-xs font-extrabold font-mono px-1.5 py-0.5 rounded-full ${
-                        isToday
-                          ? 'bg-[#2563EB] text-white shadow-2xs font-extrabold'
-                          : idx % 7 === 0
-                          ? 'text-[#EF4444]'
-                          : idx % 7 === 6
-                          ? 'text-[#2563EB]'
-                          : 'text-[#0F172A]'
-                      }`}
-                    >
-                      {cell.dayNumber}
-                    </span>
-                    {isToday && (
-                      <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded-[4px] bg-[#2563EB] text-white shrink-0">
-                        오늘
-                      </span>
-                    )}
-                  </div>
+                  <span
+                    className={`text-xs font-mono font-extrabold flex items-center justify-center ${
+                      isToday
+                        ? 'w-6 h-6 rounded-full bg-[#2563EB] text-white shadow-2xs font-extrabold'
+                        : idx % 7 === 0
+                        ? 'text-[#EF4444] px-1 py-0.5'
+                        : idx % 7 === 6
+                        ? 'text-[#2563EB] px-1 py-0.5'
+                        : 'text-[#0F172A] px-1 py-0.5'
+                    }`}
+                  >
+                    {cell.dayNumber}
+                  </span>
 
                   {dayEvents.length > 0 && (
                     <span className="text-[10px] font-extrabold bg-[#0F172A] text-white px-1.5 py-0.5 rounded-full">
