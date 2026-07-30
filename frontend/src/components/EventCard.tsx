@@ -45,10 +45,10 @@ export function EventCard({
             )}`}
           >
             {primaryPlatform === 'CHZZK' && (
-              <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-3 h-3 object-contain" />
+              <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
             )}
             {primaryPlatform === 'YOUTUBE' && (
-              <img src="/icons/youtube_icon.png" alt="YouTube" className="w-3 h-3 object-contain" />
+              <img src="/icons/youtube_icon.png" alt="YouTube" className="w-4 h-4 object-contain shrink-0" />
             )}
             <span>{primaryPlatform}</span>
           </span>

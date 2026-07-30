@@ -100,7 +100,7 @@ export function ScheduleInspectorPanel({
                         {evt.creator.displayName}
                       </span>
                       <span
-                        className={`text-[10px] font-extrabold px-2 py-0.5 rounded-[4px] flex items-center gap-1.5 shrink-0 ${
+                        className={`text-[11px] font-extrabold px-2.5 py-1 rounded-[4px] flex items-center gap-1.5 shrink-0 ${
                           primaryLink?.platform === 'CHZZK'
                             ? 'bg-[#00FFA3] text-[#000000]'
                             : primaryLink?.platform === 'YOUTUBE'
@@ -111,10 +111,10 @@ export function ScheduleInspectorPanel({
                         }`}
                       >
                         {primaryLink?.platform === 'CHZZK' && (
-                          <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-3.5 h-3.5 object-contain shrink-0" />
+                          <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
                         )}
                         {primaryLink?.platform === 'YOUTUBE' && (
-                          <img src="/icons/youtube_icon.png" alt="YouTube" className="w-3.5 h-3.5 object-contain shrink-0" />
+                          <img src="/icons/youtube_icon.png" alt="YouTube" className="w-4 h-4 object-contain shrink-0" />
                         )}
                         <span>{primaryLink?.platform}</span>
                       </span>

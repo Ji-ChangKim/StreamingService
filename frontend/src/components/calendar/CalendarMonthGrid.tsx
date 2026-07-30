@@ -96,10 +96,10 @@ export function CalendarMonthGrid({
                         className="px-1.5 py-0.5 rounded-[4px] bg-[#F8FAFC] border border-[#CBD5E1] flex items-center gap-1.5 text-[11px] font-bold text-[#0F172A] hover:bg-[#E2E8F0] hover:border-[#2563EB] transition-all cursor-pointer overflow-hidden shadow-2xs"
                       >
                         {platform === 'CHZZK' && (
-                          <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-3.5 h-3.5 object-contain shrink-0" />
+                          <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
                         )}
                         {platform === 'YOUTUBE' && (
-                          <img src="/icons/youtube_icon.png" alt="YouTube" className="w-3.5 h-3.5 object-contain shrink-0" />
+                          <img src="/icons/youtube_icon.png" alt="YouTube" className="w-4 h-4 object-contain shrink-0" />
                         )}
                         {platform === 'SOOP' && (
                           <span className="text-[9px] shrink-0">🔵</span>
