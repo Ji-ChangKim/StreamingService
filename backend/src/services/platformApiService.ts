@@ -108,41 +108,67 @@ export async function fetchChzzkProfile(channelUrlOrId: string): Promise<Platfor
 }
 
 /**
- * 2. SOOP (구 아프리카TV) 외부 API 호출
+ * 2. SOOP (구 아프리카TV) 외부 API 호출 (최신 stapi.afreecatv.com 엔드포인트 적용)
  */
 export async function fetchSoopProfile(userIdOrUrl: string): Promise<PlatformProfileResult> {
   let userId = userIdOrUrl.trim();
   if (userId.startsWith('http://') || userId.startsWith('https://')) {
-    const urlObj = new URL(userId);
-    const segments = urlObj.pathname.split('/').filter(Boolean);
-    userId = segments[segments.length - 1] || '';
-    if (segments[0] === 'station' && segments[1]) {
-      userId = segments[1];
+    try {
+      const urlObj = new URL(userId);
+      const segments = urlObj.pathname.split('/').filter(Boolean);
+      // e.g., /station/memo/a0714/post/166790429 -> ['station', 'memo', 'a0714', 'post', '166790429']
+      // e.g., /station/bboyena -> ['station', 'bboyena']
+      // e.g., /bboyena -> ['bboyena']
+      if (segments.includes('memo')) {
+        const memoIdx = segments.indexOf('memo');
+        if (segments[memoIdx + 1]) {
+          userId = segments[memoIdx + 1];
+        }
+      } else if (segments.includes('station')) {
+        const stationIdx = segments.indexOf('station');
+        if (segments[stationIdx + 1]) {
+          userId = segments[stationIdx + 1];
+        }
+      } else if (segments.length > 0) {
+        userId = segments[segments.length - 1];
+      }
+    } catch {
+      // fallback
     }
   }
 
-  const apiUrl = `https://bjapi.afreecatv.com/api/${userId}/station`;
+  // SOOP (afreecatv) 최신 방송국 API 주소
+  const apiUrl = `https://stapi.afreecatv.com/api/${userId}/station`;
 
   try {
     const response = await fetch(apiUrl, {
-      headers: { 'Accept': 'application/json' }
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      }
     });
 
     if (response.ok) {
-      const data: any = await response.json();
-      if (data.station) {
-        let profileImg = data.station.profile_image || '';
+      const resData: any = await response.json();
+      const data = resData.data || resData;
+      const station = data?.station;
+      const broad = data?.broad;
+
+      if (data || station) {
+        const nick = station?.user_nick || broad?.user_nick || station?.name || userId;
+        let profileImg = data?.profile_image || station?.profile_image || '';
         if (profileImg.startsWith('//')) {
           profileImg = `https:${profileImg}`;
         }
+
         return {
           success: true,
           platform: 'SOOP',
           channelId: userId,
-          creatorName: data.station.user_nick || userId,
+          creatorName: nick,
           profileImageUrl: profileImg,
-          channelUrl: `https://sooplive.co.kr/station/${userId}`,
-          description: data.station.joint_title || data.station.station_name || `${data.station.user_nick || userId}의 공식 SOOP 방송국입니다.`,
+          channelUrl: `https://www.sooplive.com/station/${userId}`,
+          description: station?.joint_title || station?.station_name || `${nick}의 공식 SOOP 방송국입니다.`,
           verified: true
         };
       }
