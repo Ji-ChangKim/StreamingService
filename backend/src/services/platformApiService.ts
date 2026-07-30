@@ -137,16 +137,26 @@ export async function fetchSoopProfile(userIdOrUrl: string): Promise<PlatformPro
     }
   }
 
-  // SOOP (afreecatv) 최신 방송국 API 주소
-  const apiUrl = `https://stapi.afreecatv.com/api/${userId}/station`;
+  // SOOP 최신 방송국 API 주소 (chapi.sooplive.co.kr / chapi.sooplive.com)
+  const primaryApiUrl = `https://chapi.sooplive.co.kr/api/${userId}/station`;
+  const fallbackApiUrl = `https://chapi.sooplive.com/api/${userId}/station`;
 
   try {
-    const response = await fetch(apiUrl, {
+    let response = await fetch(primaryApiUrl, {
       headers: {
         'Accept': 'application/json',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
       }
     });
+
+    if (!response.ok) {
+      response = await fetch(fallbackApiUrl, {
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        }
+      });
+    }
 
     if (response.ok) {
       const resData: any = await response.json();
@@ -154,8 +164,8 @@ export async function fetchSoopProfile(userIdOrUrl: string): Promise<PlatformPro
       const station = data?.station;
       const broad = data?.broad;
 
-      if (data || station) {
-        const nick = station?.user_nick || broad?.user_nick || station?.name || userId;
+      if (data && (station || data.user_nick || data.profile_image)) {
+        const nick = station?.user_nick || broad?.user_nick || station?.name || data.user_nick || userId;
         let profileImg = data?.profile_image || station?.profile_image || '';
         if (profileImg.startsWith('//')) {
           profileImg = `https:${profileImg}`;
