@@ -31,10 +31,10 @@ export function CalendarControlBar({
 
   const platforms = [
     { id: 'ALL', label: '전체 플랫폼', logo: null },
-    { id: 'CHZZK', label: '치지직', logo: '/icons/logo_chzzk.png', height: 'h-[20px]' },
+    { id: 'CHZZK', label: '치지직', logo: '/icons/logo_chzzk.png', height: 'h-[22px]' },
     { id: 'SOOP', label: 'SOOP', logo: null },
-    { id: 'YOUTUBE', label: 'YouTube', logo: '/icons/logo_youtube.png', height: 'h-[18px]' },
-    { id: 'TWITCH', label: 'Twitch', logo: '/icons/logo_twitch.png', height: 'h-[20px]' },
+    { id: 'YOUTUBE', label: 'YouTube', logo: '/icons/logo_youtube.png', height: 'h-[25px]' },
+    { id: 'TWITCH', label: 'Twitch', logo: '/icons/logo_twitch.png', height: 'h-[22px]' },
   ];
 
   const currentPlatform = platforms.find((p) => p.id === selectedPlatform) || platforms[0];
