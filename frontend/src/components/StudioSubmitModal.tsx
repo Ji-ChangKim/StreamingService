@@ -2,18 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { X, Sparkles, Send, Globe, CheckCircle2, Search, Edit2, Check, Building2, User } from 'lucide-react';
 import { DebutEvent } from '../types';
 import { getAvatarUrl } from '../utils/avatarUtils';
-import { createDebutEvent } from '../services/eventService';
+import { createDebutEvent, updateDebutEvent } from '../services/eventService';
 
 interface StudioSubmitModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmitSuccess: (newEvent: DebutEvent) => void;
+  editEvent?: DebutEvent | null;
+  onUpdateSuccess?: (updatedEvent: DebutEvent) => void;
 }
 
 export function StudioSubmitModal({
   isOpen,
   onClose,
   onSubmitSuccess,
+  editEvent,
+  onUpdateSuccess,
 }: StudioSubmitModalProps) {
   const [watchUrl, setWatchUrl] = useState('');
   const [platform, setPlatform] = useState('CHZZK');
@@ -21,7 +25,7 @@ export function StudioSubmitModal({
   const [avatarUrl, setAvatarUrl] = useState('');
   const [isEditingName, setIsEditingName] = useState(false);
   
-  const [date, setDate] = useState('2026-07-29');
+  const [date, setDate] = useState('2026-08-01');
   const [time, setTime] = useState('20:00');
   const [timezone, setTimezone] = useState('Asia/Seoul');
   const [description, setDescription] = useState('');
@@ -30,6 +34,41 @@ export function StudioSubmitModal({
   const [agencyType, setAgencyType] = useState<'INDIE' | 'AGENCY'>('INDIE');
   const [agencyName, setAgencyName] = useState('');
 
+  // editEvent가 주어지면 기존 데이터로 폼 상태 동기화
+  useEffect(() => {
+    if (editEvent) {
+      const primaryLink = editEvent.links.find((l) => l.isPrimary) || editEvent.links[0];
+      setWatchUrl(primaryLink?.url || '');
+      setPlatform(primaryLink?.platform || 'CHZZK');
+      setDisplayName(editEvent.creator.displayName || '');
+      setAvatarUrl(editEvent.creator.avatarUrl || '');
+      setDescription(editEvent.description || '');
+      setTimezone(editEvent.originalTimezone || 'Asia/Seoul');
+
+      if (editEvent.creator.agency && !editEvent.creator.agency.toLowerCase().includes('indie') && editEvent.creator.agency !== '개인세') {
+        setAgencyType('AGENCY');
+        setAgencyName(editEvent.creator.agency);
+      } else {
+        setAgencyType('INDIE');
+        setAgencyName('');
+      }
+
+      try {
+        const d = new Date(editEvent.startAtUtc);
+        if (!isNaN(d.getTime())) {
+          const yyyy = d.getFullYear();
+          const mm = String(d.getMonth() + 1).padStart(2, '0');
+          const dd = String(d.getDate()).padStart(2, '0');
+          const hh = String(d.getHours()).padStart(2, '0');
+          const min = String(d.getMinutes()).padStart(2, '0');
+          setDate(`${yyyy}-${mm}-${dd}`);
+          setTime(`${hh}:${min}`);
+        }
+      } catch {
+        // fallback
+      }
+    }
+  }, [editEvent]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFetchingProfile, setIsFetchingProfile] = useState(false);
   const [fetchMessage, setFetchMessage] = useState('');
@@ -134,30 +173,34 @@ export function StudioSubmitModal({
       const finalAgency = agencyType === 'AGENCY' ? (agencyName || '소속사') : 'Indie';
       const finalAvatar = avatarUrl || getAvatarUrl(displayName);
 
-      const newEvt: DebutEvent = {
-        id: `evt-${Date.now()}`,
+      const targetEvt: DebutEvent = {
+        id: editEvent?.id || `evt-${Date.now()}`,
         title: `${displayName} 데뷔 방송`,
-        type: 'FIRST_DEBUT',
+        type: editEvent?.type || 'FIRST_DEBUT',
         creator: {
-          id: `cr-${Date.now()}`,
+          id: editEvent?.creator.id || `cr-${Date.now()}`,
           displayName,
           avatarUrl: finalAvatar,
           agency: finalAgency,
-          countryCode: 'KR',
-          languages: ['ko'],
+          countryCode: editEvent?.creator.countryCode || 'KR',
+          languages: editEvent?.creator.languages || ['ko'],
         },
         startAtUtc: utcIso,
         originalTimezone: timezone,
         status: 'PUBLISHED',
-        verificationStatus: 'COMMUNITY_SUBMITTED',
+        verificationStatus: editEvent?.verificationStatus || 'COMMUNITY_SUBMITTED',
         links: [{ platform, url: watchUrl, isPrimary: true }],
         description: description || `${displayName} 버튜버의 공식 데뷔 방송입니다.`,
       };
 
-      // 백엔드 API (POST /api/v1/events) 호출하여 Cloudflare D1 DB에 보관!
-      await createDebutEvent(newEvt);
+      if (editEvent) {
+        await updateDebutEvent(editEvent.id, targetEvt);
+        onUpdateSuccess?.(targetEvt);
+      } else {
+        await createDebutEvent(targetEvt);
+        onSubmitSuccess(targetEvt);
+      }
 
-      onSubmitSuccess(newEvt);
       setIsSubmitting(false);
       setSubmitted(true);
 

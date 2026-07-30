@@ -272,3 +272,58 @@ export async function insertEventToD1(db: D1Database, body: any): Promise<string
 
   return eventId;
 }
+
+/**
+ * Cloudflare D1 데이터베이스에서 기존 데뷔 이벤트를 수정/업데이트하는 전용 서비스 함수
+ */
+export async function updateEventInD1(db: D1Database, eventId: string, body: any): Promise<boolean> {
+  try {
+    const displayName = body.creator?.displayName || body.displayName;
+    const avatarUrl = body.creator?.avatarUrl || body.avatarUrl;
+    const agencyName = body.creator?.agency || body.agency;
+    const title = body.title;
+    const startAtUtc = body.startAtUtc;
+    const description = body.description;
+    const primaryLink = (body.links && body.links[0]) ? body.links[0] : null;
+    const platform = primaryLink?.platform || body.platform;
+    const watchUrl = primaryLink?.url || body.watchUrl;
+
+    // 1. 이벤트의 creator_id 가져오기
+    const existingEvent: any = await db.prepare(`SELECT creator_id FROM debut_events WHERE id = ?`).bind(eventId).first();
+    const creatorId = existingEvent?.creator_id;
+
+    if (creatorId && displayName) {
+      await db.prepare(`
+        UPDATE creator_profiles
+        SET display_name = COALESCE(?, display_name),
+            avatar_url = COALESCE(?, avatar_url)
+        WHERE id = ?
+      `).bind(displayName, avatarUrl || null, creatorId).run();
+    }
+
+    // 2. debut_events 업데이트
+    await db.prepare(`
+      UPDATE debut_events
+      SET title = COALESCE(?, title),
+          description = COALESCE(?, description),
+          start_at_utc = COALESCE(?, start_at_utc),
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(title || null, description || null, startAtUtc || null, eventId).run();
+
+    // 3. debut_event_links 업데이트
+    if (platform || watchUrl) {
+      await db.prepare(`
+        UPDATE debut_event_links
+        SET platform = COALESCE(?, platform),
+            watch_url = COALESCE(?, watch_url)
+        WHERE event_id = ?
+      `).bind(platform || null, watchUrl || null, eventId).run();
+    }
+
+    return true;
+  } catch (err) {
+    console.error('D1 Update Error:', err);
+    return false;
+  }
+}

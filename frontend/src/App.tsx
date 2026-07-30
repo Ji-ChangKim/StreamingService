@@ -24,6 +24,7 @@ export function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [events, setEvents] = useState<DebutEvent[]>([]);
   const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
+  const [editingEvent, setEditingEvent] = useState<DebutEvent | null>(null);
 
   useEffect(() => {
     fetchDebutEvents().then(setEvents);
@@ -43,13 +44,33 @@ export function App() {
     setEvents((prev) => [newEvent, ...prev]);
   };
 
+  const handleEditEvent = (evt: DebutEvent) => {
+    setEditingEvent(evt);
+    setShowSubmitModal(true);
+  };
+
+  const handleUpdateEvent = (updatedEvt: DebutEvent) => {
+    setEvents((prev) =>
+      prev.map((e) => (e.id === updatedEvt.id ? updatedEvt : e))
+    );
+    setEditingEvent(null);
+  };
+
+  const handleCloseModal = () => {
+    setShowSubmitModal(false);
+    setEditingEvent(null);
+  };
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-['Inter'] selection:bg-[#2563EB] selection:text-white">
       {/* 1. Header Bar */}
       <Navbar
         activeNav={activeNav}
         setActiveNav={setActiveNav}
-        onOpenSubmitModal={() => setShowSubmitModal(true)}
+        onOpenSubmitModal={() => {
+          setEditingEvent(null);
+          setShowSubmitModal(true);
+        }}
       />
 
       {/* 2. Main Content Container */}
@@ -70,21 +91,30 @@ export function App() {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           onDownloadICS={handleDownloadICS}
-          onOpenSubmitModal={() => setShowSubmitModal(true)}
+          onOpenSubmitModal={() => {
+            setEditingEvent(null);
+            setShowSubmitModal(true);
+          }}
+          onEditEvent={handleEditEvent}
         />
 
         {/* Creator Callout Banner */}
-        <FooterBanner onOpenSubmitModal={() => setShowSubmitModal(true)} />
+        <FooterBanner onOpenSubmitModal={() => {
+          setEditingEvent(null);
+          setShowSubmitModal(true);
+        }} />
       </main>
 
       {/* 3. Footer */}
       <Footer />
 
-      {/* 4. Studio Submit Modal */}
+      {/* 4. Studio Submit & Edit Modal */}
       <StudioSubmitModal
         isOpen={showSubmitModal}
-        onClose={() => setShowSubmitModal(false)}
+        onClose={handleCloseModal}
         onSubmitSuccess={handleAddEvent}
+        editEvent={editingEvent}
+        onUpdateSuccess={handleUpdateEvent}
       />
     </div>
   );

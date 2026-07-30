@@ -18,6 +18,7 @@ interface MonthlyCalendarGridProps {
   setSearchQuery: (q: string) => void;
   onDownloadICS: (event: DebutEvent) => void;
   onOpenSubmitModal?: () => void;
+  onEditEvent?: (event: DebutEvent) => void;
 }
 
 export function MonthlyCalendarGrid({
@@ -27,6 +28,7 @@ export function MonthlyCalendarGrid({
   setSelectedPlatform,
   onDownloadICS,
   onOpenSubmitModal,
+  onEditEvent,
 }: MonthlyCalendarGridProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState<'month' | 'week'>('month');
@@ -123,7 +125,7 @@ export function MonthlyCalendarGrid({
           />
 
           {/* 2. 우측 슬라이드-오버 창 (Slide-over Drawer Modal Window) */}
-          <div className="relative z-10 w-full max-w-[480px] bg-white h-full shadow-2xl flex flex-col p-5 sm:p-6 overflow-y-auto animate-slideLeft border-l border-[#E2E8F0]">
+          <div className="relative z-10 w-full max-w-[480px] bg-white h-full max-h-screen shadow-2xl flex flex-col p-4 sm:p-6 animate-slideLeft border-l border-[#E2E8F0] overflow-hidden">
             <ScheduleInspectorPanel
               selectedDateStr={selectedDateStr}
               events={currentSelectedEvents}
@@ -132,6 +134,7 @@ export function MonthlyCalendarGrid({
               onDownloadICS={onDownloadICS}
               onPreviewAvatar={(url, name) => setPreviewAvatar({ url, name })}
               onClosePanel={() => setSelectedDateStr(null)}
+              onEditEvent={onEditEvent}
             />
           </div>
         </div>

@@ -3,7 +3,7 @@ import { cors } from 'hono/cors';
 import { getAssetFromKV, NotFoundError } from '@cloudflare/kv-asset-handler';
 // @ts-ignore
 import manifestJSON from '__STATIC_CONTENT_MANIFEST';
-import { fetchEventsFromD1, insertEventToD1, MOCK_EVENTS } from './services/eventDbService';
+import { fetchEventsFromD1, insertEventToD1, updateEventInD1, MOCK_EVENTS } from './services/eventDbService';
 import { fetchPlatformProfile } from './services/platformApiService';
 
 type Bindings = {
@@ -88,6 +88,23 @@ app.post('/api/v1/events', async (c) => {
   return c.json({
     success: true,
     message: '데뷔 일정이 데이터베이스에 성공적으로 저장되었습니다.',
+    eventId
+  });
+});
+
+// 3.5 Update Debut Event in D1 DB
+app.put('/api/v1/events/:id', async (c) => {
+  const eventId = c.req.param('id');
+  const body = await c.req.json();
+  let updated = false;
+
+  if (c.env.DB && eventId) {
+    updated = await updateEventInD1(c.env.DB, eventId, body);
+  }
+
+  return c.json({
+    success: updated,
+    message: updated ? '데뷔 일정이 수정되었습니다.' : '수정에 실패했습니다.',
     eventId
   });
 });
