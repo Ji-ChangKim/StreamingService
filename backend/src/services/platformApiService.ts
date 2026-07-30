@@ -199,10 +199,18 @@ export async function fetchSoopProfile(userIdOrUrl: string): Promise<PlatformPro
 }
 
 /**
- * 플랫폼 프로필 통합 파서 (더미 이미지 완전히 제거 ❌)
+ * 플랫폼 프로필 통합 파서 (URL 기반 자동 인식 보완)
  */
 export async function fetchPlatformProfile(platform: string, inputUrl: string): Promise<PlatformProfileResult> {
-  const upper = platform.toUpperCase();
+  const lowerUrl = (inputUrl || '').toLowerCase();
+  let upper = (platform || '').toUpperCase();
+
+  if (lowerUrl.includes('sooplive.com') || lowerUrl.includes('sooplive.co.kr') || lowerUrl.includes('afreecatv.com')) {
+    upper = 'SOOP';
+  } else if (lowerUrl.includes('chzzk.naver.com')) {
+    upper = 'CHZZK';
+  }
+
   if (upper === 'CHZZK') {
     return await fetchChzzkProfile(inputUrl);
   } else if (upper === 'SOOP' || upper === 'AFREECA') {
@@ -211,12 +219,12 @@ export async function fetchPlatformProfile(platform: string, inputUrl: string): 
 
   return {
     success: false,
-    platform: upper as any,
+    platform: (upper || 'CHZZK') as any,
     channelId: inputUrl,
     creatorName: '',
     profileImageUrl: '',
     channelUrl: inputUrl,
     verified: false,
-    error: '지원되지 않는 플랫폼입니다.'
+    error: '지원되지 않는 플랫폼이거나 방송국 주소가 바르지 않습니다.'
   };
 }

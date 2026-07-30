@@ -80,7 +80,7 @@ export function StudioSubmitModal({
     if (!url || url.trim().length === 0) return '';
     const lower = url.toLowerCase();
     if (lower.includes('chzzk.naver.com')) return 'CHZZK';
-    if (lower.includes('afreecatv.com') || lower.includes('sooplive.co.kr')) return 'SOOP';
+    if (lower.includes('afreecatv.com') || lower.includes('sooplive.co.kr') || lower.includes('sooplive.com')) return 'SOOP';
     if (lower.includes('youtube.com') || lower.includes('youtu.be')) return 'YOUTUBE';
     if (lower.includes('twitch.tv')) return 'TWITCH';
     return '';
