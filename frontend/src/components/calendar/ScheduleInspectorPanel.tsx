@@ -99,12 +99,12 @@ export function ScheduleInspectorPanel({
                       <span className="text-sm font-extrabold text-[#0F172A] truncate">
                         {evt.creator.displayName}
                       </span>
-                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-[4px] bg-[#0F172A] text-white flex items-center gap-1">
+                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-[4px] bg-[#0F172A] text-white flex items-center gap-1.5 shrink-0">
                         {primaryLink?.platform === 'CHZZK' && (
-                          <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-3 h-3 object-contain" />
+                          <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-3.5 h-3.5 object-contain shrink-0" />
                         )}
                         {primaryLink?.platform === 'YOUTUBE' && (
-                          <img src="/icons/youtube_icon.png" alt="YouTube" className="w-3 h-3 object-contain" />
+                          <img src="/icons/youtube_icon.png" alt="YouTube" className="w-3.5 h-3.5 object-contain shrink-0" />
                         )}
                         <span>{primaryLink?.platform}</span>
                       </span>

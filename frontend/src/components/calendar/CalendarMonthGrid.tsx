@@ -87,22 +87,26 @@ export function CalendarMonthGrid({
                 <div className="space-y-1 flex-grow justify-start">
                   {dayEvents.slice(0, 2).map((evt) => {
                     const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
-                    const platformDot =
-                      primaryLink?.platform === 'CHZZK'
-                        ? '🟢'
-                        : primaryLink?.platform === 'SOOP'
-                        ? '🔵'
-                        : primaryLink?.platform === 'YOUTUBE'
-                        ? '🔴'
-                        : '🟣';
+                    const platform = primaryLink?.platform;
                     const startTime = formatTimeInTimezone(evt.startAtUtc, selectedTimezone);
 
                     return (
                       <div
                         key={evt.id}
-                        className="px-1.5 py-0.5 rounded-[4px] bg-[#F8FAFC] border border-[#CBD5E1] flex items-center gap-1 text-[11px] font-bold text-[#0F172A] hover:bg-[#E2E8F0] hover:border-[#2563EB] transition-all cursor-pointer overflow-hidden shadow-2xs"
+                        className="px-1.5 py-0.5 rounded-[4px] bg-[#F8FAFC] border border-[#CBD5E1] flex items-center gap-1.5 text-[11px] font-bold text-[#0F172A] hover:bg-[#E2E8F0] hover:border-[#2563EB] transition-all cursor-pointer overflow-hidden shadow-2xs"
                       >
-                        <span className="text-[9px] shrink-0">{platformDot}</span>
+                        {platform === 'CHZZK' && (
+                          <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-3.5 h-3.5 object-contain shrink-0" />
+                        )}
+                        {platform === 'YOUTUBE' && (
+                          <img src="/icons/youtube_icon.png" alt="YouTube" className="w-3.5 h-3.5 object-contain shrink-0" />
+                        )}
+                        {platform === 'SOOP' && (
+                          <span className="text-[9px] shrink-0">🔵</span>
+                        )}
+                        {platform !== 'CHZZK' && platform !== 'YOUTUBE' && platform !== 'SOOP' && (
+                          <span className="text-[9px] shrink-0">🟣</span>
+                        )}
                         <span className="text-[10px] font-mono font-extrabold text-[#2563EB] shrink-0">{startTime}</span>
                         <span className="truncate text-[10px] font-bold text-[#0F172A]">{evt.creator.displayName}</span>
                       </div>
