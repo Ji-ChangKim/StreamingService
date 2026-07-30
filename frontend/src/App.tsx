@@ -9,9 +9,26 @@ import { DebutEvent } from './types';
 import { fetchDebutEvents } from './services/eventService';
 import { generateICSContent, triggerFileDownload } from './utils/dateUtils';
 import { filterEventsByPlatform, filterEventsByQuery } from './utils/eventUtils';
+import { Language, SEO_DATA } from './utils/i18n';
 
 export function App() {
   const [activeNav, setActiveNav] = useState<string>('schedule');
+  const [currentLang, setCurrentLang] = useState<Language>(() => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const langParam = urlParams.get('lang')?.toLowerCase();
+      if (langParam === 'ja' || langParam === 'en' || langParam === 'ko') {
+        return langParam as Language;
+      }
+      const navLang = navigator.language.toLowerCase();
+      if (navLang.startsWith('ja')) return 'ja';
+      if (navLang.startsWith('en')) return 'en';
+      return 'ko';
+    } catch {
+      return 'ko';
+    }
+  });
+
   const [selectedTimezone, setSelectedTimezone] = useState<string>(() => {
     try {
       return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Seoul';
@@ -25,6 +42,25 @@ export function App() {
   const [events, setEvents] = useState<DebutEvent[]>([]);
   const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
   const [editingEvent, setEditingEvent] = useState<DebutEvent | null>(null);
+
+  // 언어 변경 시 SEO Meta 태그 및 html lang 속성 동적 업데이트
+  useEffect(() => {
+    const seo = SEO_DATA[currentLang];
+    document.title = seo.title;
+    document.documentElement.lang = currentLang;
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', seo.description);
+
+    const metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (metaKeywords) metaKeywords.setAttribute('content', seo.keywords);
+
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', seo.ogTitle);
+
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', seo.ogDescription);
+  }, [currentLang]);
 
   useEffect(() => {
     fetchDebutEvents().then(setEvents);
@@ -67,6 +103,8 @@ export function App() {
       <Navbar
         activeNav={activeNav}
         setActiveNav={setActiveNav}
+        currentLang={currentLang}
+        onLanguageChange={setCurrentLang}
         onOpenSubmitModal={() => {
           setEditingEvent(null);
           setShowSubmitModal(true);
