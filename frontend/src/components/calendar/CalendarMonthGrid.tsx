@@ -106,13 +106,11 @@ export function CalendarMonthGrid({
                     return (
                       <div
                         key={evt.id}
-                        className="px-1.5 py-1 rounded-[5px] bg-[#F1F5F9] border border-[#CBD5E1] flex items-center justify-between text-xs font-bold text-[#0F172A] hover:bg-[#E2E8F0] transition-colors"
+                        className="px-2 py-1 rounded-[6px] bg-[#F1F5F9] border border-[#CBD5E1] flex items-center gap-1.5 text-xs font-bold text-[#0F172A] hover:bg-[#E2E8F0] hover:border-[#2563EB] transition-all cursor-pointer overflow-hidden shadow-2xs"
                       >
-                        <span className="text-[10px] font-mono text-[#2563EB] font-bold">{startTime}</span>
-                        <div className="flex items-center gap-1 truncate max-w-[70%]">
-                          <span className="text-[9px]">{platformDot}</span>
-                          <span className="truncate">{evt.creator.displayName}</span>
-                        </div>
+                        <span className="text-[10px] shrink-0">{platformDot}</span>
+                        <span className="text-[10px] font-mono font-extrabold text-[#2563EB] shrink-0">{startTime}</span>
+                        <span className="truncate text-[11px] font-bold text-[#0F172A]">{evt.creator.displayName}</span>
                       </div>
                     );
                   })}
