@@ -100,6 +100,8 @@ export function StudioSubmitModal({
       );
       const data = await res.json();
 
+      const platformLabel = targetPlatform === 'SOOP' ? 'SOOP' : targetPlatform === 'CHZZK' ? '치지직' : targetPlatform === 'YOUTUBE' ? '유튜브' : '트위치';
+
       if (data.success && data.creatorName) {
         setDisplayName(data.creatorName);
         const img = data.profileImageUrl || getAvatarUrl(data.creatorName);
@@ -108,19 +110,26 @@ export function StudioSubmitModal({
         if (data.description) {
           setDescription(data.description);
         } else {
-          setDescription(`${data.creatorName} 버튜버의 공식 데뷔 방송입니다. 많은 관심 부탁드립니다!`);
+          setDescription(`${data.creatorName} 버튜버의 공식 ${platformLabel} 방송국입니다. 많은 관심 부탁드립니다!`);
         }
 
         setIsFetchedSuccess(true);
         setIsEditingName(false);
-        setFetchMessage(`✅ [${targetPlatform}] 프로필 연동 완료!`);
+        setFetchMessage(`✅ [${platformLabel}] 프로필 연동 완료!`);
       } else {
         setIsFetchedSuccess(false);
-        setFetchMessage(`⚠️ ${data.error || '프로필 정보를 자동 연결할 수 없습니다. 수동 입력해 주세요.'}`);
+        setDisplayName('');
+        setAvatarUrl('');
+        setDescription(`신입 버튜버의 공식 ${platformLabel} 방송국입니다.`);
+        setFetchMessage(`⚠️ ${data.error || '방송국 정보를 찾을 수 없습니다. 활동명을 직접 입력해 주세요.'}`);
       }
     } catch (err) {
       setIsFetchedSuccess(false);
-      setFetchMessage('⚠️ 연동 오류가 발생하여 기본 정보 입력 모드로 전환됩니다.');
+      setDisplayName('');
+      setAvatarUrl('');
+      const platformLabel = targetPlatform === 'SOOP' ? 'SOOP' : '치지직';
+      setDescription(`신입 버튜버의 공식 ${platformLabel} 방송국입니다.`);
+      setFetchMessage('⚠️ 연동 중 오류가 발생했습니다. 아래에서 활동명을 수동 입력해 주세요.');
     } finally {
       setIsFetchingProfile(false);
     }
@@ -285,16 +294,16 @@ export function StudioSubmitModal({
               )}
             </div>
 
-            {/* Step 2: 프로필 연동 결과 카드 (적용 / 수정 토글) */}
-            {(isFetchedSuccess || displayName) && (
+            {/* Step 2: 프로필 연동 결과 카드 (성공 시 적용/수정 토글) */}
+            {isFetchedSuccess && displayName ? (
               <div className="bg-gradient-to-r from-blue-50 to-slate-50 border border-[#BFDBFE] rounded-[12px] p-3.5 flex items-center justify-between gap-3 animate-fadeIn">
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <img
-                    src={avatarUrl || getAvatarUrl(displayName || 'User')}
+                    src={avatarUrl || getAvatarUrl(displayName)}
                     alt={displayName}
                     className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-xs shrink-0"
                     onError={(e) => {
-                      (e.target as HTMLElement).setAttribute('src', getAvatarUrl(displayName || 'User'));
+                      (e.target as HTMLElement).setAttribute('src', getAvatarUrl(displayName));
                     }}
                   />
                   <div className="min-w-0 flex-1">
@@ -310,7 +319,7 @@ export function StudioSubmitModal({
                       />
                     ) : (
                       <div className="text-sm font-extrabold text-[#0F172A] truncate">
-                        {displayName || '활동명 미입력'}
+                        {displayName}
                       </div>
                     )}
                   </div>
@@ -324,7 +333,7 @@ export function StudioSubmitModal({
                         type="button"
                         className="px-2.5 py-1.5 rounded-[6px] bg-[#10B981] text-white text-[11px] font-bold flex items-center gap-1 shadow-2xs cursor-default"
                       >
-                        <Check className="w-3.5 h-3.5" /> 적용됨
+                        <Check className="w-3.5 h-3.5" /> 연동됨
                       </button>
                       <button
                         type="button"
@@ -345,21 +354,24 @@ export function StudioSubmitModal({
                   )}
                 </div>
               </div>
-            )}
-
-            {/* 수동 닉네임 입력 (프로필 자동 조회가 미동작 시 백업) */}
-            {!isFetchedSuccess && !displayName && (
-              <div>
+            ) : (
+              /* 수동 닉네임 입력 (자동 조회가 미동작 시 또는 404 URL 일 때) */
+              <div className="animate-fadeIn">
                 <label className="block font-bold mb-1 text-[#334155]">
                   스트리머 활동명 <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="예: 나비야 (Nabiya)"
+                  placeholder="예: 쿠루룽 (Kururung)"
                   value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all"
+                  onChange={(e) => {
+                    setDisplayName(e.target.value);
+                    if (e.target.value) {
+                      setAvatarUrl(getAvatarUrl(e.target.value));
+                    }
+                  }}
+                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-bold"
                 />
               </div>
             )}
