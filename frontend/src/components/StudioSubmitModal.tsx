@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Sparkles, Send, Globe, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Sparkles, Send, Globe, CheckCircle2, Search, Edit2, Check, Building2, User } from 'lucide-react';
 import { DebutEvent } from '../types';
 import { getAvatarUrl } from '../utils/avatarUtils';
 
@@ -14,46 +14,94 @@ export function StudioSubmitModal({
   onClose,
   onSubmitSuccess,
 }: StudioSubmitModalProps) {
-  const [displayName, setDisplayName] = useState('');
-  const [platform, setPlatform] = useState('CHZZK');
   const [watchUrl, setWatchUrl] = useState('');
+  const [platform, setPlatform] = useState('CHZZK');
+  const [displayName, setDisplayName] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [isEditingName, setIsEditingName] = useState(false);
+  
   const [date, setDate] = useState('2026-07-29');
   const [time, setTime] = useState('20:00');
   const [timezone, setTimezone] = useState('Asia/Seoul');
   const [description, setDescription] = useState('');
-  const [agency, setAgency] = useState('Indie');
+
+  // 소속: 'INDIE' | 'AGENCY'
+  const [agencyType, setAgencyType] = useState<'INDIE' | 'AGENCY'>('INDIE');
+  const [agencyName, setAgencyName] = useState('');
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFetchingProfile, setIsFetchingProfile] = useState(false);
   const [fetchMessage, setFetchMessage] = useState('');
+  const [isFetchedSuccess, setIsFetchedSuccess] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  // 치지직 / SOOP 외부 프로필 자동 불러오기 연동
-  const handleFetchProfile = async () => {
-    if (!watchUrl) {
-      setFetchMessage('채널 URL을 먼저 입력해 주세요.');
-      return;
-    }
+  // URL 패턴 기반 플랫폼 자동 파싱
+  const parsePlatformFromUrl = (url: string): string => {
+    const lower = url.toLowerCase();
+    if (lower.includes('chzzk.naver.com')) return 'CHZZK';
+    if (lower.includes('afreecatv.com') || lower.includes('sooplive.co.kr')) return 'SOOP';
+    if (lower.includes('youtube.com') || lower.includes('youtu.be')) return 'YOUTUBE';
+    if (lower.includes('twitch.tv')) return 'TWITCH';
+    return platform; // 기존 선택 유지
+  };
+
+  // 프로필 정보 백엔드 조회 함수
+  const fetchProfileInfo = async (targetPlatform: string, url: string) => {
+    if (!url || url.trim().length < 5) return;
 
     setIsFetchingProfile(true);
-    setFetchMessage('플랫폼 API 프로필 조회 중...');
+    setFetchMessage('방송국 프로필 정보 조회 중...');
 
     try {
       const apiHost = (import.meta as any).env?.VITE_API_HOST || '';
-      const res = await fetch(`${apiHost}/api/v1/platform/profile?platform=${platform}&url=${encodeURIComponent(watchUrl)}`);
+      const res = await fetch(
+        `${apiHost}/api/v1/platform/profile?platform=${targetPlatform}&url=${encodeURIComponent(url)}`
+      );
       const data = await res.json();
 
       if (data.success && data.creatorName) {
         setDisplayName(data.creatorName);
-        setFetchMessage(`✅ ${data.creatorName} 프로필 자동 연동 성공!`);
+        const img = data.profileImageUrl || getAvatarUrl(data.creatorName);
+        setAvatarUrl(img);
+        
+        if (data.description) {
+          setDescription(data.description);
+        } else {
+          setDescription(`${data.creatorName} 버튜버의 공식 데뷔 방송입니다. 많은 관심 부탁드립니다!`);
+        }
+
+        setIsFetchedSuccess(true);
+        setIsEditingName(false);
+        setFetchMessage(`✅ [${targetPlatform}] 프로필 연동 완료!`);
       } else {
-        setFetchMessage(`⚠️ ${data.error || '프로필을 불러올 수 없어 수동 입력해 주세요.'}`);
+        setIsFetchedSuccess(false);
+        setFetchMessage(`⚠️ ${data.error || '프로필 정보를 자동 연결할 수 없습니다. 수동 입력해 주세요.'}`);
       }
     } catch (err) {
-      setFetchMessage('⚠️ 연동 오류가 발생하여 기본 정보가 적용됩니다.');
+      setIsFetchedSuccess(false);
+      setFetchMessage('⚠️ 연동 오류가 발생하여 기본 정보 입력 모드로 전환됩니다.');
     } finally {
       setIsFetchingProfile(false);
     }
   };
+
+  // URL 변경 시 500ms Debounce 후 자동 프로필 조회
+  useEffect(() => {
+    if (!watchUrl || watchUrl.trim().length < 8) {
+      setFetchMessage('');
+      setIsFetchedSuccess(false);
+      return;
+    }
+
+    const autoDetectedPlatform = parsePlatformFromUrl(watchUrl);
+    setPlatform(autoDetectedPlatform);
+
+    const timer = setTimeout(() => {
+      fetchProfileInfo(autoDetectedPlatform, watchUrl);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [watchUrl]);
 
   if (!isOpen) return null;
 
@@ -75,12 +123,15 @@ export function StudioSubmitModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!displayName || !watchUrl) return;
+    if (!watchUrl || !displayName) return;
 
     setIsSubmitting(true);
 
     setTimeout(() => {
       const utcIso = new Date(`${date}T${time}:00`).toISOString();
+      const finalAgency = agencyType === 'AGENCY' ? (agencyName || '소속사') : 'Indie';
+      const finalAvatar = avatarUrl || getAvatarUrl(displayName);
+
       const newEvt: DebutEvent = {
         id: `evt-${Date.now()}`,
         title: `${displayName} 데뷔 방송`,
@@ -88,8 +139,8 @@ export function StudioSubmitModal({
         creator: {
           id: `cr-${Date.now()}`,
           displayName,
-          avatarUrl: getAvatarUrl(displayName),
-          agency: agency || 'Indie',
+          avatarUrl: finalAvatar,
+          agency: finalAgency,
           countryCode: 'KR',
           languages: ['ko'],
         },
@@ -104,6 +155,7 @@ export function StudioSubmitModal({
       onSubmitSuccess(newEvt);
       setIsSubmitting(false);
       setSubmitted(true);
+
       setTimeout(() => {
         setSubmitted(false);
         onClose();
@@ -113,9 +165,9 @@ export function StudioSubmitModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
-      <div className="bg-white rounded-[20px] max-w-[540px] w-full shadow-2xl border border-[#CBD5E1] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-[20px] max-w-[540px] w-full shadow-2xl border border-[#CBD5E1] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-[#0F172A] text-white p-5 flex items-center justify-between">
+        <div className="bg-[#0F172A] text-white p-5 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="p-2 bg-[#2563EB] rounded-[8px]">
               <Sparkles className="w-5 h-5 text-white" />
@@ -125,7 +177,7 @@ export function StudioSubmitModal({
                 데뷔 일정 제출하기
               </h3>
               <p className="text-xs text-slate-300">
-                버튜버 본인 또는 에이전시/팬 커뮤니티 등록
+                방송국 URL을 입력하면 프로필 정보가 자동으로 불러와집니다.
               </p>
             </div>
           </div>
@@ -146,69 +198,123 @@ export function StudioSubmitModal({
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4 text-xs font-medium text-[#0F172A]">
-            {/* Display Name */}
-            <div>
-              <label className="block font-bold mb-1 text-[#334155]">
-                버튜버 / 스트리머 활동명 <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                placeholder="예: 나비야 (Nabiya)"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all"
-              />
-            </div>
-
-            {/* Platform & Watch URL */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div>
-                <label className="block font-bold mb-1 text-[#334155]">방송 플랫폼</label>
-                <select
-                  value={platform}
-                  onChange={(e) => setPlatform(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-bold"
-                >
-                  <option value="CHZZK">CHZZK (치지직)</option>
-                  <option value="SOOP">SOOP (숲)</option>
-                  <option value="YOUTUBE">YouTube</option>
-                  <option value="TWITCH">Twitch</option>
-                </select>
+          <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4 text-xs font-medium text-[#0F172A] overflow-y-auto">
+            
+            {/* Step 1: 방송/프로필 URL 입력 (최상단) */}
+            <div className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-[12px] p-3.5 space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block font-bold text-[#0F172A] flex items-center gap-1.5">
+                  <span>방송국 / 라이브 URL</span> <span className="text-red-500">*</span>
+                </label>
+                {platform && (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#2563EB] text-white">
+                    {platform} 감지됨
+                  </span>
+                )}
               </div>
-              <div className="sm:col-span-2">
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block font-bold text-[#334155]">
-                    방송 / 프로필 URL <span className="text-red-500">*</span>
-                  </label>
-                  <button
-                    type="button"
-                    onClick={handleFetchProfile}
-                    disabled={isFetchingProfile || !watchUrl}
-                    className="text-[11px] font-bold text-[#2563EB] hover:text-[#1D4ED8] hover:underline disabled:opacity-50 transition-colors"
-                  >
-                    {isFetchingProfile ? '조회 중...' : '🔍 프로필 자동 불러오기'}
-                  </button>
-                </div>
+              <div className="relative">
                 <input
                   type="url"
                   required
-                  placeholder="https://chzzk.naver.com/live/... 또는 채널 아이디"
+                  placeholder="예: https://chzzk.naver.com/live/... 또는 https://sooplive.co.kr/station/..."
                   value={watchUrl}
                   onChange={(e) => setWatchUrl(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
+                  className="w-full bg-white border border-[#CBD5E1] rounded-[8px] pl-9 pr-3 py-2.5 text-xs focus:border-[#2563EB] focus:outline-none transition-all font-mono shadow-xs"
                 />
-                {fetchMessage && (
-                  <p className={`mt-1 text-[11px] font-medium ${fetchMessage.includes('성공') ? 'text-emerald-600' : 'text-amber-600'}`}>
-                    {fetchMessage}
-                  </p>
-                )}
+                <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-3" />
               </div>
+
+              {fetchMessage && (
+                <div className={`flex items-center gap-1.5 text-[11px] font-semibold ${
+                  fetchMessage.includes('완료') || fetchMessage.includes('성공') ? 'text-emerald-600' : 'text-amber-600'
+                }`}>
+                  {isFetchingProfile && <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />}
+                  <span>{fetchMessage}</span>
+                </div>
+              )}
             </div>
 
-            {/* Date & Time */}
-            <div className="grid grid-cols-2 gap-3">
+            {/* Step 2: 프로필 연동 결과 카드 (적용 / 수정 토글) */}
+            {(isFetchedSuccess || displayName) && (
+              <div className="bg-gradient-to-r from-blue-50 to-slate-50 border border-[#BFDBFE] rounded-[12px] p-3.5 flex items-center justify-between gap-3 animate-fadeIn">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <img
+                    src={avatarUrl || getAvatarUrl(displayName || 'User')}
+                    alt={displayName}
+                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-xs shrink-0"
+                    onError={(e) => {
+                      (e.target as HTMLElement).setAttribute('src', getAvatarUrl(displayName || 'User'));
+                    }}
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[10px] text-[#64748B] font-bold">크리에이터 활동명</div>
+                    {isEditingName ? (
+                      <input
+                        type="text"
+                        required
+                        value={displayName}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                        className="mt-0.5 w-full bg-white border border-[#2563EB] rounded-[6px] px-2 py-1 text-xs font-bold focus:outline-none"
+                        placeholder="활동명 직접 수정"
+                      />
+                    ) : (
+                      <div className="text-sm font-extrabold text-[#0F172A] truncate">
+                        {displayName || '활동명 미입력'}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 적용 / 수정 선택 버튼 */}
+                <div className="shrink-0 flex items-center gap-1.5">
+                  {!isEditingName ? (
+                    <>
+                      <button
+                        type="button"
+                        className="px-2.5 py-1.5 rounded-[6px] bg-[#10B981] text-white text-[11px] font-bold flex items-center gap-1 shadow-2xs cursor-default"
+                      >
+                        <Check className="w-3.5 h-3.5" /> 적용됨
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsEditingName(true)}
+                        className="px-2.5 py-1.5 rounded-[6px] bg-white border border-[#CBD5E1] text-[#334155] text-[11px] font-bold hover:bg-slate-100 flex items-center gap-1 transition-colors"
+                      >
+                        <Edit2 className="w-3 h-3 text-[#2563EB]" /> 활동명 수정
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setIsEditingName(false)}
+                      className="px-3 py-1.5 rounded-[6px] bg-[#2563EB] text-white text-[11px] font-bold flex items-center gap-1 shadow-2xs hover:bg-blue-700 transition-colors"
+                    >
+                      <Check className="w-3.5 h-3.5" /> 수정 완료
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* 수동 닉네임 입력 (프로필 자동 조회가 미동작 시 백업) */}
+            {!isFetchedSuccess && !displayName && (
+              <div>
+                <label className="block font-bold mb-1 text-[#334155]">
+                  스트리머 활동명 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="예: 나비야 (Nabiya)"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all"
+                />
+              </div>
+            )}
+
+            {/* Step 3: 데뷔 날짜 & 시간 & 기준 타임존 */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               <div>
                 <label className="block font-bold mb-1 text-[#334155]">데뷔 날짜</label>
                 <input
@@ -229,11 +335,7 @@ export function StudioSubmitModal({
                   className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
                 />
               </div>
-            </div>
-
-            {/* Timezone & Agency */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
+              <div className="col-span-2 sm:col-span-1">
                 <label className="block font-bold mb-1 text-[#334155]">기준 시간대</label>
                 <select
                   value={timezone}
@@ -246,31 +348,79 @@ export function StudioSubmitModal({
                   <option value="UTC">UTC</option>
                 </select>
               </div>
-              <div>
-                <label className="block font-bold mb-1 text-[#334155]">소속 (선택)</label>
-                <input
-                  type="text"
-                  placeholder="예: 개인세 / V-PRO"
-                  value={agency}
-                  onChange={(e) => setAgency(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all"
-                />
-              </div>
             </div>
 
-            {/* Description */}
+            {/* Step 4: 소속 선택 (개인 vs 기업) */}
+            <div className="space-y-1.5">
+              <label className="block font-bold text-[#334155]">소속 구분</label>
+              <div className="grid grid-cols-2 gap-2">
+                <label className={`flex items-center justify-center gap-2 p-2.5 rounded-[8px] border cursor-pointer transition-all ${
+                  agencyType === 'INDIE' 
+                    ? 'bg-blue-50/70 border-[#2563EB] text-[#2563EB] font-bold' 
+                    : 'bg-[#F8FAFC] border-[#CBD5E1] text-[#64748B]'
+                }`}>
+                  <input
+                    type="radio"
+                    name="agencyType"
+                    checked={agencyType === 'INDIE'}
+                    onChange={() => setAgencyType('INDIE')}
+                    className="sr-only"
+                  />
+                  <User className="w-4 h-4" />
+                  <span>개인세 / 인디 (Indie)</span>
+                </label>
+
+                <label className={`flex items-center justify-center gap-2 p-2.5 rounded-[8px] border cursor-pointer transition-all ${
+                  agencyType === 'AGENCY' 
+                    ? 'bg-blue-50/70 border-[#2563EB] text-[#2563EB] font-bold' 
+                    : 'bg-[#F8FAFC] border-[#CBD5E1] text-[#64748B]'
+                }`}>
+                  <input
+                    type="radio"
+                    name="agencyType"
+                    checked={agencyType === 'AGENCY'}
+                    onChange={() => setAgencyType('AGENCY')}
+                    className="sr-only"
+                  />
+                  <Building2 className="w-4 h-4" />
+                  <span>기업 / 에이전시</span>
+                </label>
+              </div>
+
+              {/* 기업 선택 시 에이전시/기업명 입력 필드 활성화 */}
+              {agencyType === 'AGENCY' && (
+                <div className="pt-1 animate-fadeIn">
+                  <label className="block font-bold mb-1 text-[#334155]">
+                    기업 / 에이전시명 <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required={agencyType === 'AGENCY'}
+                    placeholder="예: 스텔라이브, 이세돌, VSPO!, HOLOLIVE 등"
+                    value={agencyName}
+                    onChange={(e) => setAgencyName(e.target.value)}
+                    className="w-full bg-white border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:border-[#2563EB] focus:outline-none transition-all font-medium"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Step 5: 데뷔 인사말 & 소식 (프로필 소개글 자동 바인딩 -> 자유 수정 가능) */}
             <div>
               <label className="block font-bold mb-1 text-[#334155]">데뷔 인사말 & 소식</label>
               <textarea
-                rows={2}
+                rows={3}
                 placeholder="안녕하세요! 신입 버튜버 데뷔 방송에서 만나요!"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all"
               />
+              <p className="text-[10px] text-[#64748B] mt-0.5">
+                * 방송국 프로필 소개글이 자동으로 불러와지며 자유롭게 수정 가능합니다.
+              </p>
             </div>
 
-            {/* Preview Box */}
+            {/* 시각 변환 미리보기 박스 */}
             <div className="bg-[#F0F9FF] border border-[#BFDBFE] rounded-[8px] p-3 text-[11px] text-[#1E40AF] flex items-center justify-between">
               <span className="flex items-center gap-1.5 font-bold">
                 <Globe className="w-3.5 h-3.5 text-[#2563EB]" /> 표출 변환 시각:
@@ -278,7 +428,7 @@ export function StudioSubmitModal({
               <span className="font-mono font-extrabold">{previewLocalTime} ({timezone})</span>
             </div>
 
-            {/* Buttons */}
+            {/* 하단 버튼 */}
             <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E2E8F0]">
               <button
                 type="button"
@@ -290,7 +440,7 @@ export function StudioSubmitModal({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-5 py-2 rounded-[8px] font-bold bg-[#0F172A] text-white hover:bg-[#1E293B] transition-colors flex items-center gap-1.5 shadow-xs"
+                className="px-5 py-2 rounded-[8px] font-bold bg-[#0F172A] text-white hover:bg-[#1E293B] transition-colors flex items-center gap-1.5 shadow-xs disabled:opacity-50"
               >
                 {isSubmitting ? '제출 중...' : '등록 제출'} <Send className="w-3.5 h-3.5" />
               </button>

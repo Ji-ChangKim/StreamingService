@@ -10,6 +10,7 @@ export interface PlatformProfileResult {
   creatorName: string;
   profileImageUrl: string;
   channelUrl: string;
+  description?: string;
   verified: boolean;
   error?: string;
 }
@@ -41,6 +42,7 @@ export async function fetchChzzkProfile(channelUrlOrId: string): Promise<Platfor
               creatorName: ch.channelName || '치지직 스트리머',
               profileImageUrl: ch.channelImageUrl || '',
               channelUrl: `https://chzzk.naver.com/${ch.channelId}`,
+              description: ch.channelDescription || `${ch.channelName || '버튜버'}의 공식 방송국입니다.`,
               verified: ch.verifiedMark || false
             };
           }
@@ -75,6 +77,7 @@ export async function fetchChzzkProfile(channelUrlOrId: string): Promise<Platfor
           creatorName: data.content.channelName || '치지직 스트리머',
           profileImageUrl: data.content.channelImageUrl || '',
           channelUrl: `https://chzzk.naver.com/${channelId}`,
+          description: data.content.channelDescription || `${data.content.channelName || '버튜버'}의 공식 치지직 방송국입니다.`,
           verified: data.content.verifiedMark || false
         };
       }
@@ -139,6 +142,7 @@ export async function fetchSoopProfile(userIdOrUrl: string): Promise<PlatformPro
           creatorName: data.station.user_nick || userId,
           profileImageUrl: profileImg,
           channelUrl: `https://sooplive.co.kr/station/${userId}`,
+          description: data.station.joint_title || data.station.station_name || `${data.station.user_nick || userId}의 공식 SOOP 방송국입니다.`,
           verified: true
         };
       }
