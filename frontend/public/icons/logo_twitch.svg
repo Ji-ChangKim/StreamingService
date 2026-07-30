@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 44" fill="none">
+  <g transform="translate(0, 4)">
+    <path d="M 6 0 L 0 6 L 0 30 L 9 30 L 9 36 L 15 36 L 21 30 L 29 30 L 37 22 L 37 0 Z" fill="#9146FF"/>
+    <polygon points="10,8 10,18 14,18 14,8" fill="#FFFFFF"/>
+    <polygon points="21,8 21,18 25,18 25,8" fill="#FFFFFF"/>
+  </g>
+  <text x="44" y="31" font-family="'Roobert', 'Outfit', sans-serif" font-weight="900" font-size="26" fill="#9146FF" letter-spacing="-0.5">Twitch</text>
+</svg>

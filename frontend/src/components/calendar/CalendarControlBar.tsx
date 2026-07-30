@@ -1,4 +1,5 @@
-import { ChevronLeft, ChevronRight, Calendar, CalendarDays, Filter, RotateCcw } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Calendar, CalendarDays, Filter, RotateCcw, ChevronDown, Check } from 'lucide-react';
 
 interface CalendarControlBarProps {
   year: number;
@@ -25,35 +26,91 @@ export function CalendarControlBar({
   onChangeView,
   onOpenYearMonthPicker,
 }: CalendarControlBarProps) {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const platforms = [
-    { id: 'ALL', label: '전체 플랫폼' },
-    { id: 'CHZZK', label: '🟢 CHZZK' },
-    { id: 'SOOP', label: '🔵 SOOP' },
-    { id: 'YOUTUBE', label: '🔴 YouTube' },
-    { id: 'TWITCH', label: '🟣 Twitch' },
+    { id: 'ALL', label: '전체 플랫폼', logo: null },
+    { id: 'CHZZK', label: '치지직', logo: '/icons/chzzk/chzzklogo_Combi(Green).png', height: 'h-[22px]' },
+    { id: 'SOOP', label: 'SOOP', logo: '/icons/logo_soop.svg', height: 'h-[20px]' },
+    { id: 'YOUTUBE', label: 'YouTube', logo: '/icons/logo_youtube.svg', height: 'h-[20px]' },
+    { id: 'TWITCH', label: 'Twitch', logo: '/icons/logo_twitch.svg', height: 'h-[20px]' },
   ];
+
+  const currentPlatform = platforms.find((p) => p.id === selectedPlatform) || platforms[0];
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <div className="space-y-3 mb-4">
       {/* 1. Header Grid: Left (Platform Select), Center (Year/Month & Today), Right (View Switcher) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 items-center justify-between gap-3 pb-3 border-b border-[#E2E8F0]">
         
-        {/* Left: Platform Dropdown */}
+        {/* Left: Custom Platform Dropdown with Official Brand Logos */}
         <div className="flex items-center justify-start">
-          <div className="relative flex items-center">
-            <Filter className="w-3.5 h-3.5 text-[#64748B] absolute left-3 pointer-events-none" />
-            <select
-              value={selectedPlatform}
-              onChange={(e) => onPlatformSelect(e.target.value)}
-              className="bg-white border border-[#CBD5E1] rounded-[8px] pl-8 pr-8 py-1.5 text-xs font-bold text-[#0F172A] focus:border-[#2563EB] focus:outline-none cursor-pointer appearance-none shadow-2xs hover:bg-[#F8FAFC] transition-colors"
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="bg-white border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs font-bold text-[#0F172A] hover:bg-[#F8FAFC] focus:border-[#2563EB] focus:outline-none flex items-center gap-2 shadow-2xs transition-all min-w-[160px] h-9 justify-between"
             >
-              {platforms.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.label}
-                </option>
-              ))}
-            </select>
-            <span className="text-[10px] text-[#64748B] absolute right-2.5 pointer-events-none">▾</span>
+              <div className="flex items-center gap-2">
+                <Filter className="w-3.5 h-3.5 text-[#64748B] shrink-0" />
+                {currentPlatform.logo ? (
+                  <img
+                    src={currentPlatform.logo}
+                    alt={currentPlatform.label}
+                    className={`${currentPlatform.height} w-auto object-contain shrink-0`}
+                  />
+                ) : (
+                  <span>{currentPlatform.label}</span>
+                )}
+              </div>
+              <ChevronDown className={`w-3.5 h-3.5 text-[#64748B] transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Dropdown Popover */}
+            {isDropdownOpen && (
+              <div className="absolute left-0 top-full mt-1.5 w-48 bg-white border border-[#CBD5E1] rounded-[10px] shadow-xl py-1.5 z-50 animate-fadeIn overflow-hidden">
+                {platforms.map((p) => {
+                  const isSelected = selectedPlatform === p.id;
+                  return (
+                    <button
+                      key={p.id}
+                      onClick={() => {
+                        onPlatformSelect(p.id);
+                        setIsDropdownOpen(false);
+                      }}
+                      className={`w-full px-3 py-2.5 text-xs font-bold flex items-center justify-between transition-colors ${
+                        isSelected
+                          ? 'bg-[#F1F5F9] text-[#0F172A]'
+                          : 'text-[#334155] hover:bg-[#F8FAFC] hover:text-[#0F172A]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 h-6">
+                        {p.logo ? (
+                          <img
+                            src={p.logo}
+                            alt={p.label}
+                            className={`${p.height} w-auto object-contain shrink-0`}
+                          />
+                        ) : (
+                          <span>{p.label}</span>
+                        )}
+                      </div>
+                      {isSelected && <Check className="w-3.5 h-3.5 text-[#2563EB]" />}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 

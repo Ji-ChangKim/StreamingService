@@ -45,13 +45,19 @@ export function FilterBar({
             >
               {p.id === 'CHZZK' && (
                 <img
-                  src={isActive ? '/icons/chzzk/chzzklogo_Combi(White).png' : '/icons/chzzk/chzzklogo_Combi(Black).png'}
+                  src={isActive ? '/icons/chzzk/chzzklogo_Combi(White).png' : '/icons/chzzk/chzzklogo_Combi(Green).png'}
                   alt="CHZZK"
-                  className="h-4 object-contain shrink-0"
+                  className="h-5 w-auto object-contain shrink-0"
                 />
               )}
               {p.id === 'YOUTUBE' && (
-                <img src="/icons/youtube_icon.png" alt="YouTube" className="w-3.5 h-3.5 object-contain" />
+                <img src="/icons/logo_youtube.svg" alt="YouTube" className="h-4.5 w-auto object-contain shrink-0" />
+              )}
+              {p.id === 'SOOP' && (
+                <img src="/icons/logo_soop.svg" alt="SOOP" className="h-4.5 w-auto object-contain shrink-0" />
+              )}
+              {p.id === 'TWITCH' && (
+                <img src="/icons/logo_twitch.svg" alt="Twitch" className="h-4.5 w-auto object-contain shrink-0" />
               )}
               <span>{p.label}</span>
             </button>

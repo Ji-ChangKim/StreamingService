@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 44" fill="none">
+  <path d="M 33 4 C 31 4 7 4 4 5 C 1 6 0 9 0 22 C 0 35 1 38 4 39 C 7 40 31 40 33 40 C 35 40 59 40 62 39 C 65 38 66 35 66 22 C 66 9 65 6 62 5 C 59 4 35 4 33 4 Z" fill="#FF0000"/>
+  <polygon points="26,13 44,22 26,31" fill="#FFFFFF"/>
+  <text x="74" y="32" font-family="'Arial Black', 'Impact', sans-serif" font-weight="900" font-size="26" fill="#0F172A" letter-spacing="-1">YouTube</text>
+</svg>
