@@ -38,12 +38,13 @@ export function StudioSubmitModal({
 
   // URL 패턴 기반 플랫폼 자동 파싱
   const parsePlatformFromUrl = (url: string): string => {
+    if (!url || url.trim().length === 0) return '';
     const lower = url.toLowerCase();
     if (lower.includes('chzzk.naver.com')) return 'CHZZK';
     if (lower.includes('afreecatv.com') || lower.includes('sooplive.co.kr')) return 'SOOP';
     if (lower.includes('youtube.com') || lower.includes('youtu.be')) return 'YOUTUBE';
     if (lower.includes('twitch.tv')) return 'TWITCH';
-    return platform; // 기존 선택 유지
+    return '';
   };
 
   // 프로필 정보 백엔드 조회 함수
@@ -213,9 +214,9 @@ export function StudioSubmitModal({
                 <label className="block font-bold text-[#0F172A] flex items-center gap-1.5">
                   <span>방송국 / 라이브 URL</span> <span className="text-red-500">*</span>
                 </label>
-                {platform && (
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#2563EB] text-white">
-                    {platform} 감지됨
+                {parsePlatformFromUrl(watchUrl) && (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#2563EB] text-white animate-fadeIn">
+                    {parsePlatformFromUrl(watchUrl)} 감지됨
                   </span>
                 )}
               </div>
