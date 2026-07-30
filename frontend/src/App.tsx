@@ -71,6 +71,7 @@ export function App() {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           onDownloadICS={handleDownloadICS}
+          onOpenSubmitModal={() => setShowSubmitModal(true)}
         />
 
         {/* Creator Callout Banner */}

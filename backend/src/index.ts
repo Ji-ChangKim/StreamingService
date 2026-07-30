@@ -4,6 +4,7 @@ import { getAssetFromKV, NotFoundError } from '@cloudflare/kv-asset-handler';
 // @ts-ignore
 import manifestJSON from '__STATIC_CONTENT_MANIFEST';
 import { fetchEventsFromD1, insertEventToD1, MOCK_EVENTS } from './services/eventDbService';
+import { fetchPlatformProfile } from './services/platformApiService';
 
 type Bindings = {
   DB: D1Database;
@@ -81,6 +82,22 @@ app.post('/api/v1/events', async (c) => {
     message: '데뷔 일정이 데이터베이스에 성공적으로 저장되었습니다.',
     eventId
   });
+});
+
+// 4. Fetch Real External Platform Profile (CHZZK, SOOP, etc.)
+app.get('/api/v1/platform/profile', async (c) => {
+  const platform = c.req.query('platform') || 'CHZZK';
+  const url = c.req.query('url') || c.req.query('channelUrl') || '';
+
+  if (!url) {
+    return c.json({
+      success: false,
+      error: '채널 URL 또는 아이디를 입력해주세요.'
+    }, 400);
+  }
+
+  const result = await fetchPlatformProfile(platform, url);
+  return c.json(result);
 });
 
 // 4. Safe Static Asset & SPA Fallback Handler

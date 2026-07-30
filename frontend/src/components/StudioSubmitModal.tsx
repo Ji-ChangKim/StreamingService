@@ -23,7 +23,37 @@ export function StudioSubmitModal({
   const [description, setDescription] = useState('');
   const [agency, setAgency] = useState('Indie');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFetchingProfile, setIsFetchingProfile] = useState(false);
+  const [fetchMessage, setFetchMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
+
+  // 치지직 / SOOP 외부 프로필 자동 불러오기 연동
+  const handleFetchProfile = async () => {
+    if (!watchUrl) {
+      setFetchMessage('채널 URL을 먼저 입력해 주세요.');
+      return;
+    }
+
+    setIsFetchingProfile(true);
+    setFetchMessage('플랫폼 API 프로필 조회 중...');
+
+    try {
+      const apiHost = (import.meta as any).env?.VITE_API_HOST || '';
+      const res = await fetch(`${apiHost}/api/v1/platform/profile?platform=${platform}&url=${encodeURIComponent(watchUrl)}`);
+      const data = await res.json();
+
+      if (data.success && data.creatorName) {
+        setDisplayName(data.creatorName);
+        setFetchMessage(`✅ ${data.creatorName} 프로필 자동 연동 성공!`);
+      } else {
+        setFetchMessage(`⚠️ ${data.error || '프로필을 불러올 수 없어 수동 입력해 주세요.'}`);
+      }
+    } catch (err) {
+      setFetchMessage('⚠️ 연동 오류가 발생하여 기본 정보가 적용됩니다.');
+    } finally {
+      setIsFetchingProfile(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -148,17 +178,32 @@ export function StudioSubmitModal({
                 </select>
               </div>
               <div className="sm:col-span-2">
-                <label className="block font-bold mb-1 text-[#334155]">
-                  방송 / 프로필 URL <span className="text-red-500">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block font-bold text-[#334155]">
+                    방송 / 프로필 URL <span className="text-red-500">*</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleFetchProfile}
+                    disabled={isFetchingProfile || !watchUrl}
+                    className="text-[11px] font-bold text-[#2563EB] hover:text-[#1D4ED8] hover:underline disabled:opacity-50 transition-colors"
+                  >
+                    {isFetchingProfile ? '조회 중...' : '🔍 프로필 자동 불러오기'}
+                  </button>
+                </div>
                 <input
                   type="url"
                   required
-                  placeholder="https://chzzk.naver.com/live/..."
+                  placeholder="https://chzzk.naver.com/live/... 또는 채널 아이디"
                   value={watchUrl}
                   onChange={(e) => setWatchUrl(e.target.value)}
                   className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
                 />
+                {fetchMessage && (
+                  <p className={`mt-1 text-[11px] font-medium ${fetchMessage.includes('성공') ? 'text-emerald-600' : 'text-amber-600'}`}>
+                    {fetchMessage}
+                  </p>
+                )}
               </div>
             </div>
 
