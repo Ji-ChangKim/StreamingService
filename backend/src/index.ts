@@ -51,20 +51,28 @@ app.get('/api/v1/system/version', (c) => {
   });
 });
 
-// 2. Get Debut Events (Real D1 Database Query with Fallback)
+// 2. Get Debut Events (Real D1 Database Query with Fallback & Merge)
 app.get('/api/v1/events', async (c) => {
+  let dbEvents: any[] = [];
   if (c.env.DB) {
-    const dbEvents = await fetchEventsFromD1(c.env.DB);
-    if (dbEvents && dbEvents.length > 0) {
-      return c.json({ success: true, events: dbEvents, source: 'd1_database' });
+    const res = await fetchEventsFromD1(c.env.DB);
+    if (res && res.length > 0) {
+      dbEvents = res;
     }
   }
 
+  // D1 데이터베이스 저장 이벤트와 MOCK 이벤트를 병합하여 반환
+  const combinedMap = new Map();
+  MOCK_EVENTS.forEach((e) => combinedMap.set(e.id, e));
+  dbEvents.forEach((e) => combinedMap.set(e.id, e));
+
+  const allEvents = Array.from(combinedMap.values());
+
   return c.json({
     success: true,
-    events: MOCK_EVENTS,
-    total: MOCK_EVENTS.length,
-    source: 'mock_fallback'
+    events: allEvents,
+    total: allEvents.length,
+    source: dbEvents.length > 0 ? 'd1_database_merged' : 'mock_fallback'
   });
 });
 

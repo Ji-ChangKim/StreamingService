@@ -152,7 +152,7 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
         c.id as creator_id,
         c.display_name as creator_displayName,
         c.avatar_url as creator_avatarUrl,
-        c.agency_id as creator_agency,
+        COALESCE(a.name, c.agency_id, 'Indie') as creator_agency,
         c.country_code as creator_countryCode,
         c.languages as creator_languages,
         l.platform as link_platform,
@@ -160,6 +160,7 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
         l.is_primary as link_isPrimary
       FROM debut_events e
       LEFT JOIN creator_profiles c ON e.creator_id = c.id
+      LEFT JOIN agencies a ON c.agency_id = a.id
       LEFT JOIN debut_event_links l ON e.id = l.event_id
       WHERE e.status != 'DRAFT'
       ORDER BY e.start_at_utc ASC
@@ -185,7 +186,7 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
             id: row.creator_id,
             displayName: row.creator_displayName,
             avatarUrl: row.creator_avatarUrl,
-            agency: row.creator_agency,
+            agency: row.creator_agency || 'Indie',
             countryCode: row.creator_countryCode,
             languages: JSON.parse(row.creator_languages || '["ko"]')
           },
@@ -218,7 +219,9 @@ export async function insertEventToD1(db: D1Database, body: any): Promise<string
 
   const displayName = body.creator?.displayName || body.displayName || '신입 VTuber';
   const avatarUrl = body.creator?.avatarUrl || body.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
-  const agency = body.creator?.agency || body.agency || '개인세';
+  const agencyName = body.creator?.agency || body.agency || 'Indie';
+  const agencySlug = `agency_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
+
   const title = body.title || `${displayName} 데뷔 방송`;
   const startAtUtc = body.startAtUtc || new Date(Date.now() + 86400000 * 3).toISOString();
   const timezone = body.originalTimezone || 'Asia/Seoul';
@@ -229,16 +232,36 @@ export async function insertEventToD1(db: D1Database, body: any): Promise<string
   const watchUrl = primaryLink?.url || body.watchUrl || 'https://chzzk.naver.com';
 
   try {
+    // 1. agencies 테이블 외래키 에러 방지: 존재하는 agency_id 확인 및 생성
+    let finalAgencyId: string | null = null;
+    try {
+      const existingAgency: any = await db.prepare(`SELECT id FROM agencies WHERE id = ? OR name = ?`).bind(agencyName, agencyName).first();
+      if (existingAgency?.id) {
+        finalAgencyId = String(existingAgency.id);
+      } else {
+        finalAgencyId = `agency_${Date.now()}`;
+        await db.prepare(`
+          INSERT INTO agencies (id, slug, name, country_code)
+          VALUES (?, ?, ?, 'KR')
+        `).bind(finalAgencyId, agencySlug, agencyName).run();
+      }
+    } catch (agencyErr) {
+      finalAgencyId = null; // 외래키 오류 방지용 null 처리
+    }
+
+    // 2. creator_profiles 생성
     await db.prepare(`
       INSERT INTO creator_profiles (id, slug, display_name, country_code, languages, agency_id, avatar_url)
       VALUES (?, ?, ?, 'KR', '["ko"]', ?, ?)
-    `).bind(creatorId, `slug_${Date.now()}`, displayName, agency, avatarUrl).run();
+    `).bind(creatorId, `slug_${Date.now()}`, displayName, finalAgencyId, avatarUrl).run();
 
+    // 3. debut_events 생성
     await db.prepare(`
       INSERT INTO debut_events (id, creator_id, type, title, description, start_at_utc, original_timezone, status, verification_status)
       VALUES (?, ?, 'FIRST_DEBUT', ?, ?, ?, ?, 'PUBLISHED', 'COMMUNITY_SUBMITTED')
     `).bind(eventId, creatorId, title, description, startAtUtc, timezone).run();
 
+    // 4. debut_event_links 생성
     await db.prepare(`
       INSERT INTO debut_event_links (id, event_id, platform, watch_url, is_primary)
       VALUES (?, ?, ?, ?, 1)
