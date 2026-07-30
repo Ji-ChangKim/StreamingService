@@ -58,29 +58,36 @@ export function CalendarMonthGrid({
               <div
                 key={dateKey}
                 onClick={() => onSelectDate(dateKey)}
-                className={`min-h-[120px] p-2 bg-white flex flex-col justify-between overflow-hidden cursor-pointer transition-all ${
+                className={`min-h-[115px] p-2 flex flex-col justify-between overflow-hidden cursor-pointer transition-all ${
                   isSelected
                     ? 'bg-[#F0F9FF] ring-2 ring-inset ring-[#2563EB] shadow-xs'
                     : isToday
-                    ? 'bg-[#F8FAFC] border-t-2 border-t-[#2563EB]'
-                    : 'hover:bg-[#F8FAFC]'
+                    ? 'bg-[#EFF6FF]/80 border-2 border-[#2563EB] shadow-xs'
+                    : 'bg-white hover:bg-[#F8FAFC]'
                 }`}
               >
                 {/* Date Header */}
                 <div className="flex items-center justify-between mb-1">
-                  <span
-                    className={`text-xs font-extrabold font-mono px-1.5 py-0.5 rounded-[4px] ${
-                      isToday
-                        ? 'bg-[#2563EB] text-white'
-                        : idx % 7 === 0
-                        ? 'text-[#EF4444]'
-                        : idx % 7 === 6
-                        ? 'text-[#2563EB]'
-                        : 'text-[#0F172A]'
-                    }`}
-                  >
-                    {cell.dayNumber}
-                  </span>
+                  <div className="flex items-center gap-1">
+                    <span
+                      className={`text-xs font-extrabold font-mono px-1.5 py-0.5 rounded-full ${
+                        isToday
+                          ? 'bg-[#2563EB] text-white shadow-2xs font-extrabold'
+                          : idx % 7 === 0
+                          ? 'text-[#EF4444]'
+                          : idx % 7 === 6
+                          ? 'text-[#2563EB]'
+                          : 'text-[#0F172A]'
+                      }`}
+                    >
+                      {cell.dayNumber}
+                    </span>
+                    {isToday && (
+                      <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded-[4px] bg-[#2563EB] text-white shrink-0">
+                        오늘
+                      </span>
+                    )}
+                  </div>
 
                   {dayEvents.length > 0 && (
                     <span className="text-[10px] font-extrabold bg-[#0F172A] text-white px-1.5 py-0.5 rounded-full">
@@ -89,9 +96,9 @@ export function CalendarMonthGrid({
                   )}
                 </div>
 
-                {/* Event Items */}
-                <div className="space-y-1.5 flex-grow">
-                  {dayEvents.slice(0, 3).map((evt) => {
+                {/* Event Items (최대 2개로 깔끔히 정돈하여 지저분함 제거) */}
+                <div className="space-y-1 flex-grow justify-start">
+                  {dayEvents.slice(0, 2).map((evt) => {
                     const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
                     const platformDot =
                       primaryLink?.platform === 'CHZZK'
@@ -106,18 +113,18 @@ export function CalendarMonthGrid({
                     return (
                       <div
                         key={evt.id}
-                        className="px-2 py-1 rounded-[6px] bg-[#F1F5F9] border border-[#CBD5E1] flex items-center gap-1.5 text-xs font-bold text-[#0F172A] hover:bg-[#E2E8F0] hover:border-[#2563EB] transition-all cursor-pointer overflow-hidden shadow-2xs"
+                        className="px-1.5 py-0.5 rounded-[4px] bg-[#F8FAFC] border border-[#CBD5E1] flex items-center gap-1 text-[11px] font-bold text-[#0F172A] hover:bg-[#E2E8F0] hover:border-[#2563EB] transition-all cursor-pointer overflow-hidden shadow-2xs"
                       >
-                        <span className="text-[10px] shrink-0">{platformDot}</span>
+                        <span className="text-[9px] shrink-0">{platformDot}</span>
                         <span className="text-[10px] font-mono font-extrabold text-[#2563EB] shrink-0">{startTime}</span>
-                        <span className="truncate text-[11px] font-bold text-[#0F172A]">{evt.creator.displayName}</span>
+                        <span className="truncate text-[10px] font-bold text-[#0F172A]">{evt.creator.displayName}</span>
                       </div>
                     );
                   })}
 
-                  {dayEvents.length > 3 && (
-                    <div className="text-[10px] font-bold text-[#2563EB] text-center bg-[#EFF6FF] py-0.5 rounded-[4px]">
-                      + {dayEvents.length - 3}개 더보기
+                  {dayEvents.length > 2 && (
+                    <div className="text-[9px] font-bold text-[#64748B] hover:text-[#2563EB] text-center pt-0.5">
+                      + {dayEvents.length - 2}개 더보기
                     </div>
                   )}
                 </div>
