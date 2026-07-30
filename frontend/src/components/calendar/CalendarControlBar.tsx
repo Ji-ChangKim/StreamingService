@@ -31,10 +31,10 @@ export function CalendarControlBar({
 
   const platforms = [
     { id: 'ALL', label: '전체 플랫폼', logo: null },
-    { id: 'CHZZK', label: '치지직', logo: '/icons/chzzk/chzzklogo_Combi(Green).png', height: 'h-[22px]' },
-    { id: 'SOOP', label: 'SOOP', logo: null }, // SOOP은 승인 전까지 텍스트로만 대체
-    { id: 'YOUTUBE', label: 'YouTube', logo: '/icons/youtube/YouTube_Logo/Digital/01 Full Color/yt_logo_fullcolor_almostblack_digital.png', height: 'h-[20px]' },
-    { id: 'TWITCH', label: 'Twitch', logo: '/icons/Twitch Logos/01. Twitch Wordmark/02. Flat Wordmark/01. Twitch Purple/twitch_wordmark_flat_purple.png', height: 'h-[22px]' },
+    { id: 'CHZZK', label: '치지직', logo: '/icons/logo_chzzk.png', height: 'h-[20px]' },
+    { id: 'SOOP', label: 'SOOP', logo: null },
+    { id: 'YOUTUBE', label: 'YouTube', logo: '/icons/logo_youtube.png', height: 'h-[18px]' },
+    { id: 'TWITCH', label: 'Twitch', logo: '/icons/logo_twitch.png', height: 'h-[20px]' },
   ];
 
   const currentPlatform = platforms.find((p) => p.id === selectedPlatform) || platforms[0];
@@ -59,7 +59,7 @@ export function CalendarControlBar({
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="bg-white border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs font-bold text-[#0F172A] hover:bg-[#F8FAFC] focus:border-[#2563EB] focus:outline-none flex items-center gap-2 shadow-2xs transition-all min-w-[160px] h-9 justify-between"
+              className="bg-white border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs font-bold text-[#0F172A] hover:bg-[#F8FAFC] focus:border-[#2563EB] focus:outline-none flex items-center gap-2 shadow-2xs transition-all min-w-[170px] h-9 justify-between"
             >
               <div className="flex items-center gap-2">
                 <Filter className="w-3.5 h-3.5 text-[#64748B] shrink-0" />
@@ -70,7 +70,9 @@ export function CalendarControlBar({
                     className={`${currentPlatform.height} w-auto object-contain shrink-0`}
                   />
                 ) : (
-                  <span>{currentPlatform.label}</span>
+                  <span className={currentPlatform.id === 'SOOP' ? 'font-bold text-[#2563EB]' : ''}>
+                    {currentPlatform.label}
+                  </span>
                 )}
               </div>
               <ChevronDown className={`w-3.5 h-3.5 text-[#64748B] transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
@@ -78,7 +80,7 @@ export function CalendarControlBar({
 
             {/* Dropdown Popover */}
             {isDropdownOpen && (
-              <div className="absolute left-0 top-full mt-1.5 w-48 bg-white border border-[#CBD5E1] rounded-[10px] shadow-xl py-1.5 z-50 animate-fadeIn overflow-hidden">
+              <div className="absolute left-0 top-full mt-1.5 w-52 bg-white border border-[#CBD5E1] rounded-[10px] shadow-xl py-1.5 z-50 animate-fadeIn overflow-hidden">
                 {platforms.map((p) => {
                   const isSelected = selectedPlatform === p.id;
                   return (
@@ -88,13 +90,13 @@ export function CalendarControlBar({
                         onPlatformSelect(p.id);
                         setIsDropdownOpen(false);
                       }}
-                      className={`w-full px-3 py-2.5 text-xs font-bold flex items-center justify-between transition-colors ${
+                      className={`w-full px-3.5 py-2.5 text-xs font-bold flex items-center justify-between transition-colors ${
                         isSelected
                           ? 'bg-[#F1F5F9] text-[#0F172A]'
                           : 'text-[#334155] hover:bg-[#F8FAFC] hover:text-[#0F172A]'
                       }`}
                     >
-                      <div className="flex items-center gap-2 h-6">
+                      <div className="flex items-center gap-2.5 h-6">
                         {p.logo ? (
                           <img
                             src={p.logo}
@@ -102,10 +104,12 @@ export function CalendarControlBar({
                             className={`${p.height} w-auto object-contain shrink-0`}
                           />
                         ) : (
-                          <span>{p.label}</span>
+                          <span className={p.id === 'SOOP' ? 'font-bold text-[#2563EB]' : ''}>
+                            {p.label}
+                          </span>
                         )}
                       </div>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-[#2563EB]" />}
+                      {isSelected && <Check className="w-3.5 h-3.5 text-[#2563EB] shrink-0" />}
                     </button>
                   );
                 })}

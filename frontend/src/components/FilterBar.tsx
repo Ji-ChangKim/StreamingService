@@ -45,26 +45,28 @@ export function FilterBar({
             >
               {p.id === 'CHZZK' && (
                 <img
-                  src={isActive ? '/icons/chzzk/chzzklogo_Combi(White).png' : '/icons/chzzk/chzzklogo_Combi(Green).png'}
+                  src={isActive ? '/icons/logo_chzzk_white.png' : '/icons/logo_chzzk.png'}
                   alt="CHZZK"
                   className="h-5 w-auto object-contain shrink-0"
                 />
               )}
               {p.id === 'YOUTUBE' && (
                 <img
-                  src={isActive ? '/icons/youtube/YouTube_Logo/Digital/01 Full Color/yt_logo_fullcolor_white_digital.png' : '/icons/youtube/YouTube_Logo/Digital/01 Full Color/yt_logo_fullcolor_almostblack_digital.png'}
+                  src={isActive ? '/icons/logo_youtube_white.png' : '/icons/logo_youtube.png'}
                   alt="YouTube"
-                  className="h-4.5 w-auto object-contain shrink-0"
+                  className="h-4 w-auto object-contain shrink-0"
                 />
               )}
               {p.id === 'TWITCH' && (
                 <img
-                  src={isActive ? '/icons/Twitch Logos/01. Twitch Wordmark/02. Flat Wordmark/04. White/twitch_wordmark_flat_white.png' : '/icons/Twitch Logos/01. Twitch Wordmark/02. Flat Wordmark/01. Twitch Purple/twitch_wordmark_flat_purple.png'}
+                  src={isActive ? '/icons/logo_twitch_white.png' : '/icons/logo_twitch.png'}
                   alt="Twitch"
                   className="h-4.5 w-auto object-contain shrink-0"
                 />
               )}
-              <span>{p.label}</span>
+              <span className={p.id === 'SOOP' && !isActive ? 'font-bold text-[#2563EB]' : ''}>
+                {p.label}
+              </span>
             </button>
           );
         })}
