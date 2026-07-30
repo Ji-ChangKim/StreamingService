@@ -81,12 +81,6 @@ export function CalendarMonthGrid({
                   >
                     {cell.dayNumber}
                   </span>
-
-                  {dayEvents.length > 0 && (
-                    <span className="text-[10px] font-extrabold bg-[#0F172A] text-white px-1.5 py-0.5 rounded-full">
-                      {dayEvents.length}개
-                    </span>
-                  )}
                 </div>
 
                 {/* Event Items (최대 2개로 깔끔히 정돈하여 지저분함 제거) */}
