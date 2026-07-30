@@ -99,8 +99,14 @@ export function ScheduleInspectorPanel({
                       <span className="text-sm font-extrabold text-[#0F172A] truncate">
                         {evt.creator.displayName}
                       </span>
-                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-[4px] bg-[#0F172A] text-white">
-                        {primaryLink?.platform}
+                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-[4px] bg-[#0F172A] text-white flex items-center gap-1">
+                        {primaryLink?.platform === 'CHZZK' && (
+                          <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-3 h-3 object-contain" />
+                        )}
+                        {primaryLink?.platform === 'YOUTUBE' && (
+                          <img src="/icons/youtube_icon.png" alt="YouTube" className="w-3 h-3 object-contain" />
+                        )}
+                        <span>{primaryLink?.platform}</span>
                       </span>
                       {/* 개인세 표시는 제외하고 기업/에이전시일 때만 노출 */}
                       {!isIndie && evt.creator.agency && (

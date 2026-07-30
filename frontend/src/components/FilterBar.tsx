@@ -37,13 +37,19 @@ export function FilterBar({
             <button
               key={p.id}
               onClick={() => setSelectedPlatform(p.id)}
-              className={`px-3 py-1.5 rounded-[4px] text-xs font-medium transition-all whitespace-nowrap ${
+              className={`px-3 py-1.5 rounded-[4px] text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5 ${
                 isActive
                   ? 'bg-[#080808] text-white font-semibold shadow-xs'
                   : 'bg-[#F8FAFC] text-[#5A5A5A] hover:bg-slate-200/80 hover:text-[#080808] border border-[#D8D8D8]'
               }`}
             >
-              {p.label}
+              {p.id === 'CHZZK' && (
+                <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-3.5 h-3.5 object-contain" />
+              )}
+              {p.id === 'YOUTUBE' && (
+                <img src="/icons/youtube_icon.png" alt="YouTube" className="w-3.5 h-3.5 object-contain" />
+              )}
+              <span>{p.label}</span>
             </button>
           );
         })}

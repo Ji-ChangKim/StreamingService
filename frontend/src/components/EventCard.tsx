@@ -40,11 +40,17 @@ export function EventCard({
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
           <span
-            className={`eyebrow-uppercase text-[10px] font-medium px-2.5 py-0.5 rounded-[4px] uppercase tracking-[1px] ${getPlatformBadgeStyle(
+            className={`eyebrow-uppercase text-[10px] font-medium px-2.5 py-0.5 rounded-[4px] uppercase tracking-[1px] flex items-center gap-1.5 ${getPlatformBadgeStyle(
               primaryPlatform
             )}`}
           >
-            {primaryPlatform}
+            {primaryPlatform === 'CHZZK' && (
+              <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-3 h-3 object-contain" />
+            )}
+            {primaryPlatform === 'YOUTUBE' && (
+              <img src="/icons/youtube_icon.png" alt="YouTube" className="w-3 h-3 object-contain" />
+            )}
+            <span>{primaryPlatform}</span>
           </span>
 
           <div className="flex items-center gap-1.5">
