@@ -23,7 +23,7 @@ export function EventCard({
   const getPlatformBadgeStyle = (platform: string) => {
     switch (platform.toUpperCase()) {
       case 'CHZZK':
-        return 'bg-[#3B89FF] text-white';
+        return 'bg-[#00FFA3] text-[#000000] font-extrabold';
       case 'YOUTUBE':
         return 'bg-[#EE1D36] text-white';
       case 'SOOP':

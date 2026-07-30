@@ -99,7 +99,17 @@ export function ScheduleInspectorPanel({
                       <span className="text-sm font-extrabold text-[#0F172A] truncate">
                         {evt.creator.displayName}
                       </span>
-                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-[4px] bg-[#0F172A] text-white flex items-center gap-1.5 shrink-0">
+                      <span
+                        className={`text-[10px] font-extrabold px-2 py-0.5 rounded-[4px] flex items-center gap-1.5 shrink-0 ${
+                          primaryLink?.platform === 'CHZZK'
+                            ? 'bg-[#00FFA3] text-[#000000]'
+                            : primaryLink?.platform === 'YOUTUBE'
+                            ? 'bg-[#FF0000] text-white'
+                            : primaryLink?.platform === 'SOOP'
+                            ? 'bg-[#FF6B00] text-white'
+                            : 'bg-[#0F172A] text-white'
+                        }`}
+                      >
                         {primaryLink?.platform === 'CHZZK' && (
                           <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-3.5 h-3.5 object-contain shrink-0" />
                         )}
