@@ -70,7 +70,7 @@ export function HeroHeader({
   ].filter((card) => card.count > 0);
 
   return (
-    <div className="py-6 sm:py-8 flex flex-col items-center justify-center text-center space-y-5 max-w-4xl mx-auto">
+    <div className="py-6 sm:py-8 flex flex-col items-center justify-center text-center space-y-6 max-w-4xl mx-auto">
       {/* 1. 히어로 타이틀 & 설명글 (가운데 정렬) */}
       <div className="space-y-2">
         <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0F172A] tracking-tight font-['Outfit']">
@@ -81,10 +81,10 @@ export function HeroHeader({
         </h3>
       </div>
 
-      {/* 2. 통계 카드 (상시 노출 2개 + 0명 초과 시만 보이는 가변 플랫폼 카드) */}
-      <div className="flex flex-wrap items-center justify-center gap-y-3 bg-white p-3.5 px-6 rounded-[16px] border border-[#E2E8F0] shadow-xs max-w-2xl w-full mx-auto divide-x divide-[#E2E8F0]">
+      {/* 2. 각각 독립된 둥근 별도 카드 박스 형태 (Separate Rounded Cards) */}
+      <div className="flex flex-wrap items-center justify-center gap-3 w-full max-w-3xl mx-auto">
         {/* 상시 노출 1: {N}월 데뷔 */}
-        <div className="text-center px-4">
+        <div className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-5 py-3 text-center min-w-[130px] hover:border-[#2563EB] hover:shadow-sm transition-all">
           <span className="text-[11px] font-bold text-[#64748B] block mb-0.5">{currentMonthNum}월 데뷔</span>
           <span className="text-xl font-extrabold text-[#2563EB] font-mono">
             {monthEvents.length}<span className="text-xs font-normal text-[#94A3B8] ml-0.5">명</span>
@@ -92,16 +92,19 @@ export function HeroHeader({
         </div>
 
         {/* 상시 노출 2: {A}월 {B}주차 데뷔 */}
-        <div className="text-center px-4">
+        <div className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-5 py-3 text-center min-w-[130px] hover:border-[#0F172A] hover:shadow-sm transition-all">
           <span className="text-[11px] font-bold text-[#64748B] block mb-0.5">{currentMonthNum}월 {currentWeekNum}주차 데뷔</span>
           <span className="text-xl font-extrabold text-[#0F172A] font-mono">
             {weekEvents.length}<span className="text-xs font-normal text-[#94A3B8] ml-0.5">명</span>
           </span>
         </div>
 
-        {/* 가변 노출: 0명이 아닐 때만 등장하는 플랫폼별 카드 */}
+        {/* 가변 노출: 0명이 아닐 때만 등장하는 개별 둥근 카드 */}
         {dynamicCards.map((card) => (
-          <div key={card.label} className="text-center px-4 animate-fadeIn">
+          <div
+            key={card.label}
+            className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-5 py-3 text-center min-w-[130px] hover:border-[#2563EB] hover:shadow-sm transition-all animate-fadeIn"
+          >
             <span className="text-[11px] font-bold text-[#64748B] block mb-0.5">{card.label}</span>
             <span className={`text-xl font-extrabold font-mono ${card.color}`}>
               {card.count}<span className="text-xs font-normal text-[#94A3B8] ml-0.5">명</span>
