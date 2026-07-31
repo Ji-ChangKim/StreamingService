@@ -1,4 +1,4 @@
-// 1:1 Isolated Schema Creator DB Service (channel_management 1:1 streamer_info)
+// Intuitive Pair Tables Creator DB Service (streamerChannel & streamerChannel_info)
 import { fetchPlatformProfile } from './platformApiService';
 
 export interface CreatorProfileData {
@@ -63,13 +63,13 @@ export async function fetchCreatorProfileBySlug(db: D1Database | null, slug: str
     const row: any = await db
       .prepare(`
         SELECT 
-          s.*,
+          i.*,
           c.platform,
           c.channel_url,
           c.channel_name
-        FROM streamer_info s
-        INNER JOIN channel_management c ON s.channel_id = c.id
-        WHERE s.slug = ? OR s.display_name = ?
+        FROM streamerChannel_info i
+        INNER JOIN streamerChannel c ON i.channel_id = c.id
+        WHERE i.slug = ? OR i.display_name = ?
         LIMIT 1
       `)
       .bind(normalizedSlug, slug)
@@ -140,7 +140,7 @@ export async function fetchCreatorProfileBySlug(db: D1Database | null, slug: str
       ],
     };
   } catch (err) {
-    console.error('1:1 fetchCreatorProfileBySlug Error:', err);
+    console.error('Pair table fetchCreatorProfileBySlug Error:', err);
     return null;
   }
 }

@@ -7,7 +7,7 @@ bucket = "../frontend/dist"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "streaming-db"
+database_name = "vdebut-db"
 database_id = "6757674b-3344-4ddd-a96c-c612f34aea3f"
 migrations_dir = "migrations"
 
@@ -18,7 +18,7 @@ name = "streaming-dev"
 bucket = "../frontend/dist"
 [[env.dev.d1_databases]]
 binding = "DB"
-database_name = "streaming-db"
+database_name = "vdebut-db"
 database_id = "6757674b-3344-4ddd-a96c-c612f34aea3f"
 
 # Production (live) env
@@ -28,5 +28,5 @@ name = "streaming"
 bucket = "../frontend/dist"
 [[env.production.d1_databases]]
 binding = "DB"
-database_name = "streaming-db"
+database_name = "vdebut-db"
 database_id = "6757674b-3344-4ddd-a96c-c612f34aea3f"
