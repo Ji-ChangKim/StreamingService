@@ -25,40 +25,28 @@ export async function fetchDebutEvents(): Promise<DebutEvent[]> {
  */
 export async function createDebutEvent(event: DebutEvent): Promise<boolean> {
   try {
-    const apiHost = (import.meta as any).env?.VITE_API_HOST || '';
-    const res = await fetch(`${apiHost}/api/v1/events`, {
+    const data = await fetchWithVersion('/events', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(event),
     });
-    const data = await res.json();
     return Boolean(data.success);
   } catch (err) {
     console.error('Failed to save debut event to backend:', err);
     return false;
   }
 }
-
 /**
  * 기존 데뷔 이벤트를 백엔드 API (PUT /api/v1/events/:id)로 전송하여 수정
  */
 export async function updateDebutEvent(eventId: string, event: Partial<DebutEvent>): Promise<boolean> {
   try {
-    const apiHost = (import.meta as any).env?.VITE_API_HOST || '';
-    const res = await fetch(`${apiHost}/api/v1/events/${eventId}`, {
+    const data = await fetchWithVersion(`/events/${eventId}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(event),
     });
-    const data = await res.json();
     return Boolean(data.success);
   } catch (err) {
     console.error('Failed to update debut event in backend:', err);
     return false;
   }
 }
-

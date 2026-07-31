@@ -137,8 +137,75 @@ export const MOCK_EVENTS = [
 /**
  * Cloudflare D1 데이터베이스에서 데뷔 이벤트 목록을 조회하는 전용 서비스 함수
  */
+async function getTableColumns(db: D1Database, tableName: string): Promise<Set<string>> {
+  const { results } = await db.prepare(`PRAGMA table_info(${tableName})`).all();
+  return new Set((results || []).map((row: any) => String(row.name)));
+}
+
+async function insertKnownColumns(
+  db: D1Database,
+  tableName: string,
+  columns: Set<string>,
+  values: Record<string, any>
+) {
+  const insertColumns = Object.keys(values).filter((column) => columns.has(column));
+
+  if (insertColumns.length === 0) {
+    throw new Error(`No writable columns found for ${tableName}`);
+  }
+
+  const placeholders = insertColumns.map(() => '?').join(', ');
+  const boundValues = insertColumns.map((column) => values[column]);
+
+  return db
+    .prepare(`INSERT INTO ${tableName} (${insertColumns.join(', ')}) VALUES (${placeholders})`)
+    .bind(...boundValues)
+    .run();
+}
+
+function parseLanguages(value: unknown): string[] {
+  if (Array.isArray(value)) return value.map(String);
+  if (typeof value !== 'string' || value.trim().length === 0) return ['ko'];
+
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed.map(String) : [String(parsed)];
+  } catch {
+    return [value];
+  }
+}
 export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
   try {
+    const eventColumns = await getTableColumns(db, 'debut_events');
+    const creatorColumns = await getTableColumns(db, 'creator_profiles');
+    const linkColumns = await getTableColumns(db, 'debut_event_links');
+    const agencyColumns = await getTableColumns(db, 'agencies');
+
+    if (eventColumns.size === 0 || creatorColumns.size === 0) {
+      return null;
+    }
+
+    const eventTypeExpr = eventColumns.has('type')
+      ? 'e.type'
+      : eventColumns.has('event_type')
+        ? 'e.event_type'
+        : "'FIRST_DEBUT'";
+    const timezoneExpr = eventColumns.has('original_timezone') ? 'e.original_timezone' : "'Asia/Seoul'";
+    const statusExpr = eventColumns.has('status') ? 'e.status' : "'PUBLISHED'";
+    const verificationExpr = eventColumns.has('verification_status') ? 'e.verification_status' : "'SOURCE_VERIFIED'";
+    const descriptionExpr = eventColumns.has('description') ? 'e.description' : 'NULL';
+    const avatarExpr = creatorColumns.has('avatar_url')
+      ? 'c.avatar_url'
+      : creatorColumns.has('profile_image_url')
+        ? 'c.profile_image_url'
+        : 'NULL';
+    const countryExpr = creatorColumns.has('country_code') ? 'c.country_code' : "'KR'";
+    const languagesExpr = creatorColumns.has('languages')
+      ? 'c.languages'
+      : creatorColumns.has('language')
+        ? 'c.language'
+        : '\'["ko"]\'';
+    const useAgenciesJoin = creatorColumns.has('agency_id') && agencyColumns.size > 0;
     const { results } = await db.prepare(`
       SELECT 
         e.id,
@@ -151,8 +218,8 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
         e.description,
         c.id as creator_id,
         c.display_name as creator_displayName,
-        c.avatar_url as creator_avatarUrl,
-        COALESCE(a.name, c.agency_id, 'Indie') as creator_agency,
+        COALESCE(c.avatar_url, c.profile_image_url) as creator_avatarUrl,
+        COALESCE(a.name, c.agency_name, 'Indie') as creator_agency,
         c.country_code as creator_countryCode,
         c.languages as creator_languages,
         l.platform as link_platform,
@@ -166,12 +233,8 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
       ORDER BY e.start_at_utc ASC
     `).all();
 
-    if (!results || results.length === 0) {
-      return null;
-    }
-
     const eventsMap = new Map();
-    results.forEach((row: any) => {
+    (results || []).forEach((row: any) => {
       if (!eventsMap.has(row.id)) {
         eventsMap.set(row.id, {
           id: row.id,
@@ -184,11 +247,11 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
           description: row.description,
           creator: {
             id: row.creator_id,
-            displayName: row.creator_displayName,
-            avatarUrl: row.creator_avatarUrl,
+            displayName: row.creator_displayName || '버튜버',
+            avatarUrl: row.creator_avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
             agency: row.creator_agency || 'Indie',
-            countryCode: row.creator_countryCode,
-            languages: JSON.parse(row.creator_languages || '["ko"]')
+            countryCode: row.creator_countryCode || 'KR',
+            languages: parseLanguages(row.creator_languages)
           },
           links: []
         });
@@ -202,7 +265,12 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
       }
     });
 
-    return Array.from(eventsMap.values());
+    const dbEventsList = Array.from(eventsMap.values());
+    const combinedMap = new Map();
+    MOCK_EVENTS.forEach((e) => combinedMap.set(e.id, e));
+    dbEventsList.forEach((e) => combinedMap.set(e.id, e));
+
+    return Array.from(combinedMap.values());
   } catch (err) {
     console.error('D1 Database Fetch Error:', err);
     return null;
@@ -210,71 +278,140 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
 }
 
 /**
- * Cloudflare D1 데이터베이스에 신규 데뷔 이벤트를 추가하는 전용 서비스 함수
+ * Insert a new debut event and verify that it can be read back from D1.
  */
 export async function insertEventToD1(db: D1Database, body: any): Promise<string> {
-  const eventId = body.id || `evt_${Date.now()}`;
-  const creatorId = body.creator?.id || `cr_${Date.now()}`;
-  const linkId = `link_${Date.now()}`;
+  const now = Date.now();
+  const nowIso = new Date(now).toISOString();
+  const eventId = body.id || `evt_${now}`;
+  const requestedCreatorId = body.creator?.id || `cr_${now}`;
+  const linkId = `link_${now}`;
 
   const displayName = body.creator?.displayName || body.displayName || '신입 VTuber';
   const avatarUrl = body.creator?.avatarUrl || body.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
   const agencyName = body.creator?.agency || body.agency || 'Indie';
-  const agencySlug = `agency_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
+  const agencySlug = `agency_${now}_${Math.random().toString(36).slice(2, 6)}`;
+  const creatorSlug = `slug_${now}_${Math.random().toString(36).slice(2, 6)}`;
 
   const title = body.title || `${displayName} 데뷔 방송`;
-  const startAtUtc = body.startAtUtc || new Date(Date.now() + 86400000 * 3).toISOString();
+  const startAtUtc = body.startAtUtc || new Date(now + 86400000 * 3).toISOString();
   const timezone = body.originalTimezone || 'Asia/Seoul';
-  const description = body.description || `${displayName} 버튜버의 데뷔 방송입니다.`;
-  
-  const primaryLink = (body.links && body.links[0]) ? body.links[0] : null;
+  const description = body.description || `${displayName} 버튜버의 공식 데뷔 방송입니다.`;
+
+  const primaryLink = body.links?.[0] || null;
   const platform = primaryLink?.platform || body.platform || 'CHZZK';
   const watchUrl = primaryLink?.url || body.watchUrl || 'https://chzzk.naver.com';
 
-  try {
-    // 1. agencies 테이블 외래키 에러 방지: 존재하는 agency_id 확인 및 생성
-    let finalAgencyId: string | null = null;
-    try {
-      const existingAgency: any = await db.prepare(`SELECT id FROM agencies WHERE id = ? OR name = ?`).bind(agencyName, agencyName).first();
-      if (existingAgency?.id) {
-        finalAgencyId = String(existingAgency.id);
-      } else {
-        finalAgencyId = `agency_${Date.now()}`;
-        await db.prepare(`
-          INSERT INTO agencies (id, slug, name, country_code)
-          VALUES (?, ?, ?, 'KR')
-        `).bind(finalAgencyId, agencySlug, agencyName).run();
-      }
-    } catch (agencyErr) {
-      finalAgencyId = null; // 외래키 오류 방지용 null 처리
+  const creatorColumns = await getTableColumns(db, 'creator_profiles');
+  const eventColumns = await getTableColumns(db, 'debut_events');
+  const linkColumns = await getTableColumns(db, 'debut_event_links');
+  const agencyColumns = await getTableColumns(db, 'agencies');
+  const channelColumns = await getTableColumns(db, 'creator_channels');
+
+  if (creatorColumns.size === 0 || eventColumns.size === 0) {
+    throw new Error('Required D1 tables are missing.');
+  }
+
+  let finalAgencyId: string | null = null;
+  if (creatorColumns.has('agency_id') && agencyColumns.size > 0) {
+    const existingAgency: any = await db
+      .prepare('SELECT id FROM agencies WHERE id = ? OR name = ? LIMIT 1')
+      .bind(agencyName, agencyName)
+      .first();
+
+    if (existingAgency?.id) {
+      finalAgencyId = String(existingAgency.id);
+    } else {
+      finalAgencyId = agencyName === 'Indie' ? 'Indie' : `agency_${now}`;
+      await insertKnownColumns(db, 'agencies', agencyColumns, {
+        id: finalAgencyId,
+        slug: agencySlug,
+        name: agencyName,
+        country_code: 'KR',
+      });
     }
+  }
 
-    // 2. creator_profiles 생성
-    await db.prepare(`
-      INSERT INTO creator_profiles (id, slug, display_name, country_code, languages, agency_id, avatar_url)
-      VALUES (?, ?, ?, 'KR', '["ko"]', ?, ?)
-    `).bind(creatorId, `slug_${Date.now()}`, displayName, finalAgencyId, avatarUrl).run();
+  const usesLegacyCreatorSchema = creatorColumns.has('country_code') || creatorColumns.has('avatar_url');
+  await insertKnownColumns(db, 'creator_profiles', creatorColumns, usesLegacyCreatorSchema
+    ? {
+        id: requestedCreatorId,
+        slug: creatorSlug,
+        display_name: displayName,
+        country_code: 'KR',
+        languages: '["ko"]',
+        agency_id: finalAgencyId,
+        avatar_url: avatarUrl,
+        created_at: nowIso,
+        updated_at: nowIso,
+      }
+    : {
+        slug: creatorSlug,
+        display_name: displayName,
+        description,
+        profile_image_url: avatarUrl,
+        agency_name: agencyName,
+        creator_type: agencyName === 'Indie' ? 'INDIE' : 'AGENCY',
+        language: 'ko',
+        is_public: 1,
+        created_at: nowIso,
+        updated_at: nowIso,
+      });
 
-    // 3. debut_events 생성
-    await db.prepare(`
-      INSERT INTO debut_events (id, creator_id, type, title, description, start_at_utc, original_timezone, status, verification_status)
-      VALUES (?, ?, 'FIRST_DEBUT', ?, ?, ?, ?, 'PUBLISHED', 'COMMUNITY_SUBMITTED')
-    `).bind(eventId, creatorId, title, description, startAtUtc, timezone).run();
+  const createdCreator: any = await db
+    .prepare('SELECT id FROM creator_profiles WHERE slug = ? LIMIT 1')
+    .bind(creatorSlug)
+    .first();
+  const creatorId = createdCreator?.id ?? requestedCreatorId;
 
-    // 4. debut_event_links 생성
-    await db.prepare(`
-      INSERT INTO debut_event_links (id, event_id, platform, watch_url, is_primary)
-      VALUES (?, ?, ?, ?, 1)
-    `).bind(linkId, eventId, platform, watchUrl).run();
-  } catch (err) {
-    console.error('D1 Save Error:', err);
+  await insertKnownColumns(db, 'debut_events', eventColumns, {
+    id: eventId,
+    creator_id: creatorId,
+    type: body.type || 'FIRST_DEBUT',
+    event_type: body.type || 'FIRST_DEBUT',
+    title,
+    description,
+    start_at_utc: startAtUtc,
+    original_timezone: timezone,
+    status: 'PUBLISHED',
+    verification_status: 'COMMUNITY_SUBMITTED',
+    created_at: nowIso,
+    updated_at: nowIso,
+  });
+
+  if (linkColumns.size > 0) {
+    await insertKnownColumns(db, 'debut_event_links', linkColumns, {
+      id: linkId,
+      event_id: eventId,
+      platform,
+      watch_url: watchUrl,
+      is_primary: 1,
+      created_at: nowIso,
+    });
+  }
+
+  if (channelColumns.size > 0) {
+    await insertKnownColumns(db, 'creator_channels', channelColumns, {
+      creator_id: creatorId,
+      platform,
+      channel_name: displayName,
+      channel_url: watchUrl,
+      is_primary: 1,
+      created_at: nowIso,
+      updated_at: nowIso,
+    });
+  }
+
+  const savedEvent = await db.prepare('SELECT id FROM debut_events WHERE id = ? LIMIT 1').bind(eventId).first();
+  if (!savedEvent) {
+    throw new Error(`D1 insert verification failed for event ${eventId}`);
   }
 
   return eventId;
 }
 
 /**
- * Cloudflare D1 데이터베이스에서 기존 데뷔 이벤트를 수정/업데이트하는 전용 서비스 함수
+ * Update an existing debut event in D1.
  */
 export async function updateEventInD1(db: D1Database, eventId: string, body: any): Promise<boolean> {
   try {
@@ -284,41 +421,91 @@ export async function updateEventInD1(db: D1Database, eventId: string, body: any
     const title = body.title;
     const startAtUtc = body.startAtUtc;
     const description = body.description;
-    const primaryLink = (body.links && body.links[0]) ? body.links[0] : null;
+    const primaryLink = body.links?.[0] || null;
     const platform = primaryLink?.platform || body.platform;
     const watchUrl = primaryLink?.url || body.watchUrl;
 
-    // 1. 이벤트의 creator_id 가져오기
-    const existingEvent: any = await db.prepare(`SELECT creator_id FROM debut_events WHERE id = ?`).bind(eventId).first();
+    const creatorColumns = await getTableColumns(db, 'creator_profiles');
+    const eventColumns = await getTableColumns(db, 'debut_events');
+    const linkColumns = await getTableColumns(db, 'debut_event_links');
+    const existingEvent: any = await db.prepare('SELECT creator_id FROM debut_events WHERE id = ?').bind(eventId).first();
     const creatorId = existingEvent?.creator_id;
 
-    if (creatorId && displayName) {
-      await db.prepare(`
-        UPDATE creator_profiles
-        SET display_name = COALESCE(?, display_name),
-            avatar_url = COALESCE(?, avatar_url)
-        WHERE id = ?
-      `).bind(displayName, avatarUrl || null, creatorId).run();
+    if (!creatorId) {
+      return false;
     }
 
-    // 2. debut_events 업데이트
-    await db.prepare(`
-      UPDATE debut_events
-      SET title = COALESCE(?, title),
-          description = COALESCE(?, description),
-          start_at_utc = COALESCE(?, start_at_utc),
-          updated_at = CURRENT_TIMESTAMP
-      WHERE id = ?
-    `).bind(title || null, description || null, startAtUtc || null, eventId).run();
+    if (displayName) {
+      const creatorAssignments = ['display_name = COALESCE(?, display_name)'];
+      const creatorValues = [displayName];
+      const avatarColumn = creatorColumns.has('avatar_url')
+        ? 'avatar_url'
+        : creatorColumns.has('profile_image_url')
+          ? 'profile_image_url'
+          : null;
 
-    // 3. debut_event_links 업데이트
-    if (platform || watchUrl) {
+      if (avatarColumn) {
+        creatorAssignments.push(`${avatarColumn} = COALESCE(?, ${avatarColumn})`);
+        creatorValues.push(avatarUrl || null);
+      }
+
+      if (creatorColumns.has('agency_name')) {
+        creatorAssignments.push('agency_name = COALESCE(?, agency_name)');
+        creatorValues.push(agencyName || null);
+      }
+
       await db.prepare(`
-        UPDATE debut_event_links
-        SET platform = COALESCE(?, platform),
-            watch_url = COALESCE(?, watch_url)
-        WHERE event_id = ?
-      `).bind(platform || null, watchUrl || null, eventId).run();
+        UPDATE creator_profiles
+        SET ${creatorAssignments.join(', ')}
+        WHERE id = ?
+      `).bind(...creatorValues, creatorId).run();
+    }
+
+    const eventAssignments = [];
+    const eventValues = [];
+    if (title && eventColumns.has('title')) {
+      eventAssignments.push('title = ?');
+      eventValues.push(title);
+    }
+    if (description && eventColumns.has('description')) {
+      eventAssignments.push('description = ?');
+      eventValues.push(description);
+    }
+    if (startAtUtc && eventColumns.has('start_at_utc')) {
+      eventAssignments.push('start_at_utc = ?');
+      eventValues.push(startAtUtc);
+    }
+    if (eventColumns.has('updated_at')) {
+      eventAssignments.push('updated_at = CURRENT_TIMESTAMP');
+    }
+
+    if (eventAssignments.length > 0) {
+      await db.prepare(`
+        UPDATE debut_events
+        SET ${eventAssignments.join(', ')}
+        WHERE id = ?
+      `).bind(...eventValues, eventId).run();
+    }
+
+    if ((platform || watchUrl) && linkColumns.size > 0) {
+      const linkAssignments = [];
+      const linkValues = [];
+      if (platform && linkColumns.has('platform')) {
+        linkAssignments.push('platform = ?');
+        linkValues.push(platform);
+      }
+      if (watchUrl && linkColumns.has('watch_url')) {
+        linkAssignments.push('watch_url = ?');
+        linkValues.push(watchUrl);
+      }
+
+      if (linkAssignments.length > 0) {
+        await db.prepare(`
+          UPDATE debut_event_links
+          SET ${linkAssignments.join(', ')}
+          WHERE event_id = ?
+        `).bind(...linkValues, eventId).run();
+      }
     }
 
     return true;

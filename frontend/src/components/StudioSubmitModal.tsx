@@ -103,6 +103,7 @@ export function StudioSubmitModal({
   const [fetchMessage, setFetchMessage] = useState('');
   const [isFetchedSuccess, setIsFetchedSuccess] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   // URL 패턴 기반 플랫폼 자동 파싱
   const parsePlatformFromUrl = (url: string): string => {
@@ -205,6 +206,7 @@ export function StudioSubmitModal({
     if (!watchUrl || !displayName) return;
 
     setIsSubmitting(true);
+    setSubmitError('');
 
     try {
       const utcIso = new Date(`${date}T${time}:00`).toISOString();
@@ -232,10 +234,12 @@ export function StudioSubmitModal({
       };
 
       if (editEvent) {
-        await updateDebutEvent(editEvent.id, targetEvt);
+        const saved = await updateDebutEvent(editEvent.id, targetEvt);
+        if (!saved) throw new Error('데뷔 일정 수정 저장에 실패했습니다.');
         onUpdateSuccess?.(targetEvt);
       } else {
-        await createDebutEvent(targetEvt);
+        const saved = await createDebutEvent(targetEvt);
+        if (!saved) throw new Error('데뷔 일정 등록 저장에 실패했습니다.');
         onSubmitSuccess(targetEvt);
       }
 
@@ -528,6 +532,11 @@ export function StudioSubmitModal({
             </div>
 
             {/* 하단 버튼 (2번 이미지 구조 및 세련된 다크/라이트 디자인 개선) */}
+            {submitError && (
+              <div className="rounded-[6px] border border-red-200 bg-red-50 px-3.5 py-2.5 text-xs font-bold text-red-700">
+                {submitError}
+              </div>
+            )}
             <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E2E8F0]">
               <button
                 type="button"
