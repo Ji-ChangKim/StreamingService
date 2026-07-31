@@ -1,4 +1,4 @@
-import { PlusCircle, Clock, ExternalLink, Download, X, Edit3 } from 'lucide-react';
+import { PlusCircle, Clock, ExternalLink, Download, X } from 'lucide-react';
 import { DebutEvent } from '../../types';
 import { formatLocalTime } from '../../utils/dateUtils';
 import { AvatarImage } from './AvatarImage';
@@ -22,7 +22,6 @@ export function ScheduleInspectorPanel({
   onDownloadICS,
   onPreviewAvatar,
   onClosePanel,
-  onEditEvent,
 }: ScheduleInspectorPanelProps) {
   return (
     <div className="flex flex-col h-full max-h-full overflow-hidden animate-fadeIn">
@@ -146,14 +145,6 @@ export function ScheduleInspectorPanel({
                     className="flex-1 flex items-center justify-center gap-1 px-2.5 py-2 text-[11px] sm:text-xs font-bold bg-white border border-[#CBD5E1] text-[#0F172A] hover:bg-[#F1F5F9] rounded-[8px] transition-colors"
                   >
                     캘린더 추가 <Download className="w-3 h-3" />
-                  </button>
-                  {/* 일정 수정 버튼 */}
-                  <button
-                    onClick={() => onEditEvent?.(evt)}
-                    className="px-2.5 py-2 text-[11px] sm:text-xs font-bold bg-white border border-[#CBD5E1] text-[#475569] hover:bg-[#F1F5F9] hover:text-[#2563EB] rounded-[8px] transition-colors flex items-center gap-1 shrink-0"
-                    title="데뷔 일정 수정하기"
-                  >
-                    <Edit3 className="w-3 h-3 text-[#2563EB]" /> 수정
                   </button>
                 </div>
               </div>
