@@ -1,6 +1,6 @@
 # 🗄️ [기획] 03_DATABASE_SCHEMA.md
-**버전**: v1.0  
-**최종 수정일**: 2026-07-30  
+**버전**: v2.0 (Intuitive Pair Tables + Country Code)  
+**최종 수정일**: 2026-08-01  
 **DBMS**: Cloudflare D1 (SQLite)  
 
 ---
@@ -9,36 +9,31 @@
 
 ```mermaid
 erDiagram
-    CREATOR_PROFILES ||--o{ DEBUT_EVENTS : "has"
-    DEBUT_EVENTS ||--|{ DEBUT_EVENT_LINKS : "contains"
+    streamerChannel ||--|| streamerChannel_info : "1:1 Pair UNIQUE"
 
-    CREATOR_PROFILES {
-        TEXT id PK
-        TEXT display_name
-        TEXT avatar_url
-        TEXT agency
-        TEXT languages
-        TEXT created_at
-    }
-
-    DEBUT_EVENTS {
-        TEXT id PK
-        TEXT creator_id FK
-        TEXT event_type
-        TEXT start_at_utc
-        TEXT original_timezone
-        TEXT title
-        TEXT description
-        TEXT status
-        TEXT created_at
-    }
-
-    DEBUT_EVENT_LINKS {
-        TEXT id PK
-        TEXT event_id FK
+    streamerChannel {
+        INTEGER id PK
         TEXT platform
-        TEXT url
-        INTEGER is_primary
+        TEXT channel_url
+        TEXT channel_name
+        TEXT created_at
+    }
+
+    streamerChannel_info {
+        INTEGER id PK
+        INTEGER channel_id FK "UNIQUE"
+        TEXT slug "UNIQUE"
+        TEXT display_name
+        TEXT profile_image_url
+        TEXT description
+        TEXT agency_name
+        TEXT debut_date
+        TEXT debut_time
+        TEXT timezone
+        TEXT start_at_utc
+        TEXT country_code "CHECK (KR, JP, US, NULL)"
+        TEXT created_at
+        TEXT updated_at
     }
 ```
 
@@ -46,33 +41,29 @@ erDiagram
 
 ## 2. 테이블 상세 명세 (Table Details)
 
-### 2.1 `creator_profiles` (크리에이터 프로필)
+### 2.1 `streamerChannel` (상위 방송국 / 라이브 메인 테이블)
 | 컬럼명 | 타입 | 제약 조건 | 설명 |
 | :--- | :--- | :--- | :--- |
-| `id` | TEXT | PRIMARY KEY | 크리에이터 고유 ID (`cr_...`) |
-| `display_name` | TEXT | NOT NULL | 활동명 (닉네임) |
-| `avatar_url` | TEXT | | 프로필 이미지 / GIF URL |
-| `agency` | TEXT | DEFAULT '개인세'| 소속사 (예: Stella lab, 개인세 등) |
-| `languages` | TEXT | | 사용 언어 (JSON 배열 string e.g. `["KO"]`) |
-| `created_at` | TEXT | NOT NULL | 생성 일시 (ISO-8601) |
+| `id` | INTEGER | PRIMARY KEY AUTOINCREMENT | 방송국 고유 ID |
+| `platform` | TEXT | NOT NULL | 방송 플랫폼 (`CHZZK`, `SOOP`, `YOUTUBE` 등) |
+| `channel_url` | TEXT | NOT NULL | 방송국 / 라이브 URL |
+| `channel_name` | TEXT | | 수집 및 등록된 채널 이름 |
+| `created_at` | TEXT | DEFAULT CURRENT_TIMESTAMP | 생성 일시 |
 
-### 2.2 `debut_events` (데뷔 일정)
+### 2.2 `streamerChannel_info` (하위 세부 정보 1:1 참조 테이블)
 | 컬럼명 | 타입 | 제약 조건 | 설명 |
 | :--- | :--- | :--- | :--- |
-| `id` | TEXT | PRIMARY KEY | 이벤트 고유 ID (`evt_...`) |
-| `creator_id` | TEXT | FOREIGN KEY | `creator_profiles.id` 참조 |
-| `event_type` | TEXT | NOT NULL | `FIRST_DEBUT` (최초데뷔) / `TRANSFER` (이적) |
-| `start_at_utc` | TEXT | NOT NULL | UTC 기준 방송 시작 일시 |
-| `original_timezone` | TEXT | DEFAULT 'Asia/Seoul' | 작성자 기준 원본 타임존 |
-| `title` | TEXT | | 이벤트 제목 |
-| `description` | TEXT | | 상세 설명 |
-| `status` | TEXT | DEFAULT 'APPROVED' | 승인 상태 (`APPROVED`, `PENDING`) |
-
-### 2.3 `debut_event_links` (방송국 및 방송 링크)
-| 컬럼명 | 타입 | 제약 조건 | 설명 |
-| :--- | :--- | :--- | :--- |
-| `id` | TEXT | PRIMARY KEY | 링크 고유 ID (`link_...`) |
-| `event_id` | TEXT | FOREIGN KEY | `debut_events.id` 참조 |
-| `platform` | TEXT | NOT NULL | `CHZZK`, `SOOP`, `YOUTUBE`, `TWITCH` |
-| `url` | TEXT | NOT NULL | 방송국/영상 대표 URL |
-| `is_primary` | INTEGER | DEFAULT 1 | 대표 링크 여부 (1: 참, 0: 거짓) |
+| `id` | INTEGER | PRIMARY KEY AUTOINCREMENT | 세부 정보 고유 ID |
+| `channel_id` | INTEGER | NOT NULL UNIQUE (FK) | `streamerChannel.id` 1:1 참조 |
+| `slug` | TEXT | NOT NULL UNIQUE | URL 식별용 슬러그 |
+| `display_name` | TEXT | NOT NULL | 스트리머 활동명 (닉네임) |
+| `profile_image_url` | TEXT | | 프로필 이미지 URL (미설정 시 API 자동 수집) |
+| `description` | TEXT | | 프로필 소개글 |
+| `agency_name` | TEXT | DEFAULT '개인세' | 소속사 (예: 개인세, 기업세 소속명 등) |
+| `debut_date` | TEXT | NOT NULL | 데뷔 날짜 (YYYY-MM-DD) |
+| `debut_time` | TEXT | NOT NULL | 데뷔 시간 (HH:MM) |
+| `timezone` | TEXT | DEFAULT 'Asia/Seoul' | 기준 타임존 |
+| `start_at_utc` | TEXT | NOT NULL | 표준 UTC 일시 (ISO-8601) |
+| `country_code` | TEXT | CHECK (country_code IN ('KR', 'JP', 'US') OR NULL) | 활동 국가 코드 (`KR`, `JP`, `US`) |
+| `created_at` | TEXT | DEFAULT CURRENT_TIMESTAMP | 생성 일시 |
+| `updated_at` | TEXT | DEFAULT CURRENT_TIMESTAMP | 수정 일시 |

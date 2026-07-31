@@ -1,6 +1,6 @@
 # 📡 [기획] 04_API_SPECIFICATION.md
-**버전**: v1.0  
-**최종 수정일**: 2026-07-30  
+**버전**: v2.0 (Country Code Support)  
+**최종 수정일**: 2026-08-01  
 **Base URL**: `https://streaming.gametps.workers.dev/api/v1`  
 
 ---
@@ -13,7 +13,7 @@
 #### Request Parameters (Query)
 | Parameter | Type | Required | Description | Example |
 | :--- | :--- | :--- | :--- | :--- |
-| `platform` | String | Yes | `CHZZK`, `SOOP`, `YOUTUBE`, `TWITCH` | `SOOP` |
+| `platform` | String | Yes | `CHZZK`, `SOOP`, `YOUTUBE` | `SOOP` |
 | `url` | String | Yes | 방송국/채널/동영상 URL | `https://www.sooplive.com/station/ddiddu4` |
 
 #### Response Example (Success - 200 OK)
@@ -35,28 +35,31 @@
 ## 2. 데뷔 일정 API (Events API)
 
 ### `GET /events`
-전체 등록된 데뷔 일정 목록을 조회합니다.
+전체 등록된 데뷔 일정 목록을 조회합니다. D1 Pair Tables(`streamerChannel` & `streamerChannel_info`)에서 수집됩니다.
 
 #### Response Example (200 OK)
 ```json
 [
   {
-    "id": "evt_1785404500000",
-    "type": "✨ 최초 데뷔",
+    "id": "evt_1",
+    "title": "치즈치즈♪ 데뷔 방송",
+    "type": "FIRST_DEBUT",
     "startAtUtc": "2026-08-01T11:00:00.000Z",
     "originalTimezone": "Asia/Seoul",
-    "title": "치즈치즈♪ 데뷔 방송",
+    "status": "PUBLISHED",
+    "verificationStatus": "SOURCE_VERIFIED",
     "description": "반가워요! 치즈치즈♪입니다.",
     "creator": {
-      "id": "cr_1785404500000",
+      "id": 1,
       "displayName": "치즈치즈♪",
       "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/dd/ddiddu4/ddiddu4.jpg",
       "agency": "개인세",
-      "languages": ["KO"]
+      "countryCode": "KR",
+      "languages": ["ko"],
+      "slug": "ddiddu4"
     },
     "links": [
       {
-        "id": "link_1785404500000",
         "platform": "SOOP",
         "url": "https://www.sooplive.com/station/ddiddu4",
         "isPrimary": true
@@ -72,16 +75,16 @@
 #### Request Body
 ```json
 {
-  "type": "✨ 최초 데뷔",
+  "title": "치즈치즈♪ 데뷔 방송",
+  "type": "FIRST_DEBUT",
   "startAtUtc": "2026-08-01T11:00:00.000Z",
   "originalTimezone": "Asia/Seoul",
-  "title": "치즈치즈♪ 데뷔 방송",
   "description": "반가워요! 치즈치즈♪입니다.",
   "creator": {
     "displayName": "치즈치즈♪",
     "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/dd/ddiddu4/ddiddu4.jpg",
     "agency": "개인세",
-    "languages": ["KO"]
+    "countryCode": "KR"
   },
   "links": [
     {
