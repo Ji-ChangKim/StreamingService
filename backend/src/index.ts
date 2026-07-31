@@ -79,20 +79,31 @@ app.get('/api/v1/events', async (c) => {
 
 // 3. Create Debut Event into D1 DB
 app.post('/api/v1/events', async (c) => {
-  const body = await c.req.json();
-  let eventId = `evt_${Date.now()}`;
-
-  if (c.env.DB) {
-    eventId = await insertEventToD1(c.env.DB, body);
+  if (!c.env.DB) {
+    return c.json({
+      success: false,
+      message: 'D1 database binding is not configured.',
+    }, 503);
   }
 
-  return c.json({
-    success: true,
-    message: '데뷔 일정이 데이터베이스에 성공적으로 저장되었습니다.',
-    eventId
-  });
-});
+  try {
+    const body = await c.req.json();
+    const eventId = await insertEventToD1(c.env.DB, body);
 
+    return c.json({
+      success: true,
+      message: '데뷔 일정이 데이터베이스에 저장되었습니다.',
+      eventId,
+    });
+  } catch (err: any) {
+    console.error('Create event failed:', err);
+    return c.json({
+      success: false,
+      message: '데뷔 일정 저장에 실패했습니다.',
+      error: err?.message || 'unknown_error',
+    }, 500);
+  }
+});
 // 3.5 Update Debut Event in D1 DB
 app.put('/api/v1/events/:id', async (c) => {
   const eventId = c.req.param('id');
