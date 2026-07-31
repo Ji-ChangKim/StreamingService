@@ -10,3 +10,9 @@
 
 ## Git & Workflow Guidelines
 - **Git 커밋 메시지 한글 작성 원칙**: `git commit` 명령을 수행할 때 커밋 메시지는 **반드시 명확한 한글(Ko)**로 작성한다. (예: `git commit -m "feat: 캘린더 컨트롤 UI 개편 및 robots.txt 추가"`)
+
+## Database & Migration Guidelines
+- **DB 마이그레이션 및 작업 안전 관리 원칙**:
+  - 단순 컬럼 추가나 데이터 UPDATE 작업 시 기존 마이그레이션 스크립트를 임의로 훼손/수정하거나 과거 마이그레이션을 일괄 재실행하지 않는다.
+  - 현재 활성 데이터베이스 표준 스키마는 `streamerChannel` & `streamerChannel_info` 짝꿍 테이블 구조이며, 레거시 마이그레이션(`0001`~`0005`)과의 충돌 방지를 위해 DB 작업 시 최신 스키마 가이드를 항상 참조한다.
+  - 마이그레이션 및 스키마 변경 사항은 반드시 문서(`backend/migrations/README.md` 등)를 통해 최신화 상태로 동기화 관리한다.
