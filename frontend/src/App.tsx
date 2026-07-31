@@ -46,12 +46,22 @@ export function App() {
   const [submitModalInitialDate, setSubmitModalInitialDate] = useState<string | undefined>(undefined);
   const [editingEvent, setEditingEvent] = useState<DebutEvent | null>(null);
 
-  // Popstate event listener for client-side routing
+  // Popstate event listener for client-side routing & /upload URL sync
   useEffect(() => {
     const handlePopState = () => {
-      setCurrentPath(window.location.pathname);
+      const path = window.location.pathname;
+      setCurrentPath(path);
+      if (path === '/upload') {
+        setShowSubmitModal(true);
+      }
     };
     window.addEventListener('popstate', handlePopState);
+
+    // Initial mount check for /upload path
+    if (window.location.pathname === '/upload') {
+      setShowSubmitModal(true);
+    }
+
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
@@ -60,7 +70,7 @@ export function App() {
     if (currentPath.startsWith('/creator/')) return; // 크리에이터 페이지의 경우 전용 SEO 유지
 
     const seo = SEO_DATA[currentLang];
-    document.title = seo.title;
+    document.title = currentPath === '/upload' ? '데뷔 일정 등록 | VDébut' : seo.title;
     document.documentElement.lang = currentLang;
 
     const metaDesc = document.querySelector('meta[name="description"]');
@@ -70,7 +80,7 @@ export function App() {
     if (metaKeywords) metaKeywords.setAttribute('content', seo.keywords);
 
     const ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle) ogTitle.setAttribute('content', seo.ogTitle);
+    if (ogTitle) ogTitle.setAttribute('content', currentPath === '/upload' ? '데뷔 일정 등록 | VDébut' : seo.ogTitle);
 
     const ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogDesc) ogDesc.setAttribute('content', seo.ogDescription);
@@ -98,12 +108,20 @@ export function App() {
     setEditingEvent(null);
     setSubmitModalInitialDate(dateStr);
     setShowSubmitModal(true);
+    if (window.location.pathname !== '/upload') {
+      window.history.pushState(null, '', '/upload');
+      setCurrentPath('/upload');
+    }
   };
 
   const handleEditEvent = (evt: DebutEvent) => {
     setEditingEvent(evt);
     setSubmitModalInitialDate(undefined);
     setShowSubmitModal(true);
+    if (window.location.pathname !== '/upload') {
+      window.history.pushState(null, '', '/upload');
+      setCurrentPath('/upload');
+    }
   };
 
   const handleUpdateEvent = (updatedEvt: DebutEvent) => {
@@ -117,6 +135,10 @@ export function App() {
     setShowSubmitModal(false);
     setEditingEvent(null);
     setSubmitModalInitialDate(undefined);
+    if (window.location.pathname === '/upload') {
+      window.history.pushState(null, '', '/');
+      setCurrentPath('/');
+    }
   };
 
   const handleNavigateHome = () => {

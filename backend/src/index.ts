@@ -251,6 +251,42 @@ app.get('/creator/:slug', async (c) => {
   }
 });
 
+// 7.5 Dynamic SEO Meta Injection for /upload
+app.get('/upload', async (c) => {
+  const title = `데뷔 일정 등록 | VDébut - 버튜버 데뷔 일정 신청`;
+  const description = `신입 버튜버 데뷔 일정을 VDébut 캘린더에 자유롭게 등록하고 공식 소식을 전하세요.`;
+  const canonicalUrl = `https://vdebut.live/upload`;
+
+  const assetManifest = JSON.parse(manifestJSON || '{}');
+  try {
+    const res = await getAssetFromKV(
+      {
+        request: c.req.raw,
+        waitUntil: (promise) => c.executionCtx.waitUntil(promise),
+      },
+      {
+        ASSET_NAMESPACE: c.env.__STATIC_CONTENT,
+        ASSET_MANIFEST: assetManifest,
+        mapRequestToAsset: serveSinglePageApp,
+      }
+    );
+
+    let html = await res.text();
+
+    html = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
+    html = html.replace(/<meta name="title" content=".*?" \/>/, `<meta name="title" content="${title}" />`);
+    html = html.replace(/<meta name="description" content=".*?" \/>/, `<meta name="description" content="${description}" />`);
+    html = html.replace(/<link rel="canonical" href=".*?" \/>/, `<link rel="canonical" href="${canonicalUrl}" />`);
+    html = html.replace(/<meta property="og:title" content=".*?" \/>/, `<meta property="og:title" content="${title}" />`);
+    html = html.replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${description}" />`);
+    html = html.replace(/<meta property="og:url" content=".*?" \/>/, `<meta property="og:url" content="${canonicalUrl}" />`);
+
+    return c.html(html);
+  } catch (e: any) {
+    return c.text(`SPA Asset Error: ${e?.message || 'Asset NotFound'}`, 404);
+  }
+});
+
 // 8. Safe Static Asset & SPA Fallback Handler
 app.all('*', async (c) => {
   const assetManifest = JSON.parse(manifestJSON || '{}');

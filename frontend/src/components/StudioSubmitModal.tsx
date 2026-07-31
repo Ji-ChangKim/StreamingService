@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Send, Globe, CheckCircle2, Search, Edit2, Check, Building2, User } from 'lucide-react';
+import { X, Send, Globe, CheckCircle2, Search, Edit2, Check, Building2, User, Clock, Flame } from 'lucide-react';
 import { DebutEvent } from '../types';
 import { getAvatarUrl } from '../utils/avatarUtils';
 import { createDebutEvent, updateDebutEvent } from '../services/eventService';
@@ -44,7 +44,26 @@ export function StudioSubmitModal({
   const [agencyType, setAgencyType] = useState<'INDIE' | 'AGENCY'>('INDIE');
   const [agencyName, setAgencyName] = useState('');
 
-  // isOpen 및 editEvent 상태 변경 시 폼 필드 동기화 또는 신규 작성 리셋
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFetchingProfile, setIsFetchingProfile] = useState(false);
+  const [fetchMessage, setFetchMessage] = useState('');
+  const [isFetchedSuccess, setIsFetchedSuccess] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  // 💡 2. 모달이 열려있는 동안 뒤 화면 및 전체 스크롤 고정 (Body Scroll Lock)
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  // isOpen 및 editEvent 상태 변경 시 폼 필드 동기화 또는 리셋
   useEffect(() => {
     if (!isOpen) return;
 
@@ -82,7 +101,6 @@ export function StudioSubmitModal({
         // fallback
       }
     } else {
-      // 신규 등록 모드: 이전 잔여 데이터 깨끗이 리셋 & 전달된 initialDate 또는 오늘 날짜로 세팅!
       setWatchUrl('');
       setPlatform('CHZZK');
       setDisplayName('');
@@ -98,12 +116,6 @@ export function StudioSubmitModal({
       setFetchMessage('');
     }
   }, [isOpen, editEvent, initialDate]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isFetchingProfile, setIsFetchingProfile] = useState(false);
-  const [fetchMessage, setFetchMessage] = useState('');
-  const [isFetchedSuccess, setIsFetchedSuccess] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState('');
 
   // URL 패턴 기반 플랫폼 자동 파싱
   const parsePlatformFromUrl = (url: string): string => {
@@ -153,7 +165,7 @@ export function StudioSubmitModal({
         setDescription(`신입 버튜버의 공식 ${platformLabel} 방송국입니다.`);
         setFetchMessage(`⚠️ ${data.error || '방송국 정보를 찾을 수 없습니다. 활동명을 직접 입력해 주세요.'}`);
       }
-    } catch (err) {
+    } catch {
       setIsFetchedSuccess(false);
       setDisplayName('');
       setAvatarUrl('');
@@ -165,7 +177,6 @@ export function StudioSubmitModal({
     }
   };
 
-  // URL 변경 시 500ms Debounce 후 자동 프로필 조회
   useEffect(() => {
     if (!watchUrl || watchUrl.trim().length < 8) {
       setFetchMessage('');
@@ -200,6 +211,66 @@ export function StudioSubmitModal({
       return `${date} ${time}`;
     }
   })();
+
+  // 💡 6 & 7. D - N 및 D-0 당일 디자이너 타임 뱃지 계산 로직
+  const getDdayBadgeInfo = () => {
+    try {
+      const targetTime = new Date(`${date}T${time}:00`).getTime();
+      const nowTime = new Date().getTime();
+      const diffMs = targetTime - nowTime;
+
+      // 자정 기준 일수 계산
+      const targetMidnight = new Date(`${date}T00:00:00`).getTime();
+      const today = new Date();
+      const todayMidnight = new Date(`${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}T00:00:00`).getTime();
+      const diffDays = Math.round((targetMidnight - todayMidnight) / (1000 * 60 * 60 * 24));
+
+      if (diffDays > 0) {
+        return {
+          type: 'DAY',
+          label: `D - ${diffDays}`,
+          colorClass: 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xs border border-purple-400',
+        };
+      } else if (diffDays < 0) {
+        return {
+          type: 'PASSED',
+          label: `D + ${Math.abs(diffDays)}`,
+          colorClass: 'bg-slate-200 text-slate-700 font-bold border border-slate-300',
+        };
+      } else {
+        // D-0 (당일 데뷔)
+        const diffMinutes = Math.floor(diffMs / (1000 * 60));
+        const diffHours = Math.floor(diffMinutes / 60);
+
+        if (diffMinutes < 10) {
+          return {
+            type: 'URGENT',
+            label: '곧 데뷔!',
+            colorClass: 'bg-gradient-to-r from-pink-500 via-rose-500 to-red-500 text-white font-extrabold shadow-md border border-pink-300 animate-pulse',
+            icon: <Flame className="w-3.5 h-3.5 text-yellow-300 animate-bounce" />,
+          };
+        } else if (diffMinutes < 60) {
+          return {
+            type: 'MINUTES',
+            label: `데뷔까지 ${diffMinutes}분`,
+            colorClass: 'bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold shadow-xs border border-amber-300',
+            icon: <Clock className="w-3.5 h-3.5 text-white" />,
+          };
+        } else {
+          return {
+            type: 'HOURS',
+            label: `데뷔까지 ${diffHours}시간`,
+            colorClass: 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-xs border border-blue-300',
+            icon: <Clock className="w-3.5 h-3.5 text-white" />,
+          };
+        }
+      }
+    } catch {
+      return { type: 'DAY', label: 'D - 0', colorClass: 'bg-purple-600 text-white' };
+    }
+  };
+
+  const ddayBadge = getDdayBadgeInfo();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -257,34 +328,45 @@ export function StudioSubmitModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
-      {/* 팝업 모달 창 컨테이너 (relative 지정으로 우측 상단 X 버튼 absolute 배치) */}
-      <div className="relative bg-white rounded-[8px] max-w-[640px] w-full shadow-2xl border border-[#CBD5E1] flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-fadeIn">
+      {/* 팝업 모달 창 컨테이너 */}
+      <div className="bg-white rounded-[8px] max-w-[640px] w-full shadow-2xl border border-[#CBD5E1] flex flex-col max-h-[92vh] overflow-hidden">
         
-        {/* 팝업 우측 상단 X 닫기 버튼 (2번 이미지 와이어프레임 100% 반영) */}
-        <button
-          onClick={onClose}
-          className="absolute -top-3.5 -right-3.5 sm:-top-4 sm:-right-4 z-20 p-2 bg-[#0F172A] hover:bg-[#2563EB] text-white rounded-full shadow-lg border border-slate-700 transition-all cursor-pointer group"
-          title="닫기"
-        >
-          <X className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
-        </button>
+        {/* 💡 3. Header: 좌측 [X] 닫기 버튼, 중앙 로고/타이틀, 우측 [등록] 제출 버튼 배치 */}
+        <div className="bg-[#0F172A] text-white px-4 py-3.5 sm:px-5 sm:py-4 rounded-t-[8px] flex items-center justify-between shrink-0 border-b border-slate-800">
+          
+          {/* 좌측 상단 X 닫기 버튼 */}
+          <button
+            onClick={onClose}
+            className="p-1.5 hover:bg-white/10 text-slate-300 hover:text-white rounded-[6px] transition-colors cursor-pointer flex items-center gap-1 text-xs font-bold"
+            title="닫기"
+          >
+            <X className="w-5 h-5" />
+            <span className="hidden sm:inline">닫기</span>
+          </button>
 
-        {/* Header */}
-        <div className="bg-[#0F172A] text-white p-4 sm:p-5 rounded-t-[8px] flex items-center justify-between shrink-0 border-b border-slate-800">
-          <div className="flex items-center gap-3">
-            <div className="p-1.5 bg-white/10 rounded-[6px] shrink-0">
-              <img src="/logo.png" alt="VDébut Logo" className="h-7 sm:h-8 w-auto object-contain" />
+          {/* 중앙 1. logo_white_bg 로고 및 타이틀 */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="p-1 bg-white rounded-[6px] shrink-0 shadow-xs">
+              <img src="/logo_white_bg.png" alt="VDébut Logo" className="h-6 sm:h-7 w-auto object-contain" />
             </div>
-            <div>
-              <h3 className="text-lg sm:text-xl font-extrabold font-['Outfit']">
-                데뷔 일정 등록
-              </h3>
-              <p className="text-xs text-slate-300">
-                방송국 URL을 입력하면 프로필 정보가 자동으로 불러와집니다.
-              </p>
-            </div>
+            <h3 className="text-base sm:text-lg font-extrabold font-['Outfit'] text-white">
+              데뷔 일정 등록
+            </h3>
           </div>
+
+          {/* 우측 상단 등록 (Submit) 버튼 */}
+          <button
+            onClick={() => {
+              const formEle = document.getElementById('debut-submit-form') as HTMLFormElement;
+              if (formEle) formEle.requestSubmit();
+            }}
+            disabled={isSubmitting || !watchUrl || !displayName}
+            className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-[6px] font-extrabold text-xs sm:text-sm bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white transition-all flex items-center gap-1.5 shadow-md cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <span>{isSubmitting ? '등록 중' : '등록'}</span>
+            <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          </button>
         </div>
 
         {submitted ? (
@@ -296,9 +378,9 @@ export function StudioSubmitModal({
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4 sm:space-y-4.5 text-sm font-medium text-[#0F172A] overflow-y-auto">
+          <form id="debut-submit-form" onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4 sm:space-y-4.5 text-sm font-medium text-[#0F172A] overflow-y-auto">
             
-            {/* Step 1: 방송/프로필 URL 입력 (최상단) */}
+            {/* Step 1: 방송/프로필 URL 입력 */}
             <div className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] p-3.5 sm:p-4 space-y-2">
               <div className="flex items-center justify-between">
                 <label className="block font-bold text-[#0F172A] text-sm flex items-center gap-1.5">
@@ -332,7 +414,7 @@ export function StudioSubmitModal({
               )}
             </div>
 
-            {/* Step 2: 프로필 연동 결과 카드 (성공 시 적용/수정 토글) */}
+            {/* Step 2: 프로필 연동 결과 카드 */}
             {isFetchedSuccess && displayName ? (
               <div className="bg-gradient-to-r from-blue-50 to-slate-50 border border-[#BFDBFE] rounded-[6px] p-3.5 flex items-center justify-between gap-3 animate-fadeIn">
                 <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -363,7 +445,6 @@ export function StudioSubmitModal({
                   </div>
                 </div>
 
-                {/* 적용 / 수정 선택 버튼 */}
                 <div className="shrink-0 flex items-center gap-1.5">
                   {!isEditingName ? (
                     <>
@@ -393,7 +474,6 @@ export function StudioSubmitModal({
                 </div>
               </div>
             ) : (
-              /* 수동 닉네임 입력 (자동 조회가 미동작 시 또는 404 URL 일 때) */
               <div className="animate-fadeIn">
                 <label className="block font-bold mb-1.5 text-[#334155] text-sm">
                   스트리머 활동명 <span className="text-red-500">*</span>
@@ -451,7 +531,7 @@ export function StudioSubmitModal({
               </div>
             </div>
 
-            {/* Step 4: 소속 선택 (개인 vs 기업) */}
+            {/* Step 4: 소속 선택 */}
             <div className="space-y-1.5">
               <label className="block font-bold text-[#334155] text-sm">소속 구분</label>
               <div className="grid grid-cols-2 gap-2">
@@ -488,7 +568,6 @@ export function StudioSubmitModal({
                 </label>
               </div>
 
-              {/* 기업 선택 시 에이전시/기업명 입력 필드 활성화 */}
               {agencyType === 'AGENCY' && (
                 <div className="pt-1.5 animate-fadeIn">
                   <label className="block font-bold mb-1.5 text-[#334155] text-sm">
@@ -506,7 +585,7 @@ export function StudioSubmitModal({
               )}
             </div>
 
-            {/* Step 5: 데뷔 인사말 & 소식 (프로필 소개글 자동 바인딩 -> 자유 수정 가능) */}
+            {/* Step 5: 데뷔 인사말 & 소식 */}
             <div>
               <label className="block font-bold mb-1.5 text-[#334155] text-sm">데뷔 인사말 & 소식</label>
               <textarea
@@ -521,17 +600,27 @@ export function StudioSubmitModal({
               </p>
             </div>
 
-            {/* 시각 변환 미리보기 박스 (두 줄 레이아웃 적용으로 긴 타임존 짤림 방지) */}
-            <div className="bg-[#F0F9FF] border border-[#BFDBFE] rounded-[6px] p-3.5 text-xs sm:text-sm text-[#1E40AF] flex flex-col gap-1.5 shadow-2xs">
-              <span className="flex items-center gap-1.5 font-bold">
-                <Globe className="w-4 h-4 text-[#2563EB] shrink-0" /> 표출 변환 시각:
-              </span>
-              <span className="font-mono font-extrabold text-sm sm:text-base text-[#1E40AF] break-words pl-5">
-                {previewLocalTime} ({timezone})
-              </span>
+            {/* 💡 5, 6, 7. "캘린더 표시 시간:" 및 D - N / 데뷔까지 N시간 / 곧 데뷔! 뱃지 박스 */}
+            <div className="bg-[#F0F9FF] border border-[#BFDBFE] rounded-[6px] p-3.5 text-xs sm:text-sm text-[#1E40AF] flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
+              <div className="flex flex-col gap-1 min-w-0">
+                <span className="flex items-center gap-1.5 font-bold text-[#1E3A8A]">
+                  <Globe className="w-4 h-4 text-[#2563EB] shrink-0" /> 캘린더 표시 시간:
+                </span>
+                <span className="font-mono font-extrabold text-sm sm:text-base text-[#1E40AF] break-words pl-5">
+                  {previewLocalTime} ({timezone})
+                </span>
+              </div>
+
+              {/* 💡 D-day 카운트다운 박스 (우측) */}
+              <div className="shrink-0 self-start sm:self-center pl-5 sm:pl-0">
+                <span className={`px-3 py-1.5 rounded-[6px] text-xs sm:text-sm font-black flex items-center gap-1.5 ${ddayBadge.colorClass}`}>
+                  {ddayBadge.icon}
+                  <span>{ddayBadge.label}</span>
+                </span>
+              </div>
             </div>
 
-            {/* 하단 버튼 (2번 이미지 구조 및 세련된 다크/라이트 디자인 개선) */}
+            {/* 하단 버튼 영역 */}
             {submitError && (
               <div className="rounded-[6px] border border-red-200 bg-red-50 px-3.5 py-2.5 text-xs font-bold text-red-700">
                 {submitError}
@@ -547,8 +636,8 @@ export function StudioSubmitModal({
               </button>
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="px-6 py-2.5 rounded-[6px] font-bold text-sm bg-[#0F172A] text-white hover:bg-[#2563EB] transition-all flex items-center gap-2 shadow-xs cursor-pointer disabled:opacity-50"
+                disabled={isSubmitting || !watchUrl || !displayName}
+                className="px-6 py-2.5 rounded-[6px] font-extrabold text-sm bg-[#0F172A] hover:bg-[#2563EB] text-white transition-all flex items-center gap-2 shadow-xs cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? '등록 중...' : '등록'} <Send className="w-4 h-4" />
               </button>
