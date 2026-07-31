@@ -30,11 +30,11 @@ export function CalendarControlBar({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const platforms = [
-    { id: 'ALL', label: '전체 플랫폼', logo: null },
-    { id: 'CHZZK', label: '치지직', logo: '/icons/logo_chzzk.png', height: 'h-[22px]' },
-    { id: 'SOOP', label: 'SOOP', logo: null },
-    { id: 'YOUTUBE', label: 'YouTube', logo: '/icons/logo_youtube.png', height: 'h-[25px]' },
-    { id: 'TWITCH', label: 'Twitch', logo: '/icons/logo_twitch.png', height: 'h-[22px]' },
+    { id: 'ALL', label: '전체 플랫폼' },
+    { id: 'CHZZK', label: '치지직 (CHZZK)' },
+    { id: 'SOOP', label: 'SOOP' },
+    { id: 'YOUTUBE', label: '유튜브 (YouTube)' },
+    { id: 'TWITCH', label: '트위치 (Twitch)' },
   ];
 
   const currentPlatform = platforms.find((p) => p.id === selectedPlatform) || platforms[0];
@@ -54,7 +54,7 @@ export function CalendarControlBar({
       {/* 1. Header Grid: Left (Platform Select), Center (Year/Month & Today), Right (View Switcher) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 items-center justify-between gap-3 pb-3 border-b border-[#E2E8F0]">
         
-        {/* Left: Custom Platform Dropdown with Official Brand Logos */}
+        {/* Left: Custom Platform Dropdown with Text Only */}
         <div className="flex items-center justify-start">
           <div className="relative" ref={dropdownRef}>
             <button
@@ -63,17 +63,9 @@ export function CalendarControlBar({
             >
               <div className="flex items-center gap-2">
                 <Filter className="w-3.5 h-3.5 text-[#64748B] shrink-0" />
-                {currentPlatform.logo ? (
-                  <img
-                    src={currentPlatform.logo}
-                    alt={currentPlatform.label}
-                    className={`${currentPlatform.height} w-auto object-contain shrink-0`}
-                  />
-                ) : (
-                  <span className={currentPlatform.id === 'SOOP' ? 'font-bold text-[#2563EB]' : ''}>
-                    {currentPlatform.label}
-                  </span>
-                )}
+                <span className={currentPlatform.id === 'SOOP' ? 'font-bold text-[#2563EB]' : ''}>
+                  {currentPlatform.label}
+                </span>
               </div>
               <ChevronDown className={`w-3.5 h-3.5 text-[#64748B] transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
@@ -90,24 +82,16 @@ export function CalendarControlBar({
                         onPlatformSelect(p.id);
                         setIsDropdownOpen(false);
                       }}
-                      className={`w-full px-3.5 py-2.5 text-xs font-bold flex items-center justify-between transition-colors ${
+                      className={`w-full px-3.5 py-2 text-xs font-bold flex items-center justify-between transition-colors ${
                         isSelected
                           ? 'bg-[#F1F5F9] text-[#0F172A]'
                           : 'text-[#334155] hover:bg-[#F8FAFC] hover:text-[#0F172A]'
                       }`}
                     >
                       <div className="flex items-center gap-2.5 h-6">
-                        {p.logo ? (
-                          <img
-                            src={p.logo}
-                            alt={p.label}
-                            className={`${p.height} w-auto object-contain shrink-0`}
-                          />
-                        ) : (
-                          <span className={p.id === 'SOOP' ? 'font-bold text-[#2563EB]' : ''}>
-                            {p.label}
-                          </span>
-                        )}
+                        <span className={p.id === 'SOOP' ? 'font-bold text-[#2563EB]' : ''}>
+                          {p.label}
+                        </span>
                       </div>
                       {isSelected && <Check className="w-3.5 h-3.5 text-[#2563EB] shrink-0" />}
                     </button>

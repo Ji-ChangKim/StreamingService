@@ -43,27 +43,6 @@ export function FilterBar({
                   : 'bg-[#F8FAFC] text-[#5A5A5A] hover:bg-slate-200/80 hover:text-[#080808] border border-[#D8D8D8]'
               }`}
             >
-              {p.id === 'CHZZK' && (
-                <img
-                  src={isActive ? '/icons/logo_chzzk_white.png' : '/icons/logo_chzzk.png'}
-                  alt="CHZZK"
-                  className="h-[22px] w-auto object-contain shrink-0"
-                />
-              )}
-              {p.id === 'YOUTUBE' && (
-                <img
-                  src={isActive ? '/icons/logo_youtube_white.png' : '/icons/logo_youtube.png'}
-                  alt="YouTube"
-                  className="h-[25px] w-auto object-contain shrink-0"
-                />
-              )}
-              {p.id === 'TWITCH' && (
-                <img
-                  src={isActive ? '/icons/logo_twitch_white.png' : '/icons/logo_twitch.png'}
-                  alt="Twitch"
-                  className="h-[22px] w-auto object-contain shrink-0"
-                />
-              )}
               <span className={p.id === 'SOOP' && !isActive ? 'font-bold text-[#2563EB]' : ''}>
                 {p.label}
               </span>
