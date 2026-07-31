@@ -6,6 +6,7 @@ import { getAvatarUrl } from '../../utils/avatarUtils';
 interface CreatorProfilePageProps {
   slug: string;
   onNavigateHome: () => void;
+  currentLang?: string;
 }
 
 export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageProps) {

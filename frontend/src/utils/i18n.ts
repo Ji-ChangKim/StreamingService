@@ -50,7 +50,25 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     forCreators: 'FOR NEW CREATORS',
     bannerTitle: '곧 데뷔를 준비하고 있나요?',
     bannerDesc: '날짜, 방송 플랫폼, 공지 링크를 등록하면 검토 후 소개됩니다.',
-    copyright: '© 2026 VDebut. All rights reserved.'
+    copyright: '© 2026 VDebut. All rights reserved.',
+    
+    // 버튼 & 타이틀 다국어 확충
+    modalTitle: '데뷔 일정 등록',
+    close: '닫기',
+    cancel: '취소',
+    submit: '등록',
+    submitting: '등록 중...',
+    calendarDisplayTime: '캘린더 표시 시간:',
+    profileTitle: '버튜버 프로필',
+    visitChannel: '채널 방문',
+    firstDebutSchedule: '첫 방송 데뷔 일정',
+    profileIntro: '프로필 소개',
+    officialChannels: '공식 활동 채널',
+    backToCalendar: '메인 캘린더로 돌아가기',
+    debutDaysPassed: '데뷔일로부터 D +',
+    debutDaysLeft: '데뷔까지',
+    debutSoon: '곧 데뷔!',
+    recommendation: '추천 데뷔 일정 & 관련 소식',
   },
   ja: {
     heroTitle: '新しいVTuberの初舞台を一番最初にチェックしよう。',
@@ -68,8 +86,26 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     allPlatforms: '全プラットフォーム',
     forCreators: 'FOR NEW CREATORS',
     bannerTitle: 'まもなくデビュー予定ですか？',
-    bannerDesc: '日時、配信プラットフォーム、告知リンクを登録すると掲載されます.',
-    copyright: '© 2026 VDebut. All rights reserved.'
+    bannerDesc: '日時、配信プラットフォーム、告知リンクを登録すると掲載されます。',
+    copyright: '© 2026 VDebut. All rights reserved.',
+
+    // ボタン & タイトル 多言語
+    modalTitle: 'デビュー日程を登録',
+    close: '閉じる',
+    cancel: 'キャンセル',
+    submit: '登録',
+    submitting: '登録中...',
+    calendarDisplayTime: 'カレンダー表示時間:',
+    profileTitle: 'VTuber プロフィール',
+    visitChannel: 'チャンネル訪問',
+    firstDebutSchedule: '初配信デビュー日程',
+    profileIntro: 'プロフィール紹介',
+    officialChannels: '公式活動チャンネル',
+    backToCalendar: 'メインカレンダーに戻る',
+    debutDaysPassed: 'デビュー日から D +',
+    debutDaysLeft: 'デビューまで',
+    debutSoon: 'まもなくデビュー!',
+    recommendation: 'おすすめデビュー日程 & 関連ニュース',
   },
   en: {
     heroTitle: 'Every debut deserves an audience.',
@@ -88,6 +124,24 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     forCreators: 'FOR NEW CREATORS',
     bannerTitle: 'Preparing for your debut?',
     bannerDesc: 'Submit your debut date, platform, and link to be featured on our calendar.',
-    copyright: '© 2026 VDebut. All rights reserved.'
+    copyright: '© 2026 VDebut. All rights reserved.',
+
+    // Buttons & Titles i18n
+    modalTitle: 'Register Debut Schedule',
+    close: 'Close',
+    cancel: 'Cancel',
+    submit: 'Submit',
+    submitting: 'Submitting...',
+    calendarDisplayTime: 'Calendar Display Time:',
+    profileTitle: 'VTuber Profile',
+    visitChannel: 'Visit Channel',
+    firstDebutSchedule: 'First Debut Stream Schedule',
+    profileIntro: 'Profile Overview',
+    officialChannels: 'Official Channels',
+    backToCalendar: 'Back to Calendar',
+    debutDaysPassed: 'D + ',
+    debutDaysLeft: 'Debuts in ',
+    debutSoon: 'Debuting Soon!',
+    recommendation: 'Recommended Debuts & Related News',
   }
 };

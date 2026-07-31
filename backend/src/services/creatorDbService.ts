@@ -10,6 +10,7 @@ export interface CreatorProfileData {
   agencyName: string;
   creatorType: 'INDIE' | 'AGENCY';
   language: string;
+  countryCode?: string;
   isPublic: boolean;
   createdAt: string;
   updatedAt: string;
@@ -114,6 +115,7 @@ export async function fetchCreatorProfileBySlug(db: D1Database | null, slug: str
       agencyName: row.agency_name || '개인세',
       creatorType: row.agency_name?.includes('기업') ? 'AGENCY' : 'INDIE',
       language: 'ko',
+      countryCode: row.country_code || 'KR',
       isPublic: true,
       createdAt: row.created_at || new Date().toISOString(),
       updatedAt: row.updated_at || new Date().toISOString(),
@@ -134,6 +136,7 @@ export async function fetchCreatorProfileBySlug(db: D1Database | null, slug: str
             displayName,
             avatarUrl,
             agency: row.agency_name || '개인세',
+            countryCode: row.country_code || 'KR',
             slug: row.slug,
           },
         },

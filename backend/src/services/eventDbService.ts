@@ -43,6 +43,7 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
         i.debut_time,
         i.timezone,
         i.start_at_utc,
+        i.country_code,
         c.platform,
         c.channel_url,
         c.channel_name
@@ -98,7 +99,7 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
           displayName: displayName || '신입 버튜버',
           avatarUrl: avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
           agency: row.agency_name || '개인세',
-          countryCode: 'KR',
+          countryCode: row.country_code || 'KR',
           languages: ['ko'],
           slug: row.slug || `slug_${row.info_id}`,
         },
@@ -127,6 +128,7 @@ export async function insertEventToD1(db: D1Database, body: any): Promise<string
   const displayName = body.creator?.displayName || body.displayName || '신입 VTuber';
   const avatarUrl = body.creator?.avatarUrl || body.avatarUrl || '';
   const agencyName = body.creator?.agency || body.agency || '개인세';
+  const countryCode = body.creator?.countryCode || body.countryCode || 'KR';
   const description = body.description || `${displayName} 버튜버의 데뷔 방송입니다.`;
   const slug = `slug_${now}_${Math.random().toString(36).slice(2, 6)}`;
 
@@ -152,10 +154,10 @@ export async function insertEventToD1(db: D1Database, body: any): Promise<string
 
   // ② 하위 참조 테이블: streamerChannel_info 에 1:1 참조 저장
   const stRes: any = await db.prepare(`
-    INSERT INTO streamerChannel_info (channel_id, slug, display_name, profile_image_url, description, agency_name, debut_date, debut_time, timezone, start_at_utc)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO streamerChannel_info (channel_id, slug, display_name, profile_image_url, description, agency_name, debut_date, debut_time, timezone, start_at_utc, country_code)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     RETURNING id
-  `).bind(channelId, slug, displayName, avatarUrl, description, agencyName, debutDate, debutTime, timezone, startAtUtc).first();
+  `).bind(channelId, slug, displayName, avatarUrl, description, agencyName, debutDate, debutTime, timezone, startAtUtc, countryCode).first();
 
   const infoId = stRes?.id || channelId;
   return `evt_${infoId}`;

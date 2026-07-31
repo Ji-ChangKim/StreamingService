@@ -3,6 +3,7 @@ import { X, Send, Globe, CheckCircle2, Search, Edit2, Check, Building2, User, Cl
 import { DebutEvent } from '../types';
 import { getAvatarUrl } from '../utils/avatarUtils';
 import { createDebutEvent, updateDebutEvent } from '../services/eventService';
+import { Language, UI_TRANSLATIONS } from '../utils/i18n';
 
 interface StudioSubmitModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface StudioSubmitModalProps {
   editEvent?: DebutEvent | null;
   initialDate?: string;
   onUpdateSuccess?: (updatedEvent: DebutEvent) => void;
+  currentLang?: Language;
 }
 
 export function StudioSubmitModal({
@@ -20,7 +22,9 @@ export function StudioSubmitModal({
   editEvent,
   initialDate,
   onUpdateSuccess,
+  currentLang = 'ko',
 }: StudioSubmitModalProps) {
+  const t = UI_TRANSLATIONS[currentLang] || UI_TRANSLATIONS.ko;
   const [watchUrl, setWatchUrl] = useState('');
   const [platform, setPlatform] = useState('CHZZK');
   const [displayName, setDisplayName] = useState('');
@@ -339,10 +343,10 @@ export function StudioSubmitModal({
           <button
             onClick={onClose}
             className="p-1.5 hover:bg-white/10 text-slate-300 hover:text-white rounded-[6px] transition-colors cursor-pointer flex items-center gap-1 text-xs font-bold"
-            title="닫기"
+            title={t.close}
           >
             <X className="w-5 h-5" />
-            <span className="hidden sm:inline">닫기</span>
+            <span className="hidden sm:inline">{t.close}</span>
           </button>
 
           {/* 중앙 1. logo_white_bg 로고 및 타이틀 */}
@@ -351,7 +355,7 @@ export function StudioSubmitModal({
               <img src="/logo_white_bg.png" alt="VDébut Logo" className="h-6 sm:h-7 w-auto object-contain" />
             </div>
             <h3 className="text-base sm:text-lg font-extrabold font-['Outfit'] text-white">
-              데뷔 일정 등록
+              {t.modalTitle}
             </h3>
           </div>
 
@@ -364,7 +368,7 @@ export function StudioSubmitModal({
             disabled={isSubmitting || !watchUrl || !displayName}
             className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-[6px] font-extrabold text-xs sm:text-sm bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white transition-all flex items-center gap-1.5 shadow-md cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <span>{isSubmitting ? '등록 중' : '등록'}</span>
+            <span>{isSubmitting ? t.submitting : t.submit}</span>
             <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
         </div>
@@ -604,7 +608,7 @@ export function StudioSubmitModal({
             <div className="bg-[#F0F9FF] border border-[#BFDBFE] rounded-[6px] p-3.5 text-xs sm:text-sm text-[#1E40AF] flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
               <div className="flex flex-col gap-1 min-w-0">
                 <span className="flex items-center gap-1.5 font-bold text-[#1E3A8A]">
-                  <Globe className="w-4 h-4 text-[#2563EB] shrink-0" /> 캘린더 표시 시간:
+                  <Globe className="w-4 h-4 text-[#2563EB] shrink-0" /> {t.calendarDisplayTime}
                 </span>
                 <span className="font-mono font-extrabold text-sm sm:text-base text-[#1E40AF] break-words pl-5">
                   {previewLocalTime} ({timezone})

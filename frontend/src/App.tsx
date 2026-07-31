@@ -171,6 +171,7 @@ export function App() {
           <CreatorProfilePage
             slug={creatorSlug}
             onNavigateHome={handleNavigateHome}
+            currentLang={currentLang}
           />
         ) : (
           <>
@@ -212,6 +213,7 @@ export function App() {
         editEvent={editingEvent}
         initialDate={submitModalInitialDate}
         onUpdateSuccess={handleUpdateEvent}
+        currentLang={currentLang}
       />
     </div>
   );
