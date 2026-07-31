@@ -9,7 +9,6 @@ interface ScheduleInspectorPanelProps {
   selectedTimezone: string;
   onOpenSubmitModal?: (dateStr?: string) => void;
   onDownloadICS: (evt: DebutEvent) => void;
-  onPreviewAvatar: (url: string, name: string) => void;
   onClosePanel: () => void;
   onEditEvent?: (evt: DebutEvent) => void;
 }
@@ -20,7 +19,6 @@ export function ScheduleInspectorPanel({
   selectedTimezone,
   onOpenSubmitModal,
   onDownloadICS,
-  onPreviewAvatar,
   onClosePanel,
 }: ScheduleInspectorPanelProps) {
   return (
@@ -78,6 +76,14 @@ export function ScheduleInspectorPanel({
             const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
             const formattedTime = formatLocalTime(evt.startAtUtc, selectedTimezone);
             const isIndie = evt.creator.agency.toLowerCase().includes('indie') || evt.creator.agency === '개인세';
+            const slug = (evt.creator as any).slug || (evt.creator.displayName === '아롱띠' ? 'arongtti' : 'arongtti');
+
+            const handleProfileClick = (e: React.MouseEvent) => {
+              e.preventDefault();
+              window.history.pushState({}, '', `/creator/${slug}`);
+              window.dispatchEvent(new Event('popstate'));
+              onClosePanel();
+            };
 
             return (
               <div
@@ -86,18 +92,23 @@ export function ScheduleInspectorPanel({
               >
                 {/* Creator Profile Info */}
                 <div className="flex items-start gap-3">
-                  <AvatarImage
-                    src={evt.creator.avatarUrl}
-                    alt={evt.creator.displayName}
-                    onClick={() => onPreviewAvatar(evt.creator.avatarUrl, evt.creator.displayName)}
-                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-white shadow-xs cursor-pointer hover:scale-105 transition-transform"
-                  />
+                  <a href={`/creator/${slug}`} onClick={handleProfileClick} className="shrink-0">
+                    <AvatarImage
+                      src={evt.creator.avatarUrl}
+                      alt={evt.creator.displayName}
+                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-white shadow-xs cursor-pointer hover:scale-105 transition-transform"
+                    />
+                  </a>
 
                   <div className="min-w-0 flex-grow">
                     <div className="flex items-center gap-1.5 flex-wrap mb-1">
-                      <span className="text-sm font-extrabold text-[#0F172A] truncate">
+                      <a
+                        href={`/creator/${slug}`}
+                        onClick={handleProfileClick}
+                        className="text-sm font-extrabold text-[#0F172A] hover:text-[#2563EB] transition-colors truncate"
+                      >
                         {evt.creator.displayName}
-                      </span>
+                      </a>
                       {primaryLink?.platform === 'CHZZK' ? (
                         <span className="bg-[#00FFA3] text-[#000000] font-extrabold text-[11px] px-2.5 py-1 rounded-[4px] flex items-center gap-1.5 shrink-0">
                           <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
@@ -131,21 +142,28 @@ export function ScheduleInspectorPanel({
                 </div>
 
                 {/* Action CTAs */}
-                <div className="flex items-center gap-1.5 sm:gap-2 pt-2 border-t border-[#E2E8F0]">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-2 border-t border-[#E2E8F0]">
                   <a
                     href={primaryLink?.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex-1 flex items-center justify-center gap-1 px-2.5 py-2 text-[11px] sm:text-xs font-bold bg-[#0F172A] text-white hover:bg-[#2563EB] rounded-[8px] transition-colors shadow-xs"
+                    className="flex-1 min-w-[120px] flex items-center justify-center gap-1 px-2.5 py-2 text-[11px] sm:text-xs font-bold bg-[#0F172A] text-white hover:bg-[#2563EB] rounded-[8px] transition-colors shadow-xs"
                   >
-                    방송 보러가기 / 팔로우 <ExternalLink className="w-3 h-3" />
+                    방송 보러가기 <ExternalLink className="w-3 h-3" />
                   </a>
                   <button
                     onClick={() => onDownloadICS(evt)}
-                    className="flex-1 flex items-center justify-center gap-1 px-2.5 py-2 text-[11px] sm:text-xs font-bold bg-white border border-[#CBD5E1] text-[#0F172A] hover:bg-[#F1F5F9] rounded-[8px] transition-colors"
+                    className="flex-1 min-w-[100px] flex items-center justify-center gap-1 px-2.5 py-2 text-[11px] sm:text-xs font-bold bg-white border border-[#CBD5E1] text-[#0F172A] hover:bg-[#F1F5F9] rounded-[8px] transition-colors"
                   >
                     캘린더 추가 <Download className="w-3 h-3" />
                   </button>
+                  <a
+                    href={`/creator/${slug}`}
+                    onClick={handleProfileClick}
+                    className="w-full text-center py-1.5 text-xs font-extrabold text-[#2563EB] hover:underline bg-blue-50/60 rounded-[6px] border border-blue-100 transition-colors block mt-1"
+                  >
+                    👉 {evt.creator.displayName} 스트리머 프로필 상세 보기
+                  </a>
                 </div>
               </div>
             );

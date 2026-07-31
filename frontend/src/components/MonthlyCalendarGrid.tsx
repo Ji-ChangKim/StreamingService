@@ -132,7 +132,6 @@ export function MonthlyCalendarGrid({
               selectedTimezone={selectedTimezone}
               onOpenSubmitModal={onOpenSubmitModal}
               onDownloadICS={onDownloadICS}
-              onPreviewAvatar={(url, name) => setPreviewAvatar({ url, name })}
               onClosePanel={() => setSelectedDateStr(null)}
               onEditEvent={onEditEvent}
             />

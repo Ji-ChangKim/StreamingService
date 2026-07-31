@@ -5,6 +5,7 @@ import { MonthlyCalendarGrid } from './components/MonthlyCalendarGrid';
 import { FooterBanner } from './components/FooterBanner';
 import { Footer } from './components/Footer';
 import { StudioSubmitModal } from './components/StudioSubmitModal';
+import { CreatorProfilePage } from './components/profile/CreatorProfilePage';
 import { DebutEvent } from './types';
 import { fetchDebutEvents } from './services/eventService';
 import { generateICSContent, triggerFileDownload } from './utils/dateUtils';
@@ -12,6 +13,7 @@ import { filterEventsByPlatform, filterEventsByQuery } from './utils/eventUtils'
 import { Language, SEO_DATA } from './utils/i18n';
 
 export function App() {
+  const [currentPath, setCurrentPath] = useState<string>(() => window.location.pathname);
   const [activeNav, setActiveNav] = useState<string>('schedule');
   const [currentLang, setCurrentLang] = useState<Language>(() => {
     try {
@@ -44,8 +46,19 @@ export function App() {
   const [submitModalInitialDate, setSubmitModalInitialDate] = useState<string | undefined>(undefined);
   const [editingEvent, setEditingEvent] = useState<DebutEvent | null>(null);
 
+  // Popstate event listener for client-side routing
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPath(window.location.pathname);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   // 언어 변경 시 SEO Meta 태그 및 html lang 속성 동적 업데이트
   useEffect(() => {
+    if (currentPath.startsWith('/creator/')) return; // 크리에이터 페이지의 경우 전용 SEO 유지
+
     const seo = SEO_DATA[currentLang];
     document.title = seo.title;
     document.documentElement.lang = currentLang;
@@ -61,7 +74,7 @@ export function App() {
 
     const ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogDesc) ogDesc.setAttribute('content', seo.ogDescription);
-  }, [currentLang]);
+  }, [currentLang, currentPath]);
 
   useEffect(() => {
     fetchDebutEvents().then(setEvents);
@@ -106,12 +119,25 @@ export function App() {
     setSubmitModalInitialDate(undefined);
   };
 
+  const handleNavigateHome = () => {
+    window.history.pushState({}, '', '/');
+    setCurrentPath('/');
+  };
+
+  const isCreatorPage = currentPath.startsWith('/creator/');
+  const creatorSlug = isCreatorPage ? currentPath.replace('/creator/', '').split('/')[0] : '';
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-['Inter'] selection:bg-[#2563EB] selection:text-white">
       {/* 1. Header Bar */}
       <Navbar
         activeNav={activeNav}
-        setActiveNav={setActiveNav}
+        setActiveNav={(nav) => {
+          setActiveNav(nav);
+          if (currentPath !== '/') {
+            handleNavigateHome();
+          }
+        }}
         currentLang={currentLang}
         onLanguageChange={setCurrentLang}
         onOpenSubmitModal={() => handleOpenSubmitModal()}
@@ -119,29 +145,38 @@ export function App() {
 
       {/* 2. Main Content Container */}
       <main className="flex-grow max-w-[1280px] w-full mx-auto px-4 sm:px-6">
-        {/* Hero Section */}
-        <HeroHeader
-          allEvents={events}
-          selectedTimezone={selectedTimezone}
-          currentLang={currentLang}
-        />
+        {isCreatorPage && creatorSlug ? (
+          <CreatorProfilePage
+            slug={creatorSlug}
+            onNavigateHome={handleNavigateHome}
+          />
+        ) : (
+          <>
+            {/* Hero Section */}
+            <HeroHeader
+              allEvents={events}
+              selectedTimezone={selectedTimezone}
+              currentLang={currentLang}
+            />
 
-        {/* Main Monthly Calendar Grid Section */}
-        <MonthlyCalendarGrid
-          events={filteredEvents}
-          selectedTimezone={selectedTimezone}
-          setSelectedTimezone={setSelectedTimezone}
-          selectedPlatform={selectedPlatform}
-          setSelectedPlatform={setSelectedPlatform}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          onDownloadICS={handleDownloadICS}
-          onOpenSubmitModal={handleOpenSubmitModal}
-          onEditEvent={handleEditEvent}
-        />
+            {/* Main Monthly Calendar Grid Section */}
+            <MonthlyCalendarGrid
+              events={filteredEvents}
+              selectedTimezone={selectedTimezone}
+              setSelectedTimezone={setSelectedTimezone}
+              selectedPlatform={selectedPlatform}
+              setSelectedPlatform={setSelectedPlatform}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              onDownloadICS={handleDownloadICS}
+              onOpenSubmitModal={handleOpenSubmitModal}
+              onEditEvent={handleEditEvent}
+            />
 
-        {/* Creator Callout Banner */}
-        <FooterBanner onOpenSubmitModal={() => handleOpenSubmitModal()} />
+            {/* Creator Callout Banner */}
+            <FooterBanner onOpenSubmitModal={() => handleOpenSubmitModal()} />
+          </>
+        )}
       </main>
 
       {/* 3. Footer */}
