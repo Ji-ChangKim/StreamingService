@@ -7,7 +7,7 @@ interface ScheduleInspectorPanelProps {
   selectedDateStr: string;
   events: DebutEvent[];
   selectedTimezone: string;
-  onOpenSubmitModal?: () => void;
+  onOpenSubmitModal?: (dateStr?: string) => void;
   onDownloadICS: (evt: DebutEvent) => void;
   onPreviewAvatar: (url: string, name: string) => void;
   onClosePanel: () => void;
@@ -41,7 +41,7 @@ export function ScheduleInspectorPanel({
           {/* 1-Click Add Schedule Button */}
           {onOpenSubmitModal && (
             <button
-              onClick={onOpenSubmitModal}
+              onClick={() => onOpenSubmitModal(selectedDateStr)}
               className="px-2.5 py-1.5 text-xs font-bold bg-[#0F172A] text-white hover:bg-[#1E293B] rounded-[8px] transition-colors flex items-center gap-1 shadow-xs shrink-0"
             >
               <PlusCircle className="w-3.5 h-3.5 text-cyan-400" />
@@ -66,7 +66,7 @@ export function ScheduleInspectorPanel({
           <p className="font-semibold">이 날짜에는 아직 등록된 데뷔 일정이 없습니다.</p>
           {onOpenSubmitModal && (
             <button
-              onClick={onOpenSubmitModal}
+              onClick={() => onOpenSubmitModal(selectedDateStr)}
               className="text-[#2563EB] font-bold hover:underline inline-block mt-1"
             >
               👉 첫 번째 데뷔 일정 직접 등록하기

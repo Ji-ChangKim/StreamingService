@@ -41,6 +41,7 @@ export function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [events, setEvents] = useState<DebutEvent[]>([]);
   const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
+  const [submitModalInitialDate, setSubmitModalInitialDate] = useState<string | undefined>(undefined);
   const [editingEvent, setEditingEvent] = useState<DebutEvent | null>(null);
 
   // 언어 변경 시 SEO Meta 태그 및 html lang 속성 동적 업데이트
@@ -80,8 +81,15 @@ export function App() {
     setEvents((prev) => [newEvent, ...prev]);
   };
 
+  const handleOpenSubmitModal = (dateStr?: string) => {
+    setEditingEvent(null);
+    setSubmitModalInitialDate(dateStr);
+    setShowSubmitModal(true);
+  };
+
   const handleEditEvent = (evt: DebutEvent) => {
     setEditingEvent(evt);
+    setSubmitModalInitialDate(undefined);
     setShowSubmitModal(true);
   };
 
@@ -95,6 +103,7 @@ export function App() {
   const handleCloseModal = () => {
     setShowSubmitModal(false);
     setEditingEvent(null);
+    setSubmitModalInitialDate(undefined);
   };
 
   return (
@@ -105,10 +114,7 @@ export function App() {
         setActiveNav={setActiveNav}
         currentLang={currentLang}
         onLanguageChange={setCurrentLang}
-        onOpenSubmitModal={() => {
-          setEditingEvent(null);
-          setShowSubmitModal(true);
-        }}
+        onOpenSubmitModal={() => handleOpenSubmitModal()}
       />
 
       {/* 2. Main Content Container */}
@@ -130,18 +136,12 @@ export function App() {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           onDownloadICS={handleDownloadICS}
-          onOpenSubmitModal={() => {
-            setEditingEvent(null);
-            setShowSubmitModal(true);
-          }}
+          onOpenSubmitModal={handleOpenSubmitModal}
           onEditEvent={handleEditEvent}
         />
 
         {/* Creator Callout Banner */}
-        <FooterBanner onOpenSubmitModal={() => {
-          setEditingEvent(null);
-          setShowSubmitModal(true);
-        }} />
+        <FooterBanner onOpenSubmitModal={() => handleOpenSubmitModal()} />
       </main>
 
       {/* 3. Footer */}
@@ -153,6 +153,7 @@ export function App() {
         onClose={handleCloseModal}
         onSubmitSuccess={handleAddEvent}
         editEvent={editingEvent}
+        initialDate={submitModalInitialDate}
         onUpdateSuccess={handleUpdateEvent}
       />
     </div>

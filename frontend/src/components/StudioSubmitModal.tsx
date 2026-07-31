@@ -9,6 +9,7 @@ interface StudioSubmitModalProps {
   onClose: () => void;
   onSubmitSuccess: (newEvent: DebutEvent) => void;
   editEvent?: DebutEvent | null;
+  initialDate?: string;
   onUpdateSuccess?: (updatedEvent: DebutEvent) => void;
 }
 
@@ -17,6 +18,7 @@ export function StudioSubmitModal({
   onClose,
   onSubmitSuccess,
   editEvent,
+  initialDate,
   onUpdateSuccess,
 }: StudioSubmitModalProps) {
   const [watchUrl, setWatchUrl] = useState('');
@@ -25,7 +27,15 @@ export function StudioSubmitModal({
   const [avatarUrl, setAvatarUrl] = useState('');
   const [isEditingName, setIsEditingName] = useState(false);
   
-  const [date, setDate] = useState('2026-08-01');
+  const getTodayString = () => {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const [date, setDate] = useState(initialDate || getTodayString());
   const [time, setTime] = useState('20:00');
   const [timezone, setTimezone] = useState('Asia/Seoul');
   const [description, setDescription] = useState('');
@@ -72,13 +82,13 @@ export function StudioSubmitModal({
         // fallback
       }
     } else {
-      // 신규 등록 모드: 이전 잔여 데이터 깨끗이 리셋!
+      // 신규 등록 모드: 이전 잔여 데이터 깨끗이 리셋 & 전달된 initialDate 또는 오늘 날짜로 세팅!
       setWatchUrl('');
       setPlatform('CHZZK');
       setDisplayName('');
       setAvatarUrl('');
       setIsEditingName(false);
-      setDate('2026-08-01');
+      setDate(initialDate || getTodayString());
       setTime('20:00');
       setTimezone('Asia/Seoul');
       setDescription('');
@@ -87,7 +97,7 @@ export function StudioSubmitModal({
       setIsFetchedSuccess(false);
       setFetchMessage('');
     }
-  }, [isOpen, editEvent]);
+  }, [isOpen, editEvent, initialDate]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFetchingProfile, setIsFetchingProfile] = useState(false);
   const [fetchMessage, setFetchMessage] = useState('');

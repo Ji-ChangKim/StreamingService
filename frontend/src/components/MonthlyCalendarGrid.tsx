@@ -17,7 +17,7 @@ interface MonthlyCalendarGridProps {
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   onDownloadICS: (event: DebutEvent) => void;
-  onOpenSubmitModal?: () => void;
+  onOpenSubmitModal?: (dateStr?: string) => void;
   onEditEvent?: (event: DebutEvent) => void;
 }
 
