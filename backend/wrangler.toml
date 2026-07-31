@@ -8,7 +8,7 @@ bucket = "../frontend/dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "vdebut-db"
-database_id = "6757674b-3344-4ddd-a96c-c612f34aea3f"
+database_id = "888a8c04-5657-4bff-9b50-5002a47ac7c7"
 migrations_dir = "migrations"
 
 # Default (dev) env
@@ -19,7 +19,7 @@ bucket = "../frontend/dist"
 [[env.dev.d1_databases]]
 binding = "DB"
 database_name = "vdebut-db"
-database_id = "6757674b-3344-4ddd-a96c-c612f34aea3f"
+database_id = "888a8c04-5657-4bff-9b50-5002a47ac7c7"
 
 # Production (live) env
 [env.production]
@@ -29,4 +29,4 @@ bucket = "../frontend/dist"
 [[env.production.d1_databases]]
 binding = "DB"
 database_name = "vdebut-db"
-database_id = "6757674b-3344-4ddd-a96c-c612f34aea3f"
+database_id = "888a8c04-5657-4bff-9b50-5002a47ac7c7"
