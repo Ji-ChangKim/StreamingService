@@ -85,20 +85,20 @@ export function HeroHeader({
         </h3>
       </div>
 
-      {/* 2. 각각 독립된 둥근 별도 카드 박스 형태 (Separate Rounded Cards) */}
-      <div className="flex flex-wrap items-center justify-center gap-3 w-full max-w-3xl mx-auto">
+      {/* 2. 각각 독립된 둥근 별도 카드 박스 형태 - 무조건 한 줄 (1줄) 정렬 */}
+      <div className="flex flex-nowrap items-center justify-center gap-2 sm:gap-3 w-full max-w-6xl mx-auto overflow-x-auto pb-1 no-scrollbar">
         {/* 상시 노출 1: {N}월 데뷔 */}
-        <div className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-5 py-3 text-center min-w-[130px] hover:border-[#2563EB] hover:shadow-sm transition-all">
-          <span className="text-[11px] font-bold text-[#64748B] block mb-0.5">{currentMonthNum}월 데뷔</span>
-          <span className="text-xl font-extrabold text-[#2563EB] font-mono">
+        <div className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-3.5 sm:px-4 py-2.5 sm:py-3 text-center shrink-0 min-w-[110px] sm:min-w-[125px] hover:border-[#2563EB] hover:shadow-sm transition-all">
+          <span className="text-[10px] sm:text-[11px] font-bold text-[#64748B] block mb-0.5 whitespace-nowrap">{currentMonthNum}월 데뷔</span>
+          <span className="text-lg sm:text-xl font-extrabold text-[#2563EB] font-mono">
             {monthEvents.length}<span className="text-xs font-normal text-[#94A3B8] ml-0.5">명</span>
           </span>
         </div>
 
         {/* 상시 노출 2: {A}월 {B}주차 데뷔 */}
-        <div className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-5 py-3 text-center min-w-[130px] hover:border-[#0F172A] hover:shadow-sm transition-all">
-          <span className="text-[11px] font-bold text-[#64748B] block mb-0.5">{currentMonthNum}월 {currentWeekNum}주차 데뷔</span>
-          <span className="text-xl font-extrabold text-[#0F172A] font-mono">
+        <div className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-3.5 sm:px-4 py-2.5 sm:py-3 text-center shrink-0 min-w-[110px] sm:min-w-[125px] hover:border-[#0F172A] hover:shadow-sm transition-all">
+          <span className="text-[10px] sm:text-[11px] font-bold text-[#64748B] block mb-0.5 whitespace-nowrap">{currentMonthNum}월 {currentWeekNum}주차 데뷔</span>
+          <span className="text-lg sm:text-xl font-extrabold text-[#0F172A] font-mono">
             {weekEvents.length}<span className="text-xs font-normal text-[#94A3B8] ml-0.5">명</span>
           </span>
         </div>
@@ -107,10 +107,10 @@ export function HeroHeader({
         {dynamicCards.map((card) => (
           <div
             key={card.label}
-            className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-5 py-3 text-center min-w-[130px] hover:border-[#2563EB] hover:shadow-sm transition-all animate-fadeIn"
+            className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-3.5 sm:px-4 py-2.5 sm:py-3 text-center shrink-0 min-w-[110px] sm:min-w-[125px] hover:border-[#2563EB] hover:shadow-sm transition-all animate-fadeIn"
           >
-            <span className="text-[11px] font-bold text-[#64748B] block mb-0.5">{card.label}</span>
-            <span className={`text-xl font-extrabold font-mono ${card.color}`}>
+            <span className="text-[10px] sm:text-[11px] font-bold text-[#64748B] block mb-0.5 whitespace-nowrap">{card.label}</span>
+            <span className={`text-lg sm:text-xl font-extrabold font-mono ${card.color}`}>
               {card.count}<span className="text-xs font-normal text-[#94A3B8] ml-0.5">명</span>
             </span>
           </div>
