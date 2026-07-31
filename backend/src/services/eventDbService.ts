@@ -56,48 +56,27 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
       return null;
     }
 
-    const eventsList: any[] = [];
+    const defaultAvatar = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
 
-    for (const row of results as any[]) {
-      let avatarUrl = row.profile_image_url;
-      let displayName = row.display_name;
-      let description = row.description;
-
-      // 💡 [Route B 보완] 관리자가 DB로 다이렉트 입력하여 프로필 이미지가 없는 경우, 외부 API 실시간 자동 조회!
-      if (!avatarUrl && row.channel_url) {
-        try {
-          const apiResult = await fetchPlatformProfile(row.platform || 'CHZZK', row.channel_url);
-          if (apiResult.success) {
-            avatarUrl = apiResult.profileImageUrl || avatarUrl;
-            displayName = displayName || apiResult.creatorName;
-            description = description || apiResult.description;
-
-            // D1 DB에도 실시간 자동 보완 저장
-            await db.prepare(`
-              UPDATE streamerChannel_info 
-              SET profile_image_url = ?, display_name = COALESCE(?, display_name), description = COALESCE(?, description)
-              WHERE id = ?
-            `).bind(avatarUrl, displayName, description, row.info_id).run();
-          }
-        } catch {
-          // fallback
-        }
-      }
-
+    return (results as any[]).map((row) => {
+      const avatarUrl = row.profile_image_url || defaultAvatar;
+      const displayName = row.display_name || '신입 버튜버';
+      const description = row.description || `${displayName}의 데뷔 방송입니다.`;
       const evtId = `evt_${row.info_id}`;
-      eventsList.push({
+
+      return {
         id: evtId,
-        title: `${displayName || '버튜버'} 데뷔 방송`,
+        title: `${displayName} 데뷔 방송`,
         type: 'FIRST_DEBUT',
         startAtUtc: row.start_at_utc,
         originalTimezone: row.timezone || 'Asia/Seoul',
         status: 'PUBLISHED',
         verificationStatus: 'SOURCE_VERIFIED',
-        description: description || `${displayName || '버튜버'}의 데뷔 방송입니다.`,
+        description,
         creator: {
           id: row.info_id,
-          displayName: displayName || '신입 버튜버',
-          avatarUrl: avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+          displayName,
+          avatarUrl,
           agency: row.agency_name || '개인세',
           countryCode: row.country_code || 'KR',
           languages: ['ko'],
@@ -110,10 +89,8 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
             isPrimary: true,
           },
         ],
-      });
-    }
-
-    return eventsList;
+      };
+    });
   } catch (err) {
     console.error('D1 Pair Table Fetch Error:', err);
     return null;
@@ -125,16 +102,28 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
  */
 export async function insertEventToD1(db: D1Database, body: any): Promise<string> {
   const now = Date.now();
-  const displayName = body.creator?.displayName || body.displayName || '신입 VTuber';
-  const avatarUrl = body.creator?.avatarUrl || body.avatarUrl || '';
+  let displayName = body.creator?.displayName || body.displayName || '신입 VTuber';
+  let avatarUrl = body.creator?.avatarUrl || body.avatarUrl || '';
   const agencyName = body.creator?.agency || body.agency || '개인세';
   const countryCode = body.creator?.countryCode || body.countryCode || 'KR';
-  const description = body.description || `${displayName} 버튜버의 데뷔 방송입니다.`;
+  let description = body.description || `${displayName} 버튜버의 데뷔 방송입니다.`;
   const slug = `slug_${now}_${Math.random().toString(36).slice(2, 6)}`;
 
   const primaryLink = body.links?.[0] || null;
   const platform = primaryLink?.platform || body.platform || 'CHZZK';
   const watchUrl = primaryLink?.url || body.watchUrl || 'https://chzzk.naver.com';
+
+  // 💡 프로필 이미지가 없는 경우, 등록 시점에 미리 외부 API로 자동 보완 수집하여 DB에 저장!
+  if (!avatarUrl && watchUrl) {
+    try {
+      const apiResult = await fetchPlatformProfile(platform, watchUrl);
+      if (apiResult.success) {
+        avatarUrl = apiResult.profileImageUrl || avatarUrl;
+        displayName = apiResult.creatorName || displayName;
+        description = apiResult.description || description;
+      }
+    } catch {}
+  }
 
   const startAtUtc = body.startAtUtc || new Date(now + 86400000 * 3).toISOString();
   const timezone = body.originalTimezone || 'Asia/Seoul';
