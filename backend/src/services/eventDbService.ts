@@ -1,4 +1,4 @@
-// Clean 2-Table Event DB Service (streamer_info & channel_management)
+// 1:1 Isolated Schema Event DB Service (channel_management 1:1 streamer_info)
 import { fetchPlatformProfile } from './platformApiService';
 
 export const MOCK_EVENTS = [
@@ -25,7 +25,7 @@ export const MOCK_EVENTS = [
 ];
 
 /**
- * 1. D1 DB (streamer_info & channel_management)에서 이벤트 조회
+ * 1. D1 DB (channel_management 1:1 streamer_info)에서 이벤트 1:1 조회
  * + 관리자가 DB에 다이렉트 쿼리로 입력한 경우(Route B), 외부 API를 실시간 자동 동기화 보완!
  */
 export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
@@ -33,6 +33,7 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
     const { results } = await db.prepare(`
       SELECT 
         s.id as streamer_id,
+        s.channel_id,
         s.slug,
         s.display_name,
         s.profile_image_url,
@@ -44,10 +45,9 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
         s.start_at_utc,
         c.platform,
         c.channel_url,
-        c.channel_name,
-        c.is_primary
+        c.channel_name
       FROM streamer_info s
-      LEFT JOIN channel_management c ON s.id = c.streamer_id
+      INNER JOIN channel_management c ON s.channel_id = c.id
       ORDER BY s.start_at_utc ASC
     `).all();
 
@@ -55,7 +55,7 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
       return null;
     }
 
-    const eventsMap = new Map();
+    const eventsList: any[] = [];
 
     for (const row of results as any[]) {
       let avatarUrl = row.profile_image_url;
@@ -84,47 +84,43 @@ export async function fetchEventsFromD1(db: D1Database): Promise<any[] | null> {
       }
 
       const evtId = `evt_${row.streamer_id}`;
-      if (!eventsMap.has(evtId)) {
-        eventsMap.set(evtId, {
-          id: evtId,
-          title: `${displayName || '버튜버'} 데뷔 방송`,
-          type: 'FIRST_DEBUT',
-          startAtUtc: row.start_at_utc,
-          originalTimezone: row.timezone || 'Asia/Seoul',
-          status: 'PUBLISHED',
-          verificationStatus: 'SOURCE_VERIFIED',
-          description: description || `${displayName || '버튜버'}의 데뷔 방송입니다.`,
-          creator: {
-            id: row.streamer_id,
-            displayName: displayName || '신입 버튜버',
-            avatarUrl: avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-            agency: row.agency_name || '개인세',
-            countryCode: 'KR',
-            languages: ['ko'],
-            slug: row.slug || `slug_${row.streamer_id}`,
+      eventsList.push({
+        id: evtId,
+        title: `${displayName || '버튜버'} 데뷔 방송`,
+        type: 'FIRST_DEBUT',
+        startAtUtc: row.start_at_utc,
+        originalTimezone: row.timezone || 'Asia/Seoul',
+        status: 'PUBLISHED',
+        verificationStatus: 'SOURCE_VERIFIED',
+        description: description || `${displayName || '버튜버'}의 데뷔 방송입니다.`,
+        creator: {
+          id: row.streamer_id,
+          displayName: displayName || '신입 버튜버',
+          avatarUrl: avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+          agency: row.agency_name || '개인세',
+          countryCode: 'KR',
+          languages: ['ko'],
+          slug: row.slug || `slug_${row.streamer_id}`,
+        },
+        links: [
+          {
+            platform: row.platform || 'CHZZK',
+            url: row.channel_url,
+            isPrimary: true,
           },
-          links: [],
-        });
-      }
-
-      if (row.channel_url) {
-        eventsMap.get(evtId).links.push({
-          platform: row.platform || 'CHZZK',
-          url: row.channel_url,
-          isPrimary: Boolean(row.is_primary ?? 1),
-        });
-      }
+        ],
+      });
     }
 
-    return Array.from(eventsMap.values());
+    return eventsList;
   } catch (err) {
-    console.error('D1 2-Table Fetch Error:', err);
+    console.error('D1 1:1 Fetch Error:', err);
     return null;
   }
 }
 
 /**
- * 2. WEB 폼 제출 시 streamer_info 및 channel_management 단 2개 DB에 저징 (Route A)
+ * 2. WEB 폼 제출 시 channel_management 1:1 streamer_info DB에 저장 (Route A)
  */
 export async function insertEventToD1(db: D1Database, body: any): Promise<string> {
   const now = Date.now();
@@ -145,27 +141,30 @@ export async function insertEventToD1(db: D1Database, body: any): Promise<string
   const debutDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   const debutTime = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 
-  // ① streamer_info 테이블에 저장
-  const res: any = await db.prepare(`
-    INSERT INTO streamer_info (slug, display_name, profile_image_url, description, agency_name, debut_date, debut_time, timezone, start_at_utc)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  // ① channel_management 테이블에 먼저 저장
+  const chRes: any = await db.prepare(`
+    INSERT INTO channel_management (platform, channel_url, channel_name)
+    VALUES (?, ?, ?)
     RETURNING id
-  `).bind(slug, displayName, avatarUrl, description, agencyName, debutDate, debutTime, timezone, startAtUtc).first();
+  `).bind(platform, watchUrl, `${displayName} ${platform}`).first();
 
-  const streamerId = res?.id || now;
+  const channelId = chRes?.id || now;
 
-  // ② channel_management 테이블에 저장
-  await db.prepare(`
-    INSERT INTO channel_management (streamer_id, platform, channel_url, channel_name, is_primary)
-    VALUES (?, ?, ?, ?, 1)
-  `).bind(streamerId, platform, watchUrl, `${displayName} ${platform}`).run();
+  // ② streamer_info 테이블에 1:1 매핑 저장
+  const stRes: any = await db.prepare(`
+    INSERT INTO streamer_info (channel_id, slug, display_name, profile_image_url, description, agency_name, debut_date, debut_time, timezone, start_at_utc)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    RETURNING id
+  `).bind(channelId, slug, displayName, avatarUrl, description, agencyName, debutDate, debutTime, timezone, startAtUtc).first();
 
+  const streamerId = stRes?.id || channelId;
   return `evt_${streamerId}`;
 }
 
-/**
- * 3. 기존 이벤트 수정 시 streamer_info 및 channel_management 업데이트
- */
+export async function updateEventInD1(db: D1Database, eventId: string, body: any): Promise<boolean> {
+  return updateDebutEventInD1(db, eventId, body);
+}
+
 export async function updateDebutEventInD1(db: D1Database, eventId: string, body: any): Promise<boolean> {
   try {
     const rawId = eventId.replace('evt_', '');
@@ -191,17 +190,20 @@ export async function updateDebutEventInD1(db: D1Database, eventId: string, body
 
     const primaryLink = body.links?.[0];
     if (primaryLink) {
-      await db.prepare(`
-        UPDATE channel_management
-        SET platform = COALESCE(?, platform),
-            channel_url = COALESCE(?, channel_url)
-        WHERE streamer_id = ?
-      `).bind(primaryLink.platform || null, primaryLink.url || null, streamerId).run();
+      const row: any = await db.prepare('SELECT channel_id FROM streamer_info WHERE id = ?').bind(streamerId).first();
+      if (row?.channel_id) {
+        await db.prepare(`
+          UPDATE channel_management
+          SET platform = COALESCE(?, platform),
+              channel_url = COALESCE(?, channel_url)
+          WHERE id = ?
+        `).bind(primaryLink.platform || null, primaryLink.url || null, row.channel_id).run();
+      }
     }
 
     return true;
   } catch (err) {
-    console.error('D1 2-Table Update Error:', err);
+    console.error('D1 1:1 Update Error:', err);
     return false;
   }
 }

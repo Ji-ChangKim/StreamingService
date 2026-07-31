@@ -1,4 +1,4 @@
-// Clean 2-Table Creator DB Service (streamer_info & channel_management)
+// 1:1 Isolated Schema Creator DB Service (channel_management 1:1 streamer_info)
 import { fetchPlatformProfile } from './platformApiService';
 
 export interface CreatorProfileData {
@@ -60,36 +60,33 @@ export async function fetchCreatorProfileBySlug(db: D1Database | null, slug: str
   }
 
   try {
-    const streamerRow: any = await db
-      .prepare('SELECT * FROM streamer_info WHERE slug = ? OR display_name = ? LIMIT 1')
+    const row: any = await db
+      .prepare(`
+        SELECT 
+          s.*,
+          c.platform,
+          c.channel_url,
+          c.channel_name
+        FROM streamer_info s
+        INNER JOIN channel_management c ON s.channel_id = c.id
+        WHERE s.slug = ? OR s.display_name = ?
+        LIMIT 1
+      `)
       .bind(normalizedSlug, slug)
       .first();
 
-    if (!streamerRow) {
+    if (!row) {
       return null;
     }
 
-    const channelsRes = await db
-      .prepare('SELECT * FROM channel_management WHERE streamer_id = ? ORDER BY is_primary DESC, id ASC')
-      .bind(streamerRow.id)
-      .all();
+    let avatarUrl = row.profile_image_url;
+    let displayName = row.display_name;
+    let description = row.description;
 
-    const channels = (channelsRes.results || []).map((c: any) => ({
-      id: c.id,
-      platform: c.platform,
-      channelName: c.channel_name || `${c.platform} 채널`,
-      channelUrl: c.channel_url,
-      isPrimary: c.is_primary === 1,
-    }));
-
-    let avatarUrl = streamerRow.profile_image_url;
-    let displayName = streamerRow.display_name;
-    let description = streamerRow.description;
-
-    // 💡 관리자가 DB 다이렉트 쿼리로 입력한 프로필의 경우 실시간 외부 API 자동 보완!
-    if (!avatarUrl && channels.length > 0 && channels[0].channelUrl) {
+    // 💡 관리자 DB 다이렉트 쿼리 입력 건 외부 API 자동 보완
+    if (!avatarUrl && row.channel_url) {
       try {
-        const apiResult = await fetchPlatformProfile(channels[0].platform, channels[0].channelUrl);
+        const apiResult = await fetchPlatformProfile(row.platform, row.channel_url);
         if (apiResult.success) {
           avatarUrl = apiResult.profileImageUrl || avatarUrl;
           displayName = displayName || apiResult.creatorName;
@@ -100,42 +97,50 @@ export async function fetchCreatorProfileBySlug(db: D1Database | null, slug: str
       }
     }
 
+    const channelObj = {
+      id: row.channel_id,
+      platform: row.platform,
+      channelName: row.channel_name || `${row.platform} 채널`,
+      channelUrl: row.channel_url,
+      isPrimary: true,
+    };
+
     return {
-      id: streamerRow.id,
-      slug: streamerRow.slug,
+      id: row.id,
+      slug: row.slug,
       displayName: displayName || '버튜버',
       description: description || `${displayName}의 데뷔 일정 페이지입니다.`,
       profileImageUrl: avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
-      agencyName: streamerRow.agency_name || '개인세',
-      creatorType: streamerRow.agency_name?.includes('기업') ? 'AGENCY' : 'INDIE',
+      agencyName: row.agency_name || '개인세',
+      creatorType: row.agency_name?.includes('기업') ? 'AGENCY' : 'INDIE',
       language: 'ko',
       isPublic: true,
-      createdAt: streamerRow.created_at || new Date().toISOString(),
-      updatedAt: streamerRow.updated_at || new Date().toISOString(),
-      channels,
+      createdAt: row.created_at || new Date().toISOString(),
+      updatedAt: row.updated_at || new Date().toISOString(),
+      channels: [channelObj],
       events: [
         {
-          id: `evt_${streamerRow.id}`,
+          id: `evt_${row.id}`,
           title: `${displayName} 데뷔 방송`,
           type: 'FIRST_DEBUT',
-          startAtUtc: streamerRow.start_at_utc,
-          originalTimezone: streamerRow.timezone || 'Asia/Seoul',
+          startAtUtc: row.start_at_utc,
+          originalTimezone: row.timezone || 'Asia/Seoul',
           status: 'PUBLISHED',
           verificationStatus: 'VERIFIED_OFFICIAL',
           description: description || `${displayName} 버튜버의 공식 데뷔 방송입니다.`,
-          links: channels.map((c: any) => ({ platform: c.platform, url: c.channelUrl, isPrimary: c.isPrimary })),
+          links: [channelObj],
           creator: {
-            id: streamerRow.id,
+            id: row.id,
             displayName,
             avatarUrl,
-            agency: streamerRow.agency_name || '개인세',
-            slug: streamerRow.slug,
+            agency: row.agency_name || '개인세',
+            slug: row.slug,
           },
         },
       ],
     };
   } catch (err) {
-    console.error('fetchCreatorProfileBySlug Error:', err);
+    console.error('1:1 fetchCreatorProfileBySlug Error:', err);
     return null;
   }
 }
