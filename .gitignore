@@ -212,3 +212,7 @@ playground.xcworkspace
 # Wrangler
 .wrangler/
 
+# Graphify Output
+graphify-out/
+
+

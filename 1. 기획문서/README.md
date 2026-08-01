@@ -12,6 +12,7 @@ V-DEBUT 프로젝트의 라이브 프로덕션(Production Live) 공식 기획 �
 4. **[03_DATABASE_SCHEMA.md](./03_DATABASE_SCHEMA.md)**: D1 Pair Tables (`streamerChannel` & `streamerChannel_info` + `country_code`) 스키마 & ERD
 5. **[04_API_SPECIFICATION.md](./04_API_SPECIFICATION.md)**: 백엔드 REST API 명세서 (`countryCode` 지원)
 6. **[05_UI_UX_DESIGN_GUIDE.md](./05_UI_UX_DESIGN_GUIDE.md)**: UI/UX 디자인 시스템 및 메인 프로필 카드 정책
+7. **[graph.html](./graph.html)**: Graphify v8 코드베이스 & DB 스키마 인터랙티브 시각화 지식 그래프
 
 ---
 

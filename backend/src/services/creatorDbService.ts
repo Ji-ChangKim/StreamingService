@@ -80,23 +80,9 @@ export async function fetchCreatorProfileBySlug(db: D1Database | null, slug: str
       return null;
     }
 
-    let avatarUrl = row.profile_image_url;
-    let displayName = row.display_name;
-    let description = row.description;
-
-    // 💡 관리자 DB 다이렉트 쿼리 입력 건 외부 API 자동 보완
-    if (!avatarUrl && row.channel_url) {
-      try {
-        const apiResult = await fetchPlatformProfile(row.platform, row.channel_url);
-        if (apiResult.success) {
-          avatarUrl = apiResult.profileImageUrl || avatarUrl;
-          displayName = displayName || apiResult.creatorName;
-          description = description || apiResult.description;
-        }
-      } catch {
-        // fallback
-      }
-    }
+    let avatarUrl = row.profile_image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80';
+    let displayName = row.display_name || '버튜버';
+    let description = row.description || `${displayName}의 데뷔 일정 페이지입니다.`;
 
     const channelObj = {
       id: row.channel_id,
