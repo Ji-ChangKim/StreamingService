@@ -19,10 +19,10 @@ export function MobileBottomNav({
         className={`flex items-center justify-center gap-1.5 transition-all duration-200 active:scale-95 cursor-pointer ${
           activeTab === 'schedule'
             ? 'bg-white text-black font-black px-4 py-2 rounded-xl shadow-md'
-            : 'text-zinc-400 hover:text-white px-3 py-2'
+            : 'text-zinc-200 hover:text-white font-bold px-3 py-2'
         }`}
       >
-        <Calendar className={`w-4 h-4 ${activeTab === 'schedule' ? 'text-black' : 'text-zinc-400'}`} />
+        <Calendar className={`w-4 h-4 ${activeTab === 'schedule' ? 'text-black' : 'text-zinc-300'}`} />
         <span className="text-xs tracking-tight">스케줄</span>
       </button>
 
@@ -35,10 +35,10 @@ export function MobileBottomNav({
         className={`flex items-center justify-center gap-1.5 transition-all duration-200 active:scale-95 cursor-pointer ${
           activeTab === 'submit'
             ? 'bg-white text-black font-black px-4 py-2 rounded-xl shadow-md'
-            : 'text-zinc-400 hover:text-white px-3 py-2'
+            : 'text-zinc-200 hover:text-white font-bold px-3 py-2'
         }`}
       >
-        <PlusCircle className={`w-4 h-4 ${activeTab === 'submit' ? 'text-black' : 'text-zinc-400'}`} />
+        <PlusCircle className={`w-4 h-4 ${activeTab === 'submit' ? 'text-black' : 'text-zinc-300'}`} />
         <span className="text-xs tracking-tight">등록</span>
       </button>
 
@@ -48,10 +48,10 @@ export function MobileBottomNav({
         className={`flex items-center justify-center gap-1.5 transition-all duration-200 active:scale-95 cursor-pointer ${
           activeTab === 'creators'
             ? 'bg-white text-black font-black px-4 py-2 rounded-xl shadow-md'
-            : 'text-zinc-400 hover:text-white px-3 py-2'
+            : 'text-zinc-200 hover:text-white font-bold px-3 py-2'
         }`}
       >
-        <Users className={`w-4 h-4 ${activeTab === 'creators' ? 'text-black' : 'text-zinc-400'}`} />
+        <Users className={`w-4 h-4 ${activeTab === 'creators' ? 'text-black' : 'text-zinc-300'}`} />
         <span className="text-xs tracking-tight">크리에이터</span>
       </button>
     </nav>

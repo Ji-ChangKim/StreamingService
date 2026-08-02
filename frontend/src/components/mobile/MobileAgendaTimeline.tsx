@@ -72,20 +72,20 @@ export function MobileAgendaTimeline({
           const isDebut = evt.title?.includes('데뷔') || evt.title?.includes('Debut');
           const categoryTag = isDebut ? 'DEBUT' : isCollab ? 'COLLAB' : 'STREAM';
           const tagBgStyle = isDebut
-            ? 'bg-amber-100 text-amber-800 border-amber-200'
+            ? 'bg-amber-100 text-amber-900 border-amber-300 font-extrabold'
             : isCollab
-            ? 'bg-purple-100 text-purple-800 border-purple-200'
-            : 'bg-[#D9F99D] text-[#365314] border-[#BEF264]'; // 형광 그린 뱃지
+            ? 'bg-purple-100 text-purple-900 border-purple-300 font-extrabold'
+            : 'bg-[#CCFF00] text-black border-[#aee600] font-black'; // 고대비 형광 그린 뱃지
 
           const avatarUrl = evt.creator.avatarUrl || getAvatarUrl(evt.creator.displayName);
 
           return (
             <div
               key={evt.id}
-              className="bg-white rounded-[20px] border border-[#CBD5E1] p-3.5 shadow-sm hover:shadow-md transition-all flex gap-3.5 items-stretch relative overflow-hidden"
+              className="bg-white rounded-[20px] border border-slate-300 p-3.5 shadow-sm hover:shadow-md transition-all flex gap-3.5 items-stretch relative overflow-hidden"
             >
-              {/* 좌측: 썸네일 이미지 & 소요시간 Overlay (시안 스타일) */}
-              <div className="relative w-24 h-24 rounded-[14px] overflow-hidden bg-slate-900 shrink-0 border border-slate-200 shadow-inner">
+              {/* 좌측: 썸네일 이미지 & 소요시간 Overlay */}
+              <div className="relative w-24 h-24 rounded-[14px] overflow-hidden bg-slate-900 shrink-0 border border-slate-300 shadow-inner">
                 <img
                   src={avatarUrl}
                   alt={evt.creator.displayName}
@@ -94,8 +94,8 @@ export function MobileAgendaTimeline({
                     (e.target as HTMLElement).setAttribute('src', getAvatarUrl(evt.creator.displayName));
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-1.5 right-1.5 bg-black/80 text-white font-mono text-[9px] font-bold px-1.5 py-0.5 rounded-md backdrop-blur-xs border border-white/20">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                <div className="absolute bottom-1.5 right-1.5 bg-black text-white font-mono text-[10px] font-black px-1.5 py-0.5 rounded-md border border-white/40">
                   1.5H
                 </div>
               </div>
@@ -104,11 +104,11 @@ export function MobileAgendaTimeline({
               <div className="flex-1 flex flex-col justify-between min-w-0">
                 {/* 우측 상단: 카테고리 뱃지 & 시간 */}
                 <div className="flex items-center justify-between gap-1">
-                  <span className={`text-[10px] font-black tracking-wider px-2 py-0.5 rounded-md border ${tagBgStyle}`}>
+                  <span className={`text-[10px] tracking-wider px-2 py-0.5 rounded-md border ${tagBgStyle}`}>
                     {categoryTag}
                   </span>
-                  <div className="flex items-center gap-1 text-slate-500 font-mono font-bold text-xs">
-                    <Clock className="w-3 h-3 text-slate-400" />
+                  <div className="flex items-center gap-1 text-slate-900 font-mono font-black text-xs">
+                    <Clock className="w-3.5 h-3.5 text-slate-700" />
                     <span>{startTime}</span>
                   </div>
                 </div>
@@ -118,16 +118,16 @@ export function MobileAgendaTimeline({
                   <img
                     src={avatarUrl}
                     alt={evt.creator.displayName}
-                    className="w-6 h-6 rounded-full object-cover border border-slate-200 shrink-0"
+                    className="w-6.5 h-6.5 rounded-full object-cover border border-slate-300 shrink-0"
                   />
-                  <span className="text-xs font-black text-slate-900 truncate font-['Outfit']">
+                  <span className="text-xs font-black text-slate-950 truncate font-['Outfit']">
                     {evt.creator.displayName}
                   </span>
                 </div>
 
                 {/* 하단: 소속 agency 및 바로가기 */}
-                <div className="flex items-center justify-between gap-1 pt-1 border-t border-slate-100">
-                  <span className="text-[10px] text-slate-500 font-medium truncate">
+                <div className="flex items-center justify-between gap-1 pt-1 border-t border-slate-200">
+                  <span className="text-[11px] text-slate-700 font-bold truncate">
                     {evt.creator.agency || 'Indie'}
                   </span>
                   {primaryLink?.url && (
@@ -135,10 +135,10 @@ export function MobileAgendaTimeline({
                       href={primaryLink.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-0.5 shrink-0"
+                      className="text-[11px] font-black text-blue-700 hover:text-blue-900 flex items-center gap-0.5 shrink-0"
                     >
                       <span>방송국</span>
-                      <ExternalLink className="w-2.5 h-2.5" />
+                      <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
                 </div>
