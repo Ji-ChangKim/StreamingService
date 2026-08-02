@@ -151,22 +151,24 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-['Inter'] selection:bg-[#2563EB] selection:text-white">
-      {/* 1. Header Bar */}
-      <Navbar
-        activeNav={activeNav}
-        setActiveNav={(nav) => {
-          setActiveNav(nav);
-          if (currentPath !== '/') {
-            handleNavigateHome();
-          }
-        }}
-        currentLang={currentLang}
-        onLanguageChange={setCurrentLang}
-        onOpenSubmitModal={() => handleOpenSubmitModal()}
-      />
+      {/* 1. Desktop Header Bar (sm:block) */}
+      <div className="hidden sm:block">
+        <Navbar
+          activeNav={activeNav}
+          setActiveNav={(nav) => {
+            setActiveNav(nav);
+            if (currentPath !== '/') {
+              handleNavigateHome();
+            }
+          }}
+          currentLang={currentLang}
+          onLanguageChange={setCurrentLang}
+          onOpenSubmitModal={() => handleOpenSubmitModal()}
+        />
+      </div>
 
       {/* 2. Main Content Container */}
-      <main className="flex-grow max-w-[1280px] w-full mx-auto px-4 sm:px-6">
+      <main className="flex-grow max-w-[1280px] w-full mx-auto px-0 sm:px-6">
         {isCreatorPage && creatorSlug ? (
           <CreatorProfilePage
             slug={creatorSlug}
@@ -175,14 +177,16 @@ export function App() {
           />
         ) : (
           <>
-            {/* Hero Section */}
-            <HeroHeader
-              allEvents={events}
-              selectedTimezone={selectedTimezone}
-              currentLang={currentLang}
-            />
+            {/* Hero Section (Desktop only) */}
+            <div className="hidden sm:block">
+              <HeroHeader
+                allEvents={events}
+                selectedTimezone={selectedTimezone}
+                currentLang={currentLang}
+              />
+            </div>
 
-            {/* Main Monthly Calendar Grid Section */}
+            {/* Main Monthly / Mobile Calendar Grid Section */}
             <MonthlyCalendarGrid
               events={filteredEvents}
               selectedTimezone={selectedTimezone}
@@ -196,14 +200,18 @@ export function App() {
               onEditEvent={handleEditEvent}
             />
 
-            {/* Creator Callout Banner */}
-            <FooterBanner onOpenSubmitModal={() => handleOpenSubmitModal()} />
+            {/* Creator Callout Banner (Desktop only) */}
+            <div className="hidden sm:block">
+              <FooterBanner onOpenSubmitModal={() => handleOpenSubmitModal()} />
+            </div>
           </>
         )}
       </main>
 
-      {/* 3. Footer */}
-      <Footer />
+      {/* 3. Footer (Desktop only) */}
+      <div className="hidden sm:block">
+        <Footer />
+      </div>
 
       {/* 4. Studio Submit & Edit Modal */}
       <StudioSubmitModal

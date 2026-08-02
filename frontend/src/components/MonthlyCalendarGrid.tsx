@@ -7,6 +7,7 @@ import { CalendarWeekGrid } from './calendar/CalendarWeekGrid';
 import { ScheduleInspectorPanel } from './calendar/ScheduleInspectorPanel';
 import { ProfileLightboxModal } from './calendar/ProfileLightboxModal';
 import { YearMonthPickerModal } from './calendar/YearMonthPickerModal';
+import { MobileAppLayout } from './mobile/MobileAppLayout';
 
 interface MonthlyCalendarGridProps {
   events: DebutEvent[];
@@ -26,6 +27,8 @@ export function MonthlyCalendarGrid({
   selectedTimezone,
   selectedPlatform,
   setSelectedPlatform,
+  searchQuery,
+  setSearchQuery,
   onDownloadICS,
   onOpenSubmitModal,
   onEditEvent,
@@ -76,85 +79,102 @@ export function MonthlyCalendarGrid({
     : [];
 
   return (
-    <div className="space-y-4 mb-8">
-      {/* Main Container: 캘린더 그리드 항시 100% 레이아웃 */}
-      <div className="bg-white rounded-[16px] border border-[#CBD5E1] shadow-xs p-3 sm:p-5 flex flex-col justify-between">
-        <CalendarControlBar
-          year={year}
-          month={month}
-          onPrevMonth={handlePrevMonth}
-          onNextMonth={handleNextMonth}
-          onToday={handleToday}
+    <>
+      {/* 📱 1. 스마트폰/모바일 화면 전용 네이티브 캘린더 APP 레이아웃 (<640px) */}
+      <div className="block sm:hidden">
+        <MobileAppLayout
+          events={events}
+          selectedTimezone={selectedTimezone}
           selectedPlatform={selectedPlatform}
-          onPlatformSelect={setSelectedPlatform}
-          currentView={currentView}
-          onChangeView={setCurrentView}
-          onOpenYearMonthPicker={() => setShowYearMonthPicker(true)}
+          setSelectedPlatform={setSelectedPlatform}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onDownloadICS={onDownloadICS}
+          onOpenSubmitModal={onOpenSubmitModal || (() => {})}
+          currentLang="ko"
+          eventsByDateMap={eventsByDateMap}
+          todayStr={todayStr}
         />
-
-        {currentView === 'month' ? (
-          <CalendarMonthGrid
-            year={year}
-            month={month}
-            calendarCells={calendarCells}
-            eventsByDateMap={eventsByDateMap}
-            selectedTimezone={selectedTimezone}
-            selectedDateStr={selectedDateStr || ''}
-            todayStr={todayStr}
-            onSelectDate={(dateStr) => setSelectedDateStr(dateStr)}
-          />
-        ) : (
-          <CalendarWeekGrid
-            currentDate={currentDate}
-            eventsByDateMap={eventsByDateMap}
-            selectedTimezone={selectedTimezone}
-            selectedDateStr={selectedDateStr || ''}
-            todayStr={todayStr}
-            onSelectDate={(dateStr) => setSelectedDateStr(dateStr)}
-          />
-        )}
       </div>
 
-      {/* 📌 우측 슬라이드-오버 모달 뷰 (Right Slide-over Modal View) */}
-      {selectedDateStr && (
-        <div className="fixed inset-0 z-50 flex justify-end animate-fadeIn">
-          {/* 1. 반투명 딤드 오버레이 (Dimmed Backdrop) */}
-          <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity cursor-pointer"
-            onClick={() => setSelectedDateStr(null)}
+      {/* 🖥️ 2. 데스크탑 / 대형 화면 전용 레이아웃 (>=640px) */}
+      <div className="hidden sm:block space-y-4 mb-8">
+        {/* Main Container */}
+        <div className="bg-white rounded-[16px] border border-[#CBD5E1] shadow-xs p-3 sm:p-5 flex flex-col justify-between">
+          <CalendarControlBar
+            year={year}
+            month={month}
+            onPrevMonth={handlePrevMonth}
+            onNextMonth={handleNextMonth}
+            onToday={handleToday}
+            selectedPlatform={selectedPlatform}
+            onPlatformSelect={setSelectedPlatform}
+            currentView={currentView}
+            onChangeView={setCurrentView}
+            onOpenYearMonthPicker={() => setShowYearMonthPicker(true)}
           />
 
-          {/* 2. 우측 슬라이드-오버 창 (모바일 소형 디바이스 100% 풀스크린 대응) */}
-          <div className="relative z-10 w-full max-w-full sm:max-w-[480px] bg-white h-full max-h-screen shadow-2xl flex flex-col p-4 sm:p-6 animate-slideLeft border-l border-[#E2E8F0] overflow-hidden">
-            <ScheduleInspectorPanel
-              selectedDateStr={selectedDateStr}
-              events={currentSelectedEvents}
+          {currentView === 'month' ? (
+            <CalendarMonthGrid
+              year={year}
+              month={month}
+              calendarCells={calendarCells}
+              eventsByDateMap={eventsByDateMap}
               selectedTimezone={selectedTimezone}
-              onOpenSubmitModal={onOpenSubmitModal}
-              onDownloadICS={onDownloadICS}
-              onClosePanel={() => setSelectedDateStr(null)}
-              onEditEvent={onEditEvent}
+              selectedDateStr={selectedDateStr || ''}
+              todayStr={todayStr}
+              onSelectDate={(dateStr) => setSelectedDateStr(dateStr)}
             />
-          </div>
+          ) : (
+            <CalendarWeekGrid
+              currentDate={currentDate}
+              eventsByDateMap={eventsByDateMap}
+              selectedTimezone={selectedTimezone}
+              selectedDateStr={selectedDateStr || ''}
+              todayStr={todayStr}
+              onSelectDate={(dateStr) => setSelectedDateStr(dateStr)}
+            />
+          )}
         </div>
-      )}
 
-      {/* Lightbox & YearMonth Picker Modals */}
-      <ProfileLightboxModal
-        previewAvatar={previewAvatar}
-        onClose={() => setPreviewAvatar(null)}
-      />
+        {/* 우측 슬라이드-오버 드로어 모달 */}
+        {selectedDateStr && (
+          <div className="fixed inset-0 z-50 flex justify-end animate-fadeIn">
+            <div
+              className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity cursor-pointer"
+              onClick={() => setSelectedDateStr(null)}
+            />
 
-      <YearMonthPickerModal
-        isOpen={showYearMonthPicker}
-        onClose={() => setShowYearMonthPicker(false)}
-        currentYear={year}
-        currentMonth={month}
-        onSelectYearMonth={(y, m) => {
-          setCurrentDate(new Date(y, m, 1));
-          setShowYearMonthPicker(false);
-        }}
-      />
-    </div>
+            <div className="relative z-10 w-full max-w-full sm:max-w-[480px] bg-white h-full max-h-screen shadow-2xl flex flex-col p-4 sm:p-6 animate-slideLeft border-l border-[#E2E8F0] overflow-hidden">
+              <ScheduleInspectorPanel
+                selectedDateStr={selectedDateStr}
+                events={currentSelectedEvents}
+                selectedTimezone={selectedTimezone}
+                onOpenSubmitModal={onOpenSubmitModal}
+                onDownloadICS={onDownloadICS}
+                onClosePanel={() => setSelectedDateStr(null)}
+                onEditEvent={onEditEvent}
+              />
+            </div>
+          </div>
+        )}
+
+        <ProfileLightboxModal
+          previewAvatar={previewAvatar}
+          onClose={() => setPreviewAvatar(null)}
+        />
+
+        <YearMonthPickerModal
+          isOpen={showYearMonthPicker}
+          onClose={() => setShowYearMonthPicker(false)}
+          currentYear={year}
+          currentMonth={month}
+          onSelectYearMonth={(y, m) => {
+            setCurrentDate(new Date(y, m, 1));
+            setShowYearMonthPicker(false);
+          }}
+        />
+      </div>
+    </>
   );
 }
