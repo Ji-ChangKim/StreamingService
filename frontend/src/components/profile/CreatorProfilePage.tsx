@@ -123,12 +123,12 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
         </button>
       </div>
 
-      {/* 1. 상단 프로필 카드리뉴얼 */}
-      <section className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 sm:p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+      {/* 1. 상단 프로필 카드 리뉴얼 (모바일 반응형 수직/수평 정렬 최적화) */}
+      <section className="bg-white border border-[#E2E8F0] rounded-[16px] p-5 sm:p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
 
-        {/* 💡 1. 프로필 이미지 (초록색 '데뷔 완료' 뱃지 문구 완전 삭제!) */}
-        <div className="flex items-center gap-5 w-full md:w-auto">
+        {/* 프로필 이미지 & 기본 정보 */}
+        <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 sm:gap-5 w-full md:w-auto">
           <div className="relative shrink-0">
             <img
               src={profile.profileImageUrl || getAvatarUrl(profile.displayName)}
@@ -140,14 +140,13 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
             />
           </div>
 
-          <div className="flex-1 space-y-2 min-w-0">
+          <div className="flex-1 space-y-2 min-w-0 flex flex-col items-center sm:items-start">
             <div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-[#0F172A] font-['Outfit'] tracking-tight">
                 {profile.displayName} 버튜버 프로필
               </h1>
-              <p className="text-xs sm:text-sm font-bold text-[#64748B] mt-0.5 flex items-center gap-2">
+              <p className="text-xs sm:text-sm font-bold text-[#64748B] mt-0.5 flex items-center justify-center sm:justify-start gap-2">
                 <span className="text-[#2563EB] font-extrabold">{platformLabel}</span>
-                {/* 💡 3. 개인세/인디 문구 지움! 기업세 소속일 때만 표시 */}
                 {!isIndie && (
                   <>
                     <span>•</span>
@@ -157,12 +156,12 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
               </p>
             </div>
 
-            {/* 💡 4. 데뷔 일정 및 데뷔일로부터 D + N일 박스 */}
-            <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#334155] bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-1.5 shadow-2xs">
-              <Calendar className="w-4 h-4 text-[#2563EB]" />
+            {/* 데뷔 일정 및 D + N일 박스 */}
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-[#334155] bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-1.5 shadow-2xs">
+              <Calendar className="w-4 h-4 text-[#2563EB] shrink-0" />
               <span>{formattedDebutDate} 데뷔</span>
               {isDebuted && (
-                <span className="ml-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-md text-xs font-black">
+                <span className="ml-0.5 px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-md text-[11px] sm:text-xs font-black">
                   D + {passedDays}일
                 </span>
               )}
@@ -170,9 +169,9 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
           </div>
         </div>
 
-        {/* 💡 2. [채널 방문] 버튼을 우측 하단으로 명확히 배치 (겹침 차단) */}
+        {/* [채널 방문] 버튼 (모바일 풀 너비 모드 지원) */}
         {primaryChannel && (
-          <div className="w-full md:w-auto flex justify-end shrink-0 self-end md:self-center">
+          <div className="w-full md:w-auto flex justify-center md:justify-end shrink-0 self-stretch md:self-center">
             <a
               href={primaryChannel.channelUrl}
               target="_blank"

@@ -77,8 +77,8 @@ export function MonthlyCalendarGrid({
 
   return (
     <div className="space-y-4 mb-8">
-      {/* Main Container: 캘린더 그리드는 항시 100% 레이아웃 (col-span-12) 유지 */}
-      <div className="bg-white rounded-[16px] border border-[#CBD5E1] shadow-xs p-4 sm:p-5 flex flex-col justify-between">
+      {/* Main Container: 캘린더 그리드 항시 100% 레이아웃 */}
+      <div className="bg-white rounded-[16px] border border-[#CBD5E1] shadow-xs p-3 sm:p-5 flex flex-col justify-between">
         <CalendarControlBar
           year={year}
           month={month}
@@ -118,14 +118,14 @@ export function MonthlyCalendarGrid({
       {/* 📌 우측 슬라이드-오버 모달 뷰 (Right Slide-over Modal View) */}
       {selectedDateStr && (
         <div className="fixed inset-0 z-50 flex justify-end animate-fadeIn">
-          {/* 1. 반투명 딤드 오버레이 (Dimmed Backdrop) -> 클릭 시 모달 닫힘 & 기존 화면 상호작용 제한 */}
+          {/* 1. 반투명 딤드 오버레이 (Dimmed Backdrop) */}
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity cursor-pointer"
             onClick={() => setSelectedDateStr(null)}
           />
 
-          {/* 2. 우측 슬라이드-오버 창 (Slide-over Drawer Modal Window) */}
-          <div className="relative z-10 w-full max-w-[480px] bg-white h-full max-h-screen shadow-2xl flex flex-col p-4 sm:p-6 animate-slideLeft border-l border-[#E2E8F0] overflow-hidden">
+          {/* 2. 우측 슬라이드-오버 창 (모바일 소형 디바이스 100% 풀스크린 대응) */}
+          <div className="relative z-10 w-full max-w-full sm:max-w-[480px] bg-white h-full max-h-screen shadow-2xl flex flex-col p-4 sm:p-6 animate-slideLeft border-l border-[#E2E8F0] overflow-hidden">
             <ScheduleInspectorPanel
               selectedDateStr={selectedDateStr}
               events={currentSelectedEvents}

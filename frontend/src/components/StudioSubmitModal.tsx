@@ -332,12 +332,12 @@ export function StudioSubmitModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-fadeIn">
-      {/* 팝업 모달 창 컨테이너 */}
-      <div className="bg-white rounded-[8px] max-w-[640px] w-full shadow-2xl border border-[#CBD5E1] flex flex-col max-h-[92vh] overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-xs animate-fadeIn">
+      {/* 팝업 모달 창 컨테이너 (모바일 풀스크린 최적화) */}
+      <div className="bg-white rounded-none sm:rounded-[12px] max-w-[640px] w-full h-full sm:h-auto max-h-screen sm:max-h-[92vh] shadow-2xl border-0 sm:border border-[#CBD5E1] flex flex-col overflow-hidden">
         
-        {/* 💡 3. Header: 좌측 [X] 닫기 버튼, 중앙 로고/타이틀, 우측 [등록] 제출 버튼 배치 */}
-        <div className="bg-[#0F172A] text-white px-4 py-3.5 sm:px-5 sm:py-4 rounded-t-[8px] flex items-center justify-between shrink-0 border-b border-slate-800">
+        {/* Header: 좌측 [X] 닫기 버튼, 중앙 로고/타이틀, 우측 [등록] 제출 버튼 배치 */}
+        <div className="bg-[#0F172A] text-white px-3.5 py-3 sm:px-5 sm:py-4 rounded-t-none sm:rounded-t-[12px] flex items-center justify-between shrink-0 border-b border-slate-800">
           
           {/* 좌측 상단 X 닫기 버튼 */}
           <button

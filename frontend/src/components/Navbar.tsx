@@ -42,18 +42,18 @@ export function Navbar({
 
   return (
     <header className="bg-white border-b border-[#E5E7EB] sticky top-0 z-30">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div className="max-w-[1280px] mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
         {/* Left: Brand Logo & Left-aligned Nav Links */}
-        <div className="flex items-center gap-6 sm:gap-8 h-full">
+        <div className="flex items-center gap-3 sm:gap-8 h-full">
           <div className="flex items-center cursor-pointer py-1" onClick={() => setActiveNav('schedule')}>
-            <img src="/logo.png" alt="VDébut Logo" className="h-9 w-auto object-contain" />
+            <img src="/logo.png" alt="VDébut Logo" className="h-7 sm:h-9 w-auto object-contain" />
           </div>
 
-          {/* 좌측 로고 옆으로 이동한 데뷔 일정 탭 (언어 변경 시 밀림 현상 방지) */}
+          {/* 좌측 로고 옆 데뷔 일정 탭 */}
           <nav className="flex items-center h-full">
             <button
               onClick={() => setActiveNav('schedule')}
-              className={`relative h-full flex items-center text-sm font-bold transition-colors px-1 ${
+              className={`relative h-full flex items-center text-xs sm:text-sm font-bold transition-colors px-1 ${
                 activeNav === 'schedule' ? 'text-[#2563EB]' : 'text-[#475569] hover:text-[#0F172A]'
               }`}
             >
@@ -66,21 +66,22 @@ export function Navbar({
         </div>
 
         {/* Right: Custom Language Dropdown & Submit CTA Button */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Sleek Custom Language Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsLangOpen(!isLangOpen)}
-              className="flex items-center gap-2 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#CBD5E1] rounded-[8px] px-3 py-1.5 transition-all shadow-2xs text-xs font-extrabold text-[#0F172A]"
+              className="flex items-center gap-1 sm:gap-2 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#CBD5E1] rounded-[8px] px-2 sm:px-3 py-1.5 transition-all shadow-2xs text-[11px] sm:text-xs font-extrabold text-[#0F172A]"
             >
               <Globe className="w-3.5 h-3.5 text-[#475569] shrink-0" />
-              <span>{currentOption.label}</span>
+              <span className="hidden sm:inline">{currentOption.label}</span>
+              <span className="sm:hidden font-black">{currentOption.id.toUpperCase()}</span>
               <ChevronDown className={`w-3.5 h-3.5 text-[#64748B] transition-transform duration-200 ${isLangOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {/* Dropdown Menu Popover */}
             {isLangOpen && (
-              <div className="absolute right-0 top-full mt-1.5 w-44 bg-white border border-[#CBD5E1] rounded-[10px] shadow-xl py-1.5 z-50 animate-fadeIn overflow-hidden">
+              <div className="absolute right-0 top-full mt-1.5 w-40 sm:w-44 bg-white border border-[#CBD5E1] rounded-[10px] shadow-xl py-1.5 z-50 animate-fadeIn overflow-hidden">
                 {langOptions.map((option) => {
                   const isSelected = currentLang === option.id;
                   return (
@@ -110,7 +111,7 @@ export function Navbar({
 
           <button
             onClick={onOpenSubmitModal}
-            className="bg-[#0F172A] hover:bg-[#1E293B] text-white text-xs font-bold px-4 py-2 rounded-[8px] transition-all shadow-sm flex items-center gap-1.5"
+            className="bg-[#0F172A] hover:bg-[#1E293B] text-white text-[11px] sm:text-xs font-bold px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-[8px] transition-all shadow-sm flex items-center gap-1 shrink-0"
           >
             {t.submitButton || '데뷔 일정 등록'}
           </button>
