@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DebutEvent } from '../types';
 import { getCalendarGridCells, buildEventsByDateMap, getTodayDateKey } from '../utils/calendarUtils';
 import { CalendarControlBar } from './calendar/CalendarControlBar';
@@ -38,6 +38,18 @@ export function MonthlyCalendarGrid({
   const [showYearMonthPicker, setShowYearMonthPicker] = useState<boolean>(false);
   const [selectedDateStr, setSelectedDateStr] = useState<string | null>(null);
   const [previewAvatar, setPreviewAvatar] = useState<{ url: string; name: string } | null>(null);
+
+  // 스케줄 상세 모달 오픈 시 배경 메인 페이지 스크롤 고정 (Body Scroll Lock)
+  useEffect(() => {
+    if (selectedDateStr) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedDateStr]);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
