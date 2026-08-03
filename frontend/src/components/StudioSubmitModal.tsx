@@ -391,9 +391,14 @@ export function StudioSubmitModal({
                   <span>방송국 / 라이브 URL</span> <span className="text-red-500">*</span>
                 </label>
                 {parsePlatformFromUrl(watchUrl) && (
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-[#2563EB] text-white animate-fadeIn flex items-center gap-1">
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-extrabold text-white animate-fadeIn flex items-center gap-1 ${
+                    parsePlatformFromUrl(watchUrl) === 'TWITCH' ? 'bg-[#7A3DFF]' : 'bg-[#2563EB]'
+                  }`}>
                     {parsePlatformFromUrl(watchUrl) === 'SOOP' && (
                       <img src="/icons/soop/soop_symbol_white.svg" alt="SOOP" className="w-3.5 h-3.5 object-contain" />
+                    )}
+                    {parsePlatformFromUrl(watchUrl) === 'TWITCH' && (
+                      <img src="/icons/logo_twitch_white.png" alt="Twitch" className="w-3.5 h-3.5 object-contain" />
                     )}
                     <span>{parsePlatformFromUrl(watchUrl)} 감지됨</span>
                   </span>
@@ -403,7 +408,7 @@ export function StudioSubmitModal({
                 <input
                   type="url"
                   required
-                  placeholder="예: https://chzzk.naver.com/live/... 또는 https://sooplive.co.kr/station/..."
+                  placeholder="예: https://chzzk.naver.com/live/..., https://sooplive.co.kr/station/... 또는 https://twitch.tv/..."
                   value={watchUrl}
                   onChange={(e) => setWatchUrl(e.target.value)}
                   className="w-full bg-white border border-[#CBD5E1] rounded-[6px] pl-10 pr-3 py-2.5 text-xs sm:text-sm focus:border-[#2563EB] focus:outline-none transition-all font-mono shadow-xs"

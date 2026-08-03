@@ -289,6 +289,129 @@ export async function fetchYoutubeProfile(channelUrlOrHandle: string): Promise<P
 }
 
 /**
+ * 4. Twitch 외부 프로필 파서 (URL / Username 통합 처리)
+ */
+export async function fetchTwitchProfile(channelUrlOrId: string): Promise<PlatformProfileResult> {
+  let username = channelUrlOrId.trim();
+
+  if (username.startsWith('http://') || username.startsWith('https://')) {
+    try {
+      const urlObj = new URL(username);
+      const segments = urlObj.pathname.split('/').filter(Boolean);
+      if (segments.length > 0) {
+        username = segments[0];
+      }
+    } catch {
+      // fallback
+    }
+  }
+
+  username = username.replace(/^@/, '');
+  const channelUrl = `https://www.twitch.tv/${username}`;
+
+  try {
+    // 1차: 트위치 공개 GQL API 호출
+    const gqlUrl = 'https://gql.twitch.tv/gql';
+    const gqlBody = {
+      query: `
+        query GetUser($login: String!) {
+          user(login: $login) {
+            id
+            login
+            displayName
+            description
+            profileImageURL(width: 300)
+          }
+        }
+      `,
+      variables: { login: username.toLowerCase() }
+    };
+
+    const gqlRes = await fetch(gqlUrl, {
+      method: 'POST',
+      headers: {
+        'Client-ID': 'kimne78kx3ncx6brogo494xz661m55',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(gqlBody)
+    });
+
+    if (gqlRes.ok) {
+      const gqlData: any = await gqlRes.json();
+      const userData = gqlData?.data?.user;
+      if (userData && userData.displayName) {
+        return {
+          success: true,
+          platform: 'TWITCH',
+          channelId: userData.login || username,
+          creatorName: userData.displayName || username,
+          profileImageUrl: userData.profileImageURL || '',
+          channelUrl,
+          description: userData.description || `${userData.displayName}의 트위치 공식 방송국입니다.`,
+          verified: true
+        };
+      }
+    }
+
+    // 2차 Fallback: HTML OpenGraph 메타 태그 파싱
+    const response = await fetch(channelUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+        'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'
+      }
+    });
+
+    if (response.ok) {
+      const html = await response.text();
+      const titleMatch = html.match(/<meta property="og:title" content="([^"]+)">/i) || html.match(/<title>([^<]+)<\/title>/i);
+      const imageMatch = html.match(/<meta property="og:image" content="([^"]+)">/i);
+      const descMatch = html.match(/<meta property="og:description" content="([^"]+)">/i);
+
+      if (titleMatch || imageMatch) {
+        let title = titleMatch ? titleMatch[1] : username;
+        title = title.replace(/ - Twitch$/, '').replace(/ - 트위치$/, '').trim();
+
+        const profileImg = imageMatch ? imageMatch[1] : '';
+        const desc = descMatch ? descMatch[1] : `${title}의 공식 트위치 채널입니다.`;
+
+        return {
+          success: true,
+          platform: 'TWITCH',
+          channelId: username,
+          creatorName: title || username,
+          profileImageUrl: profileImg,
+          channelUrl,
+          description: desc,
+          verified: true
+        };
+      }
+    }
+
+    return {
+      success: true,
+      platform: 'TWITCH',
+      channelId: username,
+      creatorName: username,
+      profileImageUrl: '',
+      channelUrl,
+      description: `${username}의 트위치 채널입니다.`,
+      verified: true
+    };
+  } catch (err: any) {
+    return {
+      success: true,
+      platform: 'TWITCH',
+      channelId: username,
+      creatorName: username,
+      profileImageUrl: '',
+      channelUrl,
+      description: `${username}의 트위치 채널입니다.`,
+      verified: true
+    };
+  }
+}
+
+/**
  * 플랫폼 프로필 통합 파서 (URL 기반 자동 인식 보완)
  */
 export async function fetchPlatformProfile(platform: string, inputUrl: string): Promise<PlatformProfileResult> {
@@ -301,6 +424,8 @@ export async function fetchPlatformProfile(platform: string, inputUrl: string): 
     upper = 'CHZZK';
   } else if (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be')) {
     upper = 'YOUTUBE';
+  } else if (lowerUrl.includes('twitch.tv')) {
+    upper = 'TWITCH';
   }
 
   if (upper === 'CHZZK') {
@@ -309,6 +434,8 @@ export async function fetchPlatformProfile(platform: string, inputUrl: string): 
     return await fetchSoopProfile(inputUrl);
   } else if (upper === 'YOUTUBE') {
     return await fetchYoutubeProfile(inputUrl);
+  } else if (upper === 'TWITCH') {
+    return await fetchTwitchProfile(inputUrl);
   }
 
   return {
