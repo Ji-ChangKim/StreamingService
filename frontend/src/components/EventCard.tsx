@@ -48,6 +48,11 @@ export function EventCard({
             <div className="flex items-center gap-1.5 shrink-0">
               <img src="/icons/youtube_icon.png" alt="YouTube" className="h-4.5 object-contain shrink-0" />
             </div>
+          ) : primaryPlatform === 'SOOP' ? (
+            <span className="bg-[#0F172A] text-white font-extrabold text-[10px] px-2.5 py-1 rounded-[4px] flex items-center gap-1.5 shrink-0 uppercase tracking-[1px]">
+              <img src="/icons/soop/soop_symbol_white.svg" alt="SOOP" className="w-4 h-4 object-contain shrink-0" />
+              <span>SOOP</span>
+            </span>
           ) : (
             <span
               className={`eyebrow-uppercase text-[10px] font-medium px-2.5 py-0.5 rounded-[4px] uppercase tracking-[1px] flex items-center gap-1.5 ${getPlatformBadgeStyle(

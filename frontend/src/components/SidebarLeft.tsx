@@ -42,7 +42,30 @@ export function SidebarLeft({
                     : 'text-[#363636] hover:bg-[#F8FAFC] hover:text-[#080808]'
                 }`}
               >
-                <span>{p.label}</span>
+                <div className="flex items-center gap-2">
+                  {p.id === 'SOOP' && (
+                    <img
+                      src={isActive ? "/icons/soop/soop_symbol_white.svg" : "/icons/soop/soop_symbol_blue.svg"}
+                      alt="SOOP"
+                      className="w-4 h-4 object-contain shrink-0"
+                    />
+                  )}
+                  {p.id === 'CHZZK' && (
+                    <img
+                      src="/icons/chzzk_icon.png"
+                      alt="CHZZK"
+                      className="w-4 h-4 object-contain shrink-0"
+                    />
+                  )}
+                  {p.id === 'YOUTUBE' && (
+                    <img
+                      src="/icons/youtube_icon.png"
+                      alt="YouTube"
+                      className="w-4 h-4 object-contain shrink-0"
+                    />
+                  )}
+                  <span>{p.label}</span>
+                </div>
                 {isActive && <span className="w-1.5 h-1.5 bg-white rounded-[9999px]" />}
               </button>
             );

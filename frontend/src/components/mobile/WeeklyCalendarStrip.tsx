@@ -128,7 +128,7 @@ export function WeeklyCalendarStrip({
                     <span key={i} className="shrink-0">
                       {p === 'CHZZK' && <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-3 h-3 object-contain" />}
                       {p === 'YOUTUBE' && <img src="/icons/youtube_icon.png" alt="YT" className="w-3 h-3 object-contain" />}
-                      {p === 'SOOP' && <span className="text-[8px] font-bold text-[#2563EB]">🔵</span>}
+                      {p === 'SOOP' && <img src="/icons/soop/soop_symbol_blue.svg" alt="SOOP" className="w-3 h-3 object-contain" />}
                       {p !== 'CHZZK' && p !== 'YOUTUBE' && p !== 'SOOP' && <span className="text-[8px]">🟣</span>}
                     </span>
                   ))
@@ -137,6 +137,8 @@ export function WeeklyCalendarStrip({
                   <div className="flex items-center gap-0.5 bg-blue-100/80 text-[#2563EB] px-1 py-0.2 rounded-full text-[9px] font-black shrink-0">
                     {platforms[0] === 'CHZZK' ? (
                       <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-2.5 h-2.5 object-contain" />
+                    ) : platforms[0] === 'SOOP' ? (
+                      <img src="/icons/soop/soop_symbol_blue.svg" alt="SOOP" className="w-2.5 h-2.5 object-contain" />
                     ) : (
                       <span className="text-[7px]">🔵</span>
                     )}

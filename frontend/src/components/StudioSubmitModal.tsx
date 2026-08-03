@@ -391,8 +391,11 @@ export function StudioSubmitModal({
                   <span>방송국 / 라이브 URL</span> <span className="text-red-500">*</span>
                 </label>
                 {parsePlatformFromUrl(watchUrl) && (
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-[#2563EB] text-white animate-fadeIn">
-                    {parsePlatformFromUrl(watchUrl)} 감지됨
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-[#2563EB] text-white animate-fadeIn flex items-center gap-1">
+                    {parsePlatformFromUrl(watchUrl) === 'SOOP' && (
+                      <img src="/icons/soop/soop_symbol_white.svg" alt="SOOP" className="w-3.5 h-3.5 object-contain" />
+                    )}
+                    <span>{parsePlatformFromUrl(watchUrl)} 감지됨</span>
                   </span>
                 )}
               </div>

@@ -43,9 +43,28 @@ export function FilterBar({
                   : 'bg-[#F8FAFC] text-[#5A5A5A] hover:bg-slate-200/80 hover:text-[#080808] border border-[#D8D8D8]'
               }`}
             >
-              <span className={p.id === 'SOOP' && !isActive ? 'font-bold text-[#2563EB]' : ''}>
-                {p.label}
-              </span>
+              {p.id === 'SOOP' && (
+                <img
+                  src={isActive ? "/icons/soop/soop_symbol_white.svg" : "/icons/soop/soop_symbol_blue.svg"}
+                  alt="SOOP"
+                  className="w-4 h-4 object-contain shrink-0"
+                />
+              )}
+              {p.id === 'CHZZK' && (
+                <img
+                  src="/icons/chzzk_icon.png"
+                  alt="CHZZK"
+                  className="w-4 h-4 object-contain shrink-0"
+                />
+              )}
+              {p.id === 'YOUTUBE' && (
+                <img
+                  src="/icons/youtube_icon.png"
+                  alt="YouTube"
+                  className="w-4 h-4 object-contain shrink-0"
+                />
+              )}
+              <span>{p.label}</span>
             </button>
           );
         })}

@@ -146,7 +146,12 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
                 {profile.displayName} 버튜버 프로필
               </h1>
               <p className="text-xs sm:text-sm font-bold text-[#64748B] mt-0.5 flex items-center justify-center sm:justify-start gap-2">
-                <span className="text-[#2563EB] font-extrabold">{platformLabel}</span>
+                <span className="text-[#2563EB] font-extrabold flex items-center gap-1">
+                  {primaryPlatform === 'SOOP' && (
+                    <img src="/icons/soop/soop_symbol_blue.svg" alt="SOOP" className="w-4 h-4 object-contain inline-block" />
+                  )}
+                  <span>{platformLabel}</span>
+                </span>
                 {!isIndie && (
                   <>
                     <span>•</span>
@@ -176,9 +181,14 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
               href={primaryChannel.channelUrl}
               target="_blank"
               rel="noreferrer"
-              className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-[10px] bg-[#0F172A] hover:bg-[#2563EB] text-white font-extrabold text-xs sm:text-sm transition-all shadow-sm group"
+              aria-label={`${profile.displayName}의 ${platformLabel} 공식 채널 열기`}
+              className="w-full md:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-[10px] bg-[#0F172A] hover:bg-[#2563EB] text-white font-extrabold text-xs sm:text-sm transition-all shadow-sm group"
             >
-              <span>[{platformLabel} 채널 방문]</span>
+              {primaryPlatform === 'SOOP' ? (
+                <img src="/icons/soop/soop_logo_white.svg" alt="SOOP" className="h-5 w-auto object-contain" />
+              ) : (
+                <span>[{platformLabel} 채널 방문]</span>
+              )}
               <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </a>
           </div>

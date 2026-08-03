@@ -102,7 +102,7 @@ export function CalendarMonthGrid({
                           <img src="/icons/youtube_icon.png" alt="YouTube" className="w-4 h-4 object-contain shrink-0" />
                         )}
                         {platform === 'SOOP' && (
-                          <span className="text-[9px] shrink-0">🔵</span>
+                          <img src="/icons/soop/soop_symbol_blue.svg" alt="SOOP" className="w-4 h-4 object-contain shrink-0" />
                         )}
                         {platform !== 'CHZZK' && platform !== 'YOUTUBE' && platform !== 'SOOP' && (
                           <span className="text-[9px] shrink-0">🟣</span>

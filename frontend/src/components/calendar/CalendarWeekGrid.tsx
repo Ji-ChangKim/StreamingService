@@ -124,7 +124,7 @@ export function CalendarWeekGrid({
                               <img src="/icons/youtube_icon.png" alt="YouTube" className="w-4 h-4 object-contain shrink-0" />
                             )}
                             {primaryLink?.platform === 'SOOP' && (
-                              <span className="text-[9px] shrink-0">🔵</span>
+                              <img src="/icons/soop/soop_symbol_white.svg" alt="SOOP" className="w-4 h-4 object-contain shrink-0" />
                             )}
                           </div>
                           <div className="flex items-center gap-1">

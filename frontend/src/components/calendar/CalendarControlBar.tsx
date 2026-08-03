@@ -63,9 +63,16 @@ export function CalendarControlBar({
             >
               <div className="flex items-center gap-2">
                 <Filter className="w-3.5 h-3.5 text-[#64748B] shrink-0" />
-                <span className={currentPlatform.id === 'SOOP' ? 'font-bold text-[#2563EB]' : ''}>
-                  {currentPlatform.label}
-                </span>
+                {currentPlatform.id === 'SOOP' && (
+                  <img src="/icons/soop/soop_symbol_blue.svg" alt="SOOP" className="w-4 h-4 object-contain shrink-0" />
+                )}
+                {currentPlatform.id === 'CHZZK' && (
+                  <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
+                )}
+                {currentPlatform.id === 'YOUTUBE' && (
+                  <img src="/icons/youtube_icon.png" alt="YouTube" className="w-4 h-4 object-contain shrink-0" />
+                )}
+                <span>{currentPlatform.label}</span>
               </div>
               <ChevronDown className={`w-3.5 h-3.5 text-[#64748B] transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
@@ -89,9 +96,16 @@ export function CalendarControlBar({
                       }`}
                     >
                       <div className="flex items-center gap-2.5 h-6">
-                        <span className={p.id === 'SOOP' ? 'font-bold text-[#2563EB]' : ''}>
-                          {p.label}
-                        </span>
+                        {p.id === 'SOOP' && (
+                          <img src="/icons/soop/soop_symbol_blue.svg" alt="SOOP" className="w-4 h-4 object-contain shrink-0" />
+                        )}
+                        {p.id === 'CHZZK' && (
+                          <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
+                        )}
+                        {p.id === 'YOUTUBE' && (
+                          <img src="/icons/youtube_icon.png" alt="YouTube" className="w-4 h-4 object-contain shrink-0" />
+                        )}
+                        <span>{p.label}</span>
                       </div>
                       {isSelected && <Check className="w-3.5 h-3.5 text-[#2563EB] shrink-0" />}
                     </button>
