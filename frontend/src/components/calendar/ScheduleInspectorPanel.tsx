@@ -114,6 +114,16 @@ export function ScheduleInspectorPanel({
                           <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
                           <span>CHZZK</span>
                         </span>
+                      ) : primaryLink?.platform === 'SOOP' ? (
+                        <span className="bg-[#0F172A] text-white font-extrabold text-[11px] px-2.5 py-1 rounded-[4px] flex items-center gap-1.5 shrink-0">
+                          <img src="/icons/soop/soop_symbol_white.svg" alt="SOOP" className="w-4 h-4 object-contain shrink-0" />
+                          <span>SOOP</span>
+                        </span>
+                      ) : primaryLink?.platform === 'TWITCH' ? (
+                        <span className="bg-[#7A3DFF] text-white font-extrabold text-[11px] px-2.5 py-1 rounded-[4px] flex items-center gap-1.5 shrink-0">
+                          <img src="/icons/logo_twitch_white.png" alt="Twitch" className="w-4 h-4 object-contain shrink-0" />
+                          <span>TWITCH</span>
+                        </span>
                       ) : primaryLink?.platform === 'YOUTUBE' ? (
                         <div className="flex items-center gap-1.5 shrink-0">
                           <img src="/icons/youtube_icon.png" alt="YouTube" className="h-4 object-contain shrink-0" />
