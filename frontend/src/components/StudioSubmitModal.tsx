@@ -336,19 +336,8 @@ export function StudioSubmitModal({
       {/* 팝업 모달 창 컨테이너 (모바일 풀스크린 최적화) */}
       <div className="bg-white rounded-none sm:rounded-[12px] max-w-[640px] w-full h-full sm:h-auto max-h-screen sm:max-h-[92vh] shadow-2xl border-0 sm:border border-[#CBD5E1] flex flex-col overflow-hidden">
         
-        {/* Header: 좌측 [X] 닫기 버튼, 중앙 로고/타이틀, 우측 [등록] 제출 버튼 배치 */}
-        <div className="bg-[#0F172A] text-white px-3.5 py-3 sm:px-5 sm:py-4 rounded-t-none sm:rounded-t-[12px] flex items-center justify-between shrink-0 border-b border-slate-800">
-          
-          {/* 좌측 상단 X 닫기 버튼 */}
-          <button
-            onClick={onClose}
-            className="p-1.5 hover:bg-white/10 text-slate-300 hover:text-white rounded-[6px] transition-colors cursor-pointer flex items-center gap-1 text-xs font-bold"
-            title={t.close}
-          >
-            <X className="w-5 h-5" />
-            <span className="hidden sm:inline">{t.close}</span>
-          </button>
-
+        {/* Header: 중앙 로고/타이틀, 우측 [X] 닫기 버튼 배치 */}
+        <div className="bg-[#0F172A] text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-t-none sm:rounded-t-[12px] flex items-center justify-between shrink-0 border-b border-slate-800">
           {/* 중앙 1. logo_white_bg 로고 및 타이틀 */}
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="p-1 bg-white rounded-[6px] shrink-0 shadow-xs">
@@ -359,17 +348,13 @@ export function StudioSubmitModal({
             </h3>
           </div>
 
-          {/* 우측 상단 등록 (Submit) 버튼 */}
+          {/* 우측 상단 X 닫기 버튼 */}
           <button
-            onClick={() => {
-              const formEle = document.getElementById('debut-submit-form') as HTMLFormElement;
-              if (formEle) formEle.requestSubmit();
-            }}
-            disabled={isSubmitting || !watchUrl || !displayName}
-            className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-[6px] font-extrabold text-xs sm:text-sm bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white transition-all flex items-center gap-1.5 shadow-md cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+            onClick={onClose}
+            className="p-1.5 hover:bg-white/10 text-slate-300 hover:text-white rounded-[6px] transition-colors cursor-pointer flex items-center gap-1 text-xs font-bold"
+            title={t.close}
           >
-            <span>{isSubmitting ? t.submitting : t.submit}</span>
-            <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
@@ -382,10 +367,10 @@ export function StudioSubmitModal({
             </p>
           </div>
         ) : (
-          <form id="debut-submit-form" onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4 sm:space-y-4.5 text-sm font-medium text-[#0F172A] overflow-y-auto">
+          <form id="debut-submit-form" onSubmit={handleSubmit} className="p-4 sm:p-5 space-y-3 sm:space-y-3.5 text-sm font-medium text-[#0F172A] overflow-y-auto">
             
             {/* Step 1: 방송/프로필 URL 입력 */}
-            <div className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] p-3.5 sm:p-4 space-y-2">
+            <div className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] p-3 sm:p-3.5 space-y-1.5">
               <div className="flex items-center justify-between">
                 <label className="block font-bold text-[#0F172A] text-sm flex items-center gap-1.5">
                   <span>방송국 / 라이브 URL</span> <span className="text-red-500">*</span>
@@ -408,12 +393,12 @@ export function StudioSubmitModal({
                 <input
                   type="url"
                   required
-                  placeholder="예: https://chzzk.naver.com/live/..., https://sooplive.co.kr/station/... 또는 https://twitch.tv/..."
+                  placeholder="https://chzzk.naver.com/live/..., https://sooplive.co.kr/station/... 또는 https://twitch.tv/..."
                   value={watchUrl}
                   onChange={(e) => setWatchUrl(e.target.value)}
-                  className="w-full bg-white border border-[#CBD5E1] rounded-[6px] pl-10 pr-3 py-2.5 text-xs sm:text-sm focus:border-[#2563EB] focus:outline-none transition-all font-mono shadow-xs"
+                  className="w-full bg-white border border-[#CBD5E1] rounded-[6px] pl-9 sm:pl-10 pr-3 py-2 text-xs sm:text-sm focus:border-[#2563EB] focus:outline-none transition-all font-mono shadow-xs"
                 />
-                <Search className="w-4 h-4 sm:w-5 sm:h-5 text-[#64748B] absolute left-3 top-3 sm:top-3.5" />
+                <Search className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#64748B] absolute left-3 top-2.5 sm:top-3 pointer-events-none" />
               </div>
 
               {fetchMessage && (
@@ -428,12 +413,12 @@ export function StudioSubmitModal({
 
             {/* Step 2: 프로필 연동 결과 카드 */}
             {isFetchedSuccess && displayName ? (
-              <div className="bg-gradient-to-r from-blue-50 to-slate-50 border border-[#BFDBFE] rounded-[6px] p-3.5 flex items-center justify-between gap-3 animate-fadeIn">
+              <div className="bg-gradient-to-r from-blue-50 to-slate-50 border border-[#BFDBFE] rounded-[6px] p-3 flex items-center justify-between gap-3 animate-fadeIn">
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <img
                     src={avatarUrl || getAvatarUrl(displayName)}
                     alt={displayName}
-                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-xs shrink-0"
+                    className="w-11 h-11 rounded-full object-cover border-2 border-white shadow-xs shrink-0"
                     onError={(e) => {
                       (e.target as HTMLElement).setAttribute('src', getAvatarUrl(displayName));
                     }}
@@ -487,13 +472,13 @@ export function StudioSubmitModal({
               </div>
             ) : (
               <div className="animate-fadeIn">
-                <label className="block font-bold mb-1.5 text-[#334155] text-sm">
+                <label className="block font-bold mb-1 text-[#334155] text-sm">
                   스트리머 활동명 <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="예: 하츠네 미쿠 (初音ミク)"
+                  placeholder="예: 방송 크리에이터 활동명 입력"
                   value={displayName}
                   onChange={(e) => {
                     setDisplayName(e.target.value);
@@ -501,39 +486,39 @@ export function StudioSubmitModal({
                       setAvatarUrl(getAvatarUrl(e.target.value));
                     }
                   }}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3.5 py-2.5 text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-bold"
+                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3.5 py-2 text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-bold"
                 />
               </div>
             )}
 
             {/* Step 3: 날짜 & 시간 & 기준 타임존 */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
               <div>
-                <label className="block font-bold mb-1.5 text-[#334155] text-sm">날짜</label>
+                <label className="block font-bold mb-1 text-[#334155] text-sm">날짜</label>
                 <input
                   type="date"
                   required
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3 py-2 text-xs sm:text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
+                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs sm:text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
                 />
               </div>
               <div>
-                <label className="block font-bold mb-1.5 text-[#334155] text-sm">시간</label>
+                <label className="block font-bold mb-1 text-[#334155] text-sm">시간</label>
                 <input
                   type="time"
                   required
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3 py-2 text-xs sm:text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
+                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs sm:text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
                 />
               </div>
               <div className="col-span-2 sm:col-span-1">
-                <label className="block font-bold mb-1.5 text-[#334155] text-sm">기준 시간대</label>
+                <label className="block font-bold mb-1 text-[#334155] text-sm">기준 시간대</label>
                 <select
                   value={timezone}
                   onChange={(e) => setTimezone(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3 py-2 text-xs sm:text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
+                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs sm:text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
                 >
                   <option value="Asia/Seoul">Asia/Seoul (KST)</option>
                   <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
@@ -544,10 +529,10 @@ export function StudioSubmitModal({
             </div>
 
             {/* Step 4: 소속 선택 */}
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               <label className="block font-bold text-[#334155] text-sm">소속 구분</label>
               <div className="grid grid-cols-2 gap-2">
-                <label className={`flex items-center justify-center gap-2 p-2.5 rounded-[6px] border cursor-pointer transition-all ${
+                <label className={`flex items-center justify-center gap-2 p-2 rounded-[6px] border cursor-pointer transition-all ${
                   agencyType === 'INDIE' 
                     ? 'bg-blue-50/70 border-[#2563EB] text-[#2563EB] font-bold' 
                     : 'bg-[#F8FAFC] border-[#CBD5E1] text-[#64748B]'
@@ -563,7 +548,7 @@ export function StudioSubmitModal({
                   <span className="text-xs sm:text-sm">개인세 / 인디 (Indie)</span>
                 </label>
 
-                <label className={`flex items-center justify-center gap-2 p-2.5 rounded-[6px] border cursor-pointer transition-all ${
+                <label className={`flex items-center justify-center gap-2 p-2 rounded-[6px] border cursor-pointer transition-all ${
                   agencyType === 'AGENCY' 
                     ? 'bg-blue-50/70 border-[#2563EB] text-[#2563EB] font-bold' 
                     : 'bg-[#F8FAFC] border-[#CBD5E1] text-[#64748B]'
@@ -581,8 +566,8 @@ export function StudioSubmitModal({
               </div>
 
               {agencyType === 'AGENCY' && (
-                <div className="pt-1.5 animate-fadeIn">
-                  <label className="block font-bold mb-1.5 text-[#334155] text-sm">
+                <div className="pt-1 animate-fadeIn">
+                  <label className="block font-bold mb-1 text-[#334155] text-sm">
                     기업 / 에이전시명 <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -591,7 +576,7 @@ export function StudioSubmitModal({
                     placeholder="예: 스텔라이브, 이세돌, VSPO!, HOLOLIVE 등"
                     value={agencyName}
                     onChange={(e) => setAgencyName(e.target.value)}
-                    className="w-full bg-white border border-[#CBD5E1] rounded-[6px] px-3.5 py-2.5 text-sm focus:border-[#2563EB] focus:outline-none transition-all font-medium"
+                    className="w-full bg-white border border-[#CBD5E1] rounded-[6px] px-3.5 py-2 text-sm focus:border-[#2563EB] focus:outline-none transition-all font-medium"
                   />
                 </div>
               )}
@@ -599,59 +584,61 @@ export function StudioSubmitModal({
 
             {/* Step 5: 데뷔 인사말 & 소식 */}
             <div>
-              <label className="block font-bold mb-1.5 text-[#334155] text-sm">데뷔 인사말 & 소식</label>
+              <label className="block font-bold mb-1 text-[#334155] text-sm">데뷔 인사말 & 소식</label>
               <textarea
-                rows={3}
+                rows={2}
                 placeholder="안녕하세요! 신입 버튜버 데뷔 방송에서 만나요!"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3.5 py-2.5 text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all"
+                className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3.5 py-2 text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all"
               />
-              <p className="text-xs text-[#64748B] mt-1">
+              <p className="text-[11px] text-[#64748B] mt-0.5">
                 * 방송국 프로필 소개글이 자동으로 불러와지며 자유롭게 수정 가능합니다.
               </p>
             </div>
 
             {/* 💡 5, 6, 7. "캘린더 표시 시간:" 및 D - N / 데뷔까지 N시간 / 곧 데뷔! 뱃지 박스 */}
-            <div className="bg-[#F0F9FF] border border-[#BFDBFE] rounded-[6px] p-3.5 text-xs sm:text-sm text-[#1E40AF] flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
-              <div className="flex flex-col gap-1 min-w-0">
+            <div className="bg-[#F0F9FF] border border-[#BFDBFE] rounded-[6px] p-3 text-xs sm:text-sm text-[#1E40AF] flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
+              <div className="flex flex-col gap-0.5 min-w-0">
                 <span className="flex items-center gap-1.5 font-bold text-[#1E3A8A]">
                   <Globe className="w-4 h-4 text-[#2563EB] shrink-0" /> {t.calendarDisplayTime}
                 </span>
-                <span className="font-mono font-extrabold text-sm sm:text-base text-[#1E40AF] break-words pl-5">
+                <span className="font-mono font-extrabold text-xs sm:text-sm text-[#1E40AF] break-words pl-5">
                   {previewLocalTime} ({timezone})
                 </span>
               </div>
 
-              {/* 💡 D-day 카운트다운 박스 (우측) */}
-              <div className="shrink-0 self-start sm:self-center pl-5 sm:pl-0">
-                <span className={`px-3 py-1.5 rounded-[6px] text-xs sm:text-sm font-black flex items-center gap-1.5 ${ddayBadge.colorClass}`}>
-                  {ddayBadge.icon}
-                  <span>{ddayBadge.label}</span>
-                </span>
-              </div>
+              {/* 💡 D-day 카운트다운 박스: 정보가 입력되거나 프로필 연동 완료 시에만 노출 */}
+              {(watchUrl.length > 5 || displayName.length > 0 || isFetchedSuccess) && (
+                <div className="shrink-0 self-start sm:self-center pl-5 sm:pl-0 animate-fadeIn">
+                  <span className={`px-2.5 py-1 rounded-[6px] text-xs font-black flex items-center gap-1.5 ${ddayBadge?.colorClass}`}>
+                    {ddayBadge?.icon}
+                    <span>{ddayBadge?.label}</span>
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* 하단 버튼 영역 */}
             {submitError && (
-              <div className="rounded-[6px] border border-red-200 bg-red-50 px-3.5 py-2.5 text-xs font-bold text-red-700">
+              <div className="rounded-[6px] border border-red-200 bg-red-50 px-3.5 py-2 text-xs font-bold text-red-700">
                 {submitError}
               </div>
             )}
-            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E2E8F0]">
+            <div className="flex items-center justify-end gap-2.5 pt-2.5 border-t border-[#E2E8F0]">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 rounded-[6px] font-bold text-sm bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0] hover:text-[#0F172A] transition-all cursor-pointer"
+                className="px-4 py-2 rounded-[6px] font-bold text-xs sm:text-sm bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0] hover:text-[#0F172A] transition-all cursor-pointer"
               >
                 취소
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting || !watchUrl || !displayName}
-                className="px-6 py-2.5 rounded-[6px] font-extrabold text-sm bg-[#0F172A] hover:bg-[#2563EB] text-white transition-all flex items-center gap-2 shadow-xs cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-5 py-2 rounded-[6px] font-extrabold text-xs sm:text-sm bg-[#0F172A] hover:bg-[#2563EB] text-white transition-all flex items-center gap-2 shadow-xs cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? '등록 중...' : '등록'} <Send className="w-4 h-4" />
+                {isSubmitting ? '등록 중...' : '등록'} <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             </div>
           </form>
