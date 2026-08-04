@@ -306,48 +306,34 @@ export async function fetchTwitchProfile(channelUrlOrId: string): Promise<Platfo
     }
   }
 
-  username = username.replace(/^@/, '');
+  username = username.replace(/^@/, '').trim();
   const channelUrl = `https://www.twitch.tv/${username}`;
 
   try {
-    // 1차: 트위치 공개 GQL API 호출
-    const gqlUrl = 'https://gql.twitch.tv/gql';
-    const gqlBody = {
-      query: `
-        query GetUser($login: String!) {
-          user(login: $login) {
-            id
-            login
-            displayName
-            description
-            profileImageURL(width: 300)
-          }
-        }
-      `,
-      variables: { login: username.toLowerCase() }
-    };
-
-    const gqlRes = await fetch(gqlUrl, {
-      method: 'POST',
+    // 1차: IVR Twitch Public REST API (프로필 이미지, 디스플레이 네임, Bio 100% 정상 수집)
+    const ivrRes = await fetch(`https://api.ivr.fi/v2/twitch/user?login=${encodeURIComponent(username.toLowerCase())}`, {
       headers: {
-        'Client-ID': 'kimne78kx3ncx6brogo494xz661m55',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(gqlBody)
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
     });
 
-    if (gqlRes.ok) {
-      const gqlData: any = await gqlRes.json();
-      const userData = gqlData?.data?.user;
-      if (userData && userData.displayName) {
+    if (ivrRes.ok) {
+      const ivrData: any = await ivrRes.json();
+      const userData = Array.isArray(ivrData) ? ivrData[0] : ivrData;
+      if (userData && (userData.displayName || userData.login)) {
+        const displayName = userData.displayName || userData.login || username;
+        const profileImage = userData.logo || '';
+        const description = userData.bio || `${displayName}의 공식 트위치 방송국입니다.`;
+
         return {
           success: true,
           platform: 'TWITCH',
           channelId: userData.login || username,
-          creatorName: userData.displayName || username,
-          profileImageUrl: userData.profileImageURL || '',
+          creatorName: displayName,
+          profileImageUrl: profileImage,
           channelUrl,
-          description: userData.description || `${userData.displayName}의 트위치 공식 방송국입니다.`,
+          description,
           verified: true
         };
       }

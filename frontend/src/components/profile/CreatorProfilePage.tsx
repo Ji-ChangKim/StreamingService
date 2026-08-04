@@ -221,7 +221,11 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
               target="_blank"
               rel="noreferrer"
               aria-label={`${profile.displayName}의 ${platformLabel} 공식 채널 열기`}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-[10px] bg-[#0F172A] hover:bg-[#2563EB] text-white font-extrabold text-xs sm:text-sm transition-all shadow-sm group"
+              className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-[10px] text-white font-extrabold text-xs sm:text-sm transition-all shadow-sm group ${
+                primaryPlatform === 'TWITCH'
+                  ? 'bg-[#9146FF] hover:bg-[#772CE8]'
+                  : 'bg-[#0F172A] hover:bg-[#2563EB]'
+              }`}
             >
               {primaryPlatform === 'SOOP' ? (
                 <img src="/icons/soop/soop_logo_white.svg" alt="SOOP" className="h-5 w-auto object-contain" />
