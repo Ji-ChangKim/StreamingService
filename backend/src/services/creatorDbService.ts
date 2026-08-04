@@ -11,6 +11,7 @@ export interface CreatorProfileData {
   creatorType: 'INDIE' | 'AGENCY';
   language: string;
   countryCode?: string;
+  xUrl?: string;
   isPublic: boolean;
   createdAt: string;
   updatedAt: string;
@@ -102,6 +103,7 @@ export async function fetchCreatorProfileBySlug(db: D1Database | null, slug: str
       creatorType: row.agency_name?.includes('기업') ? 'AGENCY' : 'INDIE',
       language: 'ko',
       countryCode: row.country_code || 'KR',
+      xUrl: row.x_url || undefined,
       isPublic: true,
       createdAt: row.created_at || new Date().toISOString(),
       updatedAt: row.updated_at || new Date().toISOString(),
@@ -133,3 +135,145 @@ export async function fetchCreatorProfileBySlug(db: D1Database | null, slug: str
     return null;
   }
 }
+
+export async function fetchAllCreatorSlugs(db: D1Database | null): Promise<{ slug: string; updatedAt?: string }[]> {
+  if (!db) {
+    return [{ slug: 'arongtti', updatedAt: '2026-07-31T00:00:00Z' }];
+  }
+
+  try {
+    const { results } = await db
+      .prepare(`SELECT slug, updated_at FROM streamerChannel_info WHERE slug IS NOT NULL AND slug != ''`)
+      .all();
+
+    if (results && results.length > 0) {
+      return results.map((row: any) => ({
+        slug: row.slug,
+        updatedAt: row.updated_at ? new Date(row.updated_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
+      }));
+    }
+    return [{ slug: 'arongtti', updatedAt: '2026-07-31' }];
+  } catch (err) {
+    console.error('fetchAllCreatorSlugs Error:', err);
+    return [{ slug: 'arongtti', updatedAt: '2026-07-31' }];
+  }
+}
+
+export interface UpdateCreatorInput {
+  displayName?: string;
+  description?: string;
+  agencyName?: string;
+  debutDate?: string; // YYYY-MM-DD
+  debutTime?: string; // HH:MM
+  channelUrl?: string;
+  xUrl?: string;
+  profileImageUrl?: string;
+}
+
+export async function updateCreatorProfileInD1(
+  db: D1Database | null,
+  slug: string,
+  input: UpdateCreatorInput
+): Promise<boolean> {
+  if (!db) return true;
+
+  try {
+    const row: any = await db
+      .prepare(`SELECT channel_id FROM streamerChannel_info WHERE slug = ? OR display_name = ? LIMIT 1`)
+      .bind(slug.toLowerCase(), slug)
+      .first();
+
+    if (!row) return false;
+
+    const channelId = row.channel_id;
+
+    let startAtUtc: string | undefined = undefined;
+    if (input.debutDate && input.debutTime) {
+      const dateStr = `${input.debutDate}T${input.debutTime}:00+09:00`;
+      const dateObj = new Date(dateStr);
+      if (!isNaN(dateObj.getTime())) {
+        startAtUtc = dateObj.toISOString();
+      }
+    }
+
+    const nowIso = new Date().toISOString();
+    await db
+      .prepare(`
+        UPDATE streamerChannel_info
+        SET
+          display_name = COALESCE(?, display_name),
+          description = COALESCE(?, description),
+          agency_name = COALESCE(?, agency_name),
+          debut_date = COALESCE(?, debut_date),
+          debut_time = COALESCE(?, debut_time),
+          start_at_utc = COALESCE(?, start_at_utc),
+          x_url = COALESCE(?, x_url),
+          profile_image_url = COALESCE(?, profile_image_url),
+          updated_at = ?
+        WHERE channel_id = ?
+      `)
+      .bind(
+        input.displayName || null,
+        input.description || null,
+        input.agencyName || null,
+        input.debutDate || null,
+        input.debutTime || null,
+        startAtUtc || null,
+        input.xUrl || null,
+        input.profileImageUrl || null,
+        nowIso,
+        channelId
+      )
+      .run();
+
+    if (input.channelUrl || input.displayName) {
+      await db
+        .prepare(`
+          UPDATE streamerChannel
+          SET
+            channel_url = COALESCE(?, channel_url),
+            channel_name = COALESCE(?, channel_name)
+          WHERE id = ?
+        `)
+        .bind(
+          input.channelUrl || null,
+          input.displayName || null,
+          channelId
+        )
+        .run();
+    }
+
+    return true;
+  } catch (err) {
+    console.error('updateCreatorProfileInD1 Error:', err);
+    return false;
+  }
+}
+
+export async function deleteCreatorProfileFromD1(
+  db: D1Database | null,
+  slug: string
+): Promise<boolean> {
+  if (!db) return true;
+
+  try {
+    const row: any = await db
+      .prepare(`SELECT channel_id FROM streamerChannel_info WHERE slug = ? OR display_name = ? LIMIT 1`)
+      .bind(slug.toLowerCase(), slug)
+      .first();
+
+    if (!row) return false;
+
+    const channelId = row.channel_id;
+
+    await db.prepare(`DELETE FROM streamerChannel_info WHERE channel_id = ?`).bind(channelId).run();
+    await db.prepare(`DELETE FROM streamerChannel WHERE id = ?`).bind(channelId).run();
+
+    return true;
+  } catch (err) {
+    console.error('deleteCreatorProfileFromD1 Error:', err);
+    return false;
+  }
+}
+
+

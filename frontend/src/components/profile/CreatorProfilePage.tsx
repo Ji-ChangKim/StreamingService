@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { ExternalLink, ArrowLeft, Tv, CheckCircle2, Calendar, Sparkles } from 'lucide-react';
-import { fetchCreatorProfile, CreatorProfileData } from '../../services/creatorService';
+import { ExternalLink, ArrowLeft, Tv, CheckCircle2, Calendar, Sparkles, Pencil, Trash2 } from 'lucide-react';
+import { fetchCreatorProfile, CreatorProfileData, deleteCreatorProfile } from '../../services/creatorService';
 import { getAvatarUrl } from '../../utils/avatarUtils';
+import { CreatorEditModal } from './CreatorEditModal';
 
 interface CreatorProfilePageProps {
   slug: string;
@@ -16,21 +17,43 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
   const [countdownText, setCountdownText] = useState<string>('');
   const [isDebuted, setIsDebuted] = useState(false);
   const [passedDays, setPassedDays] = useState<number>(0);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const loadData = async () => {
+    setIsLoading(true);
+    setError(null);
+    const data = await fetchCreatorProfile(slug);
+    if (data) {
+      setProfile(data);
+    } else {
+      setError('크리에이터 프로필을 찾을 수 없습니다.');
+    }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
-      setError(null);
-      const data = await fetchCreatorProfile(slug);
-      if (data) {
-        setProfile(data);
-      } else {
-        setError('크리에이터 프로필을 찾을 수 없습니다.');
-      }
-      setIsLoading(false);
-    }
     loadData();
   }, [slug]);
+
+  const handleDelete = async () => {
+    if (!profile) return;
+    const confirmed = window.confirm(
+      `정말로 '${profile.displayName}' 크리에이터 프로필 및 데뷔 일정을 삭제하시겠습니까?\n\n이 작업은 취소할 수 없으며, 데뷔 일정 캘린더 목록에서도 삭제됩니다.`
+    );
+    if (!confirmed) return;
+
+    setIsDeleting(true);
+    const success = await deleteCreatorProfile(profile.slug);
+    setIsDeleting(false);
+
+    if (success) {
+      alert(`'${profile.displayName}' 프로필이 정상 삭제되었습니다.`);
+      onNavigateHome();
+    } else {
+      alert('프로필 삭제에 실패했습니다. 다시 시도해 주세요.');
+    }
+  };
 
   // 데뷔 일정 D-Day 카운트다운 및 D + N일 계산 연동
   useEffect(() => {
@@ -113,14 +136,30 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
 
   return (
     <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-8 space-y-8 animate-fadeIn">
-      {/* Back Button */}
-      <div>
+      {/* Top Header Navigation & Edit/Delete Action Controls */}
+      <div className="flex items-center justify-between gap-3">
         <button
           onClick={onNavigateHome}
           className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#64748B] hover:text-[#0F172A] transition-colors py-1.5 px-3 rounded-[6px] hover:bg-slate-100 cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" /> 메인 캘린더로 돌아가기
         </button>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsEditModalOpen(true)}
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-[#2563EB] bg-white border border-slate-200 hover:border-blue-300 px-3 py-1.5 rounded-[8px] transition-all shadow-2xs cursor-pointer"
+          >
+            <Pencil className="w-3.5 h-3.5" /> 정보 수정 (Edit)
+          </button>
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 px-3 py-1.5 rounded-[8px] transition-all cursor-pointer disabled:opacity-50"
+          >
+            <Trash2 className="w-3.5 h-3.5" /> {isDeleting ? '삭제 중...' : '삭제 (Delete)'}
+          </button>
+        </div>
       </div>
 
       {/* 1. 상단 프로필 카드 리뉴얼 (모바일 반응형 수직/수평 정렬 최적화) */}
@@ -174,15 +213,15 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
           </div>
         </div>
 
-        {/* [채널 방문] 버튼 (모바일 풀 너비 모드 지원) */}
-        {primaryChannel && (
-          <div className="w-full md:w-auto flex justify-center md:justify-end shrink-0 self-stretch md:self-center">
+        {/* [채널 방문] & [X(트위터)] 이동 버튼 */}
+        <div className="w-full md:w-auto flex flex-col sm:flex-row items-center justify-center md:justify-end gap-2.5 shrink-0 self-stretch md:self-center">
+          {primaryChannel && (
             <a
               href={primaryChannel.channelUrl}
               target="_blank"
               rel="noreferrer"
               aria-label={`${profile.displayName}의 ${platformLabel} 공식 채널 열기`}
-              className="w-full md:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-[10px] bg-[#0F172A] hover:bg-[#2563EB] text-white font-extrabold text-xs sm:text-sm transition-all shadow-sm group"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-[10px] bg-[#0F172A] hover:bg-[#2563EB] text-white font-extrabold text-xs sm:text-sm transition-all shadow-sm group"
             >
               {primaryPlatform === 'SOOP' ? (
                 <img src="/icons/soop/soop_logo_white.svg" alt="SOOP" className="h-5 w-auto object-contain" />
@@ -191,8 +230,24 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
               )}
               <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </a>
-          </div>
-        )}
+          )}
+
+          {profile.xUrl && (
+            <a
+              href={profile.xUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`${profile.displayName}의 X(트위터) 공식 프로필`}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[10px] bg-[#0F172A] hover:bg-black text-white font-extrabold text-xs sm:text-sm transition-all shadow-sm border border-slate-800 hover:border-slate-600 group"
+            >
+              <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+              <span>[X 프로필]</span>
+              <ExternalLink className="w-3.5 h-3.5 text-slate-300 group-hover:translate-x-0.5 transition-transform" />
+            </a>
+          )}
+        </div>
       </section>
 
       {/* 2. 데뷔 일정 영역 (상태 자동 전환: D + N일 표현) */}
@@ -272,6 +327,21 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
               <ExternalLink className="w-3.5 h-3.5 text-[#64748B]" />
             </a>
           ))}
+
+          {profile.xUrl && (
+            <a
+              href={profile.xUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-[10px] bg-[#0F172A] hover:bg-black text-white font-bold text-xs sm:text-sm transition-all shadow-2xs hover:border-slate-700"
+            >
+              <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+              <span>[X (구 트위터) 공식 계정]</span>
+              <ExternalLink className="w-3.5 h-3.5 text-slate-300" />
+            </a>
+          )}
         </div>
       </section>
 
@@ -312,6 +382,16 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
           </button>
         </div>
       </section>
+
+      {/* 6. 정보 수정 (Edit) 모달 */}
+      {profile && (
+        <CreatorEditModal
+          profile={profile}
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onSuccess={loadData}
+        />
+      )}
     </div>
   );
 }

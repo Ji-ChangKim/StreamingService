@@ -17,6 +17,7 @@ export interface CreatorProfileData {
   agencyName: string;
   creatorType: 'INDIE' | 'AGENCY';
   language: string;
+  xUrl?: string;
   isPublic: boolean;
   createdAt: string;
   updatedAt: string;
@@ -39,3 +40,45 @@ export async function fetchCreatorProfile(slug: string): Promise<CreatorProfileD
     return null;
   }
 }
+
+export interface UpdateCreatorPayload {
+  displayName?: string;
+  description?: string;
+  agencyName?: string;
+  debutDate?: string;
+  debutTime?: string;
+  channelUrl?: string;
+  xUrl?: string;
+  profileImageUrl?: string;
+}
+
+export async function updateCreatorProfile(slug: string, payload: UpdateCreatorPayload): Promise<boolean> {
+  try {
+    const apiHost = (import.meta as any).env?.VITE_API_HOST || '';
+    const res = await fetch(`${apiHost}/api/v1/creator/${encodeURIComponent(slug)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    return !!data.success;
+  } catch (err) {
+    console.error('updateCreatorProfile Error:', err);
+    return false;
+  }
+}
+
+export async function deleteCreatorProfile(slug: string): Promise<boolean> {
+  try {
+    const apiHost = (import.meta as any).env?.VITE_API_HOST || '';
+    const res = await fetch(`${apiHost}/api/v1/creator/${encodeURIComponent(slug)}`, {
+      method: 'DELETE',
+    });
+    const data = await res.json();
+    return !!data.success;
+  } catch (err) {
+    console.error('deleteCreatorProfile Error:', err);
+    return false;
+  }
+}
+

@@ -90,6 +90,8 @@ export function MonthlyCalendarGrid({
       )
     : [];
 
+  const totalCreators = new Set(events.map((e) => (e.creator as any)?.slug || e.creator?.displayName)).size || events.length || 123;
+
   return (
     <>
       {/* 📱 1. 스마트폰/모바일 화면 전용 네이티브 캘린더 APP 레이아웃 (<640px) */}
@@ -135,6 +137,7 @@ export function MonthlyCalendarGrid({
               selectedTimezone={selectedTimezone}
               selectedDateStr={selectedDateStr || ''}
               todayStr={todayStr}
+              totalCreators={totalCreators}
               onSelectDate={(dateStr) => setSelectedDateStr(dateStr)}
             />
           ) : (

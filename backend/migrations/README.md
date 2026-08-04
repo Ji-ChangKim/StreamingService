@@ -28,6 +28,7 @@
 - `timezone`: TEXT DEFAULT 'Asia/Seoul'
 - `start_at_utc`: TEXT
 - `country_code`: TEXT CHECK (country_code IN ('KR', 'JP', 'US') OR country_code IS NULL) *(Migration 0009에서 추가)*
+- `x_url`: TEXT *(Migration 0012에서 추가, X/트위터 공식 주소)*
 - `created_at`: TEXT / `updated_at`: TEXT
 
 ---
@@ -41,6 +42,7 @@
 - `0009_add_country_code.sql`: `country_code` 컬럼 추가 및 KR/JP/US 국가 코드 데이터 셋 업데이트
 - `0010_fix_profile_image_urls_and_index.sql`: `profile_image_url` NULL 보완 및 `start_at_utc` 쿼리 인덱스 추가 (조회 속도 초고속화)
 - `0011_update_diaphin_channel_info.sql`: `디아핀` 치지직 정식 채널 URL, 최신 프로필 이미지 및 방송국 소개글 업데이트
+- `0012_add_x_url_column_and_data.sql`: `x_url` 컬럼 추가 및 기존 데이터 보존 상태에서 X(트위터) 링크 등록
 
 ---
 

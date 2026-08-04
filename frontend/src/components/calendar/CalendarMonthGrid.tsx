@@ -1,31 +1,29 @@
 import { CheckCircle2 } from 'lucide-react';
 import { DebutEvent } from '../../types';
 import { formatTimeInTimezone } from '../../utils/dateUtils';
-
-interface CalendarCellData {
-  dayNumber: number | null;
-  date: Date | null;
-}
+import { CalendarCell } from '../../utils/calendarUtils';
 
 interface CalendarMonthGridProps {
   year: number;
   month: number;
-  calendarCells: CalendarCellData[];
+  calendarCells: CalendarCell[];
   eventsByDateMap: Map<string, DebutEvent[]>;
   selectedTimezone: string;
   selectedDateStr: string;
   todayStr: string;
+  totalCreators?: number;
   onSelectDate: (dateStr: string) => void;
 }
 
 export function CalendarMonthGrid({
-  year,
-  month,
+  year: _year,
+  month: _month,
   calendarCells,
   eventsByDateMap,
   selectedTimezone,
   selectedDateStr,
   todayStr,
+  totalCreators = 123,
   onSelectDate,
 }: CalendarMonthGridProps) {
   return (
@@ -45,25 +43,24 @@ export function CalendarMonthGrid({
         {/* Calendar Grid Cells */}
         <div className="grid grid-cols-7 border-x border-b border-[#CBD5E1] rounded-b-[8px] divide-x divide-y divide-[#CBD5E1] bg-[#F1F5F9]">
           {calendarCells.map((cell, idx) => {
-            if (!cell.date) {
-              return <div key={`empty-${idx}`} className="min-h-[120px] bg-[#F8FAFC]/40" />;
-            }
-
-            const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(cell.dayNumber).padStart(2, '0')}`;
+            const dateKey = `${cell.year}-${String(cell.month + 1).padStart(2, '0')}-${String(cell.dayNumber).padStart(2, '0')}`;
             const dayEvents = eventsByDateMap.get(dateKey) || [];
             const isSelected = dateKey === selectedDateStr;
             const isToday = dateKey === todayStr;
+            const isCurrentMonth = cell.isCurrentMonth;
 
             return (
               <div
-                key={dateKey}
+                key={`${dateKey}-${idx}`}
                 onClick={() => onSelectDate(dateKey)}
                 className={`min-h-[115px] p-2 flex flex-col justify-between overflow-hidden cursor-pointer transition-all ${
                   isSelected
                     ? 'bg-[#F0F9FF] ring-2 ring-inset ring-[#2563EB] shadow-xs'
                     : isToday
                     ? 'bg-[#EFF6FF]/80 border-2 border-[#2563EB] shadow-xs'
-                    : 'bg-white hover:bg-[#F8FAFC]'
+                    : isCurrentMonth
+                    ? 'bg-white hover:bg-[#F8FAFC]'
+                    : 'bg-[#F8FAFC]/70 opacity-50 hover:opacity-90'
                 }`}
               >
                 {/* Date Header */}
@@ -72,6 +69,8 @@ export function CalendarMonthGrid({
                     className={`text-xs font-mono font-extrabold flex items-center justify-center ${
                       isToday
                         ? 'w-6 h-6 rounded-full bg-[#2563EB] text-white shadow-2xs font-extrabold'
+                        : !isCurrentMonth
+                        ? 'text-[#94A3B8] px-1 py-0.5 font-bold'
                         : idx % 7 === 0
                         ? 'text-[#EF4444] px-1 py-0.5'
                         : idx % 7 === 6
@@ -83,7 +82,7 @@ export function CalendarMonthGrid({
                   </span>
                 </div>
 
-                {/* Event Items (최대 2개로 깔끔히 정돈하여 지저분함 제거) */}
+                {/* Event Items */}
                 <div className="space-y-1 flex-grow justify-start">
                   {dayEvents.slice(0, 2).map((evt) => {
                     const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
@@ -93,7 +92,11 @@ export function CalendarMonthGrid({
                     return (
                       <div
                         key={evt.id}
-                        className="px-1.5 py-0.5 rounded-[4px] bg-[#F8FAFC] border border-[#CBD5E1] flex items-center gap-1.5 text-[11px] font-bold text-[#0F172A] hover:bg-[#E2E8F0] hover:border-[#2563EB] transition-all cursor-pointer overflow-hidden shadow-2xs"
+                        className={`px-1.5 py-0.5 rounded-[4px] border flex items-center gap-1.5 text-[11px] font-bold transition-all cursor-pointer overflow-hidden shadow-2xs ${
+                          isCurrentMonth
+                            ? 'bg-[#F8FAFC] border-[#CBD5E1] text-[#0F172A] hover:bg-[#E2E8F0] hover:border-[#2563EB]'
+                            : 'bg-slate-100/60 border-slate-200 text-slate-500 opacity-75'
+                        }`}
                       >
                         {platform === 'CHZZK' && (
                           <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
@@ -125,9 +128,16 @@ export function CalendarMonthGrid({
         </div>
       </div>
 
+      {/* 달력 하단 방송 URL 확인 및 총 등록 버튜버 수 표기 */}
       <div className="flex items-center justify-between mt-3 text-[11px] text-[#64748B]">
-        <span className="flex items-center gap-1 font-medium">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> 방송사 소유권 확인 및 스케줄 검증 데이터
+        <span className="flex items-center gap-2 font-bold text-slate-700">
+          <span className="flex items-center gap-1 text-emerald-600">
+            <CheckCircle2 className="w-4 h-4 shrink-0" /> 방송 URL 확인 데이터
+          </span>
+          <span className="text-slate-300">•</span>
+          <span className="text-[#0F172A] font-extrabold bg-slate-100 px-2.5 py-1 rounded-[6px] border border-slate-200">
+            총 등록 버튜버 <span className="text-[#2563EB]">{totalCreators}</span>명
+          </span>
         </span>
       </div>
     </div>

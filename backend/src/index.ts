@@ -5,7 +5,7 @@ import { getAssetFromKV, serveSinglePageApp } from '@cloudflare/kv-asset-handler
 import manifestJSON from '__STATIC_CONTENT_MANIFEST';
 import { fetchEventsFromD1, insertEventToD1, updateEventInD1, MOCK_EVENTS } from './services/eventDbService';
 import { fetchPlatformProfile } from './services/platformApiService';
-import { fetchCreatorProfileBySlug } from './services/creatorDbService';
+import { fetchCreatorProfileBySlug, fetchAllCreatorSlugs, updateCreatorProfileInD1, deleteCreatorProfileFromD1 } from './services/creatorDbService';
 
 type Bindings = {
   DB: D1Database;
@@ -51,6 +51,74 @@ app.get('/api/v1/system/version', (c) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// Dynamic Sitemap XML Generator Handler
+const sitemapXmlHandler = async (c: any) => {
+  const baseUrl = 'https://vdebut.live';
+  const todayStr = new Date().toISOString().split('T')[0];
+  const creators = await fetchAllCreatorSlugs(c.env.DB || null);
+
+  let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+  xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
+  xml += `        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n`;
+
+  // 1. Home / Landing Page
+  xml += `  <url>\n`;
+  xml += `    <loc>${baseUrl}/</loc>\n`;
+  xml += `    <xhtml:link rel="alternate" hreflang="ko" href="${baseUrl}/?lang=ko" />\n`;
+  xml += `    <xhtml:link rel="alternate" hreflang="ja" href="${baseUrl}/?lang=ja" />\n`;
+  xml += `    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/?lang=en" />\n`;
+  xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/" />\n`;
+  xml += `    <lastmod>${todayStr}</lastmod>\n`;
+  xml += `    <changefreq>daily</changefreq>\n`;
+  xml += `    <priority>1.0</priority>\n`;
+  xml += `  </url>\n`;
+
+  // 2. Language variations
+  ['ko', 'ja', 'en'].forEach((lang) => {
+    xml += `  <url>\n`;
+    xml += `    <loc>${baseUrl}/?lang=${lang}</loc>\n`;
+    xml += `    <xhtml:link rel="alternate" hreflang="ko" href="${baseUrl}/?lang=ko" />\n`;
+    xml += `    <xhtml:link rel="alternate" hreflang="ja" href="${baseUrl}/?lang=ja" />\n`;
+    xml += `    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/?lang=en" />\n`;
+    xml += `    <lastmod>${todayStr}</lastmod>\n`;
+    xml += `    <changefreq>daily</changefreq>\n`;
+    xml += `    <priority>0.9</priority>\n`;
+    xml += `  </url>\n`;
+  });
+
+  // 3. Upload Page (/upload)
+  xml += `  <url>\n`;
+  xml += `    <loc>${baseUrl}/upload</loc>\n`;
+  xml += `    <lastmod>${todayStr}</lastmod>\n`;
+  xml += `    <changefreq>weekly</changefreq>\n`;
+  xml += `    <priority>0.8</priority>\n`;
+  xml += `  </url>\n`;
+
+  // 4. Dynamic Creator Profiles (/creator/:slug)
+  creators.forEach((item) => {
+    const modDate = item.updatedAt || todayStr;
+    xml += `  <url>\n`;
+    xml += `    <loc>${baseUrl}/creator/${encodeURIComponent(item.slug)}</loc>\n`;
+    xml += `    <lastmod>${modDate}</lastmod>\n`;
+    xml += `    <changefreq>daily</changefreq>\n`;
+    xml += `    <priority>0.8</priority>\n`;
+    xml += `  </url>\n`;
+  });
+
+  xml += `</urlset>`;
+
+  return new Response(xml, {
+    headers: {
+      'Content-Type': 'application/xml; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+    },
+  });
+};
+
+app.get('/sitemap.xml', sitemapXmlHandler);
+app.get('/api/v1/sitemap.xml', sitemapXmlHandler);
+
 
 // 2. Get Debut Events (Real D1 Database Query with Fallback & Merge)
 app.get('/api/v1/events', async (c) => {
@@ -152,6 +220,29 @@ app.get('/api/v1/creator/:slug', async (c) => {
   return c.json({
     success: true,
     creator
+  });
+});
+
+// Update Creator Profile API Endpoint
+app.put('/api/v1/creator/:slug', async (c) => {
+  const slug = c.req.param('slug');
+  const body = await c.req.json();
+  const ok = await updateCreatorProfileInD1(c.env.DB || null, slug, body);
+
+  return c.json({
+    success: ok,
+    message: ok ? '크리에이터 프로필이 성공적으로 수정되었습니다.' : '프로필 수정에 실패했습니다.'
+  });
+});
+
+// Delete Creator Profile API Endpoint
+app.delete('/api/v1/creator/:slug', async (c) => {
+  const slug = c.req.param('slug');
+  const ok = await deleteCreatorProfileFromD1(c.env.DB || null, slug);
+
+  return c.json({
+    success: ok,
+    message: ok ? '크리에이터 프로필이 성공적으로 삭제되었습니다.' : '프로필 삭제에 실패했습니다.'
   });
 });
 
