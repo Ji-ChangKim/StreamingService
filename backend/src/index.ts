@@ -431,7 +431,7 @@ app.all('*', async (c) => {
   }
 });
 
-// Cloudflare Workers Scheduled Cron Handler (매일 09:00 KST / 21:00 KST 정기 웹서치 자동 수행)
+// Cloudflare Workers Scheduled Cron Handler (매일 오전 09:00 KST 정기 웹서치 자동 1회 수행)
 export default {
   fetch: app.fetch,
   async scheduled(event: any, env: Bindings, ctx: any) {

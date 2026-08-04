@@ -32,4 +32,4 @@ database_name = "vdebut-db"
 database_id = "888a8c04-5657-4bff-9b50-5002a47ac7c7"
 
 [triggers]
-crons = ["0 0 * * *", "0 12 * * *"]
+crons = ["0 0 * * *"]
