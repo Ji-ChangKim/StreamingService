@@ -6,6 +6,7 @@ import manifestJSON from '__STATIC_CONTENT_MANIFEST';
 import { fetchEventsFromD1, insertEventToD1, updateEventInD1, MOCK_EVENTS } from './services/eventDbService';
 import { fetchPlatformProfile } from './services/platformApiService';
 import { fetchCreatorProfileBySlug, fetchAllCreatorSlugs, updateCreatorProfileInD1, deleteCreatorProfileFromD1 } from './services/creatorDbService';
+import { runDebutCrawlerProcess } from './services/debutCrawlerService';
 
 type Bindings = {
   DB: D1Database;
@@ -378,7 +379,39 @@ app.get('/upload', async (c) => {
   }
 });
 
-// 8. Safe Static Asset & SPA Fallback Handler
+// 9. Admin Crawler Web Search & Email Report Manual Trigger
+app.post('/api/v1/admin/crawler/run', async (c) => {
+  try {
+    const body = await c.req.json().catch(() => ({}));
+    const recipient = body.recipientEmail || 'kimjichang1234@gmail.com';
+    const result = await runDebutCrawlerProcess(c.env.DB || null, recipient);
+    return c.json({
+      success: true,
+      message: '자동 웹서치 수집 및 이메일 리포트 발송 프로세스가 성공적으로 수행되었습니다.',
+      result
+    });
+  } catch (err: any) {
+    return c.json({ success: false, error: err.message || '크롤러 실행 중 오류 발생' }, 500);
+  }
+});
+
+// 10. Admin Crawler Logs History Fetch API
+app.get('/api/v1/admin/crawler/logs', async (c) => {
+  if (!c.env.DB) {
+    return c.json({ success: false, error: 'Database binding unavailable' }, 500);
+  }
+  try {
+    const { results } = await c.env.DB.prepare(`SELECT * FROM crawler_update_logs ORDER BY run_at DESC LIMIT 50`).all();
+    return c.json({
+      success: true,
+      logs: results || []
+    });
+  } catch (err: any) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+
+// 11. Safe Static Asset & SPA Fallback Handler
 app.all('*', async (c) => {
   const assetManifest = JSON.parse(manifestJSON || '{}');
   try {
@@ -398,4 +431,14 @@ app.all('*', async (c) => {
   }
 });
 
-export default app;
+// Cloudflare Workers Scheduled Cron Handler (매일 09:00 KST / 21:00 KST 정기 웹서치 자동 수행)
+export default {
+  fetch: app.fetch,
+  async scheduled(event: any, env: Bindings, ctx: any) {
+    ctx.waitUntil(
+      runDebutCrawlerProcess(env.DB || null, 'kimjichang1234@gmail.com')
+        .then((res) => console.log('[Scheduled Cron] Debut search & email report success:', res.totalCrawledCount))
+        .catch((err) => console.error('[Scheduled Cron] Error:', err))
+    );
+  }
+};

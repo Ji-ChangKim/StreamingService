@@ -44,6 +44,7 @@
 - `0011_update_diaphin_channel_info.sql`: `디아핀` 치지직 정식 채널 URL, 최신 프로필 이미지 및 방송국 소개글 업데이트
 - `0012_add_x_url_column_and_data.sql`: `x_url` 컬럼 추가 및 기존 데이터 보존 상태에서 X(트위터) 링크 등록
 - `0013_update_twitch_profile_and_soy_info.sql`: Soy (`astaril-soy`) 스트리머 트위치 고화질 프로필 이미지 및 소개글 업데이트
+- `0014_create_crawler_update_logs_table.sql`: 자동 웹서치 수집 및 갱신 이력 기록용 `crawler_update_logs` 테이블 생성
 
 ---
 
