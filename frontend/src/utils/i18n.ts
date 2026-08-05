@@ -10,23 +10,23 @@ export interface SeoMetadata {
 
 export const SEO_DATA: Record<Language, SeoMetadata> = {
   ko: {
-    title: 'VDébut | 버튜버 데뷔 캘린더 - 버츄얼 스트리머 첫 무대 방송 일정',
-    description: '새로운 버튜버의 첫 무대를 가장 먼저 만나보세요. 치지직·SOOP·유튜브 신입 버튜버 데뷔 일정을 실시간 통합 제공합니다.',
-    keywords: 'VDébut, 버튜버, VTuber, 데뷔 캘린더, 치지직, SOOP, 아프리카TV, 유튜브, 버츄얼 스트리머, 이적, 캘린더',
-    ogTitle: 'VDébut | 버튜버 데뷔 캘린더',
-    ogDescription: '새로운 버튜버의 첫 무대를 가장 먼저 만나보세요! 치지직·SOOP·유튜브 신입 버튜버 라이브 일정 집계 중.'
+    title: 'VDébut | 신입 버튜버 데뷔 일정 통합 캘린더 - 버츄얼 스트리머 첫 방송',
+    description: '신입 버튜버의 첫 방송 무대를 가장 먼저 만나보세요. 치지직·SOOP·유튜브·트위치 버튜버(VTuber) 데뷔 일정을 실시간 통합 캘린더로 제공합니다.',
+    keywords: 'VDébut, 버튜버, 버튜버 데뷔, 신입 버튜버, 버튜버 데뷔 일정, VTuber, 데뷔 캘린더, 치지직, SOOP, 아프리카TV, 유튜브, 버츄얼 스트리머, 初配信, デビュー, Debut Calendar',
+    ogTitle: 'VDébut | 신입 버튜버 데뷔 일정 통합 캘린더',
+    ogDescription: '신입 버튜버의 첫 무대를 가장 먼저 만나보세요! 치지직·SOOP·유튜브 버튜버 라이브 데뷔 일정 라이브 집계 중.'
   },
   ja: {
-    title: 'VDébut | VTuber デビューカレンダー - 初配信・移籍・ライブ日程',
+    title: 'VDébut | 新人VTuber デビューカレンダー - 初配信・移籍・ライブ日程',
     description: '新しいVTuberの初舞台を一番最初にチェックしよう。世界中のVTuber(YouTube・CHZZK・SOOP)のデビュー日程をタイムゾーンに合わせて提供。',
     keywords: 'VDébut, VTuber, デビュー, 初配信, スケジュール, カレンダー, バーチャルYouTuber, 移籍, YouTube, CHZZK, SOOP',
     ogTitle: 'VDébut | グローバル VTuber デビューカレンダー',
     ogDescription: '新しいVTuberの初舞台を一番最初にチェックしよう！YouTube・CHZZK・SOOPの新人VTuber初配信日程を一目でチェック。'
   },
   en: {
-    title: 'VDébut | VTuber Debut Calendar - Every debut deserves an audience',
+    title: 'VDébut | VTuber Debut Calendar - Upcoming Debut Stream Schedule',
     description: 'Every debut deserves an audience. Track upcoming VTuber debuts, first streams, and platform transfers worldwide in your local timezone.',
-    keywords: 'VDébut, VTuber, Debut Calendar, First Stream, Virtual YouTuber, Schedule, YouTube, CHZZK, SOOP',
+    keywords: 'VDébut, VTuber, VTuber Debut, Debut Calendar, First Stream, Virtual YouTuber, Schedule, YouTube, CHZZK, SOOP',
     ogTitle: 'VDébut | Global VTuber Debut Schedule Calendar',
     ogDescription: 'Every debut deserves an audience. Check upcoming debuts worldwide converted into your local timezone.'
   }
@@ -34,10 +34,10 @@ export const SEO_DATA: Record<Language, SeoMetadata> = {
 
 export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
   ko: {
-    heroTitle: '새로운 버튜버의 첫 무대를 가장 먼저 만나보세요.',
-    heroSubtitle: '전 세계 다양한 VTuber의 데뷔 일정을 내 시간대에 맞춰 한눈에 확인하세요.',
+    heroTitle: '신입 버튜버 데뷔 일정 통합 캘린더',
+    heroSubtitle: '치지직 · SOOP · 유튜브 · 트위치 버츄얼 스트리머(VTuber)의 첫 방송 데뷔 일정을 내 시간대에 맞춰 한눈에 확인하세요.',
     scheduleTab: '데뷔 일정',
-    submitButton: '데뷔 일정 등록',
+    submitButton: '버튜버 데뷔 일정 등록',
     editButton: '수정',
     liveNow: 'LIVE NOW',
     agency: '소속',
@@ -47,13 +47,13 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     tzLabel: '내 타임존',
     searchPlaceholder: '버튜버 이름, 플랫폼, 소속사 검색...',
     allPlatforms: '전체 플랫폼',
-    forCreators: 'FOR NEW CREATORS',
-    bannerTitle: '곧 데뷔를 준비하고 있나요?',
-    bannerDesc: '날짜, 방송 플랫폼, 공지 링크를 등록하면 검토 후 소개됩니다.',
+    forCreators: 'FOR NEW VTUBERS & CREATORS',
+    bannerTitle: '곧 신입 버튜버 데뷔를 준비하고 있나요?',
+    bannerDesc: '데뷔 날짜, 치지직·SOOP·유튜브 방송 채널, X(트위터) 공지 링크를 등록하시면 검토 후 VDébut 데뷔 캘린더에 정식 소개됩니다.',
     copyright: '© 2026 VDebut. All rights reserved.',
     
     // 버튼 & 타이틀 다국어 확충
-    modalTitle: '데뷔 일정 등록',
+    modalTitle: '버튜버 데뷔 일정 등록',
     close: '닫기',
     cancel: '취소',
     submit: '등록',
@@ -71,7 +71,7 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     recommendation: '추천 데뷔 일정 & 관련 소식',
   },
   ja: {
-    heroTitle: '新しいVTuberの初舞台を一番最初にチェックしよう。',
+    heroTitle: '新人VTuber デビューカレンダー',
     heroSubtitle: '世界中のVTuberのデビュー日程を、あなたのタイムゾーンに合わせて一目で確認しましょう。',
     scheduleTab: 'デビュー日程',
     submitButton: 'デビュー日程を登録',
@@ -84,7 +84,7 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     tzLabel: 'タイムゾーン',
     searchPlaceholder: 'VTuber名、プラットフォーム、事務所を検索...',
     allPlatforms: '全プラットフォーム',
-    forCreators: 'FOR NEW CREATORS',
+    forCreators: 'FOR NEW VTUBERS & CREATORS',
     bannerTitle: 'まもなくデビュー予定ですか？',
     bannerDesc: '日時、配信プラットフォーム、告知リンクを登録すると掲載されます。',
     copyright: '© 2026 VDebut. All rights reserved.',
@@ -108,7 +108,7 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     recommendation: 'おすすめデビュー日程 & 関連ニュース',
   },
   en: {
-    heroTitle: 'Every debut deserves an audience.',
+    heroTitle: 'Global VTuber Debut Schedule Calendar',
     heroSubtitle: 'Check global VTuber debut schedules at a glance, aligned to your timezone.',
     scheduleTab: 'Debut Schedule',
     submitButton: 'Register Debut',

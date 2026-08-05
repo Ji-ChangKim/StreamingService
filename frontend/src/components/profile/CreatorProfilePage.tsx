@@ -36,6 +36,20 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
     loadData();
   }, [slug]);
 
+  // SEO: 크리에이터 프로필 페이지 접근 시 동적 브라우저 타이틀 설정
+  useEffect(() => {
+    if (profile?.displayName) {
+      const prevTitle = document.title;
+      const agencyText = profile.agencyName ? ` (${profile.agencyName})` : '';
+      document.title = `${profile.displayName}${agencyText} 버튜버 데뷔 일정 & 프로필 | VDébut`;
+
+      return () => {
+        document.title = prevTitle;
+      };
+    }
+  }, [profile]);
+
+
   const handleDelete = async () => {
     if (!profile) return;
     const confirmed = window.confirm(

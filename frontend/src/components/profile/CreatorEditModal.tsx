@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Save, Calendar, Clock, Link, Sparkles, User, FileText } from 'lucide-react';
+import { X, Save, Calendar, Clock, Link, Sparkles, User, FileText, RefreshCw, CheckCircle2, AlertCircle, Image as ImageIcon } from 'lucide-react';
 import { CreatorProfileData, updateCreatorProfile } from '../../services/creatorService';
 
 interface CreatorEditModalProps {
@@ -40,7 +40,73 @@ export function CreatorEditModal({ profile, isOpen, onClose, onSuccess }: Creato
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  // Platform Profile Auto Fetch States
+  const [isFetchingProfile, setIsFetchingProfile] = useState(false);
+  const [syncStatusMsg, setSyncStatusMsg] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
+  const [imgError, setImgError] = useState(false);
+
   if (!isOpen) return null;
+
+  // URL에서 플랫폼 파싱
+  const parsePlatformFromUrl = (url: string): 'CHZZK' | 'SOOP' | 'YOUTUBE' | 'TWITCH' => {
+    const lower = url.toLowerCase();
+    if (lower.includes('sooplive') || lower.includes('afreecatv')) return 'SOOP';
+    if (lower.includes('youtube') || lower.includes('youtu.be')) return 'YOUTUBE';
+    if (lower.includes('twitch')) return 'TWITCH';
+    return 'CHZZK'; // 기본값 치지직
+  };
+
+  // 외부 플랫폼 API로 프로필 및 이미지 동기화
+  const handleFetchPlatformProfile = async () => {
+    if (!channelUrl || channelUrl.trim().length < 5) {
+      setSyncStatusMsg({
+        text: '방송 채널 URL을 먼저 입력해 주세요.',
+        type: 'error'
+      });
+      return;
+    }
+
+    setIsFetchingProfile(true);
+    setSyncStatusMsg({ text: '플랫폼 최신 프로필 정보 조회 중...', type: 'info' });
+
+    try {
+      const platform = parsePlatformFromUrl(channelUrl);
+      const apiHost = (import.meta as any).env?.VITE_API_HOST || '';
+      const res = await fetch(
+        `${apiHost}/api/v1/platform/profile?platform=${platform}&url=${encodeURIComponent(channelUrl.trim())}`
+      );
+      const data = await res.json();
+
+      const platformLabel = platform === 'SOOP' ? 'SOOP' : platform === 'CHZZK' ? '치지직' : platform === 'YOUTUBE' ? '유튜브' : '트위치';
+
+      if (data.success && (data.profileImageUrl || data.creatorName)) {
+        if (data.profileImageUrl) {
+          setProfileImageUrl(data.profileImageUrl);
+          setImgError(false);
+        }
+        if (data.description && !description) {
+          setDescription(data.description);
+        }
+
+        setSyncStatusMsg({
+          text: `✅ [${platformLabel}] 최신 프로필 정보 및 이미지를 성공적으로 불러왔습니다!`,
+          type: 'success'
+        });
+      } else {
+        setSyncStatusMsg({
+          text: `⚠️ ${data.error || '플랫폼 프로필 정보를 가져오지 못했습니다.'}`,
+          type: 'error'
+        });
+      }
+    } catch (err: any) {
+      setSyncStatusMsg({
+        text: '⚠️ 플랫폼 프로필 동기화 중 오류가 발생했습니다.',
+        type: 'error'
+      });
+    } finally {
+      setIsFetchingProfile(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -165,7 +231,10 @@ export function CreatorEditModal({ profile, isOpen, onClose, onSuccess }: Creato
             <input
               type="url"
               value={channelUrl}
-              onChange={(e) => setChannelUrl(e.target.value)}
+              onChange={(e) => {
+                setChannelUrl(e.target.value);
+                setSyncStatusMsg(null);
+              }}
               placeholder="https://chzzk.naver.com/..."
               className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-[8px] focus:outline-hidden focus:border-[#2563EB] font-bold text-slate-900"
             />
@@ -188,18 +257,72 @@ export function CreatorEditModal({ profile, isOpen, onClose, onSuccess }: Creato
             />
           </div>
 
-          {/* Profile Image URL */}
-          <div>
-            <label className="block text-xs font-black text-slate-700 mb-1.5">
-              프로필 이미지 URL
-            </label>
-            <input
-              type="url"
-              value={profileImageUrl}
-              onChange={(e) => setProfileImageUrl(e.target.value)}
-              placeholder="https://..."
-              className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-[8px] focus:outline-hidden focus:border-[#2563EB] font-bold text-slate-900"
-            />
+          {/* Profile Image & Auto Sync Section */}
+          <div className="p-4 bg-slate-50/80 border border-slate-200/80 rounded-[12px] space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-black text-slate-700 flex items-center gap-1.5">
+                <ImageIcon className="w-4 h-4 text-[#2563EB]" /> 프로필 이미지
+              </label>
+              <button
+                type="button"
+                onClick={handleFetchPlatformProfile}
+                disabled={isFetchingProfile}
+                className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#2563EB] text-xs font-bold rounded-[6px] border border-blue-200/70 transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isFetchingProfile ? 'animate-spin' : ''}`} />
+                플랫폼 이미지 불러오기
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3">
+              {/* Image Preview Thumbnail */}
+              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-md bg-slate-200 shrink-0 flex items-center justify-center relative">
+                {profileImageUrl && !imgError ? (
+                  <img
+                    src={profileImageUrl}
+                    alt={displayName || '프로필'}
+                    className="w-full h-full object-cover"
+                    onError={() => setImgError(true)}
+                  />
+                ) : (
+                  <User className="w-6 h-6 text-slate-400" />
+                )}
+              </div>
+
+              {/* Image URL Input */}
+              <div className="flex-1">
+                <input
+                  type="url"
+                  value={profileImageUrl}
+                  onChange={(e) => {
+                    setProfileImageUrl(e.target.value);
+                    setImgError(false);
+                  }}
+                  placeholder="https://... 또는 위 버튼으로 플랫폼 이미지 불러오기"
+                  className="w-full px-3.5 py-2 text-xs bg-white border border-slate-200 rounded-[8px] focus:outline-hidden focus:border-[#2563EB] font-mono text-slate-800"
+                />
+              </div>
+            </div>
+
+            {/* Sync Notification Banner */}
+            {syncStatusMsg && (
+              <div
+                className={`p-2.5 rounded-[6px] text-xs font-bold flex items-center gap-2 ${
+                  syncStatusMsg.type === 'success'
+                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                    : syncStatusMsg.type === 'error'
+                    ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                    : 'bg-blue-50 text-blue-700 border border-blue-200'
+                }`}
+              >
+                {syncStatusMsg.type === 'success' ? (
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+                ) : (
+                  <AlertCircle className="w-4 h-4 shrink-0 text-amber-600" />
+                )}
+                <span>{syncStatusMsg.text}</span>
+              </div>
+            )}
           </div>
 
           {/* Description */}
@@ -239,3 +362,4 @@ export function CreatorEditModal({ profile, isOpen, onClose, onSuccess }: Creato
     </div>
   );
 }
+
