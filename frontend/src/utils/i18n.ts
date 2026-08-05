@@ -51,6 +51,14 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     bannerTitle: '곧 신입 버튜버 데뷔를 준비하고 있나요?',
     bannerDesc: '데뷔 날짜, 치지직·SOOP·유튜브 방송 채널, X(트위터) 공지 링크를 등록하시면 검토 후 VDébut 데뷔 캘린더에 정식 소개됩니다.',
     copyright: '© 2026 VDebut. All rights reserved.',
+    footerDesc: '새로운 버튜버의 첫 무대를 가장 먼저 만나보는 글로벌 캘린더 플랫폼입니다.',
+
+    // 히어로 카드 통계 다국어
+    unitCreators: '명',
+    chzzkMonth: '금월 치지직 데뷔',
+    soopMonth: '금월 SOOP 데뷔',
+    youtubeMonth: '금월 유튜브 데뷔',
+    twitchMonth: '금월 트위치 데뷔',
     
     // 버튼 & 타이틀 다국어 확충
     modalTitle: '버튜버 데뷔 일정 등록',
@@ -85,11 +93,19 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     searchPlaceholder: 'VTuber名、プラットフォーム、事務所を検索...',
     allPlatforms: '全プラットフォーム',
     forCreators: 'FOR NEW VTUBERS & CREATORS',
-    bannerTitle: 'まもなくデビュー予定ですか？',
-    bannerDesc: '日時、配信プラットフォーム、告知リンクを登録すると掲載されます。',
+    bannerTitle: 'まもなく新人VTuberとしてデビュー予定ですか？',
+    bannerDesc: '日時、配信プラットフォーム、告知リンクを登録すると検証後VDébutに掲載されます。',
     copyright: '© 2026 VDebut. All rights reserved.',
+    footerDesc: '新しいVTuberの初舞台を一番最初にチェックするグローバルカレンダープラットフォームです。',
 
-    // ボタン & タイトル 多言語
+    // 히어로 카드 통계 다국어
+    unitCreators: '名',
+    chzzkMonth: '今月 CHZZK デビュー',
+    soopMonth: '今月 SOOP デビュー',
+    youtubeMonth: '今月 YouTube デビュー',
+    twitchMonth: '今月 Twitch デビュー',
+
+    // 버튼 & 타이틀 多言語
     modalTitle: 'デビュー日程を登録',
     close: '閉じる',
     cancel: 'キャンセル',
@@ -111,7 +127,7 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     heroTitle: 'Global VTuber Debut Schedule Calendar',
     heroSubtitle: 'Check global VTuber debut schedules at a glance, aligned to your timezone.',
     scheduleTab: 'Debut Schedule',
-    submitButton: 'Register Debut',
+    submitButton: 'Register Debut Schedule',
     editButton: 'Edit',
     liveNow: 'LIVE NOW',
     agency: 'Agency',

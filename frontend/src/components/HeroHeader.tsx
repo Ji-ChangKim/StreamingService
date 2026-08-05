@@ -65,12 +65,33 @@ export function HeroHeader({
   const youtubeCount = getPlatformCount('YOUTUBE');
   const twitchCount = getPlatformCount('TWITCH');
 
+  // 다국어 통계 레이블 파싱
+  const getMonthLabel = (m: number) => {
+    if (currentLang === 'ja') return `${m}月デビュー`;
+    if (currentLang === 'en') {
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return `${monthNames[m - 1] || m} Debuts`;
+    }
+    return `${m}월 데뷔`;
+  };
+
+  const getWeekLabel = (m: number, w: number) => {
+    if (currentLang === 'ja') return `${m}月第${w}週`;
+    if (currentLang === 'en') {
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return `Week ${w} (${monthNames[m - 1] || m})`;
+    }
+    return `${m}월 ${w}주차 데뷔`;
+  };
+
+  const unitCreators = t.unitCreators !== undefined ? t.unitCreators : '명';
+
   // 가변형 카드 목록 (0명이면 숨김, 1명 이상 시 노출)
   const dynamicCards = [
-    { label: '금월 치지직 데뷔', count: chzzkCount, color: 'text-[#10B981]' },
-    { label: '금월 SOOP 데뷔', count: soopCount, color: 'text-[#2563EB]' },
-    { label: '금월 유튜브 데뷔', count: youtubeCount, color: 'text-[#EF4444]' },
-    { label: '금월 트위치 데뷔', count: twitchCount, color: 'text-[#9333EA]' },
+    { label: t.chzzkMonth || '금월 치지직 데뷔', count: chzzkCount, color: 'text-[#10B981]' },
+    { label: t.soopMonth || '금월 SOOP 데뷔', count: soopCount, color: 'text-[#2563EB]' },
+    { label: t.youtubeMonth || '금월 유튜브 데뷔', count: youtubeCount, color: 'text-[#EF4444]' },
+    { label: t.twitchMonth || '금월 트위치 데뷔', count: twitchCount, color: 'text-[#9333EA]' },
   ].filter((card) => card.count > 0);
 
   return (
@@ -78,28 +99,28 @@ export function HeroHeader({
       {/* 1. 히어로 타이틀 & 설명글 (다국어 바인딩 적용) */}
       <div className="space-y-2">
         <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0F172A] tracking-tight font-['Outfit']">
-          {t.heroTitle || '세상에 처음 발을 내딛는 버튜버들의 순간'}
+          {t.heroTitle || '신입 버튜버 데뷔 일정 통합 캘린더'}
         </h1>
         <h3 className="text-xs sm:text-sm text-[#64748B] font-medium leading-relaxed max-w-2xl mx-auto">
           {t.heroSubtitle || '전 세계 VTuber의 데뷔 일정을 내 시간대에 맞춰 한눈에 확인하세요.'}
         </h3>
       </div>
 
-      {/* 2. 각각 독립된 둥근 별도 카드 박스 형태 - 무조건 한 줄 (1줄) 정렬 */}
+      {/* 2. 각각 독립된 둥근 별도 카드 박스 형태 - 텍스트 유연 확장 지원 */}
       <div className="flex flex-nowrap items-center justify-center gap-2 sm:gap-3 w-full max-w-6xl mx-auto overflow-x-auto pb-1 no-scrollbar">
         {/* 상시 노출 1: {N}월 데뷔 */}
-        <div className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-3.5 sm:px-4 py-2.5 sm:py-3 text-center shrink-0 min-w-[110px] sm:min-w-[125px] hover:border-[#2563EB] hover:shadow-sm transition-all">
-          <span className="text-[10px] sm:text-[11px] font-bold text-[#64748B] block mb-0.5 whitespace-nowrap">{currentMonthNum}월 데뷔</span>
+        <div className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-3.5 sm:px-4 py-2.5 sm:py-3 text-center shrink-0 min-w-[120px] sm:min-w-[135px] hover:border-[#2563EB] hover:shadow-sm transition-all">
+          <span className="text-[10px] sm:text-[11px] font-bold text-[#64748B] block mb-0.5 whitespace-nowrap">{getMonthLabel(currentMonthNum)}</span>
           <span className="text-lg sm:text-xl font-extrabold text-[#2563EB] font-mono">
-            {monthEvents.length}<span className="text-xs font-normal text-[#94A3B8] ml-0.5">명</span>
+            {monthEvents.length}{unitCreators && <span className="text-xs font-normal text-[#94A3B8] ml-0.5">{unitCreators}</span>}
           </span>
         </div>
 
         {/* 상시 노출 2: {A}월 {B}주차 데뷔 */}
-        <div className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-3.5 sm:px-4 py-2.5 sm:py-3 text-center shrink-0 min-w-[110px] sm:min-w-[125px] hover:border-[#0F172A] hover:shadow-sm transition-all">
-          <span className="text-[10px] sm:text-[11px] font-bold text-[#64748B] block mb-0.5 whitespace-nowrap">{currentMonthNum}월 {currentWeekNum}주차 데뷔</span>
+        <div className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-3.5 sm:px-4 py-2.5 sm:py-3 text-center shrink-0 min-w-[120px] sm:min-w-[135px] hover:border-[#0F172A] hover:shadow-sm transition-all">
+          <span className="text-[10px] sm:text-[11px] font-bold text-[#64748B] block mb-0.5 whitespace-nowrap">{getWeekLabel(currentMonthNum, currentWeekNum)}</span>
           <span className="text-lg sm:text-xl font-extrabold text-[#0F172A] font-mono">
-            {weekEvents.length}<span className="text-xs font-normal text-[#94A3B8] ml-0.5">명</span>
+            {weekEvents.length}{unitCreators && <span className="text-xs font-normal text-[#94A3B8] ml-0.5">{unitCreators}</span>}
           </span>
         </div>
 
@@ -107,11 +128,11 @@ export function HeroHeader({
         {dynamicCards.map((card) => (
           <div
             key={card.label}
-            className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-3.5 sm:px-4 py-2.5 sm:py-3 text-center shrink-0 min-w-[110px] sm:min-w-[125px] hover:border-[#2563EB] hover:shadow-sm transition-all animate-fadeIn"
+            className="bg-white rounded-[14px] border border-[#E2E8F0] shadow-xs px-3.5 sm:px-4 py-2.5 sm:py-3 text-center shrink-0 min-w-[120px] sm:min-w-[135px] hover:border-[#2563EB] hover:shadow-sm transition-all animate-fadeIn"
           >
             <span className="text-[10px] sm:text-[11px] font-bold text-[#64748B] block mb-0.5 whitespace-nowrap">{card.label}</span>
             <span className={`text-lg sm:text-xl font-extrabold font-mono ${card.color}`}>
-              {card.count}<span className="text-xs font-normal text-[#94A3B8] ml-0.5">명</span>
+              {card.count}{unitCreators && <span className="text-xs font-normal text-[#94A3B8] ml-0.5">{unitCreators}</span>}
             </span>
           </div>
         ))}
@@ -119,3 +140,4 @@ export function HeroHeader({
     </div>
   );
 }
+

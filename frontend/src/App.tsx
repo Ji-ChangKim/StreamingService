@@ -202,7 +202,7 @@ export function App() {
 
             {/* Creator Callout Banner (Desktop only) */}
             <div className="hidden sm:block">
-              <FooterBanner onOpenSubmitModal={() => handleOpenSubmitModal()} />
+              <FooterBanner onOpenSubmitModal={() => handleOpenSubmitModal()} currentLang={currentLang} />
             </div>
           </>
         )}
@@ -210,7 +210,7 @@ export function App() {
 
       {/* 3. Footer (Desktop only) */}
       <div className="hidden sm:block">
-        <Footer />
+        <Footer currentLang={currentLang} />
       </div>
 
       {/* 4. Studio Submit & Edit Modal */}
