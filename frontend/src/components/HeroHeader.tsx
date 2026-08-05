@@ -84,7 +84,7 @@ export function HeroHeader({
     return `${m}월 ${w}주차 데뷔`;
   };
 
-  const unitCreators = t.unitCreators !== undefined ? t.unitCreators : '명';
+  const unitCreators = t.unitCreators !== undefined ? t.unitCreators : (currentLang === 'en' ? '' : '명');
 
   // 가변형 카드 목록 (0명이면 숨김, 1명 이상 시 노출)
   const dynamicCards = [

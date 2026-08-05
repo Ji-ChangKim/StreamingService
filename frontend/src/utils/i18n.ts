@@ -137,10 +137,18 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     tzLabel: 'Timezone',
     searchPlaceholder: 'Search VTuber, platform, agency...',
     allPlatforms: 'All Platforms',
-    forCreators: 'FOR NEW CREATORS',
-    bannerTitle: 'Preparing for your debut?',
-    bannerDesc: 'Submit your debut date, platform, and link to be featured on our calendar.',
+    forCreators: 'FOR NEW VTUBERS & CREATORS',
+    bannerTitle: 'Preparing for your new VTuber debut?',
+    bannerDesc: 'Submit your debut date, platform, and links to be officially featured on VDébut.',
     copyright: '© 2026 VDebut. All rights reserved.',
+    footerDesc: 'The global calendar platform to discover upcoming VTuber debuts first.',
+
+    // 히어로 카드 통계 다국어 (영어는 단위 생략)
+    unitCreators: '',
+    chzzkMonth: 'CHZZK (This Month)',
+    soopMonth: 'SOOP (This Month)',
+    youtubeMonth: 'YouTube (This Month)',
+    twitchMonth: 'Twitch (This Month)',
 
     // Buttons & Titles i18n
     modalTitle: 'Register Debut Schedule',
@@ -161,3 +169,4 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     recommendation: 'Recommended Debuts & Related News',
   }
 };
+
