@@ -100,10 +100,10 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
 
     // 히어로 카드 통계 다국어
     unitCreators: '名',
-    chzzkMonth: '今月 CHZZK デビュー',
-    soopMonth: '今月 SOOP デビュー',
-    youtubeMonth: '今月 YouTube デビュー',
-    twitchMonth: '今月 Twitch デビュー',
+    chzzkMonth: 'CHZZK (今月)',
+    soopMonth: 'SOOP (今月)',
+    youtubeMonth: 'YouTube (今月)',
+    twitchMonth: 'Twitch (今月)',
 
     // 버튼 & 타이틀 多言語
     modalTitle: 'デビュー日程を登録',
