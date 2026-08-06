@@ -1,0 +1,44 @@
+name: Auto Refresh Virtual Debut Data & Run Crawler
+
+on:
+  schedule:
+    # 매일 한국 시간 오전 09:00 (UTC 00:00) 및 오후 21:00 (UTC 12:00) 정기 수집
+    - cron: '0 0,12 * * *'
+  workflow_dispatch: # 수동 실행 지원
+
+jobs:
+  run-crawler:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Debut Crawler Process API
+        run: |
+          echo "Starting Virtual Debut Crawler Auto-Refresh via GitHub Action..."
+          
+          PRIMARY_URL="https://vdebut.live/api/v1/admin/crawler/run"
+          FALLBACK_URL="https://streaming.kimjichang1234.workers.dev/api/v1/admin/crawler/run"
+          
+          # 1. Primary Domain Call
+          HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" -X POST "$PRIMARY_URL" \
+            -H "Content-Type: application/json" \
+            -d '{"recipientEmail": "kimjichang1234@gmail.com"}')
+          
+          echo "Primary Endpoint Status: $HTTP_STATUS"
+          cat response.json || true
+          
+          # 2. Fallback Domain Call if Primary fails
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "Primary endpoint failed or unreachable. Retrying with Worker fallback URL..."
+            HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" -X POST "$FALLBACK_URL" \
+              -H "Content-Type: application/json" \
+              -d '{"recipientEmail": "kimjichang1234@gmail.com"}')
+            echo "Fallback Endpoint Status: $HTTP_STATUS"
+            cat response.json || true
+          fi
+          
+          # Check final success
+          if [ "$HTTP_STATUS" -eq 200 ]; then
+            echo "✅ Virtual Debut Crawler Process Executed Successfully!"
+          else
+            echo "❌ Virtual Debut Crawler Process Failed with HTTP Status: $HTTP_STATUS"
+            exit 1
+          fi
