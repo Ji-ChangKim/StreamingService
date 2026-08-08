@@ -14,31 +14,27 @@ jobs:
         run: |
           echo "Starting Virtual Debut Crawler Auto-Refresh via GitHub Action..."
           
-          PRIMARY_URL="https://vdebut.live/api/v1/admin/crawler/run"
-          FALLBACK_URL="https://streaming.kimjichang1234.workers.dev/api/v1/admin/crawler/run"
+          TARGET_URL="https://vdebut.live/api/v1/admin/crawler/run"
+          USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
           
-          # 1. Primary Domain Call
-          HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" -X POST "$PRIMARY_URL" \
+          # API 호출 실행 (Cloudflare WAF 우회를 위한 User-Agent 및 안전한 HTTP 상태 코드 수집)
+          HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" --max-time 60 -X POST "$TARGET_URL" \
+            -A "$USER_AGENT" \
             -H "Content-Type: application/json" \
-            -d '{"recipientEmail": "kimjichang1234@gmail.com"}')
+            -H "Accept: application/json" \
+            -d '{"recipientEmail": "kimjichang1234@gmail.com"}' || echo "000")
           
-          echo "Primary Endpoint Status: $HTTP_STATUS"
+          echo "Endpoint HTTP Status: $HTTP_STATUS"
+          echo "--- Response Body ---"
           cat response.json || true
+          echo ""
+          echo "---------------------"
           
-          # 2. Fallback Domain Call if Primary fails
-          if [ "$HTTP_STATUS" -ne 200 ]; then
-            echo "Primary endpoint failed or unreachable. Retrying with Worker fallback URL..."
-            HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" -X POST "$FALLBACK_URL" \
-              -H "Content-Type: application/json" \
-              -d '{"recipientEmail": "kimjichang1234@gmail.com"}')
-            echo "Fallback Endpoint Status: $HTTP_STATUS"
-            cat response.json || true
-          fi
-          
-          # Check final success
+          # 결과 검증
           if [ "$HTTP_STATUS" -eq 200 ]; then
             echo "✅ Virtual Debut Crawler Process Executed Successfully!"
           else
             echo "❌ Virtual Debut Crawler Process Failed with HTTP Status: $HTTP_STATUS"
             exit 1
           fi
+
