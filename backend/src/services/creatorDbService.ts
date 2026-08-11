@@ -226,17 +226,15 @@ export async function updateCreatorProfileInD1(
       )
       .run();
 
-    if (input.channelUrl || input.displayName) {
+    if (input.displayName) {
       await db
         .prepare(`
           UPDATE streamerChannel
           SET
-            channel_url = COALESCE(?, channel_url),
             channel_name = COALESCE(?, channel_name)
           WHERE id = ?
         `)
         .bind(
-          input.channelUrl || null,
           input.displayName || null,
           channelId
         )

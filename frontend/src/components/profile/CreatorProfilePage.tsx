@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ExternalLink, ArrowLeft, Tv, CheckCircle2, Calendar, Sparkles, Pencil, Trash2 } from 'lucide-react';
-import { fetchCreatorProfile, CreatorProfileData, deleteCreatorProfile } from '../../services/creatorService';
+import { ExternalLink, ArrowLeft, CheckCircle2, Calendar, Sparkles, Pencil, Trash2, RefreshCw } from 'lucide-react';
+import { fetchCreatorProfile, CreatorProfileData, deleteCreatorProfile, updateCreatorProfile } from '../../services/creatorService';
 import { getAvatarUrl } from '../../utils/avatarUtils';
 import { CreatorEditModal } from './CreatorEditModal';
 
@@ -19,6 +19,7 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
   const [passedDays, setPassedDays] = useState<number>(0);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const loadData = async () => {
     setIsLoading(true);
@@ -69,6 +70,45 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
     }
   };
 
+  const primaryChannel = profile?.channels.find((c) => c.isPrimary) || profile?.channels[0];
+  const primaryPlatform = primaryChannel?.platform || 'CHZZK';
+
+  // 원클릭 방송국 정보 최신화 동기화
+  const handleSyncFromBroadcast = async () => {
+    if (!profile || !primaryChannel?.channelUrl) return;
+    setIsSyncing(true);
+
+    try {
+      const platform = primaryPlatform;
+      const apiHost = (import.meta as any).env?.VITE_API_HOST || '';
+      const res = await fetch(
+        `${apiHost}/api/v1/platform/profile?platform=${platform}&url=${encodeURIComponent(primaryChannel.channelUrl.trim())}`
+      );
+      const data = await res.json();
+
+      if (data.success && (data.profileImageUrl || data.creatorName)) {
+        const updated = await updateCreatorProfile(profile.slug, {
+          displayName: data.creatorName || profile.displayName,
+          profileImageUrl: data.profileImageUrl || profile.profileImageUrl,
+          description: data.description || profile.description
+        });
+
+        if (updated) {
+          alert('✅ 방송국 기준 최신 프로필 정보(이름, 프로필 이미지, 소개글)로 동기화 완료되었습니다!');
+          await loadData();
+        } else {
+          alert('⚠️ DB 동기화 업데이트에 실패했습니다.');
+        }
+      } else {
+        alert(`⚠️ 방송국 정보 동기화 실패: ${data.error || '최신 정보를 불러올 수 없습니다.'}`);
+      }
+    } catch (err) {
+      alert('⚠️ 방송국 정보 동기화 중 오류가 발생했습니다.');
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   // 데뷔 일정 D-Day 카운트다운 및 D + N일 계산 연동
   useEffect(() => {
     if (!profile || profile.events.length === 0) return;
@@ -102,39 +142,33 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
 
   if (isLoading) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center gap-3">
-        <div className="w-10 h-10 border-4 border-[#2563EB] border-t-transparent rounded-full animate-spin" />
-        <p className="text-sm font-bold text-[#64748B]">크리에이터 프로필 정보를 불러오는 중...</p>
+      <div className="max-w-[960px] mx-auto px-4 py-20 text-center space-y-4">
+        <div className="w-10 h-10 border-4 border-[#2563EB] border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-sm font-bold text-slate-500">크리에이터 프로필 정보를 불러오는 중...</p>
       </div>
     );
   }
 
   if (error || !profile) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center gap-4">
-        <div className="p-4 bg-red-50 text-red-600 rounded-full">
-          <Tv className="w-8 h-8" />
-        </div>
-        <h2 className="text-xl font-extrabold text-[#0F172A]">프로필을 찾을 수 없습니다</h2>
-        <p className="text-sm text-[#64748B]">존재하지 않거나 비공개 처리된 크리에이터 프로필입니다.</p>
+      <div className="max-w-[960px] mx-auto px-4 py-20 text-center space-y-4">
+        <p className="text-base font-bold text-red-600">{error || '크리에이터 정보가 존재하지 않습니다.'}</p>
         <button
           onClick={onNavigateHome}
-          className="px-5 py-2.5 bg-[#0F172A] text-white font-bold text-sm rounded-[8px] hover:bg-[#2563EB] transition-all flex items-center gap-2 shadow-xs cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white font-bold text-xs rounded-[8px] hover:bg-slate-800 transition-all cursor-pointer"
         >
-          <ArrowLeft className="w-4 h-4" /> 데뷔 일정 캘린더로 돌아가기
+          <ArrowLeft className="w-4 h-4" /> 메인 캘린더로 이동
         </button>
       </div>
     );
   }
 
-  const primaryChannel = profile.channels.find((c) => c.isPrimary) || profile.channels[0];
-  const debutEvent = profile.events[0];
-  const primaryPlatform = primaryChannel?.platform || 'CHZZK';
   const platformLabel = primaryPlatform === 'CHZZK' ? '치지직' : primaryPlatform === 'SOOP' ? 'SOOP' : primaryPlatform === 'YOUTUBE' ? '유튜브' : '트위치';
   
   // 💡 3. 개인세 / 인디 여부 확인 (개인세는 완전히 숨김!)
   const isIndie = !profile.agencyName || profile.creatorType === 'INDIE' || profile.agencyName.toLowerCase().includes('indie') || profile.agencyName === '개인세';
 
+  const debutEvent = profile.events[0];
   const formattedDebutDate = debutEvent ? (() => {
     try {
       const d = new Date(debutEvent.startAtUtc);
@@ -160,6 +194,14 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
         </button>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={handleSyncFromBroadcast}
+            disabled={isSyncing}
+            className="inline-flex items-center gap-1.5 text-xs font-extrabold text-[#2563EB] hover:text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1.5 rounded-[8px] transition-all cursor-pointer shadow-2xs disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+            {isSyncing ? '동기화 중...' : '방송국 정보 동기화'}
+          </button>
           <button
             onClick={() => setIsEditModalOpen(true)}
             className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-[#2563EB] bg-white border border-slate-200 hover:border-blue-300 px-3 py-1.5 rounded-[8px] transition-all shadow-2xs cursor-pointer"
