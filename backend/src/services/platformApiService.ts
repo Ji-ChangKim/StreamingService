@@ -209,7 +209,7 @@ export async function fetchSoopProfile(userIdOrUrl: string): Promise<PlatformPro
 }
 
 /**
- * 3. YouTube 외부 프로필 파서 (채널 URL / Handle @username / 영상 URL 통합 처리)
+ * 3. YouTube 외부 프로필 파서 (채널 URL / Handle @username / 영상 URL 통합 처리 및 900px 고화질 추출)
  */
 export async function fetchYoutubeProfile(channelUrlOrHandle: string): Promise<PlatformProfileResult> {
   let targetUrl = channelUrlOrHandle.trim();
@@ -221,68 +221,124 @@ export async function fetchYoutubeProfile(channelUrlOrHandle: string): Promise<P
     }
   }
 
-  // 핸들명 추출 (@RyukoNizuna -> RyukoNizuna)
-  let fallbackName = '유튜브 크리에이터';
-  const handleMatch = targetUrl.match(/@([a-zA-Z0-9._-]+)/);
-  if (handleMatch && handleMatch[1]) {
-    fallbackName = handleMatch[1];
-  }
+  const defaultHeaders = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    'Accept-Language': 'ko-KR,ko;q=0.9,ja-JP;q=0.8,en-US;q=0.7,en;q=0.6',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+  };
 
   try {
-    const response = await fetch(targetUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-        'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-      }
-    });
+    let html = '';
+    const isVideoUrl = targetUrl.includes('/watch') || targetUrl.includes('youtu.be/');
 
+    // 1차 Fetch
+    const response = await fetch(targetUrl, { headers: defaultHeaders });
     if (response.ok) {
-      const html = await response.text();
+      html = await response.text();
+    }
+
+    let creatorName = '';
+    let channelUrl = targetUrl;
+    let profileImageUrl = '';
+    let description = '';
+
+    // 만약 영상 주소인 경우 HTML에서 채널 주소 및 크리에이터 이름 추출 후 채널 페이지 추적
+    if (isVideoUrl && html) {
+      const authorMatch = html.match(/"author":"([^"]+)"/i) ||
+                          html.match(/"ownerChannelName":"([^"]+)"/i) ||
+                          html.match(/<link itemprop="name" content="([^"]+)">/i);
+      if (authorMatch && authorMatch[1]) {
+        creatorName = authorMatch[1];
+      }
+
+      const channelUrlMatch = html.match(/<span itemprop="author"[^>]*>\s*<link itemprop="url" href="([^"]+)">/i) ||
+                              html.match(/"channelUrl":"([^"]+)"/i) ||
+                              html.match(/href="(https:\/\/www\.youtube\.com\/@[^"]+)"/i);
+      if (channelUrlMatch && channelUrlMatch[1]) {
+        channelUrl = channelUrlMatch[1];
+      }
+
+      const avatarMatches = html.match(/https:\/\/yt3\.(?:ggpht|googleusercontent)\.com\/[a-zA-Z0-9_-]+=[sS0-9-]+[a-zA-Z0-9_-]*/g) ||
+                            html.match(/https:\/\/yt3\.(?:ggpht|googleusercontent)\.com\/[a-zA-Z0-9_-]+/g);
+      if (avatarMatches && avatarMatches.length > 0) {
+        profileImageUrl = avatarMatches[0].replace(/=s\d+-/, '=s900-');
+      }
+
+      // 공식 채널 URL로 2차 추적하여 진짜 소개글과 고화질 이미지 연동
+      if (channelUrl && channelUrl !== targetUrl) {
+        try {
+          const chRes = await fetch(channelUrl, { headers: defaultHeaders });
+          if (chRes.ok) {
+            const chHtml = await chRes.text();
+            const chTitleMatch = chHtml.match(/<meta property="og:title" content="([^"]+)">/i) || chHtml.match(/<title>([^<]+)<\/title>/i);
+            if (chTitleMatch) {
+              creatorName = chTitleMatch[1].replace(/ - YouTube$/, '').trim();
+            }
+
+            const chDescMatch = chHtml.match(/<meta property="og:description" content="([^"]+)">/i);
+            if (chDescMatch) {
+              description = chDescMatch[1];
+            }
+
+            const chAvatars = chHtml.match(/https:\/\/yt3\.(?:ggpht|googleusercontent)\.com\/[a-zA-Z0-9_-]+=[sS0-9-]+[a-zA-Z0-9_-]*/g) ||
+                              chHtml.match(/https:\/\/yt3\.(?:ggpht|googleusercontent)\.com\/[a-zA-Z0-9_-]+/g);
+            if (chAvatars && chAvatars.length > 0) {
+              profileImageUrl = chAvatars[0].replace(/=s\d+-/, '=s900-');
+            }
+          }
+        } catch {
+          // fallback
+        }
+      }
+    } else if (html) {
+      // 채널 페이지 파싱
       const titleMatch = html.match(/<meta property="og:title" content="([^"]+)">/i) || html.match(/<title>([^<]+)<\/title>/i);
-      const imageMatch = html.match(/<meta property="og:image" content="([^"]+)">/i);
+      if (titleMatch) {
+        creatorName = titleMatch[1].replace(/ - YouTube$/, '').trim();
+      }
+
       const descMatch = html.match(/<meta property="og:description" content="([^"]+)">/i);
+      if (descMatch) {
+        description = descMatch[1];
+      }
 
-      if (titleMatch || imageMatch) {
-        let title = titleMatch ? titleMatch[1] : fallbackName;
-        title = title.replace(/ - YouTube$/, '').trim();
-
-        const profileImg = imageMatch ? imageMatch[1] : '';
-        const desc = descMatch ? descMatch[1] : `${title}의 공식 유튜브 채널입니다.`;
-
-        return {
-          success: true,
-          platform: 'YOUTUBE',
-          channelId: targetUrl,
-          creatorName: title || fallbackName,
-          profileImageUrl: profileImg,
-          channelUrl: targetUrl,
-          description: desc,
-          verified: true
-        };
+      const avatarMatches = html.match(/https:\/\/yt3\.(?:ggpht|googleusercontent)\.com\/[a-zA-Z0-9_-]+=[sS0-9-]+[a-zA-Z0-9_-]*/g) ||
+                            html.match(/https:\/\/yt3\.(?:ggpht|googleusercontent)\.com\/[a-zA-Z0-9_-]+/g);
+      if (avatarMatches && avatarMatches.length > 0) {
+        profileImageUrl = avatarMatches[0].replace(/=s\d+-/, '=s900-');
       }
     }
 
-    // Response가 200이 아니더라도 핸들 정보로 최소 성공 복구
+    if (!creatorName) {
+      const handleMatch = targetUrl.match(/@([a-zA-Z0-9._-]+)/);
+      creatorName = handleMatch ? handleMatch[1] : '유튜브 스트리머';
+    }
+
+    if (!description) {
+      description = `${creatorName}의 공식 유튜브 채널입니다.`;
+    }
+
     return {
       success: true,
       platform: 'YOUTUBE',
-      channelId: targetUrl,
-      creatorName: fallbackName,
-      profileImageUrl: '',
-      channelUrl: targetUrl,
-      description: `${fallbackName}의 공식 유튜브 채널입니다.`,
+      channelId: channelUrl,
+      creatorName,
+      profileImageUrl,
+      channelUrl,
+      description,
       verified: true
     };
   } catch (err: any) {
+    const handleMatch = targetUrl.match(/@([a-zA-Z0-9._-]+)/);
+    const creatorName = handleMatch ? handleMatch[1] : '유튜브 스트리머';
     return {
       success: true,
       platform: 'YOUTUBE',
       channelId: targetUrl,
-      creatorName: fallbackName,
+      creatorName,
       profileImageUrl: '',
       channelUrl: targetUrl,
-      description: `${fallbackName}의 공식 유튜브 채널입니다.`,
+      description: `${creatorName}의 공식 유튜브 채널입니다.`,
       verified: true
     };
   }

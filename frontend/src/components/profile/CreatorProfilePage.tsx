@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { ExternalLink, ArrowLeft, CheckCircle2, Calendar, Sparkles, Pencil, Trash2, RefreshCw } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { ExternalLink, ArrowLeft, CheckCircle2, Calendar, Sparkles, Pencil, Trash2, RefreshCw, MoreVertical, AlertTriangle, X } from 'lucide-react';
 import { fetchCreatorProfile, CreatorProfileData, deleteCreatorProfile, updateCreatorProfile } from '../../services/creatorService';
 import { getAvatarUrl } from '../../utils/avatarUtils';
 import { CreatorEditModal } from './CreatorEditModal';
@@ -20,6 +20,25 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
+
+  // 세로 말줄임표 드롭다운 메뉴 및 삭제 검증 모달 상태
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteCodeInput, setDeleteCodeInput] = useState('');
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // 드롭다운 메뉴 외부 클릭 시 자동 닫기 처리
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const loadData = async () => {
     setIsLoading(true);
@@ -50,23 +69,37 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
     }
   }, [profile]);
 
-
-  const handleDelete = async () => {
+  // 2단계 삭제 코드(방송국 URL) 입력 검증 및 프로필 삭제 처리
+  const handleConfirmDelete = async () => {
     if (!profile) return;
-    const confirmed = window.confirm(
-      `정말로 '${profile.displayName}' 크리에이터 프로필 및 데뷔 일정을 삭제하시겠습니까?\n\n이 작업은 취소할 수 없으며, 데뷔 일정 캘린더 목록에서도 삭제됩니다.`
+
+    const trimmedInput = deleteCodeInput.trim();
+    if (!trimmedInput) {
+      setDeleteError('삭제 코드를 입력해주세요.');
+      return;
+    }
+
+    // 크리에이터에 등록된 방송국 URL 목록과 완벽히 일치하는지 비교 (대소문자 무시)
+    const validUrls = profile.channels.map((c) => c.channelUrl.trim());
+    const isValidCode = validUrls.some(
+      (url) => url.toLowerCase() === trimmedInput.toLowerCase()
     );
-    if (!confirmed) return;
+
+    if (!isValidCode) {
+      setDeleteError('삭제 코드가 일치하지 않습니다.');
+      return;
+    }
 
     setIsDeleting(true);
     const success = await deleteCreatorProfile(profile.slug);
     setIsDeleting(false);
 
     if (success) {
+      setIsDeleteModalOpen(false);
       alert(`'${profile.displayName}' 프로필이 정상 삭제되었습니다.`);
       onNavigateHome();
     } else {
-      alert('프로필 삭제에 실패했습니다. 다시 시도해 주세요.');
+      setDeleteError('프로필 삭제에 실패했습니다. 다시 시도해 주세요.');
     }
   };
 
@@ -193,28 +226,50 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
           <ArrowLeft className="w-4 h-4" /> 메인 캘린더로 돌아가기
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative" ref={menuRef}>
           <button
             onClick={handleSyncFromBroadcast}
             disabled={isSyncing}
             className="inline-flex items-center gap-1.5 text-xs font-extrabold text-[#2563EB] hover:text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1.5 rounded-[8px] transition-all cursor-pointer shadow-2xs disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
-            {isSyncing ? '동기화 중...' : '방송국 정보 동기화'}
+            {isSyncing ? '동기화 중...' : '업데이트 : 정보 동기화'}
           </button>
           <button
-            onClick={() => setIsEditModalOpen(true)}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-[#2563EB] bg-white border border-slate-200 hover:border-blue-300 px-3 py-1.5 rounded-[8px] transition-all shadow-2xs cursor-pointer"
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+            className="inline-flex items-center justify-center w-8 h-8 text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50 rounded-[8px] transition-all shadow-2xs cursor-pointer"
+            title="더보기 메뉴"
           >
-            <Pencil className="w-3.5 h-3.5" /> 정보 수정 (Edit)
+            <MoreVertical className="w-4 h-4" />
           </button>
-          <button
-            onClick={handleDelete}
-            disabled={isDeleting}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 px-3 py-1.5 rounded-[8px] transition-all cursor-pointer disabled:opacity-50"
-          >
-            <Trash2 className="w-3.5 h-3.5" /> {isDeleting ? '삭제 중...' : '삭제 (Delete)'}
-          </button>
+
+          {/* 세로 말줄임표 드롭다운 메뉴 */}
+          {isMenuOpen && (
+            <div className="absolute right-0 top-full mt-1.5 w-36 bg-white border border-slate-200 rounded-[10px] shadow-lg py-1 z-30 animate-fadeIn">
+              <button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setIsEditModalOpen(true);
+                }}
+                className="w-full px-3 py-2 text-left text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-[#2563EB] flex items-center gap-2 transition-colors cursor-pointer"
+              >
+                <Pencil className="w-3.5 h-3.5 text-slate-500" />
+                정보 수정
+              </button>
+              <button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setDeleteCodeInput('');
+                  setDeleteError(null);
+                  setIsDeleteModalOpen(true);
+                }}
+                className="w-full px-3 py-2 text-left text-xs font-bold text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors cursor-pointer border-t border-slate-100"
+              >
+                <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                삭제
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -451,6 +506,68 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
           onClose={() => setIsEditModalOpen(false)}
           onSuccess={loadData}
         />
+      )}
+
+      {/* 7. 커스텀 삭제 코드 검증 모달 */}
+      {isDeleteModalOpen && profile && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-white border border-slate-200 rounded-[16px] max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
+                프로필 삭제 확인
+              </h3>
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-md transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <p className="text-xs sm:text-sm font-bold text-slate-800 leading-relaxed">
+                해당 버튜버 데뷔일을 삭제하시겠습니까? 정말 삭제를 원하면 삭제 코드를 입력해주세요.
+              </p>
+
+              <div className="space-y-1.5 pt-1">
+                <input
+                  type="text"
+                  value={deleteCodeInput}
+                  onChange={(e) => {
+                    setDeleteCodeInput(e.target.value);
+                    if (deleteError) setDeleteError(null);
+                  }}
+                  placeholder="삭제 코드를 입력해주세요"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-red-500 focus:ring-1 focus:ring-red-500 rounded-[8px] text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 outline-none transition-all"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleConfirmDelete();
+                  }}
+                  autoFocus
+                />
+                {deleteError && (
+                  <p className="text-xs font-bold text-red-600 animate-fadeIn">{deleteError}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 border border-slate-200 rounded-[8px] transition-all cursor-pointer"
+              >
+                취소
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 text-xs font-extrabold text-white bg-red-600 hover:bg-red-700 disabled:opacity-50 rounded-[8px] transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
+              >
+                {isDeleting ? '삭제 처리 중...' : '삭제하기'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

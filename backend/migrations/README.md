@@ -46,6 +46,7 @@
 - `0013_update_twitch_profile_and_soy_info.sql`: Soy (`astaril-soy`) 스트리머 트위치 고화질 프로필 이미지 및 소개글 업데이트
 - `0014_create_crawler_update_logs_table.sql`: 자동 웹서치 수집 및 갱신 이력 기록용 `crawler_update_logs` 테이블 생성
 - `0015_add_august_debut_streamers.sql`: 2026년 8월 중순(8/10~8/16) 버추얼 스트리머 데뷔 일정 33건 신규 추가 등록 (시간 미정 00:00 처리 반영)
+- `0016_update_youtube_august_profiles.sql`: 8월 중순 데뷔 유튜브 스트리머 16명의 최신 프로필(이름, 900px 고화질 이미지, 소개글) 일괄 UPDATE 갱신
 
 ---
 
