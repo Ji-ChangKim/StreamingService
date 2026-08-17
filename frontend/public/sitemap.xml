@@ -7,7 +7,7 @@
     <xhtml:link rel="alternate" hreflang="ja" href="https://vdebut.live/?lang=ja" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vdebut.live/?lang=en" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vdebut.live/" />
-    <lastmod>2026-07-31</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -16,7 +16,7 @@
     <xhtml:link rel="alternate" hreflang="ko" href="https://vdebut.live/?lang=ko" />
     <xhtml:link rel="alternate" hreflang="ja" href="https://vdebut.live/?lang=ja" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vdebut.live/?lang=en" />
-    <lastmod>2026-07-31</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -25,7 +25,7 @@
     <xhtml:link rel="alternate" hreflang="ko" href="https://vdebut.live/?lang=ko" />
     <xhtml:link rel="alternate" hreflang="ja" href="https://vdebut.live/?lang=ja" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vdebut.live/?lang=en" />
-    <lastmod>2026-07-31</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -34,15 +34,38 @@
     <xhtml:link rel="alternate" hreflang="ko" href="https://vdebut.live/?lang=ko" />
     <xhtml:link rel="alternate" hreflang="ja" href="https://vdebut.live/?lang=ja" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vdebut.live/?lang=en" />
-    <lastmod>2026-08-03</lastmod>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://vdebut.live/upload</loc>
-    <lastmod>2026-08-03</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://vdebut.live/about</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://vdebut.live/guide</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vdebut.live/privacy</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vdebut.live/terms</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vdebut.live/contact</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
-

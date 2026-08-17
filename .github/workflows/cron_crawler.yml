@@ -11,17 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Debut Crawler Process API
+        env:
+          CRAWLER_SECRET: ${{ secrets.CRAWLER_SECRET }}
         run: |
           echo "Starting Virtual Debut Crawler Auto-Refresh via GitHub Action..."
           
           TARGET_URL="https://vdebut.live/api/v1/admin/crawler/run"
           USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
           
-          # API 호출 실행 (Cloudflare WAF 우회를 위한 User-Agent 및 안전한 HTTP 상태 코드 수집)
+          # API 호출 실행 (CRAWLER_SECRET 및 Cloudflare WAF Skip 헤더 전송)
           HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" --max-time 60 -X POST "$TARGET_URL" \
             -A "$USER_AGENT" \
             -H "Content-Type: application/json" \
             -H "Accept: application/json" \
+            -H "X-Crawler-Secret: ${CRAWLER_SECRET}" \
             -d '{"recipientEmail": "kimjichang1234@gmail.com"}' || echo "000")
           
           echo "Endpoint HTTP Status: $HTTP_STATUS"

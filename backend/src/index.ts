@@ -11,6 +11,7 @@ import { runDebutCrawlerProcess } from './services/debutCrawlerService';
 type Bindings = {
   DB: D1Database;
   __STATIC_CONTENT: any;
+  CRAWLER_SECRET?: string;
 };
 
 // Cloudflare Durable Object Class Preservation
@@ -382,9 +383,17 @@ app.get('/upload', async (c) => {
 // 9. Admin Crawler Web Search & Email Report Manual Trigger
 app.post('/api/v1/admin/crawler/run', async (c) => {
   try {
+    const crawlerSecret = c.env.CRAWLER_SECRET;
+    const requestSecret = c.req.header('X-Crawler-Secret') || c.req.header('x-crawler-secret');
+    
+    // CRAWLER_SECRET이 설정되어 있는 경우, 헤더 비밀키와 일치 여부 검증
+    if (crawlerSecret && requestSecret !== crawlerSecret) {
+      return c.json({ success: false, error: 'Unauthorized: Invalid crawler secret key' }, 401);
+    }
+
     const body = await c.req.json().catch(() => ({}));
     const recipient = body.recipientEmail || 'kimjichang1234@gmail.com';
-    const result = await runDebutCrawlerProcess(c.env.DB || null, recipient);
+    const result = await runDebutCrawlerProcess(c.env.DB || null, recipient, undefined, crawlerSecret);
     return c.json({
       success: true,
       message: '자동 웹서치 수집 및 이메일 리포트 발송 프로세스가 성공적으로 수행되었습니다.',

@@ -77,6 +77,11 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     debutDaysLeft: '데뷔까지',
     debutSoon: '곧 데뷔!',
     recommendation: '추천 데뷔 일정 & 관련 소식',
+    aboutTab: '서비스 소개',
+    guideTab: '이용 가이드 & FAQ',
+    privacyTab: '개인정보처리방침',
+    termsTab: '이용약관',
+    contactTab: '문의하기',
   },
   ja: {
     heroTitle: '新人VTuber デビューカレンダー',
@@ -122,6 +127,11 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     debutDaysLeft: 'デビューまで',
     debutSoon: 'まもなくデビュー!',
     recommendation: 'おすすめデビュー日程 & 関連ニュース',
+    aboutTab: 'サービス紹介',
+    guideTab: 'ご利用ガイド & FAQ',
+    privacyTab: 'プライバシーポリシー',
+    termsTab: '利用規約',
+    contactTab: 'お問い合わせ',
   },
   en: {
     heroTitle: 'Global VTuber Debut Schedule Calendar',
@@ -167,6 +177,11 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     debutDaysLeft: 'Debuts in ',
     debutSoon: 'Debuting Soon!',
     recommendation: 'Recommended Debuts & Related News',
+    aboutTab: 'About Us',
+    guideTab: 'Guide & FAQ',
+    privacyTab: 'Privacy Policy',
+    termsTab: 'Terms of Service',
+    contactTab: 'Contact Us',
   }
 };
 
