@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Calendar, CalendarDays, Filter, RotateCcw, ChevronDown, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, CalendarDays, RotateCcw } from 'lucide-react';
 
 interface CalendarControlBarProps {
   year: number;
@@ -26,93 +25,47 @@ export function CalendarControlBar({
   onChangeView,
   onOpenYearMonthPicker,
 }: CalendarControlBarProps) {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
   const platforms = [
-    { id: 'ALL', label: '전체 플랫폼' },
-    { id: 'CHZZK', label: '치지직 (CHZZK)' },
-    { id: 'SOOP', label: 'SOOP' },
-    { id: 'YOUTUBE', label: '유튜브 (YouTube)' },
-    { id: 'TWITCH', label: '트위치 (Twitch)' },
+    { id: 'ALL', label: 'ALL', icon: null },
+    { id: 'CHZZK', label: '치지직', icon: '/icons/chzzk/chzzk Icon_01.png' },
+    { id: 'SOOP', label: 'SOOP', icon: '/icons/soop/soop_symbol_blue.svg' },
+    { id: 'TWITCH', label: '트위치', icon: '/icons/Twitch Logos/02. Glitch/01. Twitch Purple/glitch_flat_purple.svg' },
+    { id: 'YOUTUBE', label: '유튜브', icon: '/icons/youtube_icon.png' },
   ];
-
-  const currentPlatform = platforms.find((p) => p.id === selectedPlatform) || platforms[0];
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   return (
     <div className="space-y-3 mb-4">
-      {/* 1. Header Grid: Left (Platform Select), Center (Year/Month & Today), Right (View Switcher) */}
-      <div className="flex flex-col sm:grid sm:grid-cols-3 items-center justify-between gap-2.5 sm:gap-3 pb-3 border-b border-[#E2E8F0]">
+      {/* 1. Header Grid: Left (Platform Select Box), Center (Year/Month & Today), Right (View Switcher) */}
+      <div className="flex flex-col lg:grid lg:grid-cols-3 items-center justify-between gap-3 pb-3 border-b border-[#E2E8F0]">
         
-        {/* Left: Custom Platform Dropdown */}
-        <div className="flex items-center justify-center sm:justify-start w-full sm:w-auto">
-          <div className="relative w-full sm:w-auto" ref={dropdownRef}>
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="bg-white border border-[#CBD5E1] rounded-[8px] px-3 py-2 text-xs font-bold text-[#0F172A] hover:bg-[#F8FAFC] focus:border-[#2563EB] focus:outline-none flex items-center gap-2 shadow-2xs transition-all w-full sm:min-w-[170px] h-9 justify-between"
-            >
-              <div className="flex items-center gap-2">
-                <Filter className="w-3.5 h-3.5 text-[#64748B] shrink-0" />
-                {currentPlatform.id === 'SOOP' && (
-                  <img src="/icons/soop/soop_symbol_blue.svg" alt="SOOP" className="w-4 h-4 object-contain shrink-0" />
-                )}
-                {currentPlatform.id === 'CHZZK' && (
-                  <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
-                )}
-                {currentPlatform.id === 'YOUTUBE' && (
-                  <img src="/icons/youtube_icon.png" alt="YouTube" className="w-4 h-4 object-contain shrink-0" />
-                )}
-                <span>{currentPlatform.label}</span>
-              </div>
-              <ChevronDown className={`w-3.5 h-3.5 text-[#64748B] transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
-            </button>
-
-            {/* Dropdown Popover */}
-            {isDropdownOpen && (
-              <div className="absolute left-0 top-full mt-1.5 w-full sm:w-52 bg-white border border-[#CBD5E1] rounded-[10px] shadow-xl py-1.5 z-50 animate-fadeIn overflow-hidden">
-                {platforms.map((p) => {
-                  const isSelected = selectedPlatform === p.id;
-                  return (
-                    <button
-                      key={p.id}
-                      onClick={() => {
-                        onPlatformSelect(p.id);
-                        setIsDropdownOpen(false);
-                      }}
-                      className={`w-full px-3.5 py-2 text-xs font-bold flex items-center justify-between transition-colors ${
-                        isSelected
-                          ? 'bg-[#F1F5F9] text-[#0F172A]'
-                          : 'text-[#334155] hover:bg-[#F8FAFC] hover:text-[#0F172A]'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5 h-6">
-                        {p.id === 'SOOP' && (
-                          <img src="/icons/soop/soop_symbol_blue.svg" alt="SOOP" className="w-4 h-4 object-contain shrink-0" />
-                        )}
-                        {p.id === 'CHZZK' && (
-                          <img src="/icons/chzzk_icon.png" alt="CHZZK" className="w-4 h-4 object-contain shrink-0" />
-                        )}
-                        {p.id === 'YOUTUBE' && (
-                          <img src="/icons/youtube_icon.png" alt="YouTube" className="w-4 h-4 object-contain shrink-0" />
-                        )}
-                        <span>{p.label}</span>
-                      </div>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-[#2563EB] shrink-0" />}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+        {/* Left: Platform Selection Box Bar (ALL | 치지직 | SOOP | 트위치 | 유튜브) */}
+        <div className="flex items-center justify-center lg:justify-start w-full lg:w-auto overflow-x-auto no-scrollbar py-0.5">
+          <div className="inline-flex items-center bg-[#F1F5F9] p-1 rounded-[8px] border border-[#CBD5E1] gap-1 shrink-0">
+            {platforms.map((p) => {
+              const isSelected = selectedPlatform === p.id;
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => onPlatformSelect(p.id)}
+                  className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-[6px] text-xs font-bold transition-all cursor-pointer select-none ${
+                    isSelected
+                      ? 'bg-[#0F172A] text-white shadow-xs'
+                      : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/60'
+                  }`}
+                  aria-pressed={isSelected}
+                  title={`${p.label} 데뷔 일정 보기`}
+                >
+                  {p.icon && (
+                    <img
+                      src={p.icon}
+                      alt={p.label}
+                      className="w-3.5 h-3.5 object-contain shrink-0"
+                    />
+                  )}
+                  <span>{p.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
