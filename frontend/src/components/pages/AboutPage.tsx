@@ -54,7 +54,7 @@ export function AboutPage({ onNavigateHome }: AboutPageProps) {
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
             <div className="p-3.5 rounded-[10px] bg-[#F8FAFC] border border-[#CBD5E1] flex items-center gap-2.5">
-              <img src="/icons/chzzk/chzzk Icon_01.png" alt="치지직" className="w-5 h-5 object-contain shrink-0" />
+              <img src="/icons/chzzk_icon.png" alt="치지직" className="w-5 h-5 object-contain shrink-0" />
               <div>
                 <div className="font-extrabold text-xs text-[#0F172A]">치지직 (CHZZK)</div>
                 <div className="text-[10px] text-[#64748B]">네이버 스트리밍</div>
@@ -78,7 +78,7 @@ export function AboutPage({ onNavigateHome }: AboutPageProps) {
             </div>
 
             <div className="p-3.5 rounded-[10px] bg-[#F8FAFC] border border-[#CBD5E1] flex items-center gap-2.5">
-              <img src="/icons/Twitch Logos/02. Glitch/01. Twitch Purple/glitch_flat_purple.svg" alt="Twitch" className="w-5 h-5 object-contain shrink-0" />
+              <img src="/icons/twitch_icon.svg" alt="Twitch" className="w-5 h-5 object-contain shrink-0" />
               <div>
                 <div className="font-extrabold text-xs text-[#0F172A]">Twitch</div>
                 <div className="text-[10px] text-[#64748B]">글로벌 스트리밍</div>

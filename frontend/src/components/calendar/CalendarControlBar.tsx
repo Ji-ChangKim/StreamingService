@@ -27,9 +27,9 @@ export function CalendarControlBar({
 }: CalendarControlBarProps) {
   const platforms = [
     { id: 'ALL', label: 'ALL', icon: null },
-    { id: 'CHZZK', label: '치지직', icon: '/icons/chzzk/chzzk Icon_01.png' },
+    { id: 'CHZZK', label: '치지직', icon: '/icons/chzzk_icon.png' },
     { id: 'SOOP', label: 'SOOP', icon: '/icons/soop/soop_symbol_blue.svg' },
-    { id: 'TWITCH', label: '트위치', icon: '/icons/Twitch Logos/02. Glitch/01. Twitch Purple/glitch_flat_purple.svg' },
+    { id: 'TWITCH', label: '트위치', icon: '/icons/twitch_icon.svg' },
     { id: 'YOUTUBE', label: '유튜브', icon: '/icons/youtube_icon.png' },
   ];
 

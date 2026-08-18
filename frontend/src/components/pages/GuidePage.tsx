@@ -25,7 +25,7 @@ export function GuidePage({ onNavigateHome, onOpenSubmitModal }: GuidePageProps)
     {
       id: 'chzzk',
       category: '치지직 (CHZZK)',
-      iconSrc: '/icons/chzzk/chzzk Icon_01.png',
+      iconSrc: '/icons/chzzk_icon.png',
       iconAlt: '치지직 공식 아이콘',
       badgeColor: 'bg-emerald-50 text-emerald-800 border-emerald-200',
       question: '치지직(CHZZK) 데뷔 일정은 어떻게 등록하나요?',
@@ -113,7 +113,7 @@ export function GuidePage({ onNavigateHome, onOpenSubmitModal }: GuidePageProps)
     {
       id: 'twitch',
       category: 'Twitch',
-      iconSrc: '/icons/Twitch Logos/02. Glitch/01. Twitch Purple/glitch_flat_purple.svg',
+      iconSrc: '/icons/twitch_icon.svg',
       iconAlt: 'Twitch 공식 아이콘',
       badgeColor: 'bg-purple-50 text-purple-800 border-purple-200',
       question: 'Twitch 데뷔 일정은 어떻게 등록하나요?',
