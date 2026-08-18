@@ -1,4 +1,4 @@
-import { ArrowLeft, Shield, Eye, Lock, FileText, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Shield, Lock, FileText, Cookie } from 'lucide-react';
 import { Language } from '../../utils/i18n';
 
 interface PrivacyPageProps {
@@ -26,7 +26,7 @@ export function PrivacyPage({ onNavigateHome }: PrivacyPageProps) {
             개인정보처리방침 (Privacy Policy)
           </h1>
           <p className="text-xs sm:text-sm text-slate-300">
-            최종 업데이트: 2026년 8월 17일
+            최종 업데이트: 2026년 8월 18일
           </p>
         </div>
       </section>
@@ -34,7 +34,7 @@ export function PrivacyPage({ onNavigateHome }: PrivacyPageProps) {
       {/* Policy Content */}
       <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 sm:p-8 shadow-sm space-y-8 text-xs sm:text-sm text-[#334155] leading-relaxed">
         <p>
-          VDébut(이하 '서비스')은 이용자의 개인정보를 중요하게 생각하며, 관련 법령을 준수합니다. 본 방침을 통해 수집하는 정보, 이용 목적, 그리고 Google 애드센스 광고 쿠키와 관련된 사항을 안내해 드립니다.
+          VDébut(이하 '서비스')은 이용자의 개인정보를 중요하게 생각하며, 관련 법령을 준수합니다. 본 방침을 통해 수집하는 정보, 이용 목적, 그리고 데이터 보호와 관련된 사항을 안내해 드립니다.
         </p>
 
         {/* 1. 개인정보 수집 항목 */}
@@ -52,49 +52,25 @@ export function PrivacyPage({ onNavigateHome }: PrivacyPageProps) {
           </ul>
         </section>
 
-        {/* 2. Google AdSense 및 쿠키 정책 (구글 애드센스 필수 요구사항) */}
-        <section className="space-y-3 bg-[#F8FAFC] border border-[#CBD5E1] p-5 rounded-[12px]">
-          <h2 className="text-base font-extrabold text-[#0F172A] flex items-center gap-2 border-b border-[#E2E8F0] pb-2">
-            <Eye className="w-4 h-4 text-[#2563EB]" />
-            2. Google AdSense 및 제3자 광고 쿠키 정책 (필수 고지)
-          </h2>
-          <p>
-            본 웹사이트는 원활한 서비스 운영을 위해 Google 및 제3자 광고 사업자의 광고를 게재할 수 있으며, 다음과 같은 쿠키 정책이 적용됩니다:
-          </p>
-          <div className="space-y-2 text-[#334155]">
-            <div className="flex items-start gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5" />
-              <p>
-                <strong>쿠키(Cookie) 사용:</strong> Google을 포함한 제3자 광고 공급업체는 쿠키를 사용하여 이용자의 본 사이트 및 타 웹사이트 방문 기록을 바탕으로 광고를 게재합니다.
-              </p>
-            </div>
-            <div className="flex items-start gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5" />
-              <p>
-                <strong>맞춤 광고 게재:</strong> Google의 광고 쿠키 사용으로 인해 Google 및 그 파트너는 인터넷 방문 기록을 바탕으로 적절한 맞춤 광고를 제공할 수 있습니다.
-              </p>
-            </div>
-            <div className="flex items-start gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5" />
-              <div>
-                <strong>맞춤 광고 수신 거부(Opt-out):</strong> 사용자는 언제든지 맞춤 광고 설정을 해제할 수 있습니다.
-                <ul className="list-disc pl-5 mt-1 space-y-0.5 text-xs text-[#64748B]">
-                  <li>Google 광고 설정: <a href="https://adssettings.google.com" target="_blank" rel="noreferrer" className="text-[#2563EB] underline font-bold">Google Ads Settings</a></li>
-                  <li>제3자 광고 쿠키 거부 포털: <a href="https://www.aboutads.info/choices" target="_blank" rel="noreferrer" className="text-[#2563EB] underline font-bold">aboutads.info Choices</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 3. 개인정보 보관 및 파기 */}
+        {/* 2. 개인정보 보관 및 파기 */}
         <section className="space-y-2">
           <h2 className="text-base font-extrabold text-[#0F172A] flex items-center gap-2 border-b border-[#E2E8F0] pb-2">
             <Lock className="w-4 h-4 text-[#2563EB]" />
-            3. 데이터 보관 및 파기
+            2. 데이터 보관 및 파기
           </h2>
           <p>
             수집된 비식별 접속 로그는 서비스 안정성 유지 및 비정상 접근 차단을 위해 일정 기간(최대 3개월) 보관 후 안전하게 파기됩니다.
+          </p>
+        </section>
+
+        {/* 3. 쿠키 및 로컬 데이터 사용 안내 */}
+        <section className="space-y-2">
+          <h2 className="text-base font-extrabold text-[#0F172A] flex items-center gap-2 border-b border-[#E2E8F0] pb-2">
+            <Cookie className="w-4 h-4 text-[#2563EB]" />
+            3. 쿠키(Cookie) 및 로컬 저장소 이용 안내
+          </h2>
+          <p>
+            서비스는 이용자의 맞춤 환경 제공(선택 언어, 타임존 설정, 뷰 모드 등) 및 서비스 최적화를 위해 브라우저의 로컬 스토리지 및 기본 쿠키를 사용할 수 있습니다. 이용자는 웹 브라우저 설정을 통해 쿠키 저장을 거부하거나 삭제할 수 있습니다.
           </p>
         </section>
 

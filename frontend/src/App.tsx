@@ -99,7 +99,7 @@ export function App() {
       pageDesc = '신입 버튜버 데뷔 일정 10초 간편 등록법, 캘린더(.ics) 알림 연동 및 자주 묻는 질문(FAQ)을 확인하세요.';
     } else if (currentPath === '/privacy') {
       pageTitle = '개인정보처리방침 | VDébut';
-      pageDesc = 'VDébut 개인정보처리방침 및 Google AdSense 광고 쿠키 정책 안내입니다.';
+      pageDesc = 'VDébut의 개인정보처리방침 및 이용자 데이터 보호 정책 안내입니다.';
     } else if (currentPath === '/terms') {
       pageTitle = '서비스 이용약관 | VDébut';
       pageDesc = 'VDébut 서비스 이용약관 및 저작권, 면책 조항 안내입니다.';
