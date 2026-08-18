@@ -67,7 +67,7 @@ export function ContactPage({ onNavigateHome, onOpenSubmitModal }: ContactPagePr
             </p>
           </div>
           <a
-            href="mailto:contact@vdebut.live?subject=[VDébut%20수정/삭제%20요청]"
+            href="mailto:ru_0120@naver.com?subject=[VDébut%20수정/삭제%20요청]"
             className="w-full py-2.5 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#CBD5E1] text-[#0F172A] text-xs font-extrabold rounded-[8px] transition-all flex items-center justify-center gap-1.5"
           >
             <Mail className="w-3.5 h-3.5 text-[#2563EB]" /> 메일 보내기
@@ -86,7 +86,7 @@ export function ContactPage({ onNavigateHome, onOpenSubmitModal }: ContactPagePr
             </p>
           </div>
           <a
-            href="mailto:contact@vdebut.live?subject=[VDébut%20기능%20제안/문의]"
+            href="mailto:ru_0120@naver.com?subject=[VDébut%20기능%20제안/문의]"
             className="w-full py-2.5 bg-[#0F172A] hover:bg-slate-800 text-white text-xs font-extrabold rounded-[8px] transition-all flex items-center justify-center gap-1.5"
           >
             <Mail className="w-3.5 h-3.5" /> 이메일 문의하기
@@ -97,7 +97,7 @@ export function ContactPage({ onNavigateHome, onOpenSubmitModal }: ContactPagePr
       {/* Official Email Box */}
       <div className="p-4 bg-white rounded-[12px] border border-[#CBD5E1] text-xs sm:text-sm text-[#334155] space-y-1">
         <span className="font-bold text-[#0F172A]">공식 문의처: </span>
-        <a href="mailto:contact@vdebut.live" className="text-[#2563EB] font-mono font-bold hover:underline">contact@vdebut.live</a>
+        <a href="mailto:ru_0120@naver.com" className="text-[#2563EB] font-mono font-bold hover:underline">ru_0120@naver.com</a>
       </div>
     </div>
   );

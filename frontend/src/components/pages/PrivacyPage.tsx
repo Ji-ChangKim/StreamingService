@@ -84,7 +84,7 @@ export function PrivacyPage({ onNavigateHome }: PrivacyPageProps) {
             개인정보 및 일정 정보 관리에 관한 문의 사항은 아래 공식 이메일로 연락해 주시면 확인 후 조치해 드립니다.
           </p>
           <div className="p-3 bg-[#F8FAFC] rounded-[8px] border border-[#CBD5E1] text-xs font-mono text-[#0F172A]">
-            문의 이메일: contact@vdebut.live
+            문의 이메일: ru_0120@naver.com
           </div>
         </section>
       </div>
