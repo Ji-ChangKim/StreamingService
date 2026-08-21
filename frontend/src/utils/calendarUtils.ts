@@ -63,6 +63,23 @@ export function getCalendarGridCells(year: number, month: number): CalendarCell[
   return calendarCells;
 }
 
+// Memoized Intl.DateTimeFormat Cache Pool for Calendar Keys
+const dateKeyFormatterCache = new Map<string, Intl.DateTimeFormat>();
+
+function getDateKeyFormatter(timezone: string): Intl.DateTimeFormat {
+  let formatter = dateKeyFormatterCache.get(timezone);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    dateKeyFormatterCache.set(timezone, formatter);
+  }
+  return formatter;
+}
+
 /**
  * UTC 시각 문자열을 지정된 타임존 기준 YYYY-MM-DD 키로 변환하는 순수 함수
  */
@@ -75,13 +92,7 @@ export function getEventDateKey(utcString: string, timezone: string): string {
     if (isNaN(d.getTime())) {
       throw new Error('Invalid Date');
     }
-    const formatter = new Intl.DateTimeFormat('en-CA', {
-      timeZone: timezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-    return formatter.format(d);
+    return getDateKeyFormatter(timezone).format(d);
   } catch {
     const rawDatePart = utcString.trim().split(' ')[0].split('T')[0];
     return rawDatePart;
@@ -108,12 +119,7 @@ export function buildEventsByDateMap(events: DebutEvent[], timezone: string): Ma
  */
 export function getTodayDateKey(timezone: string): string {
   try {
-    return new Intl.DateTimeFormat('en-CA', {
-      timeZone: timezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    }).format(new Date());
+    return getDateKeyFormatter(timezone).format(new Date());
   } catch {
     return new Date().toISOString().split('T')[0];
   }

@@ -8,18 +8,27 @@ function safeDate(isoStr: string): Date {
   return new Date(normalized);
 }
 
+// Memoized Intl.DateTimeFormat Cache Pool for Maximum Performance
+const localTimeFormatterCache = new Map<string, Intl.DateTimeFormat>();
+const timeOnlyFormatterCache = new Map<string, Intl.DateTimeFormat>();
+
 export function formatLocalTime(utcIso: string, timezone: string): string {
   try {
     const date = safeDate(utcIso);
-    return new Intl.DateTimeFormat('ko-KR', {
-      timeZone: timezone,
-      month: 'long',
-      day: 'numeric',
-      weekday: 'short',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    }).format(date);
+    let formatter = localTimeFormatterCache.get(timezone);
+    if (!formatter) {
+      formatter = new Intl.DateTimeFormat('ko-KR', {
+        timeZone: timezone,
+        month: 'long',
+        day: 'numeric',
+        weekday: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      });
+      localTimeFormatterCache.set(timezone, formatter);
+    }
+    return formatter.format(date);
   } catch {
     return utcIso;
   }
@@ -31,12 +40,17 @@ export function formatLocalTime(utcIso: string, timezone: string): string {
 export function formatTimeOnly(utcIso: string, timezone: string): string {
   try {
     const date = safeDate(utcIso);
-    return new Intl.DateTimeFormat('ko-KR', {
-      timeZone: timezone,
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    }).format(date);
+    let formatter = timeOnlyFormatterCache.get(timezone);
+    if (!formatter) {
+      formatter = new Intl.DateTimeFormat('ko-KR', {
+        timeZone: timezone,
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      });
+      timeOnlyFormatterCache.set(timezone, formatter);
+    }
+    return formatter.format(date);
   } catch {
     return '00:00';
   }

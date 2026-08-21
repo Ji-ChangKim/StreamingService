@@ -48,6 +48,8 @@
 - `0015_add_august_debut_streamers.sql`: 2026년 8월 중순(8/10~8/16) 버추얼 스트리머 데뷔 일정 33건 신규 추가 등록 (시간 미정 00:00 처리 반영)
 - `0016_update_youtube_august_profiles.sql`: 8월 중순 데뷔 유튜브 스트리머 16명의 최신 프로필(이름, 900px 고화질 이미지, 소개글) 일괄 UPDATE 갱신
 - `0017_add_august_late_streamers.sql`: 2026년 8월 17일~23일 신규 버추얼 스트리머 데뷔 일정 49건 등록 및 최신 프로필(치지직/SOOP/유튜브 고화질 아바타, 소개글) 반영
+- `0018_update_uralogic_game_company_streamers.sql`: 일본 신규 버튜버 프로젝트 'Uralogic Game Company' 1기생 5인 스트리머 채널/정보 최신화 (소속사명, 공식 X URL, 한자 표기 정정 및 릴레이 데뷔 일정 반영)
+- `0019_create_admin_and_submissions.sql`: 관리자 보안 계정(`admin_users`, SHA-256 해시 인증) 및 데뷔 일정 신청서 심사 대기열(`debut_submissions`) 테이블 생성 (스팸 차단 및 CMS 1-클릭 승인 워크플로우 지원)
 
 ---
 

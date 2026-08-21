@@ -7,6 +7,16 @@ import { fetchEventsFromD1, insertEventToD1, updateEventInD1, MOCK_EVENTS } from
 import { fetchPlatformProfile } from './services/platformApiService';
 import { fetchCreatorProfileBySlug, fetchAllCreatorSlugs, updateCreatorProfileInD1, deleteCreatorProfileFromD1 } from './services/creatorDbService';
 import { runDebutCrawlerProcess } from './services/debutCrawlerService';
+import { validateDebutEventPayload } from './services/eventValidationService';
+import { verifyAdminLogin, validateAdminToken } from './services/adminAuthService';
+import {
+  createSubmissionToD1,
+  fetchSubmissionsFromD1,
+  approveSubmissionInD1,
+  rejectSubmissionInD1,
+  deleteSubmissionFromD1,
+  fetchAllActiveStreamersForAdmin,
+} from './services/submissionDbService';
 
 type Bindings = {
   DB: D1Database;
@@ -139,6 +149,8 @@ app.get('/api/v1/events', async (c) => {
 
   const allEvents = Array.from(combinedMap.values());
 
+  c.header('Cache-Control', 'public, max-age=30, s-maxage=120, stale-while-revalidate=300');
+
   return c.json({
     success: true,
     events: allEvents,
@@ -147,8 +159,8 @@ app.get('/api/v1/events', async (c) => {
   });
 });
 
-// 3. Create Debut Event into D1 DB
-app.post('/api/v1/events', async (c) => {
+// 3. Create Debut Submission (Pending Queue - 100% Protected from direct calendar spam)
+app.post('/api/v1/submissions', async (c) => {
   if (!c.env.DB) {
     return c.json({
       success: false,
@@ -158,36 +170,193 @@ app.post('/api/v1/events', async (c) => {
 
   try {
     const body = await c.req.json();
-    const eventId = await insertEventToD1(c.env.DB, body);
+
+    // 엄격한 입력값 유효성 검증
+    const validation = validateDebutEventPayload(body);
+    if (!validation.isValid) {
+      return c.json({
+        success: false,
+        message: validation.errorMessage || '입력값이 올바르지 않습니다.',
+      }, 400);
+    }
+
+    const submissionId = await createSubmissionToD1(c.env.DB, body);
 
     return c.json({
       success: true,
-      message: '데뷔 일정이 데이터베이스에 저장되었습니다.',
-      eventId,
+      message: '데뷔 일정 신청서가 정상 접수되었습니다. 운영자 검토 후 캘린더에 정식 반영됩니다.',
+      submissionId,
     });
   } catch (err: any) {
-    console.error('Create event failed:', err);
+    console.error('Create submission failed:', err);
     return c.json({
       success: false,
-      message: '데뷔 일정 저장에 실패했습니다.',
+      message: '데뷔 일정 신청서 저장에 실패했습니다.',
       error: err?.message || 'unknown_error',
     }, 500);
   }
 });
-// 3.5 Update Debut Event in D1 DB
-app.put('/api/v1/events/:id', async (c) => {
-  const eventId = c.req.param('id');
-  const body = await c.req.json();
-  let updated = false;
 
-  if (c.env.DB && eventId) {
-    updated = await updateEventInD1(c.env.DB, eventId, body);
+// Legacy POST /api/v1/events (신청서 대기열로 안전하게 통합 처리)
+app.post('/api/v1/events', async (c) => {
+  if (!c.env.DB) {
+    return c.json({ success: false, message: 'D1 database binding is not configured.' }, 503);
+  }
+  try {
+    const body = await c.req.json();
+    const validation = validateDebutEventPayload(body);
+    if (!validation.isValid) {
+      return c.json({ success: false, message: validation.errorMessage || '입력값이 올바르지 않습니다.' }, 400);
+    }
+    const submissionId = await createSubmissionToD1(c.env.DB, body);
+    return c.json({
+      success: true,
+      message: '데뷔 일정 신청서가 정상 접수되었습니다. 운영자 검토 후 캘린더에 정식 반영됩니다.',
+      submissionId,
+      eventId: `sub_${submissionId}`
+    });
+  } catch (err: any) {
+    return c.json({ success: false, message: '신청서 접수에 실패했습니다.', error: err?.message }, 500);
+  }
+});
+
+// ==========================================
+// 🛡️ ADMIN CMS ENDPOINTS (보안 인증 & 승인 관리)
+// ==========================================
+
+// 1. 관리자 로그인 (ID: Vdebut.admin / PW: Vdebut1#)
+app.post('/api/v1/admin/login', async (c) => {
+  if (!c.env.DB) {
+    return c.json({ success: false, error: 'Database binding unavailable' }, 500);
+  }
+  try {
+    const body = await c.req.json().catch(() => ({}));
+    const username = body.username || '';
+    const password = body.password || '';
+
+    const result = await verifyAdminLogin(c.env.DB, username, password);
+    if (!result.success) {
+      return c.json({ success: false, error: result.error || '로그인 실패' }, 401);
+    }
+
+    return c.json({
+      success: true,
+      message: '관리자 로그인에 성공했습니다.',
+      token: result.token,
+      username
+    });
+  } catch (err: any) {
+    return c.json({ success: false, error: err?.message || '로그인 오류' }, 500);
+  }
+});
+
+// 2. 관리자 신청서 목록 조회 (PENDING / APPROVED / REJECTED / ALL)
+app.get('/api/v1/admin/submissions', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
   }
 
+  const status = c.req.query('status') || 'PENDING';
+  const list = await fetchSubmissionsFromD1(c.env.DB, status);
+  return c.json({ success: true, submissions: list, total: list.length });
+});
+
+// 3. 관리자 1-클릭 승인 (debut_submissions ➔ streamerChannel & streamerChannel_info)
+app.post('/api/v1/admin/submissions/:id/approve', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const subId = parseInt(c.req.param('id'), 10);
+  if (isNaN(subId)) return c.json({ success: false, error: '올바른 ID가 아닙니다.' }, 400);
+
+  const body = await c.req.json().catch(() => ({}));
+  const customSlug = body.customSlug;
+
+  const result = await approveSubmissionInD1(c.env.DB, subId, customSlug);
   return c.json({
-    success: updated,
-    message: updated ? '데뷔 일정이 수정되었습니다.' : '수정에 실패했습니다.',
-    eventId
+    success: result.success,
+    message: result.success ? `신청서가 승인되어 /creator/${result.slug} 주소로 캘린더에 즉시 발행되었습니다!` : '승인 처리에 실패했습니다.',
+    error: result.error,
+    eventId: result.eventId,
+    slug: result.slug
+  });
+});
+
+// 4. 관리자 반려 처리
+app.post('/api/v1/admin/submissions/:id/reject', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const subId = parseInt(c.req.param('id'), 10);
+  const body = await c.req.json().catch(() => ({}));
+  const ok = await rejectSubmissionInD1(c.env.DB, subId, body.adminNote);
+  return c.json({ success: ok, message: ok ? '신청서가 반려 처리되었습니다.' : '반려 처리에 실패했습니다.' });
+});
+
+// 5. 관리자 신청서 삭제
+app.delete('/api/v1/admin/submissions/:id', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const subId = parseInt(c.req.param('id'), 10);
+  const ok = await deleteSubmissionFromD1(c.env.DB, subId);
+  return c.json({ success: ok, message: ok ? '신청서가 삭제되었습니다.' : '삭제에 실패했습니다.' });
+});
+
+// 6. 관리자 CMS 전체 등록 버튜버 목록 조회
+app.get('/api/v1/admin/streamers', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const streamers = await fetchAllActiveStreamersForAdmin(c.env.DB);
+  return c.json({ success: true, streamers, total: streamers.length });
+});
+
+// 7. 관리자 CMS 버튜버 1-클릭 캘린더 삭제
+app.delete('/api/v1/admin/streamers/:slug', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const slug = c.req.param('slug');
+  const ok = await deleteCreatorProfileFromD1(c.env.DB, slug);
+  return c.json({
+    success: ok,
+    message: ok ? '스트리머가 캘린더에서 완전히 삭제되었습니다.' : '스트리머 삭제에 실패했습니다.'
   });
 });
 
@@ -380,6 +549,33 @@ app.get('/upload', async (c) => {
   }
 });
 
+// 7.8 Dynamic SEO Meta Injection & Strict Noindex for /admin (CMS Console)
+app.get('/admin', async (c) => {
+  const assetManifest = JSON.parse(manifestJSON || '{}');
+  try {
+    const res = await getAssetFromKV(
+      {
+        request: c.req.raw,
+        waitUntil: (promise) => c.executionCtx.waitUntil(promise),
+      },
+      {
+        ASSET_NAMESPACE: c.env.__STATIC_CONTENT,
+        ASSET_MANIFEST: assetManifest,
+        mapRequestToAsset: serveSinglePageApp,
+      }
+    );
+
+    let html = await res.text();
+    html = html.replace(/<title>.*?<\/title>/, `<title>V-DEBUT HUB CMS Console</title>`);
+    html = html.replace('</head>', `<meta name="robots" content="noindex, nofollow, noarchive" /></head>`);
+
+    c.header('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    return c.html(html);
+  } catch (e: any) {
+    return c.text(`SPA Asset Error: ${e?.message || 'Asset NotFound'}`, 404);
+  }
+});
+
 // 9. Admin Crawler Web Search & Email Report Manual Trigger
 app.post('/api/v1/admin/crawler/run', async (c) => {
   try {
@@ -393,7 +589,7 @@ app.post('/api/v1/admin/crawler/run', async (c) => {
 
     const body = await c.req.json().catch(() => ({}));
     const recipient = body.recipientEmail || 'kimjichang1234@gmail.com';
-    const result = await runDebutCrawlerProcess(c.env.DB || null, recipient, undefined, crawlerSecret);
+    const result = await runDebutCrawlerProcess(c.env.DB || null, recipient);
     return c.json({
       success: true,
       message: '자동 웹서치 수집 및 이메일 리포트 발송 프로세스가 성공적으로 수행되었습니다.',

@@ -11,6 +11,7 @@ import { GuidePage } from './components/pages/GuidePage';
 import { PrivacyPage } from './components/pages/PrivacyPage';
 import { TermsPage } from './components/pages/TermsPage';
 import { ContactPage } from './components/pages/ContactPage';
+import { AdminCmsPage } from './components/pages/AdminCmsPage';
 import { DebutEvent } from './types';
 import { fetchDebutEvents } from './services/eventService';
 import { generateICSContent, triggerFileDownload } from './utils/dateUtils';
@@ -239,6 +240,10 @@ export function App() {
             onNavigateHome={() => handleNavigate('/')}
             onOpenSubmitModal={() => handleOpenSubmitModal()}
             currentLang={currentLang}
+          />
+        ) : currentPath === '/admin' ? (
+          <AdminCmsPage
+            onNavigateHome={() => handleNavigate('/')}
           />
         ) : (
           <>

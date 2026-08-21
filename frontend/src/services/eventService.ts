@@ -21,19 +21,27 @@ export async function fetchDebutEvents(): Promise<DebutEvent[]> {
 }
 
 /**
- * 신규 데뷔 이벤트를 백엔드 API (POST /api/v1/events)로 전송하여 DB에 저장
+ * 신규 데뷔 이벤트를 백엔드 신청서 대기열 API (POST /api/v1/submissions)로 전송하여 안전하게 접수
  */
-export async function createDebutEvent(event: DebutEvent): Promise<boolean> {
+export async function createDebutSubmission(event: DebutEvent): Promise<{ success: boolean; message?: string }> {
   try {
-    const data = await fetchWithVersion('/events', {
+    const data = await fetchWithVersion('/submissions', {
       method: 'POST',
       body: JSON.stringify(event),
     });
-    return Boolean(data.success);
-  } catch (err) {
-    console.error('Failed to save debut event to backend:', err);
-    return false;
+    return {
+      success: Boolean(data.success),
+      message: data.message || '신청서가 접수되었습니다.',
+    };
+  } catch (err: any) {
+    console.error('Failed to submit debut event to backend:', err);
+    return { success: false, message: err?.message || '신청서 접수에 실패했습니다.' };
   }
+}
+
+export async function createDebutEvent(event: DebutEvent): Promise<boolean> {
+  const res = await createDebutSubmission(event);
+  return res.success;
 }
 /**
  * 기존 데뷔 이벤트를 백엔드 API (PUT /api/v1/events/:id)로 전송하여 수정

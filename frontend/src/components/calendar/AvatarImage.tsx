@@ -30,6 +30,8 @@ export function AvatarImage({ src, alt, className = '', onClick }: AvatarImagePr
     <img
       src={src}
       alt={alt}
+      loading="lazy"
+      decoding="async"
       onError={() => setHasError(true)}
       onClick={onClick}
       className={className}

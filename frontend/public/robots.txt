@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /api/v1/admin/
 
 Sitemap: https://vdebut.live/sitemap.xml
