@@ -89,6 +89,10 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     goToChannel: '방송 채널 바로가기',
     debutTime: '데뷔 방송 시간',
     todayCountSuffix: '명 데뷔',
+    tabDebutLive: '데뷔 라이브',
+    tabTodayDebut: '금일 데뷔',
+    noLiveNow: '현재 진행 중인 데뷔 생방송이 없습니다.',
+    noTodayDebuts: '오늘 예정된 데뷔 방송이 없습니다.',
   },
   ja: {
     heroTitle: '新人VTuber デビューカレンダー',
@@ -146,6 +150,10 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     goToChannel: 'チャンネルへ行く',
     debutTime: '配信開始時間',
     todayCountSuffix: '名 デビュー',
+    tabDebutLive: 'デビュー配信中',
+    tabTodayDebut: '本日デビュー',
+    noLiveNow: '現在配信中のデビュー配信はありません。',
+    noTodayDebuts: '本日予定のデビュー配信はありません。',
   },
   en: {
     heroTitle: 'Global VTuber Debut Schedule Calendar',
@@ -203,6 +211,10 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     goToChannel: 'Go to Channel',
     debutTime: 'Debut Time',
     todayCountSuffix: ' Debuts Today',
+    tabDebutLive: 'Live Debut',
+    tabTodayDebut: "Today's Debuts",
+    noLiveNow: 'No live debut streams at the moment.',
+    noTodayDebuts: 'No debuts scheduled for today.',
   }
 };
 
