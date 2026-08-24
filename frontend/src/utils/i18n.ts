@@ -35,7 +35,7 @@ export const SEO_DATA: Record<Language, SeoMetadata> = {
 export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
   ko: {
     heroTitle: '신입 버튜버 데뷔 일정 통합 캘린더',
-    heroSubtitle: '치지직 · SOOP · 유튜브 · 트위치 버츄얼 스트리머(VTuber)의 첫 방송 데뷔 일정을 내 시간대에 맞춰 한눈에 확인하세요.',
+    heroSubtitle: '치지직 · SOOP · 유튜브 버튜버(VTuber)의 첫 데뷔 일정을 내 시간대에 맞춰 한눈에 확인하세요.',
     scheduleTab: '데뷔 일정',
     submitButton: '버튜버 데뷔 일정 등록',
     editButton: '수정',

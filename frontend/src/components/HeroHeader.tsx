@@ -97,12 +97,12 @@ export function HeroHeader({
   return (
     <div className="py-6 sm:py-8 flex flex-col items-center justify-center text-center space-y-5 w-full max-w-5xl mx-auto">
       {/* 1. 히어로 타이틀 & 설명글 (다국어 바인딩 적용) */}
-      <div className="space-y-1.5">
+      <div className="space-y-1.5 w-full">
         <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0F172A] tracking-tight font-['Outfit']">
           {t.heroTitle || '신입 버튜버 데뷔 일정 통합 캘린더'}
         </h1>
-        <h3 className="text-xs sm:text-sm text-[#64748B] font-medium leading-relaxed max-w-2xl mx-auto">
-          {t.heroSubtitle || '전 세계 VTuber의 데뷔 일정을 내 시간대에 맞춰 한눈에 확인하세요.'}
+        <h3 className="text-xs sm:text-sm text-[#64748B] font-medium leading-relaxed w-full max-w-4xl mx-auto break-keep sm:whitespace-nowrap px-2">
+          {t.heroSubtitle || '치지직 · SOOP · 유튜브 버튜버(VTuber)의 첫 데뷔 일정을 내 시간대에 맞춰 한눈에 확인하세요.'}
         </h3>
       </div>
 
