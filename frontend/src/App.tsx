@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroHeader } from './components/HeroHeader';
+import { TodayDebutsPromotionBanner } from './components/TodayDebutsPromotionBanner';
 import { MonthlyCalendarGrid } from './components/MonthlyCalendarGrid';
 import { FooterBanner } from './components/FooterBanner';
 import { Footer } from './components/Footer';
@@ -255,6 +256,15 @@ export function App() {
                 currentLang={currentLang}
               />
             </div>
+
+            {/* Today's Debut & Live Stream Promotion Banner */}
+            <TodayDebutsPromotionBanner
+              allEvents={events}
+              selectedTimezone={selectedTimezone}
+              currentLang={currentLang}
+              onDownloadICS={handleDownloadICS}
+              onNavigate={handleNavigate}
+            />
 
             {/* Main Monthly / Mobile Calendar Grid Section */}
             <MonthlyCalendarGrid

@@ -82,6 +82,13 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     privacyTab: '개인정보처리방침',
     termsTab: '이용약관',
     contactTab: '문의하기',
+    todayDebutsEyebrow: "TODAY'S DEBUT STREAM",
+    todayDebutsTitle: '오늘 데뷔하는 스트리머',
+    todayLiveTitle: '현재 데뷔 라이브 방송 중',
+    watchLiveNow: '지금 생방송 보러가기',
+    goToChannel: '방송 채널 바로가기',
+    debutTime: '데뷔 방송 시간',
+    todayCountSuffix: '명 데뷔',
   },
   ja: {
     heroTitle: '新人VTuber デビューカレンダー',
@@ -132,6 +139,13 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     privacyTab: 'プライバシーポリシー',
     termsTab: '利用規約',
     contactTab: 'お問い合わせ',
+    todayDebutsEyebrow: "TODAY'S DEBUT STREAM",
+    todayDebutsTitle: '本日デビューのVTuber',
+    todayLiveTitle: '現在初配信中',
+    watchLiveNow: '今すぐ配信を見る',
+    goToChannel: 'チャンネルへ行く',
+    debutTime: '配信開始時間',
+    todayCountSuffix: '名 デビュー',
   },
   en: {
     heroTitle: 'Global VTuber Debut Schedule Calendar',
@@ -182,6 +196,13 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     privacyTab: 'Privacy Policy',
     termsTab: 'Terms of Service',
     contactTab: 'Contact Us',
+    todayDebutsEyebrow: "TODAY'S DEBUT STREAM",
+    todayDebutsTitle: "Today's Debuting VTubers",
+    todayLiveTitle: 'Live Debut Streams Now',
+    watchLiveNow: 'Watch Live Stream',
+    goToChannel: 'Go to Channel',
+    debutTime: 'Debut Time',
+    todayCountSuffix: ' Debuts Today',
   }
 };
 

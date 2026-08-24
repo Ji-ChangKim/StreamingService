@@ -1,5 +1,5 @@
 import { DebutEvent } from '../types';
-import { getEventDateKey } from '../utils/calendarUtils';
+import { getEventDateKey, getTodayDateKey } from '../utils/calendarUtils';
 import { Language, UI_TRANSLATIONS } from '../utils/i18n';
 
 interface HeroHeaderProps {
@@ -84,10 +84,21 @@ export function HeroHeader({
     return `${m}월 ${w}주차 데뷔`;
   };
 
+  // 오늘 데뷔 이벤트 필터링
+  const todayKey = getTodayDateKey(selectedTimezone);
+  const todayEvents = allEvents.filter((evt) => {
+    try {
+      return getEventDateKey(evt.startAtUtc, selectedTimezone) === todayKey;
+    } catch {
+      return false;
+    }
+  });
+
   const unitCreators = t.unitCreators !== undefined ? t.unitCreators : (currentLang === 'en' ? '' : '명');
 
   // 가변형 카드 목록 (0명이면 숨김, 1명 이상 시 노출)
   const dynamicCards = [
+    { label: t.todayDebutsTitle || '오늘 데뷔', count: todayEvents.length, color: 'text-red-600' },
     { label: t.chzzkMonth || '금월 치지직 데뷔', count: chzzkCount, color: 'text-[#10B981]' },
     { label: t.soopMonth || '금월 SOOP 데뷔', count: soopCount, color: 'text-[#2563EB]' },
     { label: t.youtubeMonth || '금월 유튜브 데뷔', count: youtubeCount, color: 'text-[#EF4444]' },
