@@ -51,6 +51,7 @@
 - `0018_update_uralogic_game_company_streamers.sql`: 일본 신규 버튜버 프로젝트 'Uralogic Game Company' 1기생 5인 스트리머 채널/정보 최신화 (소속사명, 공식 X URL, 한자 표기 정정 및 릴레이 데뷔 일정 반영)
 - `0019_create_admin_and_submissions.sql`: 관리자 보안 계정(`admin_users`, SHA-256 해시 인증) 및 데뷔 일정 신청서 심사 대기열(`debut_submissions`) 테이블 생성 (스팸 차단 및 CMS 1-클릭 승인 워크플로우 지원)
 - `0020_add_august_final_debut_streamers.sql`: 2026년 8월 23일~30일 신규 버추얼 스트리머 데뷔 일정 18건 추가 등록 및 최신 프로필(치지직/SOOP/유튜브 고화질 아바타, 소개글, 스타버스 소속사 등) 반영
+- `0021_update_and_add_late_august_streamers.sql`: 2026년 8월 26일~31일 버추얼 스트리머 일정 패치 (토모♪ 8/26 13:00 일정 변경, 모냐?·잘님 등 신규 22건 추가 등록)
 
 ---
 
