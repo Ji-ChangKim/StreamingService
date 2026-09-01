@@ -52,6 +52,7 @@
 - `0019_create_admin_and_submissions.sql`: 관리자 보안 계정(`admin_users`, SHA-256 해시 인증) 및 데뷔 일정 신청서 심사 대기열(`debut_submissions`) 테이블 생성 (스팸 차단 및 CMS 1-클릭 승인 워크플로우 지원)
 - `0020_add_august_final_debut_streamers.sql`: 2026년 8월 23일~30일 신규 버추얼 스트리머 데뷔 일정 18건 추가 등록 및 최신 프로필(치지직/SOOP/유튜브 고화질 아바타, 소개글, 스타버스 소속사 등) 반영
 - `0021_update_and_add_late_august_streamers.sql`: 2026년 8월 26일~31일 버추얼 스트리머 일정 패치 (토모♪ 8/26 13:00 일정 변경, 모냐?·잘님 등 신규 22건 추가 등록)
+- `0022_add_september_early_debut_streamers.sql`: 2026년 8월 31일 ~ 9월 6일 신규 버추얼 스트리머 34건 등록 (신규 32인 등록 + ガチ経営者VTuber組長, 月深夜冥夜 데뷔 시각 및 프로필 최신화)
 
 ---
 

@@ -4,7 +4,11 @@
 
 export const CLIENT_VERSION = 'v0.1.0';
 
-export const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || '/api/v1';
+export const API_BASE_URL =
+  (import.meta as any).env?.VITE_API_URL ||
+  (typeof window !== 'undefined' && window.location.hostname.includes('github.io')
+    ? 'https://streaming.gametps.workers.dev/api/v1'
+    : '/api/v1');
 
 export async function fetchWithVersion(endpoint: string, options: RequestInit = {}) {
   const headers = new Headers(options.headers || {});
