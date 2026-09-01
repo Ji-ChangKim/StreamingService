@@ -17,6 +17,7 @@ import {
   deleteSubmissionFromD1,
   fetchAllActiveStreamersForAdmin,
 } from './services/submissionDbService';
+import { syncMissingProfilesInD1 } from './services/profileSyncService';
 
 type Bindings = {
   DB: D1Database;
@@ -360,6 +361,29 @@ app.delete('/api/v1/admin/streamers/:slug', async (c) => {
   });
 });
 
+// 8. 관리자 CMS 프로필 일괄 자동 동기화 (Auto-Enrichment)
+app.post('/api/v1/admin/sync-profiles', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token);
+  const crawlerSecret = c.env.CRAWLER_SECRET;
+  const requestSecret = c.req.header('X-Crawler-Secret') || c.req.header('x-crawler-secret');
+  const isSecretValid = crawlerSecret && requestSecret === crawlerSecret;
+
+  if (!isAuthed && !isSecretValid) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const result = await syncMissingProfilesInD1(c.env.DB);
+  return c.json({
+    success: true,
+    message: `프로필 자동 동기화 완료: ${result.updatedCount}건 갱신 (확인: ${result.totalChecked}건)`,
+    result
+  });
+});
+
 // 4. Fetch Real External Platform Profile (CHZZK, SOOP, etc.)
 app.get('/api/v1/platform/profile', async (c) => {
   const platform = c.req.query('platform') || 'CHZZK';
@@ -636,10 +660,17 @@ app.all('*', async (c) => {
   }
 });
 
-// Cloudflare Workers Scheduled Cron Handler (매일 오전 09:00 KST 정기 웹서치 자동 1회 수행)
+// Cloudflare Workers Scheduled Cron Handler (매일 정기 웹서치 및 누락 프로필 자동 동기화 수행)
 export default {
   fetch: app.fetch,
   async scheduled(event: any, env: Bindings, ctx: any) {
+    if (env.DB) {
+      ctx.waitUntil(
+        syncMissingProfilesInD1(env.DB)
+          .then((res) => console.log('[Scheduled Cron] Profile sync success:', res.updatedCount))
+          .catch((err) => console.error('[Scheduled Cron] Profile sync error:', err))
+      );
+    }
     ctx.waitUntil(
       runDebutCrawlerProcess(env.DB || null, 'kimjichang1234@gmail.com')
         .then((res) => console.log('[Scheduled Cron] Debut search & email report success:', res.totalCrawledCount))

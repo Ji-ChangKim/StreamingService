@@ -155,6 +155,22 @@ export async function approveSubmissionInD1(
 
     const channelId = chRes?.id || now;
 
+    let avatarUrl = sub.avatar_url || '';
+    let description = sub.description || '';
+    let displayName = sub.display_name || '';
+
+    // 프로필 이미지가 누락된 경우 승인 시점에 외부 API로 실시간 자동 수집 보완
+    if (!avatarUrl && sub.channel_url) {
+      try {
+        const profile = await fetchPlatformProfile(sub.platform, sub.channel_url);
+        if (profile.success && profile.profileImageUrl) {
+          avatarUrl = profile.profileImageUrl;
+          description = profile.description || description;
+          displayName = profile.creatorName || displayName;
+        }
+      } catch {}
+    }
+
     // ② 메인 streamerChannel_info 등록 (깔끔한 슬러그로 저장)
     const infoRes: any = await db.prepare(`
       INSERT INTO streamerChannel_info (
@@ -164,7 +180,7 @@ export async function approveSubmissionInD1(
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       RETURNING id
     `).bind(
-      channelId, slug, sub.display_name, sub.avatar_url || '', sub.description || '',
+      channelId, slug, displayName, avatarUrl, description,
       sub.agency_name || '개인세', sub.debut_date, sub.debut_time, sub.timezone || 'Asia/Seoul',
       sub.start_at_utc, sub.country_code || 'KR', sub.x_url || ''
     ).first();
