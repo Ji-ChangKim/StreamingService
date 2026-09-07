@@ -53,6 +53,10 @@
 - `0020_add_august_final_debut_streamers.sql`: 2026년 8월 23일~30일 신규 버추얼 스트리머 데뷔 일정 18건 추가 등록 및 최신 프로필(치지직/SOOP/유튜브 고화질 아바타, 소개글, 스타버스 소속사 등) 반영
 - `0021_update_and_add_late_august_streamers.sql`: 2026년 8월 26일~31일 버추얼 스트리머 일정 패치 (토모♪ 8/26 13:00 일정 변경, 모냐?·잘님 등 신규 22건 추가 등록)
 - `0022_add_september_early_debut_streamers.sql`: 2026년 8월 31일 ~ 9월 6일 신규 버추얼 스트리머 34건 등록 (신규 32인 등록 + ガチ経営者VTuber組長, 月深夜冥夜 데뷔 시각 및 프로필 최신화)
+- `0023_add_september_mid_late_debut_streamers.sql`: 2026년 9월 4일 ~ 9월 28일 신규 버추얼 스트리머 34인 등록 및 緋桜なこ 데뷔 일시 UPDATE (2026-09-01 -> 2026-09-04 21:00 KST)
+- `0024_add_september_second_week_streamers.sql`: 2026년 9월 7일 ~ 9월 13일 주간 신규 버추얼 스트리머 7인 추가 등록 (天井沢依留, 밀루아, 유메사키 후카, ヤドカリのドリィ, 音蓮みずの, むみつや, 眠来らむね) 및 프로필 최신화
+- `0025_update_admin_credentials.sql`: 관리자 보안 계정 비밀번호 갱신(`admin1234@`, SHA-256 해시) 및 `vedebut.admin` / `vdebut.admin` 복수 계정 완벽 지원
+
 
 ---
 

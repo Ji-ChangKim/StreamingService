@@ -27,7 +27,7 @@ export async function verifyAdminLogin(
 
   try {
     const user: any = await db
-      .prepare('SELECT id, username, password_hash, salt, role FROM admin_users WHERE username = ? LIMIT 1')
+      .prepare('SELECT id, username, password_hash, salt, role FROM admin_users WHERE LOWER(username) = LOWER(?) LIMIT 1')
       .bind(username.trim())
       .first();
 

@@ -27,9 +27,9 @@ export function clearAdminAuth(): void {
 
 export function getAdminUser(): string {
   try {
-    return localStorage.getItem(ADMIN_USER_KEY) || 'Vdebut.admin';
+    return localStorage.getItem(ADMIN_USER_KEY) || '관리자';
   } catch {
-    return 'Vdebut.admin';
+    return '관리자';
   }
 }
 

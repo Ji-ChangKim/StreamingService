@@ -225,7 +225,7 @@ app.post('/api/v1/events', async (c) => {
 // 🛡️ ADMIN CMS ENDPOINTS (보안 인증 & 승인 관리)
 // ==========================================
 
-// 1. 관리자 로그인 (ID: Vdebut.admin / PW: Vdebut1#)
+// 1. 관리자 로그인 (PW: admin1234@ / ID: vedebut.admin 또는 vdebut.admin)
 app.post('/api/v1/admin/login', async (c) => {
   if (!c.env.DB) {
     return c.json({ success: false, error: 'Database binding unavailable' }, 500);

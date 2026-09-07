@@ -244,7 +244,7 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
                 type="text"
                 value={usernameInput}
                 onChange={(e) => setUsernameInput(e.target.value)}
-                placeholder="Vdebut.admin"
+                placeholder="관리자 ID를 입력하세요"
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 rounded-[10px] text-sm font-semibold text-slate-900 outline-none transition-all"
                 required
                 autoFocus
@@ -259,7 +259,7 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
                 type="password"
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
-                placeholder="••••••••"
+                placeholder="비밀번호를 입력하세요"
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 rounded-[10px] text-sm font-semibold text-slate-900 outline-none transition-all"
                 required
               />
