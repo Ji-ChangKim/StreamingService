@@ -1,4 +1,4 @@
-const { execSync } = require('child_process');
+const { execSync, spawnSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
@@ -10,38 +10,32 @@ const DEFAULT_HEADERS = {
   'Accept-Language': 'ko-KR,ko;q=0.9,ja-JP;q=0.8,en-US;q=0.7,en;q=0.6',
 };
 
-// Helper to execute SQL on remote D1 database via wrangler
-function runD1Sql(sql) {
-  const tempFile = path.join(__dirname, `temp_sync_${Date.now()}.sql`);
-  fs.writeFileSync(tempFile, sql, 'utf8');
-  try {
-    const stdout = execSync(`npx wrangler d1 execute vdebut-db --remote --file="${tempFile}"`, {
-      cwd: backendDir,
-      encoding: 'utf8',
-      maxBuffer: 10 * 1024 * 1024,
-    });
-    return stdout;
-  } catch (err) {
-    return err.stdout || err.message;
-  } finally {
-    if (fs.existsSync(tempFile)) {
-      fs.unlinkSync(tempFile);
-    }
-  }
+// Helper to execute SQL statement on remote D1 database via wrangler --command
+function runD1SqlStatement(sql) {
+  const oneLine = sql.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+  const res = spawnSync('cmd.exe', ['/c', 'npx', 'wrangler', 'd1', 'execute', 'vdebut-db', '--remote', `--command=${oneLine}`], {
+    cwd: backendDir,
+    encoding: 'utf8',
+    maxBuffer: 10 * 1024 * 1024,
+  });
+  if (res.error) return res.error.message;
+  return res.stdout || res.stderr || '';
 }
 
 function queryD1Sql(sql) {
   try {
-    const stdout = execSync(`npx wrangler d1 execute vdebut-db --remote --json --command="${sql.replace(/"/g, '\\"')}"`, {
+    const oneLine = sql.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+    const res = spawnSync('cmd.exe', ['/c', 'npx', 'wrangler', 'd1', 'execute', 'vdebut-db', '--remote', '--json', `--command=${oneLine}`], {
       cwd: backendDir,
       encoding: 'utf8',
       maxBuffer: 10 * 1024 * 1024,
     });
+    const stdout = res.stdout || '';
     const jsonStart = stdout.indexOf('[');
     if (jsonStart !== -1) {
       const parsed = JSON.parse(stdout.substring(jsonStart).trim());
       for (const item of parsed) {
-        if (item.results && item.results.length > 0 && (item.results[0].channel_url || item.results[0].platform || item.results[0].display_name || item.results[0].id)) {
+        if (item.results && item.results.length > 0) {
           return item.results;
         }
       }
@@ -228,7 +222,7 @@ async function fetchTwitch(channelUrl) {
 async function main() {
   console.log('🔄 1. Fetching streamers with missing or placeholder avatars from D1...');
   const list = queryD1Sql(
-    'SELECT i.id, i.display_name, i.profile_image_url, i.description, c.platform, c.channel_url FROM streamerChannel_info i INNER JOIN streamerChannel c ON i.channel_id = c.id WHERE i.profile_image_url IS NULL OR i.profile_image_url = "" OR i.profile_image_url LIKE "%unsplash%";'
+    'SELECT i.id, i.display_name, i.profile_image_url, i.description, c.platform, c.channel_url FROM streamerChannel_info i INNER JOIN streamerChannel c ON i.channel_id = c.id WHERE i.profile_image_url IS NULL OR LENGTH(i.profile_image_url) = 0;'
   );
 
   console.log(`📋 Found ${list.length} streamers needing profile sync.`);
@@ -267,9 +261,17 @@ async function main() {
 
   if (updateQueries.length > 0) {
     console.log(`🚀 Executing ${updateQueries.length} UPDATE queries to D1 DB...`);
-    const sqlContent = updateQueries.join('\n');
-    const res = runD1Sql(sqlContent);
-    console.log('✅ Remote D1 Profile Sync Result:', res);
+    let successCount = 0;
+    for (let j = 0; j < updateQueries.length; j++) {
+      const q = updateQueries[j];
+      const res = runD1SqlStatement(q);
+      if (res && res.includes('error')) {
+        console.error(`  ❌ Failed query [${j + 1}/${updateQueries.length}]:`, res);
+      } else {
+        successCount++;
+      }
+    }
+    console.log(`✅ Remote D1 Profile Sync Finished: ${successCount}/${updateQueries.length} updated successfully.`);
   } else {
     console.log('ℹ️ No profiles updated.');
   }
