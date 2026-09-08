@@ -29,6 +29,7 @@ import {
   getAdminUser,
   fetchAdminSubmissions,
   approveSubmission,
+  approveBatchSubmissions,
   rejectSubmission,
   deleteSubmission,
   fetchAdminStreamers,
@@ -65,6 +66,8 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
   const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
   const [actionSuccessMsg, setActionSuccessMsg] = useState<string | null>(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
+  const [selectedSubIds, setSelectedSubIds] = useState<number[]>([]);
+  const [isBatchApproving, setIsBatchApproving] = useState<boolean>(false);
 
   // SEO: 구글 및 검색 봇 크롤링/인덱싱 100% 차단 메타 태그 적용
   useEffect(() => {
@@ -84,6 +87,7 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
 
   const loadSubmissions = async (status = submissionFilter) => {
     setIsLoadingData(true);
+    setSelectedSubIds([]);
     const list = await fetchAdminSubmissions(status);
     setSubmissions(list);
 
@@ -157,6 +161,45 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
       loadSubmissions(submissionFilter);
     } else {
       alert(`승인 실패: ${res.error || '오류가 발생했습니다.'}`);
+    }
+  };
+
+  const pendingSubmissions = submissions.filter((s) => s.status === 'PENDING');
+  const isAllSelected =
+    pendingSubmissions.length > 0 &&
+    pendingSubmissions.every((s) => selectedSubIds.includes(s.id));
+
+  const handleToggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedSubIds([]);
+    } else {
+      setSelectedSubIds(pendingSubmissions.map((s) => s.id));
+    }
+  };
+
+  const handleToggleSelectOne = (id: number) => {
+    setSelectedSubIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const handleBatchApprove = async () => {
+    if (selectedSubIds.length === 0) return;
+    if (!confirm(`선택하신 ${selectedSubIds.length}건의 데뷔 일정을 일괄 승인하여 메인 캘린더에 즉시 발행하시겠습니까?`)) {
+      return;
+    }
+
+    setIsBatchApproving(true);
+    const res = await approveBatchSubmissions(selectedSubIds);
+    setIsBatchApproving(false);
+
+    if (res.success) {
+      setActionSuccessMsg(`✨ 총 ${res.approvedCount || selectedSubIds.length}건의 신청서가 캘린더에 성공적으로 일괄 승인되었습니다!`);
+      setTimeout(() => setActionSuccessMsg(null), 4000);
+      setSelectedSubIds([]);
+      loadSubmissions(submissionFilter);
+    } else {
+      alert(`일괄 승인 실패: ${res.error || res.message || '오류가 발생했습니다.'}`);
     }
   };
 
@@ -407,6 +450,19 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
                   {st === 'ALL' && '전체 보기'}
                 </button>
               ))}
+
+              {/* 전체 선택 체크박스 (대기열 항목이 있을 때만 표시) */}
+              {pendingSubmissions.length > 0 && (
+                <label className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-slate-100 rounded-[8px] border border-slate-200 text-xs font-extrabold text-slate-700 cursor-pointer transition-all select-none ml-1">
+                  <input
+                    type="checkbox"
+                    checked={isAllSelected}
+                    onChange={handleToggleSelectAll}
+                    className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                  />
+                  <span>전체 선택 ({pendingSubmissions.length})</span>
+                </label>
+              )}
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
@@ -453,6 +509,46 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
             </div>
           </div>
 
+          {/* Selected Batch Approval Action Bar */}
+          {selectedSubIds.length > 0 && (
+            <div className="p-3.5 bg-emerald-50 border border-emerald-300 rounded-[12px] flex flex-wrap items-center justify-between gap-3 shadow-xs animate-fadeIn">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs sm:text-sm font-extrabold text-emerald-950">
+                  선택된 대기 항목: <span className="text-emerald-700 font-black text-sm">{selectedSubIds.length}건</span>
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedSubIds([])}
+                  className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-[8px] border border-slate-200 transition-all cursor-pointer"
+                >
+                  선택 해제
+                </button>
+                <button
+                  type="button"
+                  onClick={handleBatchApprove}
+                  disabled={isBatchApproving}
+                  className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm rounded-[8px] transition-all shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  {isBatchApproving ? (
+                    <>
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      <span>일괄 승인 반영 중...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>{selectedSubIds.length}건 일괄 승인 반영</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Submissions List */}
           {isLoadingData ? (
             <div className="py-16 text-center text-slate-500 font-bold text-xs">
@@ -468,16 +564,33 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
             <div className="grid grid-cols-1 gap-3.5">
               {submissions.map((sub) => {
                 const isPending = sub.status === 'PENDING';
+                const isSelected = selectedSubIds.includes(sub.id);
 
                 return (
                   <div
                     key={sub.id}
                     className={`bg-white rounded-[14px] border p-4 sm:p-5 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-all ${
-                      isPending ? 'border-blue-200 hover:border-[#2563EB] bg-blue-50/20' : 'border-slate-200'
+                      isSelected
+                        ? 'border-emerald-500 bg-emerald-50/20 ring-2 ring-emerald-200'
+                        : isPending
+                        ? 'border-blue-200 hover:border-[#2563EB] bg-blue-50/20'
+                        : 'border-slate-200'
                     }`}
                   >
                     {/* Creator Info */}
                     <div className="flex items-start gap-3.5 min-w-0 flex-1">
+                      {/* Checkbox for PENDING */}
+                      {isPending && (
+                        <div className="flex items-center self-center shrink-0 pr-0.5">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => handleToggleSelectOne(sub.id)}
+                            className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                          />
+                        </div>
+                      )}
+
                       <AvatarImage
                         src={sub.avatarUrl || ''}
                         alt={sub.displayName}

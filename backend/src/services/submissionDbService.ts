@@ -277,7 +277,41 @@ export async function approveSubmissionInD1(
 }
 
 /**
+ * 3-2. 관리자 체크박스 기반 신청서 일괄 승인 (Batch Approval)
+ */
+export async function approveSubmissionsBatchInD1(
+  db: D1Database,
+  submissionIds: number[]
+): Promise<{ success: boolean; approvedCount: number; failedCount: number; errors: string[] }> {
+  if (!submissionIds || submissionIds.length === 0) {
+    return { success: true, approvedCount: 0, failedCount: 0, errors: [] };
+  }
+
+  let approvedCount = 0;
+  let failedCount = 0;
+  const errors: string[] = [];
+
+  for (const id of submissionIds) {
+    const res = await approveSubmissionInD1(db, id);
+    if (res.success) {
+      approvedCount++;
+    } else {
+      failedCount++;
+      errors.push(`ID ${id}: ${res.error || '승인 실패'}`);
+    }
+  }
+
+  return {
+    success: approvedCount > 0 || failedCount === 0,
+    approvedCount,
+    failedCount,
+    errors,
+  };
+}
+
+/**
  * 4. 관리자 신청서 반려
+
  */
 export async function rejectSubmissionInD1(
   db: D1Database,

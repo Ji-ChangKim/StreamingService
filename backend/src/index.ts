@@ -14,6 +14,7 @@ import {
   createSubmissionsBatchToD1,
   fetchSubmissionsFromD1,
   approveSubmissionInD1,
+  approveSubmissionsBatchInD1,
   rejectSubmissionInD1,
   deleteSubmissionFromD1,
   fetchAllActiveStreamersForAdmin,
@@ -321,6 +322,38 @@ app.post('/api/v1/admin/submissions/:id/approve', async (c) => {
     eventId: result.eventId,
     slug: result.slug
   });
+});
+
+// 3-2. 관리자 체크박스 기반 신청서 일괄 승인 (Batch Approve)
+app.post('/api/v1/admin/submissions/batch-approve', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const body = await c.req.json().catch(() => ({}));
+  const ids = Array.isArray(body.ids)
+    ? body.ids.map((id: any) => parseInt(id, 10)).filter((id: number) => !isNaN(id))
+    : [];
+
+  if (ids.length === 0) {
+    return c.json({ success: false, error: '승인할 신청서 ID가 없습니다.' }, 400);
+  }
+
+  const result = await approveSubmissionsBatchInD1(c.env.DB, ids);
+  return c.json({
+    success: result.success,
+    approvedCount: result.approvedCount,
+    failedCount: result.failedCount,
+    errors: result.errors,
+    message: result.approvedCount > 0
+      ? `총 ${result.approvedCount}건의 신청서가 캘린더에 성공적으로 일괄 승인되었습니다.`
+      : '일괄 승인에 실패했습니다.',
+  }, result.success ? 200 : 500);
 });
 
 // 4. 관리자 반려 처리

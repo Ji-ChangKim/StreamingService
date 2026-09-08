@@ -206,3 +206,28 @@ export async function uploadBatchSubmissions(
   }
 }
 
+/**
+ * 9. 체크박스 선택 신청서 일괄 승인 (Batch Approve)
+ */
+export async function approveBatchSubmissions(
+  ids: number[]
+): Promise<{ success: boolean; approvedCount?: number; failedCount?: number; message?: string; error?: string }> {
+  const token = getAdminToken();
+  if (!token) return { success: false, error: '인증 토큰이 없습니다. 다시 로그인해주세요.' };
+
+  try {
+    const res = await fetch(`${getApiHost()}/api/v1/admin/submissions/batch-approve`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ ids }),
+    });
+    return await res.json();
+  } catch (err: any) {
+    return { success: false, error: err?.message || '일괄 승인 통신 실패' };
+  }
+}
+
+
