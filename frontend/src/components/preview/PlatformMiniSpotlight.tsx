@@ -147,10 +147,7 @@ export function PlatformMiniSpotlight({
   return (
     <section
       aria-label="Platform Debut Showcase"
-      className="w-full mb-8 relative select-none rounded-[28px] border border-slate-200/80 shadow-lg overflow-hidden bg-cover bg-bottom bg-no-repeat pt-6 pb-8 sm:pt-7 sm:pb-10"
-      style={{
-        backgroundImage: "url('/images/spotlight_stage_bg.png')",
-      }}
+      className="w-full relative select-none pt-2 pb-6 sm:pb-8"
     >
       {/* 1. 상단 플랫폼 탭 바 (글래스모피즘 & 완전한 중앙 정렬) */}
       <div className="flex items-center justify-center relative mb-6">

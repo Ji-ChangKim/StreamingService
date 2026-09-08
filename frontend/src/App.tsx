@@ -226,6 +226,43 @@ export function App() {
         onOpenSubmitModal={() => handleOpenSubmitModal()}
       />
 
+      {/* 1-1. DEV 모드 전용: 브라우저 좌우 100% Full-Bleed 무대 스포트라이트 섹션 */}
+      {isDevMode && !isCreatorPage && (currentPath === '/' || isUpdatePath) && (
+        <section
+          aria-label="Dev Stage Showcase"
+          className="w-full relative bg-[url('/images/spotlight_stage_bg.png')] bg-cover bg-center sm:bg-bottom bg-no-repeat border-b border-slate-200/80 shadow-md"
+        >
+          {/* DEV LAB 알림 바 */}
+          <div className="bg-amber-500/15 backdrop-blur-xs border-b border-amber-300/60 px-4 py-2 text-center text-xs font-bold text-amber-950 flex items-center justify-center gap-2">
+            <span className="bg-amber-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-2xs">
+              DEV LAB
+            </span>
+            <span>
+              dev.vdebut.live 프리뷰 모드 (Live DB 실시간 연동 • SEO/크롤링 차단됨)
+            </span>
+          </div>
+
+          <div className="max-w-[1440px] w-full mx-auto px-3 sm:px-6 pt-4 pb-6 sm:pb-8">
+            {/* Hero Section (Desktop only) */}
+            <div className="hidden sm:block">
+              <HeroHeader
+                allEvents={events}
+                selectedTimezone={selectedTimezone}
+                currentLang={currentLang}
+              />
+            </div>
+
+            {/* 신규 플랫폼별 컴팩트 스포트라이트 (무대 배경 일체형) */}
+            <PlatformMiniSpotlight
+              allEvents={events}
+              selectedTimezone={selectedTimezone}
+              onDownloadICS={handleDownloadICS}
+              onNavigate={handleNavigate}
+            />
+          </div>
+        </section>
+      )}
+
       {/* 2. Main Content Container */}
       <main className="flex-grow max-w-[1280px] w-full mx-auto px-0 sm:px-6">
         {isCreatorPage && creatorSlug ? (
@@ -267,60 +304,45 @@ export function App() {
           />
         ) : (
           <>
-            {/* DEV LAB 알림 바 (dev.vdebut.live or /updatepage) */}
-            {isDevMode && (
-              <div className="bg-gradient-to-r from-amber-500/15 via-blue-500/10 to-indigo-500/15 border-b border-amber-300/60 px-4 py-2 text-center text-xs font-bold text-amber-950 flex items-center justify-center gap-2 mb-3">
-                <span className="bg-amber-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-2xs">
-                  DEV LAB
-                </span>
-                <span>
-                  dev.vdebut.live 프리뷰 모드 (Live DB 실시간 연동 • SEO/크롤링 차단됨)
-                </span>
-              </div>
-            )}
+            {/* 운영 모드(Non-Dev) 메인 상단 헤더 & 배너 */}
+            {!(isDevMode && (currentPath === '/' || isUpdatePath)) && (
+              <>
+                {/* Hero Section (Desktop only) */}
+                <div className="hidden sm:block">
+                  <HeroHeader
+                    allEvents={events}
+                    selectedTimezone={selectedTimezone}
+                    currentLang={currentLang}
+                  />
+                </div>
 
-            {/* Hero Section (Desktop only) */}
-            <div className="hidden sm:block">
-              <HeroHeader
-                allEvents={events}
-                selectedTimezone={selectedTimezone}
-                currentLang={currentLang}
-              />
-            </div>
-
-            {/* 개발 프리뷰 모드에서는 신규 플랫폼별 컴팩트 스포트라이트, 운영에서는 기존 배너 유지 */}
-            {isDevMode ? (
-              <PlatformMiniSpotlight
-                allEvents={events}
-                selectedTimezone={selectedTimezone}
-                onDownloadICS={handleDownloadICS}
-                onNavigate={handleNavigate}
-              />
-            ) : (
-              <TodayDebutsPromotionBanner
-                allEvents={events}
-                selectedTimezone={selectedTimezone}
-                currentLang={currentLang}
-                onDownloadICS={handleDownloadICS}
-                onNavigate={handleNavigate}
-              />
+                <TodayDebutsPromotionBanner
+                  allEvents={events}
+                  selectedTimezone={selectedTimezone}
+                  currentLang={currentLang}
+                  onDownloadICS={handleDownloadICS}
+                  onNavigate={handleNavigate}
+                />
+              </>
             )}
 
             {/* Main Monthly / Mobile Calendar Grid Section */}
-            <MonthlyCalendarGrid
-              events={filteredEvents}
-              selectedTimezone={selectedTimezone}
-              setSelectedTimezone={setSelectedTimezone}
-              selectedPlatform={selectedPlatform}
-              setSelectedPlatform={setSelectedPlatform}
-              selectedCountry={selectedCountry}
-              setSelectedCountry={setSelectedCountry}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              onDownloadICS={handleDownloadICS}
-              onOpenSubmitModal={handleOpenSubmitModal}
-              onEditEvent={handleEditEvent}
-            />
+            <div className={isDevMode && (currentPath === '/' || isUpdatePath) ? 'mt-6 sm:mt-8' : ''}>
+              <MonthlyCalendarGrid
+                events={filteredEvents}
+                selectedTimezone={selectedTimezone}
+                setSelectedTimezone={setSelectedTimezone}
+                selectedPlatform={selectedPlatform}
+                setSelectedPlatform={setSelectedPlatform}
+                selectedCountry={selectedCountry}
+                setSelectedCountry={setSelectedCountry}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                onDownloadICS={handleDownloadICS}
+                onOpenSubmitModal={handleOpenSubmitModal}
+                onEditEvent={handleEditEvent}
+              />
+            </div>
 
             {/* Creator Callout Banner (Desktop only) */}
             <div className="hidden sm:block">
