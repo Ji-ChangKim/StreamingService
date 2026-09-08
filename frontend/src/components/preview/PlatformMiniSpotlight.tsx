@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { ExternalLink, Bell } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { DebutEvent } from '../../types';
 import {
   PlatformKey,
@@ -20,8 +20,6 @@ interface PlatformTabConfig {
   id: PlatformKey;
   label: string;
   officialLogo: string;
-  accentColor: string;
-  borderHoverColor: string;
 }
 
 const PLATFORMS: PlatformTabConfig[] = [
@@ -29,46 +27,60 @@ const PLATFORMS: PlatformTabConfig[] = [
     id: 'SOOP',
     label: 'SOOP',
     officialLogo: '/icons/soop/soop_symbol_blue.svg',
-    accentColor: '#1E40AF',
-    borderHoverColor: 'hover:border-blue-400',
   },
   {
     id: 'CHZZK',
     label: '치지직',
     officialLogo: '/icons/chzzk_icon.png',
-    accentColor: '#00FFA3',
-    borderHoverColor: 'hover:border-emerald-400',
   },
   {
     id: 'YOUTUBE',
     label: '유튜브',
     officialLogo: '/icons/youtube_icon.png',
-    accentColor: '#EF4444',
-    borderHoverColor: 'hover:border-red-400',
   },
   {
     id: 'TWITCH',
     label: '트위치',
     officialLogo: '/icons/twitch_icon.svg',
-    accentColor: '#9333EA',
-    borderHoverColor: 'hover:border-purple-400',
   },
 ];
+
+/**
+ * 데뷔 날짜/시간을 숲 레퍼런스 형식으로 포맷팅: "09/11(금) 오후 7시" (단일 기능 함수 - SRP)
+ */
+function formatSoopDateStyle(dateIso: string, timezone: string = 'Asia/Seoul'): string {
+  try {
+    const d = new Date(dateIso);
+    const month = new Intl.DateTimeFormat('ko-KR', { timeZone: timezone, month: '2-digit' }).format(d);
+    const day = new Intl.DateTimeFormat('ko-KR', { timeZone: timezone, day: '2-digit' }).format(d);
+    const weekday = new Intl.DateTimeFormat('ko-KR', { timeZone: timezone, weekday: 'short' }).format(d);
+    const time = new Intl.DateTimeFormat('ko-KR', {
+      timeZone: timezone,
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    }).format(d);
+
+    return `${month}/${day}(${weekday}) ${time}`;
+  } catch {
+    return dateIso.slice(5, 16);
+  }
+}
 
 export function PlatformMiniSpotlight({
   allEvents,
   selectedTimezone,
-  onDownloadICS,
   onNavigate,
 }: PlatformMiniSpotlightProps) {
-  // 1. 디폴트 탭: 라이브 방송이 있는 플랫폼 우선, 없으면 SOOP
   const [selectedPlatform, setSelectedPlatform] = useState<PlatformKey>('SOOP');
+  const [activeIndex, setActiveIndex] = useState<number>(0);
 
-  // 각 플랫폼별 요약 데이터 계산 (단일 책임)
+  // 플랫폼별 요약 데이터 계산
   const summaries = useMemo(() => {
     const map = new Map<PlatformKey, ReturnType<typeof getPlatformSpotlightSummary>>();
     PLATFORMS.forEach((p) => {
-      map.set(p.id, getPlatformSpotlightSummary(allEvents, p.id, selectedTimezone, 5));
+      // 숲 스타일 캐러셀을 위해 최대 10명까지 확보
+      map.set(p.id, getPlatformSpotlightSummary(allEvents, p.id, selectedTimezone, 10));
     });
     return map;
   }, [allEvents, selectedTimezone]);
@@ -80,16 +92,45 @@ export function PlatformMiniSpotlight({
     nextDateLabel: '일정 준비 중',
   };
 
+  const items = currentSummary.items;
+
+  // 탭 변경 시 인덱스 리셋
+  const handleTabChange = (platform: PlatformKey) => {
+    setSelectedPlatform(platform);
+    setActiveIndex(0);
+  };
+
+  // 이전/다음 슬라이드
+  const handlePrev = () => {
+    if (items.length <= 1) return;
+    setActiveIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    if (items.length <= 1) return;
+    setActiveIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1));
+  };
+
+  // 좌-중-우 3장의 카드 인덱스 계산
+  const prevIndex = items.length > 0 ? (activeIndex - 1 + items.length) % items.length : -1;
+  const nextIndex = items.length > 0 ? (activeIndex + 1) % items.length : -1;
+
+  const currentItem = items[activeIndex];
+  const prevItem = items.length > 1 ? items[prevIndex] : null;
+  const nextItem = items.length > 2 ? items[nextIndex] : null;
+
   return (
     <section
-      aria-label="Platform Mini Spotlight"
-      className="w-full mb-6 bg-white/90 backdrop-blur-sm rounded-[16px] border border-[#E2E8F0] shadow-xs p-3.5 sm:p-4.5"
+      aria-label="SOOP Style Virtual Showcase"
+      className="w-full mb-6 bg-[#0B0F19] text-white rounded-[20px] p-4 sm:p-6 shadow-xl border border-slate-800 relative overflow-hidden select-none"
     >
-      {/* 1. 상단 플랫폼 4대 탭 바 & 헤더 요약 라벨 */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 pb-3 border-b border-[#E2E8F0]">
-        
-        {/* 플랫폼 선택 탭 */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar w-full sm:w-auto py-0.5">
+      {/* 1. 배경 은은한 네온 그리드 & 앰비언트 글로우 */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+
+      {/* 2. 상단 플랫폼 탭 바 */}
+      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 pb-4 mb-3 border-b border-slate-800/80">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto justify-center sm:justify-start">
           {PLATFORMS.map((p) => {
             const isSelected = selectedPlatform === p.id;
             const pSummary = summaries.get(p.id);
@@ -99,36 +140,31 @@ export function PlatformMiniSpotlight({
             return (
               <button
                 key={p.id}
-                onClick={() => setSelectedPlatform(p.id)}
-                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-[9px] text-xs font-black transition-all cursor-pointer select-none relative ${
+                onClick={() => handleTabChange(p.id)}
+                className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-[#0F172A] text-white shadow-xs'
-                    : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0] hover:text-[#0F172A]'
+                    ? 'bg-white text-slate-900 shadow-md scale-102'
+                    : 'bg-slate-900/90 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800'
                 }`}
-                title={`${p.label} 데뷔 스포트라이트`}
               >
-                {/* 공식 로고 (무가공 원칙 준수) */}
                 <img
                   src={p.officialLogo}
                   alt={p.label}
                   className="w-4 h-4 object-contain shrink-0"
                 />
                 <span>{p.label}</span>
-
-                {/* 총 인원 카운트 */}
                 <span
                   className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
-                    isSelected ? 'bg-white/20 text-white' : 'bg-[#CBD5E1] text-[#334155]'
+                    isSelected ? 'bg-slate-900 text-white' : 'bg-slate-800 text-slate-400'
                   }`}
                 >
                   {count}
                 </span>
 
-                {/* 🔴 라이브 중일 때 빨간 펄스 뱃지 */}
                 {hasLive && (
                   <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
                   </span>
                 )}
               </button>
@@ -136,30 +172,85 @@ export function PlatformMiniSpotlight({
           })}
         </div>
 
-        {/* 상태 요약 라벨 (다음 데뷔 예고 or 라이브 진행 중) */}
-        <div className="text-xs font-bold text-[#64748B] flex items-center gap-1.5 self-end sm:self-center">
-          <span className="px-2 py-0.5 rounded-[6px] bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A]">
-            {currentSummary.nextDateLabel}
-          </span>
-        </div>
+        {/* 인디케이터 (현재 / 전체) */}
+        {items.length > 0 && (
+          <div className="text-xs font-mono font-bold text-slate-400 flex items-center gap-2">
+            <span>{activeIndex + 1} / {items.length}</span>
+          </div>
+        )}
       </div>
 
-      {/* 2. 컴팩트 미니 카드 리스트 (가로 스크롤 / 그리드) */}
-      <div className="pt-3">
-        {currentSummary.items.length === 0 ? (
-          <div className="py-6 text-center text-xs font-bold text-[#64748B] bg-[#F8FAFC] rounded-[10px] border border-dashed border-[#CBD5E1]">
+      {/* 3. 숲 웰컴 버추얼 3단 중앙 포커스 캐러셀 */}
+      <div className="relative z-10 py-2">
+        {items.length === 0 ? (
+          <div className="py-12 text-center text-xs font-bold text-slate-500 bg-slate-900/40 rounded-xl border border-dashed border-slate-800">
             현재 등록된 {selectedPlatform} 데뷔 일정이 없습니다.
           </div>
         ) : (
-          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-1">
-            {currentSummary.items.map((item) => (
-              <MiniSpotlightCard
-                key={item.event.id}
-                item={item}
-                onDownloadICS={onDownloadICS}
-                onNavigate={onNavigate}
-              />
-            ))}
+          <div className="relative flex items-center justify-center min-h-[260px] sm:min-h-[290px]">
+            
+            {/* 이전 버튼 (<) */}
+            {items.length > 1 && (
+              <button
+                onClick={handlePrev}
+                className="absolute left-2 sm:left-6 z-30 p-2.5 rounded-full bg-slate-900/80 hover:bg-white hover:text-slate-900 text-slate-300 border border-slate-700 shadow-lg transition-all cursor-pointer backdrop-blur-md"
+                aria-label="이전 버튜버"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+            )}
+
+            {/* 카드 덱: 좌측 카드 / 중앙 메인 카드 / 우측 카드 */}
+            <div className="flex items-center justify-center gap-3 sm:gap-6 w-full max-w-4xl px-2">
+              
+              {/* [좌측 카드] (있을 때만 노출, 약간 축소 & 딤드) */}
+              {prevItem && (
+                <div
+                  onClick={handlePrev}
+                  className="hidden md:flex flex-col items-center justify-between w-[220px] h-[245px] bg-[#161F30]/70 rounded-[20px] border border-slate-800/80 p-4 opacity-50 scale-90 cursor-pointer hover:opacity-75 transition-all select-none"
+                >
+                  <SoopCardContent item={prevItem} timezone={selectedTimezone} isCenter={false} />
+                </div>
+              )}
+
+              {/* [중앙 메인 카드] (숲 캡처의 1:1 레이아웃 구현) */}
+              {currentItem && (
+                <div
+                  className="flex flex-col items-center justify-between w-[280px] sm:w-[320px] h-[270px] sm:h-[295px] bg-[#131B2B] rounded-[24px] border-2 border-blue-400/50 p-5 shadow-2xl transition-all relative group"
+                  style={{
+                    boxShadow: '0 0 30px -5px rgba(59, 130, 246, 0.25), 0 20px 25px -5px rgba(0, 0, 0, 0.5)',
+                  }}
+                >
+                  <SoopCardContent
+                    item={currentItem}
+                    timezone={selectedTimezone}
+                    isCenter={true}
+                    onNavigate={onNavigate}
+                  />
+                </div>
+              )}
+
+              {/* [우측 카드] (있을 때만 노출, 약간 축소 & 딤드) */}
+              {nextItem && (
+                <div
+                  onClick={handleNext}
+                  className="hidden md:flex flex-col items-center justify-between w-[220px] h-[245px] bg-[#161F30]/70 rounded-[20px] border border-slate-800/80 p-4 opacity-50 scale-90 cursor-pointer hover:opacity-75 transition-all select-none"
+                >
+                  <SoopCardContent item={nextItem} timezone={selectedTimezone} isCenter={false} />
+                </div>
+              )}
+            </div>
+
+            {/* 다음 버튼 (>) */}
+            {items.length > 1 && (
+              <button
+                onClick={handleNext}
+                className="absolute right-2 sm:right-6 z-30 p-2.5 rounded-full bg-slate-900/80 hover:bg-white hover:text-slate-900 text-slate-300 border border-slate-700 shadow-lg transition-all cursor-pointer backdrop-blur-md"
+                aria-label="다음 버튜버"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -168,98 +259,105 @@ export function PlatformMiniSpotlight({
 }
 
 /**
- * 가로 230px × 세로 약 84px의 컴팩트 미니 글래스 카드 (단일 책임 컴포넌트)
+ * 숲 레퍼런스 100% 싱크로율 세로형 카드 콘텐츠 (단일 책임 컴포넌트)
+ * 레이아웃: [상단 대형 아바타] ➔ [중앙 이름] ➔ [하단 [방송예정] [시간] 캡슐]
  */
-function MiniSpotlightCard({
+function SoopCardContent({
   item,
-  onDownloadICS,
+  timezone,
+  isCenter,
   onNavigate,
 }: {
   item: SpotlightItem;
-  onDownloadICS: (event: DebutEvent) => void;
+  timezone: string;
+  isCenter: boolean;
   onNavigate?: (path: string) => void;
 }) {
-  const { event, statusType, statusBadge, badgeColorClass, channelUrl } = item;
+  const { event, statusType, channelUrl } = item;
   const isLive = statusType === 'LIVE';
   const countryBadge = getCountryBadge(event.creator.countryCode);
+  const formattedDate = formatSoopDateStyle(event.startAtUtc, timezone);
   const slug = (event.creator as any)?.slug || '';
 
   return (
-    <div
-      className={`shrink-0 w-[230px] sm:w-[245px] h-[86px] bg-white rounded-[12px] border p-2.5 shadow-2xs flex items-center justify-between gap-2.5 transition-all hover:shadow-xs hover:-translate-y-0.5 group relative ${
-        isLive
-          ? 'border-red-300 bg-gradient-to-r from-red-50/40 to-white ring-1 ring-red-200'
-          : 'border-[#CBD5E1] hover:border-[#2563EB]'
-      }`}
-    >
-      {/* 1. 좌측 44px 원형 아바타 (플랫폼 네온 테두리) */}
-      <div className="relative shrink-0">
-        <AvatarImage
-          src={event.creator.avatarUrl || ''}
-          alt={event.creator.displayName}
-          className="w-11 h-11 rounded-full object-cover border-2 border-white shadow-xs"
-        />
-        {/* 국기 미니 뱃지 */}
+    <>
+      {/* 1. 상단 큼직한 캐릭터 아바타 비주얼 */}
+      <div className="relative pt-1">
+        <div
+          onClick={() => isCenter && slug && onNavigate && onNavigate(`/creator/${slug}`)}
+          className={`relative rounded-full overflow-hidden border-2 transition-transform ${
+            isCenter
+              ? 'w-24 h-24 sm:w-28 sm:h-28 border-white/80 shadow-md cursor-pointer group-hover:scale-105'
+              : 'w-20 h-20 border-slate-600'
+          }`}
+        >
+          <AvatarImage
+            src={event.creator.avatarUrl || ''}
+            alt={event.creator.displayName}
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        {/* 국기 뱃지 */}
         <span
-          className="absolute -bottom-1 -right-1 text-[11px] leading-none bg-white rounded-full p-0.5 shadow-2xs"
+          className="absolute bottom-0 right-1 text-[11px] leading-none bg-slate-900/90 rounded-full p-1 border border-slate-700"
           title={`국가: ${countryBadge.label}`}
         >
           {countryBadge.flag}
         </span>
       </div>
 
-      {/* 2. 중앙 정보 영역 (이름, 소속, 상태 뱃지) */}
-      <div className="min-w-0 flex-1 space-y-0.5">
-        <div className="flex items-center gap-1">
-          <h4
-            onClick={() => slug && onNavigate && onNavigate(`/creator/${slug}`)}
-            className="text-xs font-black text-[#0F172A] truncate group-hover:text-[#2563EB] transition-colors cursor-pointer"
-            title={event.creator.displayName}
-          >
-            {event.creator.displayName}
-          </h4>
-        </div>
-
-        <p className="text-[10px] text-[#64748B] font-medium truncate">
-          {event.creator.agency || '개인세'}
-        </p>
-
-        {/* 뱃지: 라이브 또는 오늘/내일 데뷔 시간 */}
-        <div className="pt-0.5">
-          <span
-            className={`inline-flex items-center text-[10px] font-black px-1.5 py-0.5 rounded-[4px] leading-tight ${badgeColorClass}`}
-          >
-            {statusBadge}
-          </span>
-        </div>
+      {/* 2. 중앙 버튜버 이름 (가운데 정렬, 굵직한 타이포) */}
+      <div className="w-full text-center px-1">
+        <h3
+          onClick={() => isCenter && slug && onNavigate && onNavigate(`/creator/${slug}`)}
+          className={`font-black text-white truncate cursor-pointer hover:underline ${
+            isCenter ? 'text-base sm:text-lg' : 'text-sm'
+          }`}
+          title={event.creator.displayName}
+        >
+          {event.creator.displayName}
+        </h3>
+        {isCenter && (
+          <p className="text-[11px] text-slate-400 font-medium truncate mt-0.5">
+            {event.creator.agency || '개인세'}
+          </p>
+        )}
       </div>
 
-      {/* 3. 우측 액션 버튼 (생방송 바로가기 or 캘린더 알림) */}
-      <div className="shrink-0 flex flex-col items-center justify-center gap-1 border-l border-[#F1F5F9] pl-2">
+      {/* 3. 하단 숲 100% 싱크로율 캡슐 일정 바 */}
+      {/* 숲 캡처: [방송 예정] (녹색 알약 뱃지) + 09/11(금) 오후 7시 (날짜시간) */}
+      <div className="w-full flex items-center justify-center px-1">
         <a
           href={channelUrl}
           target="_blank"
           rel="noreferrer"
-          className={`p-1.5 rounded-[6px] transition-all flex items-center justify-center ${
+          className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full border transition-all cursor-pointer select-none max-w-full overflow-hidden ${
             isLive
-              ? 'bg-red-500 text-white hover:bg-red-600 shadow-2xs'
-              : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#2563EB] hover:text-white'
+              ? 'bg-red-950/80 border-red-500/60 text-red-200 hover:bg-red-900'
+              : 'bg-[#1E293B] border-slate-700 hover:border-slate-500 text-slate-200'
           }`}
-          title={isLive ? '생방송 바로가기' : '방송국 채널 방문'}
+          title={isLive ? '생방송 바로가기' : '방송국 채널 바로가기'}
         >
-          <ExternalLink className="w-3.5 h-3.5" />
-        </a>
-
-        {!isLive && (
-          <button
-            onClick={() => onDownloadICS(event)}
-            className="p-1.5 rounded-[6px] bg-[#F1F5F9] text-[#64748B] hover:bg-emerald-500 hover:text-white transition-all cursor-pointer"
-            title="캘린더 알림(.ics) 다운로드"
+          {/* 상태 알약 뱃지 (줄바꿈 원천 차단) */}
+          <span
+            className={`text-[10px] font-black px-2 py-0.5 rounded-full whitespace-nowrap shrink-0 ${
+              isLive
+                ? 'bg-red-500 text-white animate-pulse'
+                : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+            }`}
           >
-            <Bell className="w-3.5 h-3.5" />
-          </button>
-        )}
+            {isLive ? 'LIVE' : '방송 예정'}
+          </span>
+
+          {/* 일시 텍스트 (줄바꿈 원천 차단) */}
+          <span className="text-[11px] sm:text-xs font-bold text-slate-200 whitespace-nowrap truncate">
+            {isLive ? '생방송 진행 중' : formattedDate}
+          </span>
+
+          <ExternalLink className="w-3 h-3 text-slate-400 ml-0.5 shrink-0" />
+        </a>
       </div>
-    </div>
+    </>
   );
 }
