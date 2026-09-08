@@ -46,22 +46,39 @@ const PLATFORMS: PlatformTabConfig[] = [
 ];
 
 /**
- * 데뷔 날짜/시간을 숲 레퍼런스 형식으로 포맷팅: "09/11(금) 오후 7시" (단일 기능 함수 - SRP)
+ * 데뷔 날짜/시간을 사용자 요청 포맷으로 정밀 포맷팅 (단일 기능 함수 - SRP)
+ * 포맷: "MM월 DD일 (요일) 오후 00:00" (예: "09월 09일 (수) 오후 12:00")
  */
-function formatSoopDateStyle(dateIso: string, timezone: string = 'Asia/Seoul'): string {
+function formatDebutDateStyle(dateIso: string, timezone: string = 'Asia/Seoul'): string {
   try {
     const d = new Date(dateIso);
-    const month = new Intl.DateTimeFormat('ko-KR', { timeZone: timezone, month: '2-digit' }).format(d);
-    const day = new Intl.DateTimeFormat('ko-KR', { timeZone: timezone, day: '2-digit' }).format(d);
-    const weekday = new Intl.DateTimeFormat('ko-KR', { timeZone: timezone, weekday: 'short' }).format(d);
-    const time = new Intl.DateTimeFormat('ko-KR', {
+    const parts = new Intl.DateTimeFormat('ko-KR', {
       timeZone: timezone,
-      hour: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      weekday: 'short',
+      hour: '2-digit',
       minute: '2-digit',
       hour12: true,
-    }).format(d);
+    }).formatToParts(d);
 
-    return `${month}/${day}(${weekday}) ${time}`;
+    let month = '';
+    let day = '';
+    let weekday = '';
+    let dayPeriod = '';
+    let hour = '';
+    let minute = '';
+
+    parts.forEach((p) => {
+      if (p.type === 'month') month = p.value.padStart(2, '0');
+      if (p.type === 'day') day = p.value.padStart(2, '0');
+      if (p.type === 'weekday') weekday = p.value;
+      if (p.type === 'dayPeriod') dayPeriod = p.value; // '오전' or '오후'
+      if (p.type === 'hour') hour = p.value.padStart(2, '0');
+      if (p.type === 'minute') minute = p.value.padStart(2, '0');
+    });
+
+    return `${month}월 ${day}일 (${weekday}) ${dayPeriod} ${hour}:${minute}`;
   } catch {
     return dateIso.slice(5, 16);
   }
@@ -99,7 +116,7 @@ export function PlatformMiniSpotlight({
     setActiveIndex(0);
   };
 
-  // 이전/다음 슬라이드
+  // 슬라이드 이동 함수들 (SRP)
   const handlePrev = () => {
     if (items.length <= 1) return;
     setActiveIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1));
@@ -110,20 +127,29 @@ export function PlatformMiniSpotlight({
     setActiveIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1));
   };
 
-  // 좌-중-우 3장의 카드 인덱스 계산
-  const prevIndex = items.length > 0 ? (activeIndex - 1 + items.length) % items.length : -1;
-  const nextIndex = items.length > 0 ? (activeIndex + 1) % items.length : -1;
+  const handleFarPrev = () => {
+    if (items.length <= 1) return;
+    setActiveIndex((prev) => (prev - 2 + items.length) % items.length);
+  };
 
-  const currentItem = items[activeIndex];
-  const prevItem = items.length > 1 ? items[prevIndex] : null;
-  const nextItem = items.length > 2 ? items[nextIndex] : null;
+  const handleFarNext = () => {
+    if (items.length <= 1) return;
+    setActiveIndex((prev) => (prev + 2) % items.length);
+  };
+
+  // 5단 피라미드 덱 인덱스 계산: [1(소) - 2(중) - 3(대) - 4(중) - 5(소)]
+  const currentItem = items.length > 0 ? items[activeIndex] : null;
+  const prevItem = items.length > 1 ? items[(activeIndex - 1 + items.length) % items.length] : null;
+  const nextItem = items.length > 2 ? items[(activeIndex + 1) % items.length] : null;
+  const farLeftItem = items.length > 3 ? items[(activeIndex - 2 + items.length) % items.length] : null;
+  const farRightItem = items.length > 4 ? items[(activeIndex + 2) % items.length] : null;
 
   return (
     <section
       aria-label="Platform Debut Showcase"
       className="w-full mb-6 bg-white/70 backdrop-blur-sm rounded-[24px] border border-[#CBD5E1] p-4 sm:p-6 shadow-xs relative select-none"
     >
-      {/* 1. 상단 플랫폼 탭 바 (완전한 중앙 정렬, 지저분한 밑줄 제거) */}
+      {/* 1. 상단 플랫폼 탭 바 (완전한 중앙 정렬, 우측 1/9 인디케이터 삭제 완료) */}
       <div className="flex items-center justify-center relative mb-5">
         <div className="inline-flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
           {PLATFORMS.map((p) => {
@@ -166,81 +192,110 @@ export function PlatformMiniSpotlight({
             );
           })}
         </div>
-
-        {/* 우측 상단 카운터 인디케이터 (중앙정렬 방해하지 않도록 absolute 배치) */}
-        {items.length > 0 && (
-          <div className="hidden sm:flex absolute right-2 text-xs font-mono font-bold text-[#64748B] items-center gap-2">
-            <span>{activeIndex + 1} / {items.length}</span>
-          </div>
-        )}
       </div>
 
-      {/* 2. 숲 웰컴 버추얼 3단 중앙 포커스 캐러셀 (라이트 배경 위 고품격 무대) */}
+      {/* 2. 5단 피라미드 커버플로우 덱 [1(소) - 2(중) - 3(대) - 4(중) - 5(소)] */}
       <div className="py-2">
         {items.length === 0 ? (
           <div className="py-12 text-center text-xs font-bold text-[#64748B] bg-[#F8FAFC] rounded-2xl border border-dashed border-[#CBD5E1]">
             현재 등록된 {selectedPlatform} 데뷔 일정이 없습니다.
           </div>
         ) : (
-          <div className="relative flex items-center justify-center min-h-[260px] sm:min-h-[290px]">
+          <div className="flex items-center justify-center gap-1 sm:gap-3 w-full max-w-7xl mx-auto min-h-[290px] sm:min-h-[320px]">
             
-            {/* 이전 버튼 (<) */}
+            {/* 좌측 이전 버튼 (<) - 카드 가림 없이 독립 배치 */}
             {items.length > 1 && (
               <button
                 onClick={handlePrev}
-                className="absolute left-2 sm:left-6 z-30 p-2.5 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-md transition-all cursor-pointer"
+                className="shrink-0 p-2.5 sm:p-3 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-md transition-all cursor-pointer z-20"
                 aria-label="이전 버튜버"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
             )}
 
-            {/* 카드 덱: 좌측 카드 / 중앙 메인 카드 / 우측 카드 */}
-            <div className="flex items-center justify-center gap-3 sm:gap-6 w-full max-w-4xl px-2">
+            {/* 5단 피라미드 카드 덱 컨테이너 */}
+            <div className="flex items-center justify-center gap-2 sm:gap-3.5 lg:gap-4.5 flex-1 overflow-visible px-1">
               
-              {/* [좌측 카드] (있을 때만 노출, 중앙 카드와 동일 톤 & 60% 투명도) */}
-              {prevItem && (
+              {/* [1번 카드: 가장 작은 크기] */}
+              {farLeftItem && (
                 <div
-                  onClick={handlePrev}
-                  className="hidden md:flex flex-col items-center justify-between w-[240px] h-[255px] bg-[#131B2B] rounded-[22px] border border-slate-800 p-4.5 opacity-60 scale-90 cursor-pointer hover:opacity-85 transition-all select-none shadow-md"
+                  onClick={handleFarPrev}
+                  className="hidden xl:flex flex-col items-center justify-between w-[180px] lg:w-[195px] h-[220px] bg-[#131B2B] rounded-[20px] border border-slate-800/80 p-3 opacity-40 scale-80 cursor-pointer hover:opacity-65 transition-all select-none shadow-xs shrink-0"
                 >
-                  <SoopCardContent item={prevItem} timezone={selectedTimezone} isCenter={false} />
+                  <SpotlightCardContent
+                    item={farLeftItem}
+                    timezone={selectedTimezone}
+                    tier="small"
+                  />
                 </div>
               )}
 
-              {/* [중앙 메인 카드] (숲 캡처의 1:1 레이아웃 구현) */}
+              {/* [2번 카드: 중간 크기] */}
+              {prevItem && (
+                <div
+                  onClick={handlePrev}
+                  className="hidden md:flex flex-col items-center justify-between w-[215px] lg:w-[230px] h-[255px] bg-[#131B2B] rounded-[22px] border border-slate-800 p-4 opacity-70 scale-90 cursor-pointer hover:opacity-90 transition-all select-none shadow-md shrink-0"
+                >
+                  <SpotlightCardContent
+                    item={prevItem}
+                    timezone={selectedTimezone}
+                    tier="medium"
+                  />
+                </div>
+              )}
+
+              {/* [3번 카드: 가장 크게 중앙 - 메인 주인공] */}
               {currentItem && (
                 <div
-                  className="flex flex-col items-center justify-between w-[280px] sm:w-[320px] h-[270px] sm:h-[295px] bg-[#0F172A] rounded-[24px] border-2 border-blue-400/60 p-5 shadow-xl transition-all relative group"
+                  className="flex flex-col items-center justify-between w-[295px] sm:w-[335px] h-[285px] sm:h-[310px] bg-[#0F172A] rounded-[24px] border-2 border-blue-400/80 p-5 shadow-2xl transition-all relative group scale-100 z-10 shrink-0"
                   style={{
-                    boxShadow: '0 10px 30px -5px rgba(15, 23, 42, 0.3), 0 0 20px -3px rgba(59, 130, 246, 0.2)',
+                    boxShadow: '0 12px 36px -4px rgba(15, 23, 42, 0.45), 0 0 25px -4px rgba(59, 130, 246, 0.25)',
                   }}
                 >
-                  <SoopCardContent
+                  <SpotlightCardContent
                     item={currentItem}
                     timezone={selectedTimezone}
-                    isCenter={true}
+                    tier="large"
                     onNavigate={onNavigate}
                   />
                 </div>
               )}
 
-              {/* [우측 카드] (있을 때만 노출, 중앙 카드와 동일 톤 & 60% 투명도) */}
+              {/* [4번 카드: 중간 크기] */}
               {nextItem && (
                 <div
                   onClick={handleNext}
-                  className="hidden md:flex flex-col items-center justify-between w-[240px] h-[255px] bg-[#131B2B] rounded-[22px] border border-slate-800 p-4.5 opacity-60 scale-90 cursor-pointer hover:opacity-85 transition-all select-none shadow-md"
+                  className="hidden md:flex flex-col items-center justify-between w-[215px] lg:w-[230px] h-[255px] bg-[#131B2B] rounded-[22px] border border-slate-800 p-4 opacity-70 scale-90 cursor-pointer hover:opacity-90 transition-all select-none shadow-md shrink-0"
                 >
-                  <SoopCardContent item={nextItem} timezone={selectedTimezone} isCenter={false} />
+                  <SpotlightCardContent
+                    item={nextItem}
+                    timezone={selectedTimezone}
+                    tier="medium"
+                  />
+                </div>
+              )}
+
+              {/* [5번 카드: 가장 작은 크기] */}
+              {farRightItem && (
+                <div
+                  onClick={handleFarNext}
+                  className="hidden xl:flex flex-col items-center justify-between w-[180px] lg:w-[195px] h-[220px] bg-[#131B2B] rounded-[20px] border border-slate-800/80 p-3 opacity-40 scale-80 cursor-pointer hover:opacity-65 transition-all select-none shadow-xs shrink-0"
+                >
+                  <SpotlightCardContent
+                    item={farRightItem}
+                    timezone={selectedTimezone}
+                    tier="small"
+                  />
                 </div>
               )}
             </div>
 
-            {/* 다음 버튼 (>) */}
+            {/* 우측 다음 버튼 (>) - 카드 가림 없이 독립 배치 */}
             {items.length > 1 && (
               <button
                 onClick={handleNext}
-                className="absolute right-2 sm:right-6 z-30 p-2.5 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-md transition-all cursor-pointer"
+                className="shrink-0 p-2.5 sm:p-3 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-md transition-all cursor-pointer z-20"
                 aria-label="다음 버튜버"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -254,38 +309,49 @@ export function PlatformMiniSpotlight({
 }
 
 /**
- * 숲 레퍼런스 100% 싱크로율 세로형 카드 콘텐츠 (단일 책임 컴포넌트)
- * 레이아웃: [상단 대형 아바타 (LIVE 뱃지 좌측 상단)] ➔ [중앙 이름 (개인세 제거)] ➔ [하단 캡슐 일정 바]
+ * 5단 피라미드 단계별 카드 콘텐츠 렌더러 (단일 책임 컴포넌트 - SRP)
+ * tier: 'small' (1번, 5번) | 'medium' (2번, 4번) | 'large' (3번 중앙)
  */
-function SoopCardContent({
+function SpotlightCardContent({
   item,
   timezone,
-  isCenter,
+  tier,
   onNavigate,
 }: {
   item: SpotlightItem;
   timezone: string;
-  isCenter: boolean;
+  tier: 'small' | 'medium' | 'large';
   onNavigate?: (path: string) => void;
 }) {
   const { event, statusType, channelUrl } = item;
   const isLive = statusType === 'LIVE';
   const countryBadge = getCountryBadge(event.creator.countryCode);
-  const formattedDate = formatSoopDateStyle(event.startAtUtc, timezone);
+  const formattedDate = formatDebutDateStyle(event.startAtUtc, timezone);
   const slug = (event.creator as any)?.slug || '';
 
-  // 소속사가 실제 기업세일 경우에만 노출 ('개인세'는 운영자 전용이므로 사용자 화면에서 완전 제거!)
+  // 소속사가 실제 기업세일 경우에만 노출 ('개인세'는 운영자 전용이므로 사용자 화면에서 완전 제거)
   const agency = event.creator.agency?.trim();
   const hasRealAgency = agency && agency !== '개인세' && agency !== 'None';
 
+  const isCenter = tier === 'large';
+  const isSmall = tier === 'small';
+
   return (
     <>
-      {/* 1. 상단 큼직한 캐릭터 아바타 비주얼 */}
-      <div className="relative pt-1">
+      {/* 1. 상단 아바타 비주얼 */}
+      <div className="relative pt-0.5">
         
-        {/* 🔴 사용자 지정 레퍼런스 LIVE 뱃지 (아바타 좌측 상단) */}
+        {/* 🔴 LIVE 뱃지 (아바타 좌측 상단) */}
         {isLive && (
-          <span className="absolute -top-1 -left-2 z-20 bg-[#E11D48] text-white text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-[6px] shadow-md tracking-wider flex items-center justify-center animate-pulse select-none">
+          <span
+            className={`absolute -top-1 -left-2 z-20 bg-[#E11D48] text-white font-black rounded-[6px] shadow-md tracking-wider flex items-center justify-center animate-pulse select-none ${
+              isCenter
+                ? 'text-[10px] sm:text-[11px] px-2 py-0.5'
+                : isSmall
+                ? 'text-[8px] px-1 py-0.2 -left-1'
+                : 'text-[9px] px-1.5 py-0.2'
+            }`}
+          >
             LIVE
           </span>
         )}
@@ -296,10 +362,14 @@ function SoopCardContent({
             isLive
               ? 'border-red-500 ring-2 ring-red-400/40'
               : isCenter
-              ? 'border-white/80 shadow-md cursor-pointer group-hover:scale-105'
+              ? 'border-white/90 shadow-md cursor-pointer group-hover:scale-105'
               : 'border-slate-600'
           } ${
-            isCenter ? 'w-24 h-24 sm:w-28 sm:h-28' : 'w-20 h-20'
+            isCenter
+              ? 'w-24 h-24 sm:w-28 sm:h-28'
+              : isSmall
+              ? 'w-14 h-14'
+              : 'w-18 h-18'
           }`}
         >
           <AvatarImage
@@ -311,26 +381,32 @@ function SoopCardContent({
 
         {/* 국기 뱃지 */}
         <span
-          className="absolute bottom-0 right-1 text-[12px] leading-none bg-white rounded-full p-0.5 border border-slate-200 shadow-sm"
+          className={`absolute bottom-0 right-1 leading-none bg-white rounded-full border border-slate-200 shadow-sm ${
+            isSmall ? 'text-[10px] p-0.2' : 'text-[12px] p-0.5'
+          }`}
           title={`국가: ${countryBadge.label}`}
         >
           {countryBadge.flag}
         </span>
       </div>
 
-      {/* 2. 중앙 버튜버 이름 (가운데 정렬, 굵직한 타이포 - "개인세" 완전 제거) */}
+      {/* 2. 중앙 버튜버 이름 (가운데 정렬, "개인세" 완전 제거) */}
       <div className="w-full text-center px-1">
         <h3
           onClick={() => isCenter && slug && onNavigate && onNavigate(`/creator/${slug}`)}
-          className={`font-black text-white truncate cursor-pointer hover:underline ${
-            isCenter ? 'text-base sm:text-lg' : 'text-sm'
+          className={`font-black text-white truncate ${
+            isCenter
+              ? 'text-base sm:text-lg cursor-pointer hover:underline'
+              : isSmall
+              ? 'text-xs'
+              : 'text-sm'
           }`}
           title={event.creator.displayName}
         >
           {event.creator.displayName}
         </h3>
 
-        {/* 실제 기업세 소속사가 있을 때만 표시 (개인세는 완전히 미노출) */}
+        {/* 실제 기업세 소속사가 있을 때만 표시 (중앙 카드에 한함) */}
         {isCenter && hasRealAgency && (
           <p className="text-[11px] text-slate-400 font-medium truncate mt-0.5">
             {agency}
@@ -338,38 +414,63 @@ function SoopCardContent({
         )}
       </div>
 
-      {/* 3. 하단 숲 100% 싱크로율 캡슐 일정 바 */}
-      <div className="w-full flex items-center justify-center px-1">
+      {/* 3. 하단 캡슐 일정 바 (상태: "데뷔일" 로 명확히 표시) */}
+      <div className="w-full flex items-center justify-center px-0.5">
         <a
           href={channelUrl}
           target="_blank"
           rel="noreferrer"
-          className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full border transition-all cursor-pointer select-none max-w-full overflow-hidden ${
+          className={`inline-flex items-center rounded-full border transition-all cursor-pointer select-none max-w-full overflow-hidden ${
+            isCenter
+              ? 'gap-1.5 px-2.5 sm:px-3 py-1.5'
+              : isSmall
+              ? 'gap-1 px-1.5 py-0.5'
+              : 'gap-1.2 px-2 py-1'
+          } ${
             isLive
               ? 'bg-red-950/80 border-red-500/60 text-red-200 hover:bg-red-900'
               : 'bg-[#1E293B] border-slate-700 hover:border-slate-500 text-slate-200'
           }`}
           title={isLive ? '생방송 바로가기' : '방송국 채널 바로가기'}
         >
-          {/* 상태 알약 뱃지 (줄바꿈 원천 차단) */}
+          {/* 상태 알약 뱃지: "데뷔일" (라이브 시 LIVE) */}
           <span
-            className={`text-[10px] font-black px-2 py-0.5 rounded-full whitespace-nowrap shrink-0 ${
+            className={`font-black rounded-full whitespace-nowrap shrink-0 ${
+              isCenter
+                ? 'text-[10px] px-2 py-0.5'
+                : isSmall
+                ? 'text-[8px] px-1 py-0.2'
+                : 'text-[9px] px-1.5 py-0.2'
+            } ${
               isLive
                 ? 'bg-red-500 text-white animate-pulse'
                 : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
             }`}
           >
-            {isLive ? 'LIVE' : '방송 예정'}
+            {isLive ? 'LIVE' : '데뷔일'}
           </span>
 
-          {/* 일시 텍스트 (줄바꿈 원천 차단) */}
-          <span className="text-[11px] sm:text-xs font-bold text-slate-200 whitespace-nowrap truncate">
+          {/* 일시 텍스트: "MM월 DD일 (요일) 오후 00:00" */}
+          <span
+            className={`font-bold text-slate-200 whitespace-nowrap truncate ${
+              isCenter
+                ? 'text-[11px] sm:text-xs'
+                : isSmall
+                ? 'text-[9px]'
+                : 'text-[10px]'
+            }`}
+          >
             {isLive ? '생방송 진행 중' : formattedDate}
           </span>
 
-          <ExternalLink className="w-3 h-3 text-slate-400 ml-0.5 shrink-0" />
+          <ExternalLink
+            className={`text-slate-400 shrink-0 ${
+              isSmall ? 'w-2.5 h-2.5 ml-0.2' : 'w-3 h-3 ml-0.5'
+            }`}
+          />
         </a>
       </div>
     </>
   );
 }
+
