@@ -123,9 +123,9 @@ export function PlatformMiniSpotlight({
       aria-label="Platform Debut Showcase"
       className="w-full mb-6 bg-white/70 backdrop-blur-sm rounded-[24px] border border-[#CBD5E1] p-4 sm:p-6 shadow-xs relative select-none"
     >
-      {/* 1. 상단 플랫폼 탭 바 (사이트 전체 라이트 톤앤매너와 조화) */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pb-4 mb-4 border-b border-[#E2E8F0]">
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar w-full sm:w-auto justify-center sm:justify-start py-0.5">
+      {/* 1. 상단 플랫폼 탭 바 (완전한 중앙 정렬, 지저분한 밑줄 제거) */}
+      <div className="flex items-center justify-center relative mb-5">
+        <div className="inline-flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
           {PLATFORMS.map((p) => {
             const isSelected = selectedPlatform === p.id;
             const pSummary = summaries.get(p.id);
@@ -136,7 +136,7 @@ export function PlatformMiniSpotlight({
               <button
                 key={p.id}
                 onClick={() => handleTabChange(p.id)}
-                className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black transition-all cursor-pointer ${
+                className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black transition-all cursor-pointer select-none ${
                   isSelected
                     ? 'bg-[#0F172A] text-white shadow-xs scale-102'
                     : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0] hover:text-[#0F172A] border border-[#CBD5E1]'
@@ -167,9 +167,9 @@ export function PlatformMiniSpotlight({
           })}
         </div>
 
-        {/* 인디케이터 (현재 / 전체) */}
+        {/* 우측 상단 카운터 인디케이터 (중앙정렬 방해하지 않도록 absolute 배치) */}
         {items.length > 0 && (
-          <div className="text-xs font-mono font-bold text-[#64748B] flex items-center gap-2">
+          <div className="hidden sm:flex absolute right-2 text-xs font-mono font-bold text-[#64748B] items-center gap-2">
             <span>{activeIndex + 1} / {items.length}</span>
           </div>
         )}
