@@ -273,17 +273,20 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
         </div>
       </div>
 
-      {/* 1. 상단 프로필 카드 리뉴얼 (모바일 반응형 수직/수평 정렬 최적화) */}
-      <section className="bg-white border border-[#E2E8F0] rounded-[16px] p-5 sm:p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+      {/* 1. 상단 프로필 카드 (3D 무대 스포트라이트 배경 적용) */}
+      <section
+        className="relative overflow-hidden rounded-[20px] border border-blue-200/70 shadow-md bg-[url('/images/bg_profile.png')] bg-cover bg-center p-5 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6"
+      >
+        <div className="absolute inset-0 bg-white/20 backdrop-blur-[2px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* 프로필 이미지 & 기본 정보 */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 sm:gap-5 w-full md:w-auto">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 sm:gap-5 w-full md:w-auto relative z-10">
           <div className="relative shrink-0">
             <img
               src={profile.profileImageUrl || getAvatarUrl(profile.displayName)}
               alt={`${profile.displayName} 프로필`}
-              className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white shadow-md"
+              className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white shadow-xl ring-4 ring-blue-400/30"
               onError={(e) => {
                 (e.target as HTMLElement).setAttribute('src', getAvatarUrl(profile.displayName));
               }}
@@ -292,11 +295,11 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
 
           <div className="flex-1 space-y-2 min-w-0 flex flex-col items-center sm:items-start">
             <div>
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#0F172A] font-['Outfit'] tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-black text-[#0F172A] font-['Outfit'] tracking-tight drop-shadow-xs">
                 {profile.displayName} 버튜버 프로필
               </h1>
-              <p className="text-xs sm:text-sm font-bold text-[#64748B] mt-0.5 flex items-center justify-center sm:justify-start gap-2">
-                <span className="text-[#2563EB] font-extrabold flex items-center gap-1">
+              <p className="text-xs sm:text-sm font-bold text-[#475569] mt-0.5 flex items-center justify-center sm:justify-start gap-2">
+                <span className="text-[#2563EB] font-extrabold flex items-center gap-1 bg-white/70 px-2 py-0.5 rounded-full border border-white/80 shadow-2xs">
                   {primaryPlatform === 'SOOP' && (
                     <img src="/icons/soop/soop_symbol_blue.svg" alt="SOOP" className="w-4 h-4 object-contain inline-block" />
                   )}
@@ -305,14 +308,14 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
                 {!isIndie && (
                   <>
                     <span>•</span>
-                    <span className="bg-slate-100 text-slate-800 px-2 py-0.5 rounded-[4px] text-xs font-bold">{profile.agencyName}</span>
+                    <span className="bg-white/80 text-slate-800 px-2.5 py-0.5 rounded-full text-xs font-bold border border-slate-200/80 shadow-2xs">{profile.agencyName}</span>
                   </>
                 )}
               </p>
             </div>
 
             {/* 데뷔 일정 및 D + N일 박스 */}
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-[#334155] bg-[#F8FAFC] border border-[#CBD5E1] rounded-[8px] px-3 py-1.5 shadow-2xs">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-[#1E293B] bg-white/85 backdrop-blur-xs border border-white/90 rounded-[10px] px-3.5 py-1.5 shadow-2xs">
               <Calendar className="w-4 h-4 text-[#2563EB] shrink-0" />
               <span>{formattedDebutDate} 데뷔</span>
               {isDebuted && (
@@ -325,7 +328,7 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
         </div>
 
         {/* [채널 방문] & [X(트위터)] 이동 버튼 */}
-        <div className="w-full md:w-auto flex flex-col sm:flex-row items-center justify-center md:justify-end gap-2.5 shrink-0 self-stretch md:self-center">
+        <div className="w-full md:w-auto flex flex-col sm:flex-row items-center justify-center md:justify-end gap-2.5 shrink-0 self-stretch md:self-center relative z-10">
           {primaryChannel && (
             <a
               href={primaryChannel.channelUrl}
