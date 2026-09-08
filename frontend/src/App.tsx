@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroHeader } from './components/HeroHeader';
 import { TodayDebutsPromotionBanner } from './components/TodayDebutsPromotionBanner';
+import { PlatformMiniSpotlight } from './components/preview/PlatformMiniSpotlight';
 import { MonthlyCalendarGrid } from './components/MonthlyCalendarGrid';
 import { FooterBanner } from './components/FooterBanner';
 import { Footer } from './components/Footer';
@@ -54,6 +55,11 @@ export function App() {
   const [submitModalInitialDate, setSubmitModalInitialDate] = useState<string | undefined>(undefined);
   const [editingEvent, setEditingEvent] = useState<DebutEvent | null>(null);
 
+  // 개발 프리뷰 모드 감지 (dev.vdebut.live 도메인 또는 /updatepage 경로)
+  const isDevHost = typeof window !== 'undefined' && window.location.hostname === 'dev.vdebut.live';
+  const isUpdatePath = currentPath === '/updatepage' || currentPath === '/upadepage';
+  const isDevMode = isDevHost || isUpdatePath;
+
   // Popstate event listener for client-side routing & /upload URL sync
   useEffect(() => {
     const handlePopState = () => {
@@ -92,7 +98,16 @@ export function App() {
     let pageTitle = seo.title;
     let pageDesc = seo.description;
 
-    if (currentPath === '/upload') {
+    if (isDevMode) {
+      pageTitle = '[DEV] VDébut - 컴포넌트 랩 (Live DB)';
+      let metaRobots = document.querySelector('meta[name="robots"]');
+      if (!metaRobots) {
+        metaRobots = document.createElement('meta');
+        metaRobots.setAttribute('name', 'robots');
+        document.head.appendChild(metaRobots);
+      }
+      metaRobots.setAttribute('content', 'noindex, nofollow, noarchive');
+    } else if (currentPath === '/upload') {
       pageTitle = '데뷔 일정 등록 | VDébut';
     } else if (currentPath === '/about') {
       pageTitle = '서비스 소개 | VDébut - 신입 버튜버 데뷔 캘린더 플랫폼';
@@ -252,6 +267,18 @@ export function App() {
           />
         ) : (
           <>
+            {/* DEV LAB 알림 바 (dev.vdebut.live or /updatepage) */}
+            {isDevMode && (
+              <div className="bg-gradient-to-r from-amber-500/15 via-blue-500/10 to-indigo-500/15 border-b border-amber-300/60 px-4 py-2 text-center text-xs font-bold text-amber-950 flex items-center justify-center gap-2 mb-3">
+                <span className="bg-amber-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-2xs">
+                  DEV LAB
+                </span>
+                <span>
+                  dev.vdebut.live 프리뷰 모드 (Live DB 실시간 연동 • SEO/크롤링 차단됨)
+                </span>
+              </div>
+            )}
+
             {/* Hero Section (Desktop only) */}
             <div className="hidden sm:block">
               <HeroHeader
@@ -261,14 +288,23 @@ export function App() {
               />
             </div>
 
-            {/* Today's Debut & Live Stream Promotion Banner */}
-            <TodayDebutsPromotionBanner
-              allEvents={events}
-              selectedTimezone={selectedTimezone}
-              currentLang={currentLang}
-              onDownloadICS={handleDownloadICS}
-              onNavigate={handleNavigate}
-            />
+            {/* 개발 프리뷰 모드에서는 신규 플랫폼별 컴팩트 스포트라이트, 운영에서는 기존 배너 유지 */}
+            {isDevMode ? (
+              <PlatformMiniSpotlight
+                allEvents={events}
+                selectedTimezone={selectedTimezone}
+                onDownloadICS={handleDownloadICS}
+                onNavigate={handleNavigate}
+              />
+            ) : (
+              <TodayDebutsPromotionBanner
+                allEvents={events}
+                selectedTimezone={selectedTimezone}
+                currentLang={currentLang}
+                onDownloadICS={handleDownloadICS}
+                onNavigate={handleNavigate}
+              />
+            )}
 
             {/* Main Monthly / Mobile Calendar Grid Section */}
             <MonthlyCalendarGrid
