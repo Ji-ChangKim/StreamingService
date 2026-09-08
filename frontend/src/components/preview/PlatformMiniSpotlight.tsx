@@ -210,7 +210,7 @@ export function PlatformMiniSpotlight({
               {farLeftItem && (
                 <div
                   onClick={handleFarPrev}
-                  className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[#0F172A]/90 backdrop-blur-md rounded-[20px] border border-slate-700/70 p-3 opacity-55 scale-85 cursor-pointer hover:opacity-85 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -mr-6 lg:-mr-8"
+                  className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[20px] border border-blue-200/70 p-3 opacity-70 scale-85 cursor-pointer hover:opacity-95 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -mr-6 lg:-mr-8 overflow-hidden"
                 >
                   <SpotlightCardContent
                     item={farLeftItem}
@@ -224,7 +224,7 @@ export function PlatformMiniSpotlight({
               {prevItem && (
                 <div
                   onClick={handlePrev}
-                  className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[#0F172A]/95 backdrop-blur-md rounded-[22px] border border-slate-700 p-4 opacity-80 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -mr-7 lg:-mr-10"
+                  className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[22px] border border-blue-300/80 p-4 opacity-90 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -mr-7 lg:-mr-10 overflow-hidden"
                 >
                   <SpotlightCardContent
                     item={prevItem}
@@ -283,7 +283,7 @@ export function PlatformMiniSpotlight({
               {nextItem && (
                 <div
                   onClick={handleNext}
-                  className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[#0F172A]/95 backdrop-blur-md rounded-[22px] border border-slate-700 p-4 opacity-80 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -ml-7 lg:-ml-10"
+                  className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[22px] border border-blue-300/80 p-4 opacity-90 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -ml-7 lg:-ml-10 overflow-hidden"
                 >
                   <SpotlightCardContent
                     item={nextItem}
@@ -297,7 +297,7 @@ export function PlatformMiniSpotlight({
               {farRightItem && (
                 <div
                   onClick={handleFarNext}
-                  className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[#0F172A]/90 backdrop-blur-md rounded-[20px] border border-slate-700/70 p-3 opacity-55 scale-85 cursor-pointer hover:opacity-85 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -ml-6 lg:-ml-8"
+                  className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[20px] border border-blue-200/70 p-3 opacity-70 scale-85 cursor-pointer hover:opacity-95 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -ml-6 lg:-ml-8 overflow-hidden"
                 >
                   <SpotlightCardContent
                     item={farRightItem}
@@ -369,7 +369,9 @@ function SpotlightCardContent({
               ? 'border-red-500 ring-2 ring-red-400/40'
               : isCenter
               ? 'border-4 border-white shadow-xl ring-4 ring-blue-400/40 cursor-pointer group-hover:scale-105'
-              : 'border-slate-600'
+              : !isSmall
+              ? 'border-2 border-white shadow-md ring-2 ring-blue-300/40'
+              : 'border-2 border-white/90 shadow-sm'
           } ${
             isCenter
               ? 'w-24 h-24 sm:w-28 sm:h-28'
@@ -400,12 +402,12 @@ function SpotlightCardContent({
       <div className="w-full text-center px-1">
         <h3
           onClick={() => isCenter && slug && onNavigate && onNavigate(`/creator/${slug}`)}
-          className={`font-black truncate ${
+          className={`font-black text-[#0F172A] truncate ${
             isCenter
-              ? 'text-base sm:text-lg text-[#0F172A] drop-shadow-xs cursor-pointer hover:underline'
+              ? 'text-base sm:text-lg drop-shadow-xs cursor-pointer hover:underline'
               : isSmall
-              ? 'text-xs text-white'
-              : 'text-sm text-white'
+              ? 'text-xs drop-shadow-xs'
+              : 'text-sm drop-shadow-xs'
           }`}
           title={event.creator.displayName}
         >
@@ -435,9 +437,7 @@ function SpotlightCardContent({
           } ${
             isLive
               ? 'bg-red-950/80 border-red-500/60 text-red-200 hover:bg-red-900'
-              : isCenter
-              ? 'bg-[#0F172A] border-slate-700/80 hover:bg-[#1E293B] text-white shadow-md'
-              : 'bg-[#1E293B] border-slate-700 hover:border-slate-500 text-slate-200'
+              : 'bg-[#0F172A] border-slate-700/80 hover:bg-[#1E293B] text-white shadow-md'
           }`}
           title={isLive ? '생방송 바로가기' : '방송국 채널 바로가기'}
         >
@@ -460,12 +460,12 @@ function SpotlightCardContent({
 
           {/* 일시 텍스트: "MM월 DD일 (요일) 오후 00:00" */}
           <span
-            className={`font-bold whitespace-nowrap truncate ${
+            className={`font-bold whitespace-nowrap truncate text-white ${
               isCenter
-                ? 'text-[11px] sm:text-xs text-white'
+                ? 'text-[11px] sm:text-xs'
                 : isSmall
-                ? 'text-[9px] text-slate-200'
-                : 'text-[10px] text-slate-200'
+                ? 'text-[9px]'
+                : 'text-[10px]'
             }`}
           >
             {isLive ? '생방송 진행 중' : formattedDate}
