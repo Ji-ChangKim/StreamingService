@@ -147,11 +147,14 @@ export function PlatformMiniSpotlight({
   return (
     <section
       aria-label="Platform Debut Showcase"
-      className="w-full mb-6 py-2 relative select-none"
+      className="w-full mb-8 relative select-none rounded-[28px] border border-slate-200/80 shadow-lg overflow-hidden bg-cover bg-bottom bg-no-repeat pt-6 pb-8 sm:pt-7 sm:pb-10"
+      style={{
+        backgroundImage: "url('/images/spotlight_stage_bg.png')",
+      }}
     >
-      {/* 1. 상단 플랫폼 탭 바 (완전한 중앙 정렬) */}
-      <div className="flex items-center justify-center relative mb-5">
-        <div className="inline-flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+      {/* 1. 상단 플랫폼 탭 바 (글래스모피즘 & 완전한 중앙 정렬) */}
+      <div className="flex items-center justify-center relative mb-6">
+        <div className="inline-flex items-center gap-2 overflow-x-auto no-scrollbar py-1 px-3 bg-white/40 backdrop-blur-md rounded-full border border-white/60 shadow-xs">
           {PLATFORMS.map((p) => {
             const isSelected = selectedPlatform === p.id;
             const pSummary = summaries.get(p.id);
@@ -164,8 +167,8 @@ export function PlatformMiniSpotlight({
                 onClick={() => handleTabChange(p.id)}
                 className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black transition-all cursor-pointer select-none ${
                   isSelected
-                    ? 'bg-[#0F172A] text-white shadow-xs scale-102'
-                    : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0] hover:text-[#0F172A] border border-[#CBD5E1]'
+                    ? 'bg-[#0F172A] text-white shadow-md scale-102 ring-2 ring-blue-500/20'
+                    : 'bg-white/80 text-[#475569] hover:bg-white hover:text-[#0F172A] border border-white/80 shadow-2xs'
                 }`}
               >
                 <img
@@ -176,7 +179,7 @@ export function PlatformMiniSpotlight({
                 <span>{p.label}</span>
                 <span
                   className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
-                    isSelected ? 'bg-white/20 text-white' : 'bg-[#CBD5E1] text-[#334155]'
+                    isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 text-[#334155]'
                   }`}
                 >
                   {count}
@@ -197,11 +200,11 @@ export function PlatformMiniSpotlight({
       {/* 2. 5단 피라미드 커버플로우 덱 [1(소) - 2(중) - 3(대) - 4(중) - 5(소)] */}
       <div className="py-2">
         {items.length === 0 ? (
-          <div className="py-12 text-center text-xs font-bold text-[#64748B] bg-[#F8FAFC] rounded-2xl border border-dashed border-[#CBD5E1]">
+          <div className="py-14 text-center text-xs font-bold text-[#64748B] bg-white/75 backdrop-blur-md rounded-2xl border border-dashed border-slate-300 max-w-md mx-auto shadow-xs">
             현재 등록된 {selectedPlatform} 데뷔 일정이 없습니다.
           </div>
         ) : (
-          <div className="relative flex items-center justify-center w-full max-w-7xl mx-auto min-h-[290px] sm:min-h-[320px]">
+          <div className="relative flex items-center justify-center w-full max-w-7xl mx-auto min-h-[300px] sm:min-h-[330px]">
             
             {/* 5단 피라미드 카드 덱 컨테이너 */}
             <div className="flex items-center justify-center gap-2 sm:gap-3.5 lg:gap-5 w-full overflow-visible px-1">
@@ -210,7 +213,7 @@ export function PlatformMiniSpotlight({
               {farLeftItem && (
                 <div
                   onClick={handleFarPrev}
-                  className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[#131B2B] rounded-[20px] border border-slate-800/80 p-3 opacity-45 scale-85 cursor-pointer hover:opacity-75 transition-all select-none shadow-xs shrink-0"
+                  className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[#0F172A]/90 backdrop-blur-md rounded-[20px] border border-slate-700/70 p-3 opacity-55 scale-85 cursor-pointer hover:opacity-85 transition-all select-none shadow-md shrink-0"
                 >
                   <SpotlightCardContent
                     item={farLeftItem}
@@ -224,7 +227,7 @@ export function PlatformMiniSpotlight({
               {prevItem && (
                 <div
                   onClick={handlePrev}
-                  className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[#131B2B] rounded-[22px] border border-slate-800 p-4 opacity-75 scale-92 cursor-pointer hover:opacity-95 transition-all select-none shadow-md shrink-0"
+                  className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[#0F172A]/95 backdrop-blur-md rounded-[22px] border border-slate-700 p-4 opacity-80 scale-92 cursor-pointer hover:opacity-100 transition-all select-none shadow-xl shrink-0"
                 >
                   <SpotlightCardContent
                     item={prevItem}
@@ -242,7 +245,7 @@ export function PlatformMiniSpotlight({
                   {items.length > 1 && (
                     <button
                       onClick={handlePrev}
-                      className="absolute -left-4 sm:-left-5 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-xl transition-all cursor-pointer hover:scale-108"
+                      className="absolute -left-4 sm:-left-5 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3 rounded-full bg-white/95 backdrop-blur-md hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-slate-200 shadow-xl transition-all cursor-pointer hover:scale-108"
                       title="이전 버튜버"
                       aria-label="이전 버튜버"
                     >
@@ -252,9 +255,9 @@ export function PlatformMiniSpotlight({
 
                   {/* 중앙 메인 카드 본체 */}
                   <div
-                    className="flex flex-col items-center justify-between w-[300px] sm:w-[340px] h-[290px] sm:h-[315px] bg-[#0F172A] rounded-[24px] border-2 border-blue-400/80 p-5 shadow-2xl transition-all relative group scale-100"
+                    className="flex flex-col items-center justify-between w-[300px] sm:w-[340px] h-[290px] sm:h-[315px] bg-[#0B1120] rounded-[24px] border-2 border-blue-400/90 p-5 transition-all relative group scale-100"
                     style={{
-                      boxShadow: '0 12px 36px -4px rgba(15, 23, 42, 0.45), 0 0 25px -4px rgba(59, 130, 246, 0.25)',
+                      boxShadow: '0 16px 40px -6px rgba(15, 23, 42, 0.4), 0 0 35px -2px rgba(59, 130, 246, 0.35)',
                     }}
                   >
                     <SpotlightCardContent
@@ -269,7 +272,7 @@ export function PlatformMiniSpotlight({
                   {items.length > 1 && (
                     <button
                       onClick={handleNext}
-                      className="absolute -right-4 sm:-right-5 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-xl transition-all cursor-pointer hover:scale-108"
+                      className="absolute -right-4 sm:-right-5 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3 rounded-full bg-white/95 backdrop-blur-md hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-slate-200 shadow-xl transition-all cursor-pointer hover:scale-108"
                       title="다음 버튜버"
                       aria-label="다음 버튜버"
                     >
@@ -283,7 +286,7 @@ export function PlatformMiniSpotlight({
               {nextItem && (
                 <div
                   onClick={handleNext}
-                  className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[#131B2B] rounded-[22px] border border-slate-800 p-4 opacity-75 scale-92 cursor-pointer hover:opacity-95 transition-all select-none shadow-md shrink-0"
+                  className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[#0F172A]/95 backdrop-blur-md rounded-[22px] border border-slate-700 p-4 opacity-80 scale-92 cursor-pointer hover:opacity-100 transition-all select-none shadow-xl shrink-0"
                 >
                   <SpotlightCardContent
                     item={nextItem}
@@ -297,7 +300,7 @@ export function PlatformMiniSpotlight({
               {farRightItem && (
                 <div
                   onClick={handleFarNext}
-                  className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[#131B2B] rounded-[20px] border border-slate-800/80 p-3 opacity-45 scale-85 cursor-pointer hover:opacity-75 transition-all select-none shadow-xs shrink-0"
+                  className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[#0F172A]/90 backdrop-blur-md rounded-[20px] border border-slate-700/70 p-3 opacity-55 scale-85 cursor-pointer hover:opacity-85 transition-all select-none shadow-md shrink-0"
                 >
                   <SpotlightCardContent
                     item={farRightItem}
