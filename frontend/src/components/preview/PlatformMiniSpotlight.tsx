@@ -147,9 +147,9 @@ export function PlatformMiniSpotlight({
   return (
     <section
       aria-label="Platform Debut Showcase"
-      className="w-full mb-6 bg-white/70 backdrop-blur-sm rounded-[24px] border border-[#CBD5E1] p-4 sm:p-6 shadow-xs relative select-none"
+      className="w-full mb-6 py-2 relative select-none"
     >
-      {/* 1. 상단 플랫폼 탭 바 (완전한 중앙 정렬, 우측 1/9 인디케이터 삭제 완료) */}
+      {/* 1. 상단 플랫폼 탭 바 (완전한 중앙 정렬) */}
       <div className="flex items-center justify-center relative mb-5">
         <div className="inline-flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
           {PLATFORMS.map((p) => {
@@ -201,13 +201,13 @@ export function PlatformMiniSpotlight({
             현재 등록된 {selectedPlatform} 데뷔 일정이 없습니다.
           </div>
         ) : (
-          <div className="flex items-center justify-center gap-1 sm:gap-3 w-full max-w-7xl mx-auto min-h-[290px] sm:min-h-[320px]">
+          <div className="relative flex items-center justify-center w-full max-w-7xl mx-auto min-h-[290px] sm:min-h-[320px]">
             
-            {/* 좌측 이전 버튼 (<) - 카드 가림 없이 독립 배치 */}
+            {/* 모바일/태블릿 전용 좌측 이전 버튼 (<) */}
             {items.length > 1 && (
               <button
                 onClick={handlePrev}
-                className="shrink-0 p-2.5 sm:p-3 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-md transition-all cursor-pointer z-20"
+                className="xl:hidden absolute left-1 sm:left-2 z-30 p-2.5 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-md transition-all cursor-pointer"
                 aria-label="이전 버튜버"
               >
                 <ChevronLeft className="w-5 h-5" />
@@ -215,19 +215,29 @@ export function PlatformMiniSpotlight({
             )}
 
             {/* 5단 피라미드 카드 덱 컨테이너 */}
-            <div className="flex items-center justify-center gap-2 sm:gap-3.5 lg:gap-4.5 flex-1 overflow-visible px-1">
+            <div className="flex items-end justify-center gap-2 sm:gap-3.5 lg:gap-5 w-full overflow-visible px-1">
               
-              {/* [1번 카드: 가장 작은 크기] */}
+              {/* [1번 카드: 가장 작은 크기 + 위쪽에 이전 화살표 배치] */}
               {farLeftItem && (
-                <div
-                  onClick={handleFarPrev}
-                  className="hidden xl:flex flex-col items-center justify-between w-[180px] lg:w-[195px] h-[220px] bg-[#131B2B] rounded-[20px] border border-slate-800/80 p-3 opacity-40 scale-80 cursor-pointer hover:opacity-65 transition-all select-none shadow-xs shrink-0"
-                >
-                  <SpotlightCardContent
-                    item={farLeftItem}
-                    timezone={selectedTimezone}
-                    tier="small"
-                  />
+                <div className="hidden xl:flex flex-col items-center gap-2 shrink-0">
+                  <button
+                    onClick={handlePrev}
+                    className="p-2 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-sm transition-all cursor-pointer hover:scale-105"
+                    title="이전 버튜버"
+                    aria-label="이전 버튜버"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <div
+                    onClick={handleFarPrev}
+                    className="flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[#131B2B] rounded-[20px] border border-slate-800/80 p-3 opacity-45 scale-85 cursor-pointer hover:opacity-75 transition-all select-none shadow-xs"
+                  >
+                    <SpotlightCardContent
+                      item={farLeftItem}
+                      timezone={selectedTimezone}
+                      tier="small"
+                    />
+                  </div>
                 </div>
               )}
 
@@ -235,7 +245,7 @@ export function PlatformMiniSpotlight({
               {prevItem && (
                 <div
                   onClick={handlePrev}
-                  className="hidden md:flex flex-col items-center justify-between w-[215px] lg:w-[230px] h-[255px] bg-[#131B2B] rounded-[22px] border border-slate-800 p-4 opacity-70 scale-90 cursor-pointer hover:opacity-90 transition-all select-none shadow-md shrink-0"
+                  className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[#131B2B] rounded-[22px] border border-slate-800 p-4 opacity-75 scale-92 cursor-pointer hover:opacity-95 transition-all select-none shadow-md shrink-0 mb-1"
                 >
                   <SpotlightCardContent
                     item={prevItem}
@@ -248,7 +258,7 @@ export function PlatformMiniSpotlight({
               {/* [3번 카드: 가장 크게 중앙 - 메인 주인공] */}
               {currentItem && (
                 <div
-                  className="flex flex-col items-center justify-between w-[295px] sm:w-[335px] h-[285px] sm:h-[310px] bg-[#0F172A] rounded-[24px] border-2 border-blue-400/80 p-5 shadow-2xl transition-all relative group scale-100 z-10 shrink-0"
+                  className="flex flex-col items-center justify-between w-[300px] sm:w-[340px] h-[290px] sm:h-[315px] bg-[#0F172A] rounded-[24px] border-2 border-blue-400/80 p-5 shadow-2xl transition-all relative group scale-100 z-10 shrink-0"
                   style={{
                     boxShadow: '0 12px 36px -4px rgba(15, 23, 42, 0.45), 0 0 25px -4px rgba(59, 130, 246, 0.25)',
                   }}
@@ -266,7 +276,7 @@ export function PlatformMiniSpotlight({
               {nextItem && (
                 <div
                   onClick={handleNext}
-                  className="hidden md:flex flex-col items-center justify-between w-[215px] lg:w-[230px] h-[255px] bg-[#131B2B] rounded-[22px] border border-slate-800 p-4 opacity-70 scale-90 cursor-pointer hover:opacity-90 transition-all select-none shadow-md shrink-0"
+                  className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[#131B2B] rounded-[22px] border border-slate-800 p-4 opacity-75 scale-92 cursor-pointer hover:opacity-95 transition-all select-none shadow-md shrink-0 mb-1"
                 >
                   <SpotlightCardContent
                     item={nextItem}
@@ -276,26 +286,36 @@ export function PlatformMiniSpotlight({
                 </div>
               )}
 
-              {/* [5번 카드: 가장 작은 크기] */}
+              {/* [5번 카드: 가장 작은 크기 + 위쪽에 다음 화살표 배치] */}
               {farRightItem && (
-                <div
-                  onClick={handleFarNext}
-                  className="hidden xl:flex flex-col items-center justify-between w-[180px] lg:w-[195px] h-[220px] bg-[#131B2B] rounded-[20px] border border-slate-800/80 p-3 opacity-40 scale-80 cursor-pointer hover:opacity-65 transition-all select-none shadow-xs shrink-0"
-                >
-                  <SpotlightCardContent
-                    item={farRightItem}
-                    timezone={selectedTimezone}
-                    tier="small"
-                  />
+                <div className="hidden xl:flex flex-col items-center gap-2 shrink-0">
+                  <button
+                    onClick={handleNext}
+                    className="p-2 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-sm transition-all cursor-pointer hover:scale-105"
+                    title="다음 버튜버"
+                    aria-label="다음 버튜버"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                  <div
+                    onClick={handleFarNext}
+                    className="flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[#131B2B] rounded-[20px] border border-slate-800/80 p-3 opacity-45 scale-85 cursor-pointer hover:opacity-75 transition-all select-none shadow-xs"
+                  >
+                    <SpotlightCardContent
+                      item={farRightItem}
+                      timezone={selectedTimezone}
+                      tier="small"
+                    />
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* 우측 다음 버튼 (>) - 카드 가림 없이 독립 배치 */}
+            {/* 모바일/태블릿 전용 우측 다음 버튼 (>) */}
             {items.length > 1 && (
               <button
                 onClick={handleNext}
-                className="shrink-0 p-2.5 sm:p-3 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-md transition-all cursor-pointer z-20"
+                className="xl:hidden absolute right-1 sm:right-2 z-30 p-2.5 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-md transition-all cursor-pointer"
                 aria-label="다음 버튜버"
               >
                 <ChevronRight className="w-5 h-5" />
