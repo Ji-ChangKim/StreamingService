@@ -230,7 +230,7 @@ export function App() {
       {isDevMode && !isCreatorPage && (currentPath === '/' || isUpdatePath) && (
         <section
           aria-label="Dev Stage Showcase"
-          className="w-full relative bg-[url('/images/spotlight_stage_bg.png')] bg-cover bg-center sm:bg-bottom bg-no-repeat border-b border-slate-200/80 shadow-md"
+          className="w-full relative bg-[url('/images/spotlight_stage_bg.png')] bg-cover bg-center sm:bg-bottom bg-no-repeat overflow-hidden"
         >
           {/* DEV LAB 알림 바 */}
           <div className="bg-amber-500/15 backdrop-blur-xs border-b border-amber-300/60 px-4 py-2 text-center text-xs font-bold text-amber-950 flex items-center justify-center gap-2">
@@ -242,7 +242,7 @@ export function App() {
             </span>
           </div>
 
-          <div className="max-w-[1440px] w-full mx-auto px-3 sm:px-6 pt-4 pb-6 sm:pb-8">
+          <div className="max-w-[1440px] w-full mx-auto px-3 sm:px-6 pt-4 pb-6 sm:pb-8 relative z-10">
             {/* Hero Section (Desktop only) */}
             <div className="hidden sm:block">
               <HeroHeader
@@ -260,6 +260,9 @@ export function App() {
               onNavigate={handleNavigate}
             />
           </div>
+
+          {/* 하단 본문(#F8FAFC) 연결 페이드 그라데이션 오버레이 (경계선 그림자 제거 및 스무스 블렌딩) */}
+          <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-36 pointer-events-none bg-gradient-to-b from-transparent via-[#F8FAFC]/50 to-[#F8FAFC] z-10" />
         </section>
       )}
 
