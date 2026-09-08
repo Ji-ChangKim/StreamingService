@@ -79,7 +79,6 @@ export function PlatformMiniSpotlight({
   const summaries = useMemo(() => {
     const map = new Map<PlatformKey, ReturnType<typeof getPlatformSpotlightSummary>>();
     PLATFORMS.forEach((p) => {
-      // 숲 스타일 캐러셀을 위해 최대 10명까지 확보
       map.set(p.id, getPlatformSpotlightSummary(allEvents, p.id, selectedTimezone, 10));
     });
     return map;
@@ -121,16 +120,12 @@ export function PlatformMiniSpotlight({
 
   return (
     <section
-      aria-label="SOOP Style Virtual Showcase"
-      className="w-full mb-6 bg-[#0B0F19] text-white rounded-[20px] p-4 sm:p-6 shadow-xl border border-slate-800 relative overflow-hidden select-none"
+      aria-label="Platform Debut Showcase"
+      className="w-full mb-6 bg-white/70 backdrop-blur-sm rounded-[24px] border border-[#CBD5E1] p-4 sm:p-6 shadow-xs relative select-none"
     >
-      {/* 1. 배경 은은한 네온 그리드 & 앰비언트 글로우 */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent pointer-events-none" />
-      <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
-
-      {/* 2. 상단 플랫폼 탭 바 */}
-      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 pb-4 mb-3 border-b border-slate-800/80">
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto justify-center sm:justify-start">
+      {/* 1. 상단 플랫폼 탭 바 (사이트 전체 라이트 톤앤매너와 조화) */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pb-4 mb-4 border-b border-[#E2E8F0]">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar w-full sm:w-auto justify-center sm:justify-start py-0.5">
           {PLATFORMS.map((p) => {
             const isSelected = selectedPlatform === p.id;
             const pSummary = summaries.get(p.id);
@@ -143,8 +138,8 @@ export function PlatformMiniSpotlight({
                 onClick={() => handleTabChange(p.id)}
                 className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-white text-slate-900 shadow-md scale-102'
-                    : 'bg-slate-900/90 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800'
+                    ? 'bg-[#0F172A] text-white shadow-xs scale-102'
+                    : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0] hover:text-[#0F172A] border border-[#CBD5E1]'
                 }`}
               >
                 <img
@@ -155,7 +150,7 @@ export function PlatformMiniSpotlight({
                 <span>{p.label}</span>
                 <span
                   className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
-                    isSelected ? 'bg-slate-900 text-white' : 'bg-slate-800 text-slate-400'
+                    isSelected ? 'bg-white/20 text-white' : 'bg-[#CBD5E1] text-[#334155]'
                   }`}
                 >
                   {count}
@@ -174,16 +169,16 @@ export function PlatformMiniSpotlight({
 
         {/* 인디케이터 (현재 / 전체) */}
         {items.length > 0 && (
-          <div className="text-xs font-mono font-bold text-slate-400 flex items-center gap-2">
+          <div className="text-xs font-mono font-bold text-[#64748B] flex items-center gap-2">
             <span>{activeIndex + 1} / {items.length}</span>
           </div>
         )}
       </div>
 
-      {/* 3. 숲 웰컴 버추얼 3단 중앙 포커스 캐러셀 */}
-      <div className="relative z-10 py-2">
+      {/* 2. 숲 웰컴 버추얼 3단 중앙 포커스 캐러셀 (라이트 배경 위 고품격 무대) */}
+      <div className="py-2">
         {items.length === 0 ? (
-          <div className="py-12 text-center text-xs font-bold text-slate-500 bg-slate-900/40 rounded-xl border border-dashed border-slate-800">
+          <div className="py-12 text-center text-xs font-bold text-[#64748B] bg-[#F8FAFC] rounded-2xl border border-dashed border-[#CBD5E1]">
             현재 등록된 {selectedPlatform} 데뷔 일정이 없습니다.
           </div>
         ) : (
@@ -193,7 +188,7 @@ export function PlatformMiniSpotlight({
             {items.length > 1 && (
               <button
                 onClick={handlePrev}
-                className="absolute left-2 sm:left-6 z-30 p-2.5 rounded-full bg-slate-900/80 hover:bg-white hover:text-slate-900 text-slate-300 border border-slate-700 shadow-lg transition-all cursor-pointer backdrop-blur-md"
+                className="absolute left-2 sm:left-6 z-30 p-2.5 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-md transition-all cursor-pointer"
                 aria-label="이전 버튜버"
               >
                 <ChevronLeft className="w-5 h-5" />
@@ -203,11 +198,11 @@ export function PlatformMiniSpotlight({
             {/* 카드 덱: 좌측 카드 / 중앙 메인 카드 / 우측 카드 */}
             <div className="flex items-center justify-center gap-3 sm:gap-6 w-full max-w-4xl px-2">
               
-              {/* [좌측 카드] (있을 때만 노출, 약간 축소 & 딤드) */}
+              {/* [좌측 카드] (있을 때만 노출, 중앙 카드와 동일 톤 & 60% 투명도) */}
               {prevItem && (
                 <div
                   onClick={handlePrev}
-                  className="hidden md:flex flex-col items-center justify-between w-[220px] h-[245px] bg-[#161F30]/70 rounded-[20px] border border-slate-800/80 p-4 opacity-50 scale-90 cursor-pointer hover:opacity-75 transition-all select-none"
+                  className="hidden md:flex flex-col items-center justify-between w-[240px] h-[255px] bg-[#131B2B] rounded-[22px] border border-slate-800 p-4.5 opacity-60 scale-90 cursor-pointer hover:opacity-85 transition-all select-none shadow-md"
                 >
                   <SoopCardContent item={prevItem} timezone={selectedTimezone} isCenter={false} />
                 </div>
@@ -216,9 +211,9 @@ export function PlatformMiniSpotlight({
               {/* [중앙 메인 카드] (숲 캡처의 1:1 레이아웃 구현) */}
               {currentItem && (
                 <div
-                  className="flex flex-col items-center justify-between w-[280px] sm:w-[320px] h-[270px] sm:h-[295px] bg-[#131B2B] rounded-[24px] border-2 border-blue-400/50 p-5 shadow-2xl transition-all relative group"
+                  className="flex flex-col items-center justify-between w-[280px] sm:w-[320px] h-[270px] sm:h-[295px] bg-[#0F172A] rounded-[24px] border-2 border-blue-400/60 p-5 shadow-xl transition-all relative group"
                   style={{
-                    boxShadow: '0 0 30px -5px rgba(59, 130, 246, 0.25), 0 20px 25px -5px rgba(0, 0, 0, 0.5)',
+                    boxShadow: '0 10px 30px -5px rgba(15, 23, 42, 0.3), 0 0 20px -3px rgba(59, 130, 246, 0.2)',
                   }}
                 >
                   <SoopCardContent
@@ -230,11 +225,11 @@ export function PlatformMiniSpotlight({
                 </div>
               )}
 
-              {/* [우측 카드] (있을 때만 노출, 약간 축소 & 딤드) */}
+              {/* [우측 카드] (있을 때만 노출, 중앙 카드와 동일 톤 & 60% 투명도) */}
               {nextItem && (
                 <div
                   onClick={handleNext}
-                  className="hidden md:flex flex-col items-center justify-between w-[220px] h-[245px] bg-[#161F30]/70 rounded-[20px] border border-slate-800/80 p-4 opacity-50 scale-90 cursor-pointer hover:opacity-75 transition-all select-none"
+                  className="hidden md:flex flex-col items-center justify-between w-[240px] h-[255px] bg-[#131B2B] rounded-[22px] border border-slate-800 p-4.5 opacity-60 scale-90 cursor-pointer hover:opacity-85 transition-all select-none shadow-md"
                 >
                   <SoopCardContent item={nextItem} timezone={selectedTimezone} isCenter={false} />
                 </div>
@@ -245,7 +240,7 @@ export function PlatformMiniSpotlight({
             {items.length > 1 && (
               <button
                 onClick={handleNext}
-                className="absolute right-2 sm:right-6 z-30 p-2.5 rounded-full bg-slate-900/80 hover:bg-white hover:text-slate-900 text-slate-300 border border-slate-700 shadow-lg transition-all cursor-pointer backdrop-blur-md"
+                className="absolute right-2 sm:right-6 z-30 p-2.5 rounded-full bg-white hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-[#CBD5E1] shadow-md transition-all cursor-pointer"
                 aria-label="다음 버튜버"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -260,7 +255,7 @@ export function PlatformMiniSpotlight({
 
 /**
  * 숲 레퍼런스 100% 싱크로율 세로형 카드 콘텐츠 (단일 책임 컴포넌트)
- * 레이아웃: [상단 대형 아바타] ➔ [중앙 이름] ➔ [하단 [방송예정] [시간] 캡슐]
+ * 레이아웃: [상단 대형 아바타 (LIVE 뱃지 좌측 상단)] ➔ [중앙 이름 (개인세 제거)] ➔ [하단 캡슐 일정 바]
  */
 function SoopCardContent({
   item,
@@ -279,16 +274,32 @@ function SoopCardContent({
   const formattedDate = formatSoopDateStyle(event.startAtUtc, timezone);
   const slug = (event.creator as any)?.slug || '';
 
+  // 소속사가 실제 기업세일 경우에만 노출 ('개인세'는 운영자 전용이므로 사용자 화면에서 완전 제거!)
+  const agency = event.creator.agency?.trim();
+  const hasRealAgency = agency && agency !== '개인세' && agency !== 'None';
+
   return (
     <>
       {/* 1. 상단 큼직한 캐릭터 아바타 비주얼 */}
       <div className="relative pt-1">
+        
+        {/* 🔴 사용자 지정 레퍼런스 LIVE 뱃지 (아바타 좌측 상단) */}
+        {isLive && (
+          <span className="absolute -top-1 -left-2 z-20 bg-[#E11D48] text-white text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-[6px] shadow-md tracking-wider flex items-center justify-center animate-pulse select-none">
+            LIVE
+          </span>
+        )}
+
         <div
           onClick={() => isCenter && slug && onNavigate && onNavigate(`/creator/${slug}`)}
           className={`relative rounded-full overflow-hidden border-2 transition-transform ${
-            isCenter
-              ? 'w-24 h-24 sm:w-28 sm:h-28 border-white/80 shadow-md cursor-pointer group-hover:scale-105'
-              : 'w-20 h-20 border-slate-600'
+            isLive
+              ? 'border-red-500 ring-2 ring-red-400/40'
+              : isCenter
+              ? 'border-white/80 shadow-md cursor-pointer group-hover:scale-105'
+              : 'border-slate-600'
+          } ${
+            isCenter ? 'w-24 h-24 sm:w-28 sm:h-28' : 'w-20 h-20'
           }`}
         >
           <AvatarImage
@@ -300,14 +311,14 @@ function SoopCardContent({
 
         {/* 국기 뱃지 */}
         <span
-          className="absolute bottom-0 right-1 text-[11px] leading-none bg-slate-900/90 rounded-full p-1 border border-slate-700"
+          className="absolute bottom-0 right-1 text-[12px] leading-none bg-white rounded-full p-0.5 border border-slate-200 shadow-sm"
           title={`국가: ${countryBadge.label}`}
         >
           {countryBadge.flag}
         </span>
       </div>
 
-      {/* 2. 중앙 버튜버 이름 (가운데 정렬, 굵직한 타이포) */}
+      {/* 2. 중앙 버튜버 이름 (가운데 정렬, 굵직한 타이포 - "개인세" 완전 제거) */}
       <div className="w-full text-center px-1">
         <h3
           onClick={() => isCenter && slug && onNavigate && onNavigate(`/creator/${slug}`)}
@@ -318,15 +329,16 @@ function SoopCardContent({
         >
           {event.creator.displayName}
         </h3>
-        {isCenter && (
+
+        {/* 실제 기업세 소속사가 있을 때만 표시 (개인세는 완전히 미노출) */}
+        {isCenter && hasRealAgency && (
           <p className="text-[11px] text-slate-400 font-medium truncate mt-0.5">
-            {event.creator.agency || '개인세'}
+            {agency}
           </p>
         )}
       </div>
 
       {/* 3. 하단 숲 100% 싱크로율 캡슐 일정 바 */}
-      {/* 숲 캡처: [방송 예정] (녹색 알약 뱃지) + 09/11(금) 오후 7시 (날짜시간) */}
       <div className="w-full flex items-center justify-center px-1">
         <a
           href={channelUrl}
