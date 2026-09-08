@@ -250,9 +250,9 @@ export function PlatformMiniSpotlight({
                     </button>
                   )}
 
-                  {/* 중앙 메인 카드 본체 */}
+                  {/* 중앙 메인 카드 본체 (bg_profile.png 3D 무대 배경 적용) */}
                   <div
-                    className="flex flex-col items-center justify-between w-[300px] sm:w-[340px] h-[290px] sm:h-[315px] bg-[#0B1120] rounded-[24px] border-2 border-blue-400/90 p-5 transition-all relative group scale-100"
+                    className="flex flex-col items-center justify-between w-[300px] sm:w-[340px] h-[290px] sm:h-[315px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[24px] border-2 border-blue-400/90 p-5 transition-all relative group scale-100 overflow-hidden"
                     style={{
                       boxShadow: '0 16px 40px -6px rgba(15, 23, 42, 0.45), 0 0 35px -2px rgba(59, 130, 246, 0.35)',
                     }}
@@ -368,7 +368,7 @@ function SpotlightCardContent({
             isLive
               ? 'border-red-500 ring-2 ring-red-400/40'
               : isCenter
-              ? 'border-white/90 shadow-md cursor-pointer group-hover:scale-105'
+              ? 'border-4 border-white shadow-xl ring-4 ring-blue-400/40 cursor-pointer group-hover:scale-105'
               : 'border-slate-600'
           } ${
             isCenter
@@ -400,12 +400,12 @@ function SpotlightCardContent({
       <div className="w-full text-center px-1">
         <h3
           onClick={() => isCenter && slug && onNavigate && onNavigate(`/creator/${slug}`)}
-          className={`font-black text-white truncate ${
+          className={`font-black truncate ${
             isCenter
-              ? 'text-base sm:text-lg cursor-pointer hover:underline'
+              ? 'text-base sm:text-lg text-[#0F172A] drop-shadow-xs cursor-pointer hover:underline'
               : isSmall
-              ? 'text-xs'
-              : 'text-sm'
+              ? 'text-xs text-white'
+              : 'text-sm text-white'
           }`}
           title={event.creator.displayName}
         >
@@ -414,7 +414,7 @@ function SpotlightCardContent({
 
         {/* 실제 기업세 소속사가 있을 때만 표시 (중앙 카드에 한함) */}
         {isCenter && hasRealAgency && (
-          <p className="text-[11px] text-slate-400 font-medium truncate mt-0.5">
+          <p className="text-[11px] text-slate-700 font-bold truncate mt-0.5">
             {agency}
           </p>
         )}
@@ -435,6 +435,8 @@ function SpotlightCardContent({
           } ${
             isLive
               ? 'bg-red-950/80 border-red-500/60 text-red-200 hover:bg-red-900'
+              : isCenter
+              ? 'bg-[#0F172A] border-slate-700/80 hover:bg-[#1E293B] text-white shadow-md'
               : 'bg-[#1E293B] border-slate-700 hover:border-slate-500 text-slate-200'
           }`}
           title={isLive ? '생방송 바로가기' : '방송국 채널 바로가기'}
@@ -458,19 +460,19 @@ function SpotlightCardContent({
 
           {/* 일시 텍스트: "MM월 DD일 (요일) 오후 00:00" */}
           <span
-            className={`font-bold text-slate-200 whitespace-nowrap truncate ${
+            className={`font-bold whitespace-nowrap truncate ${
               isCenter
-                ? 'text-[11px] sm:text-xs'
+                ? 'text-[11px] sm:text-xs text-white'
                 : isSmall
-                ? 'text-[9px]'
-                : 'text-[10px]'
+                ? 'text-[9px] text-slate-200'
+                : 'text-[10px] text-slate-200'
             }`}
           >
             {isLive ? '생방송 진행 중' : formattedDate}
           </span>
 
           <ExternalLink
-            className={`text-slate-400 shrink-0 ${
+            className={`text-slate-300 shrink-0 ${
               isSmall ? 'w-2.5 h-2.5 ml-0.2' : 'w-3 h-3 ml-0.5'
             }`}
           />
