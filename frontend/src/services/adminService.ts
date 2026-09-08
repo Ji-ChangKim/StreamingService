@@ -230,4 +230,31 @@ export async function approveBatchSubmissions(
   }
 }
 
+/**
+ * 10. 관리자 즉시 자동 심사 파이프라인 수동 기동 API
+ */
+export async function triggerAutoReviewNow(): Promise<{
+  success: boolean;
+  message?: string;
+  report?: any;
+  error?: string;
+}> {
+  const token = getAdminToken();
+  if (!token) return { success: false, error: '인증 토큰이 없습니다. 다시 로그인해주세요.' };
+
+  try {
+    const res = await fetch(`${getApiHost()}/api/v1/admin/auto-review/run`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    return await res.json();
+  } catch (err: any) {
+    return { success: false, error: err?.message || '자동 심사 API 통신 실패' };
+  }
+}
+
+
 

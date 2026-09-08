@@ -20,6 +20,7 @@ import {
   fetchAllActiveStreamersForAdmin,
 } from './services/submissionDbService';
 import { syncMissingProfilesInD1 } from './services/profileSyncService';
+import { runAutoReviewPipeline } from './services/autoReviewService';
 
 type Bindings = {
   DB: D1Database;
@@ -722,11 +723,38 @@ app.all('*', async (c) => {
   }
 });
 
-// Cloudflare Workers Scheduled Cron Handler (매일 정기 웹서치 및 누락 프로필 자동 동기화 수행)
+// 12. 관리자 즉시 자동 심사 파이프라인 수동 기동 API
+app.post('/api/v1/admin/auto-review/run', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const report = await runAutoReviewPipeline(c.env.DB);
+  return c.json({
+    success: true,
+    message: `자동 심사 완료: 대기열 ${report.totalProcessed}건 검증 중 ${report.approvedCount}건 자동 승인, ${report.rejectedCount}건 반려, ${report.heldCount}건 보류`,
+    report,
+  });
+});
+
+// Cloudflare Workers Scheduled Cron Handler (1시간 주기 자동 심사 및 정기 크롤러 수행)
 export default {
   fetch: app.fetch,
   async scheduled(event: any, env: Bindings, ctx: any) {
     if (env.DB) {
+      // 1. 신청서 3단계 자동 심사 및 캘린더 자동 반영 파이프라인 (매시간 1회 자동 실행)
+      ctx.waitUntil(
+        runAutoReviewPipeline(env.DB)
+          .then((report) => console.log('[Scheduled Cron] Auto-review success:', report.approvedCount, 'approved /', report.totalProcessed, 'processed'))
+          .catch((err) => console.error('[Scheduled Cron] Auto-review error:', err))
+      );
+
+      // 2. 누락 프로필 자동 동기화
       ctx.waitUntil(
         syncMissingProfilesInD1(env.DB)
           .then((res) => console.log('[Scheduled Cron] Profile sync success:', res.updatedCount))

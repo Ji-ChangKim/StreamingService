@@ -21,6 +21,7 @@ import {
   UploadCloud,
   FileSpreadsheet,
   FileText,
+  Zap,
 } from 'lucide-react';
 import {
   adminLogin,
@@ -30,6 +31,7 @@ import {
   fetchAdminSubmissions,
   approveSubmission,
   approveBatchSubmissions,
+  triggerAutoReviewNow,
   rejectSubmission,
   deleteSubmission,
   fetchAdminStreamers,
@@ -68,6 +70,7 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
   const [selectedSubIds, setSelectedSubIds] = useState<number[]>([]);
   const [isBatchApproving, setIsBatchApproving] = useState<boolean>(false);
+  const [isAutoReviewing, setIsAutoReviewing] = useState<boolean>(false);
 
   // SEO: 구글 및 검색 봇 크롤링/인덱싱 100% 차단 메타 태그 적용
   useEffect(() => {
@@ -200,6 +203,24 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
       loadSubmissions(submissionFilter);
     } else {
       alert(`일괄 승인 실패: ${res.error || res.message || '오류가 발생했습니다.'}`);
+    }
+  };
+
+  const handleTriggerAutoReview = async () => {
+    if (!confirm('대기열의 모든 신청서에 대해 [주소 검증 ➔ 공식 채널 API 검증 ➔ 일정·중복 검증] 3단계 자동 심사를 즉시 실행하시겠습니까?')) {
+      return;
+    }
+
+    setIsAutoReviewing(true);
+    const res = await triggerAutoReviewNow();
+    setIsAutoReviewing(false);
+
+    if (res.success) {
+      setActionSuccessMsg(res.message || '자동 심사가 완료되었습니다.');
+      setTimeout(() => setActionSuccessMsg(null), 5000);
+      loadSubmissions(submissionFilter);
+    } else {
+      alert(`자동 심사 실행 실패: ${res.error || '오류가 발생했습니다.'}`);
     }
   };
 
@@ -463,6 +484,12 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
                   <span>전체 선택 ({pendingSubmissions.length})</span>
                 </label>
               )}
+
+              {/* 1시간 자동 심사 가동 안내 배지 */}
+              <span className="text-[11px] font-bold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-[8px] border border-amber-200 inline-flex items-center gap-1 ml-1" title="Cloudflare Workers 정기 스케줄러가 1시간마다 신규 신청서를 3단계 검증 후 자동 승인합니다.">
+                <Clock3 className="w-3 h-3 text-amber-600" />
+                <span>1시간 자동 심사 가동</span>
+              </span>
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
@@ -496,6 +523,27 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
               >
                 <UploadCloud className="w-3.5 h-3.5" />
                 <span>엑셀/CSV 일괄 등록</span>
+              </button>
+
+              {/* ⚡ 자동 심사 파이프라인 수동 즉시 실행 버튼 */}
+              <button
+                type="button"
+                onClick={handleTriggerAutoReview}
+                disabled={isAutoReviewing}
+                className="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold text-xs rounded-[8px] transition-all shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                title="대기열의 모든 신청서에 대해 주소, 공식 채널 API, 일정을 검증하여 캘린더에 즉시 자동 승인/반영합니다."
+              >
+                {isAutoReviewing ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>자동 심사 중...</span>
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-3.5 h-3.5 text-yellow-200 fill-yellow-200" />
+                    <span>자동 심사 실행</span>
+                  </>
+                )}
               </button>
 
               <button
