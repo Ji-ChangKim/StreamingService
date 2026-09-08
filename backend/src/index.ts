@@ -11,6 +11,7 @@ import { validateDebutEventPayload } from './services/eventValidationService';
 import { verifyAdminLogin, validateAdminToken } from './services/adminAuthService';
 import {
   createSubmissionToD1,
+  createSubmissionsBatchToD1,
   fetchSubmissionsFromD1,
   approveSubmissionInD1,
   rejectSubmissionInD1,
@@ -265,6 +266,34 @@ app.get('/api/v1/admin/submissions', async (c) => {
   const status = c.req.query('status') || 'PENDING';
   const list = await fetchSubmissionsFromD1(c.env.DB, status);
   return c.json({ success: true, submissions: list, total: list.length });
+});
+
+// 2-2. 관리자 엑셀/CSV 신청서 일괄 등록 (Batch Submissions)
+app.post('/api/v1/admin/submissions/batch', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const body = await c.req.json().catch(() => ({}));
+  const items = Array.isArray(body.items) ? body.items : [];
+
+  if (items.length === 0) {
+    return c.json({ success: false, error: '등록할 신청서 데이터가 없습니다.' }, 400);
+  }
+
+  const result = await createSubmissionsBatchToD1(c.env.DB, items);
+  return c.json({
+    success: result.success,
+    insertedCount: result.insertedCount,
+    message: result.success
+      ? `총 ${result.insertedCount}건의 신청서가 심사 대기열에 성공적으로 등록되었습니다.`
+      : result.error || '일괄 등록에 실패했습니다.',
+  }, result.success ? 200 : 500);
 });
 
 // 3. 관리자 1-클릭 승인 (debut_submissions ➔ streamerChannel & streamerChannel_info)

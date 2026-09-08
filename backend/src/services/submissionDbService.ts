@@ -75,6 +75,81 @@ export async function createSubmissionToD1(db: D1Database, body: any): Promise<n
 }
 
 /**
+ * 데뷔 날짜 및 시간으로 ISO UTC 문자열 생성 (SRP 헬퍼)
+ */
+export function formatStartAtUtc(debutDate: string, debutTime: string, timezone: string = 'Asia/Seoul'): string {
+  try {
+    const cleanDate = debutDate.trim().replace(/\//g, '-').replace(/\./g, '-');
+    let cleanTime = debutTime.trim();
+    if (cleanTime.length === 5) cleanTime += ':00';
+
+    if (timezone === 'Asia/Seoul') {
+      const d = new Date(`${cleanDate}T${cleanTime}+09:00`);
+      if (!isNaN(d.getTime())) return d.toISOString();
+    }
+    const d = new Date(`${cleanDate}T${cleanTime}Z`);
+    if (!isNaN(d.getTime())) return d.toISOString();
+  } catch {}
+  return new Date().toISOString();
+}
+
+/**
+ * 1-2. 엑셀/CSV 일괄 업로드용: debut_submissions 테이블에 PENDING 상태로 대량 일괄 저장 (db.batch)
+ */
+export async function createSubmissionsBatchToD1(
+  db: D1Database,
+  items: any[]
+): Promise<{ success: boolean; insertedCount: number; error?: string }> {
+  if (!items || items.length === 0) {
+    return { success: true, insertedCount: 0 };
+  }
+
+  try {
+    let insertedCount = 0;
+    const CHUNK_SIZE = 50;
+
+    for (let i = 0; i < items.length; i += CHUNK_SIZE) {
+      const chunk = items.slice(i, i + CHUNK_SIZE);
+      const statements = chunk.map((item) => {
+        const displayName = (item.displayName || '신입 버튜버').trim();
+        const platform = (item.platform || 'CHZZK').toUpperCase().trim();
+        const channelUrl = (item.channelUrl || '').trim();
+        const avatarUrl = (item.avatarUrl || '').trim();
+        const description = (item.description || `${displayName}의 데뷔 방송입니다.`).trim();
+        const agencyName = (item.agencyName || '개인세').trim();
+        const countryCode = (item.countryCode || 'KR').toUpperCase().trim();
+        const debutDate = (item.debutDate || '').trim();
+        const debutTime = (item.debutTime || '00:00').trim();
+        const timezone = item.timezone || 'Asia/Seoul';
+        const startAtUtc = item.startAtUtc || formatStartAtUtc(debutDate, debutTime, timezone);
+        const xUrl = (item.xUrl || '').trim();
+        const contactEmail = (item.contactEmail || '').trim();
+
+        return db.prepare(`
+          INSERT INTO debut_submissions (
+            display_name, platform, channel_url, avatar_url, description,
+            agency_name, country_code, debut_date, debut_time, timezone,
+            start_at_utc, x_url, contact_email, status
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING')
+        `).bind(
+          displayName, platform, channelUrl, avatarUrl, description,
+          agencyName, countryCode, debutDate, debutTime, timezone,
+          startAtUtc, xUrl, contactEmail
+        );
+      });
+
+      await db.batch(statements);
+      insertedCount += chunk.length;
+    }
+
+    return { success: true, insertedCount };
+  } catch (err: any) {
+    console.error('createSubmissionsBatchToD1 error:', err);
+    return { success: false, insertedCount: 0, error: err?.message || 'DB 배치 저장 실패' };
+  }
+}
+
+/**
  * 2. 관리자 CMS용 신청서 목록 조회 (전체 / PENDING / APPROVED / REJECTED)
  */
 export async function fetchSubmissionsFromD1(db: D1Database, statusFilter?: string): Promise<SubmissionData[]> {

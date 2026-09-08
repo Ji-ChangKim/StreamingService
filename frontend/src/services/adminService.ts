@@ -181,3 +181,28 @@ export async function deleteAdminStreamer(slug: string): Promise<boolean> {
     return false;
   }
 }
+
+/**
+ * 8. 엑셀/CSV 심사 신청서 일괄 등록 (Batch Submissions)
+ */
+export async function uploadBatchSubmissions(
+  items: any[]
+): Promise<{ success: boolean; insertedCount?: number; message?: string; error?: string }> {
+  const token = getAdminToken();
+  if (!token) return { success: false, error: '인증 토큰이 없습니다. 다시 로그인해주세요.' };
+
+  try {
+    const res = await fetch(`${getApiHost()}/api/v1/admin/submissions/batch`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ items }),
+    });
+    return await res.json();
+  } catch (err: any) {
+    return { success: false, error: err?.message || '일괄 업로드 통신 실패' };
+  }
+}
+
