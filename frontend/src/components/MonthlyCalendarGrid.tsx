@@ -15,6 +15,8 @@ interface MonthlyCalendarGridProps {
   setSelectedTimezone: (tz: string) => void;
   selectedPlatform: string;
   setSelectedPlatform: (p: string) => void;
+  selectedCountry?: string;
+  setSelectedCountry?: (country: string) => void;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   onDownloadICS: (event: DebutEvent) => void;
@@ -27,6 +29,8 @@ export function MonthlyCalendarGrid({
   selectedTimezone,
   selectedPlatform,
   setSelectedPlatform,
+  selectedCountry = 'ALL',
+  setSelectedCountry,
   searchQuery,
   setSearchQuery,
   onDownloadICS,
@@ -101,6 +105,8 @@ export function MonthlyCalendarGrid({
           selectedTimezone={selectedTimezone}
           selectedPlatform={selectedPlatform}
           setSelectedPlatform={setSelectedPlatform}
+          selectedCountry={selectedCountry}
+          setSelectedCountry={setSelectedCountry}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           onDownloadICS={onDownloadICS}
@@ -123,6 +129,8 @@ export function MonthlyCalendarGrid({
             onToday={handleToday}
             selectedPlatform={selectedPlatform}
             onPlatformSelect={setSelectedPlatform}
+            selectedCountry={selectedCountry}
+            onCountrySelect={setSelectedCountry}
             currentView={currentView}
             onChangeView={setCurrentView}
             onOpenYearMonthPicker={() => setShowYearMonthPicker(true)}

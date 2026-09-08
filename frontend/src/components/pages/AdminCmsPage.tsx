@@ -41,6 +41,7 @@ import { generateSuggestedSlug } from '../../utils/slugUtils';
 import { AvatarImage } from '../calendar/AvatarImage';
 import { SubmissionUploadModal } from '../admin/SubmissionUploadModal';
 import { downloadExcelTemplate, downloadCsvTemplate } from '../../utils/submissionTemplateGenerator';
+import { getCountryBadge } from '../../utils/countryDetector';
 
 interface AdminCmsPageProps {
   onNavigateHome: () => void;
@@ -62,6 +63,7 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
   const [isLoadingData, setIsLoadingData] = useState<boolean>(false);
   const [streamerSearch, setStreamerSearch] = useState<string>('');
   const [selectedPlatform, setSelectedPlatform] = useState<string>('ALL');
+  const [selectedStreamerCountry, setSelectedStreamerCountry] = useState<string>('ALL');
 
   // 작업 처리 상태
   const [processingId, setProcessingId] = useState<number | null>(null);
@@ -283,7 +285,9 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
       s.channel_url?.toLowerCase().includes(streamerSearch.toLowerCase());
 
     const matchesPlatform = selectedPlatform === 'ALL' || s.platform === selectedPlatform;
-    return matchesQuery && matchesPlatform;
+    const itemCountry = getCountryBadge(s.country_code).code;
+    const matchesCountry = selectedStreamerCountry === 'ALL' || itemCountry === selectedStreamerCountry;
+    return matchesQuery && matchesPlatform && matchesCountry;
   });
 
   // 1. 관리자 로그인 화면 (인증 전)
@@ -668,6 +672,17 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
                             </span>
                           )}
 
+                          {/* Country Badge */}
+                          {(() => {
+                            const badge = getCountryBadge(sub.countryCode);
+                            return (
+                              <span className="bg-slate-100 text-slate-700 text-[10px] font-extrabold px-2 py-0.5 rounded border border-slate-200 flex items-center gap-1" title={`국가: ${badge.label} (${badge.code})`}>
+                                <span>{badge.flag}</span>
+                                <span>{badge.code}</span>
+                              </span>
+                            );
+                          })()}
+
                           {sub.agencyName && (
                             <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 rounded border border-slate-200">
                               {sub.agencyName}
@@ -804,20 +819,47 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
                 />
               </div>
 
-              <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
-                {['ALL', 'CHZZK', 'SOOP', 'YOUTUBE', 'TWITCH'].map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setSelectedPlatform(p)}
-                    className={`px-3 py-1.5 rounded-[8px] text-xs font-extrabold transition-all cursor-pointer whitespace-nowrap ${
-                      selectedPlatform === p
-                        ? 'bg-[#0F172A] text-white shadow-2xs'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
-                  >
-                    {p}
-                  </button>
-                ))}
+              <div className="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
+                {/* Platform Filter */}
+                <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0">
+                  {['ALL', 'CHZZK', 'SOOP', 'YOUTUBE', 'TWITCH'].map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => setSelectedPlatform(p)}
+                      className={`px-2.5 py-1.5 rounded-[8px] text-xs font-extrabold transition-all cursor-pointer whitespace-nowrap ${
+                        selectedPlatform === p
+                          ? 'bg-[#0F172A] text-white shadow-2xs'
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Country Filter */}
+                <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 pl-1 border-l border-slate-200">
+                  {[
+                    { id: 'ALL', label: '전체', flag: '🌐' },
+                    { id: 'KR', label: 'KR', flag: '🇰🇷' },
+                    { id: 'JP', label: 'JP', flag: '🇯🇵' },
+                    { id: 'EN', label: 'EN', flag: '🇺🇸' },
+                  ].map((c) => (
+                    <button
+                      key={c.id}
+                      onClick={() => setSelectedStreamerCountry(c.id)}
+                      className={`px-2 py-1.5 rounded-[8px] text-xs font-extrabold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 ${
+                        selectedStreamerCountry === c.id
+                          ? 'bg-[#2563EB] text-white shadow-2xs'
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
+                      title={`${c.label} 버튜버만 보기`}
+                    >
+                      <span>{c.flag}</span>
+                      <span>{c.id}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -862,6 +904,15 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
                         <span className="text-[10px] font-bold px-1.5 py-0.5 bg-slate-100 text-slate-700 rounded border border-slate-200">
                           {st.platform}
                         </span>
+                        {(() => {
+                          const badge = getCountryBadge(st.country_code);
+                          return (
+                            <span className="text-[10px] font-extrabold px-1.5 py-0.5 bg-slate-100 text-slate-700 rounded border border-slate-200 flex items-center gap-1" title={`국가: ${badge.label} (${badge.code})`}>
+                              <span>{badge.flag}</span>
+                              <span>{badge.code}</span>
+                            </span>
+                          );
+                        })()}
                         {st.agency_name && (
                           <span className="text-[10px] text-slate-500 font-medium truncate">
                             • {st.agency_name}

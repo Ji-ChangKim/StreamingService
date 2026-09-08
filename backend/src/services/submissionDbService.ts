@@ -1,5 +1,6 @@
 import { fetchPlatformProfile } from './platformApiService';
 import { generateCleanSlug, resolveUniqueSlug } from '../utils/slugUtils';
+import { detectCountryFromChannel } from '../utils/countryDetector';
 
 export interface SubmissionData {
   id: number;
@@ -30,7 +31,6 @@ export async function createSubmissionToD1(db: D1Database, body: any): Promise<n
   let displayName = body.creator?.displayName || body.displayName || '신입 버튜버';
   let avatarUrl = body.creator?.avatarUrl || body.avatarUrl || '';
   const agencyName = body.creator?.agency || body.agency || '개인세';
-  const countryCode = body.creator?.countryCode || body.countryCode || 'KR';
   let description = body.description || body.creator?.description || `${displayName}의 데뷔 방송입니다.`;
 
   const primaryLink = body.links?.[0] || null;
@@ -50,6 +50,16 @@ export async function createSubmissionToD1(db: D1Database, body: any): Promise<n
       }
     } catch {}
   }
+
+  // 💡 채널 정보를 바탕으로 국가(KR / JP / EN) 자동 판별
+  const rawCountry = body.creator?.countryCode || body.countryCode;
+  const countryCode = detectCountryFromChannel({
+    platform,
+    channelUrl,
+    displayName,
+    description,
+    existingCountryCode: rawCountry,
+  });
 
   const startAtUtc = body.startAtUtc || new Date(now + 86400000 * 3).toISOString();
   const timezone = body.originalTimezone || body.timezone || 'Asia/Seoul';
@@ -117,13 +127,21 @@ export async function createSubmissionsBatchToD1(
         const avatarUrl = (item.avatarUrl || '').trim();
         const description = (item.description || `${displayName}의 데뷔 방송입니다.`).trim();
         const agencyName = (item.agencyName || '개인세').trim();
-        const countryCode = (item.countryCode || 'KR').toUpperCase().trim();
         const debutDate = (item.debutDate || '').trim();
         const debutTime = (item.debutTime || '00:00').trim();
         const timezone = item.timezone || 'Asia/Seoul';
         const startAtUtc = item.startAtUtc || formatStartAtUtc(debutDate, debutTime, timezone);
         const xUrl = (item.xUrl || '').trim();
         const contactEmail = (item.contactEmail || '').trim();
+
+        // 💡 엑셀/CSV 일괄 항목 국가(KR / JP / EN) 자동 판별
+        const countryCode = detectCountryFromChannel({
+          platform,
+          channelUrl,
+          displayName,
+          description,
+          existingCountryCode: item.countryCode,
+        });
 
         return db.prepare(`
           INSERT INTO debut_submissions (
@@ -246,6 +264,15 @@ export async function approveSubmissionInD1(
       } catch {}
     }
 
+    // 국가 코드 최종 정밀 판별
+    const finalCountryCode = detectCountryFromChannel({
+      platform: sub.platform,
+      channelUrl: sub.channel_url,
+      displayName,
+      description,
+      existingCountryCode: sub.country_code,
+    });
+
     // ② 메인 streamerChannel_info 등록 (깔끔한 슬러그로 저장)
     const infoRes: any = await db.prepare(`
       INSERT INTO streamerChannel_info (
@@ -257,7 +284,7 @@ export async function approveSubmissionInD1(
     `).bind(
       channelId, slug, displayName, avatarUrl, description,
       sub.agency_name || '개인세', sub.debut_date, sub.debut_time, sub.timezone || 'Asia/Seoul',
-      sub.start_at_utc, sub.country_code || 'KR', sub.x_url || ''
+      sub.start_at_utc, finalCountryCode, sub.x_url || ''
     ).first();
 
     const infoId = infoRes?.id || channelId;

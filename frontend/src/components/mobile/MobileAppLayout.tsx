@@ -15,6 +15,8 @@ interface MobileAppLayoutProps {
   selectedTimezone: string;
   selectedPlatform: string;
   setSelectedPlatform: (p: string) => void;
+  selectedCountry?: string;
+  setSelectedCountry?: (country: string) => void;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   onDownloadICS: (event: DebutEvent) => void;
@@ -29,6 +31,8 @@ export function MobileAppLayout({
   selectedTimezone,
   selectedPlatform,
   setSelectedPlatform,
+  selectedCountry = 'ALL',
+  setSelectedCountry,
   searchQuery,
   setSearchQuery,
   onOpenSubmitModal,
@@ -108,6 +112,8 @@ export function MobileAppLayout({
             <FilterBar
               selectedPlatform={selectedPlatform}
               setSelectedPlatform={setSelectedPlatform}
+              selectedCountry={selectedCountry}
+              setSelectedCountry={setSelectedCountry}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               totalCount={events.length}

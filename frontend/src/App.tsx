@@ -16,7 +16,7 @@ import { AdminCmsPage } from './components/pages/AdminCmsPage';
 import { DebutEvent } from './types';
 import { fetchDebutEvents } from './services/eventService';
 import { generateICSContent, triggerFileDownload } from './utils/dateUtils';
-import { filterEventsByPlatform, filterEventsByQuery } from './utils/eventUtils';
+import { filterEventsByPlatform, filterEventsByQuery, filterEventsByCountry } from './utils/eventUtils';
 import { Language, SEO_DATA } from './utils/i18n';
 
 export function App() {
@@ -47,6 +47,7 @@ export function App() {
   });
 
   const [selectedPlatform, setSelectedPlatform] = useState<string>('ALL');
+  const [selectedCountry, setSelectedCountry] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [events, setEvents] = useState<DebutEvent[]>([]);
   const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
@@ -128,7 +129,10 @@ export function App() {
   }, []);
 
   const filteredEvents = filterEventsByQuery(
-    filterEventsByPlatform(events, selectedPlatform),
+    filterEventsByCountry(
+      filterEventsByPlatform(events, selectedPlatform),
+      selectedCountry
+    ),
     searchQuery
   );
 
@@ -273,6 +277,8 @@ export function App() {
               setSelectedTimezone={setSelectedTimezone}
               selectedPlatform={selectedPlatform}
               setSelectedPlatform={setSelectedPlatform}
+              selectedCountry={selectedCountry}
+              setSelectedCountry={setSelectedCountry}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               onDownloadICS={handleDownloadICS}

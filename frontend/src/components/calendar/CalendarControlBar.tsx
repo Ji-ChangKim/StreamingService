@@ -8,6 +8,8 @@ interface CalendarControlBarProps {
   onToday: () => void;
   selectedPlatform: string;
   onPlatformSelect: (platform: string) => void;
+  selectedCountry?: string;
+  onCountrySelect?: (country: string) => void;
   currentView: 'month' | 'week';
   onChangeView: (view: 'month' | 'week') => void;
   onOpenYearMonthPicker: () => void;
@@ -21,6 +23,8 @@ export function CalendarControlBar({
   onToday,
   selectedPlatform,
   onPlatformSelect,
+  selectedCountry = 'ALL',
+  onCountrySelect,
   currentView,
   onChangeView,
   onOpenYearMonthPicker,
@@ -33,13 +37,21 @@ export function CalendarControlBar({
     { id: 'YOUTUBE', label: '유튜브', icon: '/icons/youtube_icon.png' },
   ];
 
+  const countries = [
+    { id: 'ALL', label: '전체', flag: '🌐' },
+    { id: 'KR', label: '한국 (KR)', flag: '🇰🇷' },
+    { id: 'JP', label: '일본 (JP)', flag: '🇯🇵' },
+    { id: 'EN', label: '글로벌 (EN)', flag: '🇺🇸' },
+  ];
+
   return (
     <div className="space-y-3 mb-4">
-      {/* 1. Header Grid: Left (Platform Select Box), Center (Year/Month & Today), Right (View Switcher) */}
+      {/* 1. Header Grid: Left (Platform & Country Select Boxes), Center (Year/Month & Today), Right (View Switcher) */}
       <div className="flex flex-col lg:grid lg:grid-cols-3 items-center justify-between gap-3 pb-3 border-b border-[#E2E8F0]">
         
-        {/* Left: Platform Selection Box Bar (ALL | 치지직 | SOOP | 트위치 | 유튜브) */}
-        <div className="flex items-center justify-center lg:justify-start w-full lg:w-auto overflow-x-auto no-scrollbar py-0.5">
+        {/* Left: Platform & Country Filter Selection Boxes */}
+        <div className="flex flex-wrap items-center justify-center lg:justify-start w-full lg:w-auto gap-2 py-0.5">
+          {/* Platform Filter */}
           <div className="inline-flex items-center bg-[#F1F5F9] p-1 rounded-[8px] border border-[#CBD5E1] gap-1 shrink-0">
             {platforms.map((p) => {
               const isSelected = selectedPlatform === p.id;
@@ -67,6 +79,31 @@ export function CalendarControlBar({
               );
             })}
           </div>
+
+          {/* Country Filter (KR / JP / EN / ALL) */}
+          {onCountrySelect && (
+            <div className="inline-flex items-center bg-[#F8FAFC] p-1 rounded-[8px] border border-[#CBD5E1] gap-1 shrink-0">
+              {countries.map((c) => {
+                const isSelected = selectedCountry === c.id;
+                return (
+                  <button
+                    key={c.id}
+                    onClick={() => onCountrySelect(c.id)}
+                    className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-[6px] text-xs font-bold transition-all cursor-pointer select-none ${
+                      isSelected
+                        ? 'bg-[#2563EB] text-white shadow-xs'
+                        : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                    }`}
+                    aria-pressed={isSelected}
+                    title={`${c.label} 버튜버만 보기`}
+                  >
+                    <span>{c.flag}</span>
+                    <span>{c.id === 'ALL' ? '전체' : c.id}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Center: Year/Month Navigator & Today Button */}

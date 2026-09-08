@@ -3,6 +3,8 @@ import { Search, Calendar, List } from 'lucide-react';
 interface FilterBarProps {
   selectedPlatform: string;
   setSelectedPlatform: (platform: string) => void;
+  selectedCountry?: string;
+  setSelectedCountry?: (country: string) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   totalCount: number;
@@ -13,6 +15,8 @@ interface FilterBarProps {
 export function FilterBar({
   selectedPlatform,
   setSelectedPlatform,
+  selectedCountry = 'ALL',
+  setSelectedCountry,
   searchQuery,
   setSearchQuery,
   totalCount,
@@ -25,6 +29,13 @@ export function FilterBar({
     { id: 'YOUTUBE', label: '유튜브 (YouTube)' },
     { id: 'SOOP', label: '숲 (SOOP)' },
     { id: 'TWITCH', label: '트위치 (Twitch)' },
+  ];
+
+  const countries = [
+    { id: 'ALL', label: '전체', flag: '🌐' },
+    { id: 'KR', label: 'KR', flag: '🇰🇷' },
+    { id: 'JP', label: 'JP', flag: '🇯🇵' },
+    { id: 'EN', label: 'EN', flag: '🇺🇸' },
   ];
 
   return (
@@ -68,6 +79,30 @@ export function FilterBar({
             </button>
           );
         })}
+
+        {/* 국가 필터 (KR / JP / EN / ALL) */}
+        {setSelectedCountry && (
+          <div className="flex items-center gap-1 pl-1.5 border-l border-slate-200 shrink-0">
+            {countries.map((c) => {
+              const isSelected = selectedCountry === c.id;
+              return (
+                <button
+                  key={c.id}
+                  onClick={() => setSelectedCountry(c.id)}
+                  className={`px-2 py-1.5 rounded-[6px] sm:rounded-[4px] text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1 cursor-pointer shrink-0 ${
+                    isSelected
+                      ? 'bg-[#2563EB] text-white shadow-xs'
+                      : 'bg-[#F8FAFC] text-[#5A5A5A] hover:bg-slate-200/80 hover:text-[#080808] border border-[#D8D8D8]'
+                  }`}
+                  title={`${c.label} 버튜버만 보기`}
+                >
+                  <span>{c.flag}</span>
+                  <span>{c.id === 'ALL' ? '전체' : c.id}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* 우측 뷰 모드 토글 + 검색창 */}
