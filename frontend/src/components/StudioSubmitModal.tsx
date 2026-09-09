@@ -42,6 +42,11 @@ export function StudioSubmitModal({
   const [date, setDate] = useState(initialDate || getTodayString());
   const [time, setTime] = useState('20:00');
   const [timezone, setTimezone] = useState('Asia/Seoul');
+  const [isTbd, setIsTbd] = useState<boolean>(false);
+  const [tbdMonth, setTbdMonth] = useState<string>(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
   const [description, setDescription] = useState('');
 
   // 소속: 'INDIE' | 'AGENCY'
@@ -90,6 +95,14 @@ export function StudioSubmitModal({
         setAgencyName('');
       }
 
+      const isEventTbd = Boolean(editEvent.isTbd || editEvent.description?.includes('[일정 미정]') || editEvent.description?.includes('[미정]'));
+      setIsTbd(isEventTbd);
+      if (editEvent.targetMonth) {
+        setTbdMonth(editEvent.targetMonth);
+      } else if (editEvent.startAtUtc) {
+        setTbdMonth(editEvent.startAtUtc.slice(0, 7));
+      }
+
       try {
         const d = new Date(editEvent.startAtUtc);
         if (!isNaN(d.getTime())) {
@@ -113,6 +126,9 @@ export function StudioSubmitModal({
       setDate(initialDate || getTodayString());
       setTime('20:00');
       setTimezone('Asia/Seoul');
+      setIsTbd(false);
+      const now = new Date();
+      setTbdMonth(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`);
       setDescription('');
       setAgencyType('INDIE');
       setAgencyName('');
@@ -284,7 +300,9 @@ export function StudioSubmitModal({
     setSubmitError('');
 
     try {
-      const utcIso = new Date(`${date}T${time}:00`).toISOString();
+      const utcIso = isTbd
+        ? new Date(`${tbdMonth}-01T00:00:00.000Z`).toISOString()
+        : new Date(`${date}T${time}:00`).toISOString();
       const finalAgency = agencyType === 'AGENCY' ? (agencyName || '소속사') : 'Indie';
       const finalAvatar = avatarUrl || getAvatarUrl(displayName);
 
@@ -305,7 +323,12 @@ export function StudioSubmitModal({
         status: 'PUBLISHED',
         verificationStatus: editEvent?.verificationStatus || 'COMMUNITY_SUBMITTED',
         links: [{ platform, url: watchUrl, isPrimary: true }],
-        description: description || `${displayName} 버튜버의 공식 데뷔 방송입니다.`,
+        description: isTbd
+          ? (description ? `[일정 미정] ${description}` : `[일정 미정] ${displayName} 버튜버의 데뷔 방송입니다.`)
+          : (description || `${displayName} 버튜버의 공식 데뷔 방송입니다.`),
+        isTbd,
+        targetMonth: isTbd ? tbdMonth : undefined,
+        tbdType: isTbd ? 'DATE_TBD' : undefined,
       };
 
       if (editEvent) {
@@ -491,41 +514,77 @@ export function StudioSubmitModal({
               </div>
             )}
 
-            {/* Step 3: 날짜 & 시간 & 기준 타임존 */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-              <div>
-                <label className="block font-bold mb-1 text-[#334155] text-sm">날짜</label>
-                <input
-                  type="date"
-                  required
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs sm:text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
-                />
+            {/* Step 3: 날짜 & 시간 & 기준 타임존 (일정 미정 토글 지원) */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block font-bold text-[#334155] text-sm">데뷔 일정</label>
+                <label className="flex items-center gap-1.5 cursor-pointer text-xs font-bold text-amber-800 bg-amber-50 px-2 py-1 rounded-md border border-amber-200 hover:bg-amber-100/80 transition-colors select-none">
+                  <input
+                    type="checkbox"
+                    checked={isTbd}
+                    onChange={(e) => setIsTbd(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded text-amber-600 focus:ring-amber-500 cursor-pointer"
+                  />
+                  <span>일자·시간 미정 (해당 월 데뷔 예정)</span>
+                </label>
               </div>
-              <div>
-                <label className="block font-bold mb-1 text-[#334155] text-sm">시간</label>
-                <input
-                  type="time"
-                  required
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs sm:text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
-                />
-              </div>
-              <div className="col-span-2 sm:col-span-1">
-                <label className="block font-bold mb-1 text-[#334155] text-sm">기준 시간대</label>
-                <select
-                  value={timezone}
-                  onChange={(e) => setTimezone(e.target.value)}
-                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs sm:text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
-                >
-                  <option value="Asia/Seoul">Asia/Seoul (KST)</option>
-                  <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
-                  <option value="America/Los_Angeles">America/Los_Angeles (PST)</option>
-                  <option value="UTC">UTC</option>
-                </select>
-              </div>
+
+              {isTbd ? (
+                <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-[8px] flex flex-col sm:flex-row items-start sm:items-center gap-3 animate-fadeIn">
+                  <div className="w-full sm:w-1/2">
+                    <label className="block font-bold mb-1 text-amber-900 text-xs">데뷔 예정 연월</label>
+                    <input
+                      type="month"
+                      required
+                      value={tbdMonth}
+                      onChange={(e) => setTbdMonth(e.target.value)}
+                      className="w-full bg-white border border-amber-300 rounded-[6px] px-3 py-1.5 text-xs sm:text-sm font-bold font-mono text-[#0F172A] focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+                  <div className="w-full sm:w-1/2">
+                    <label className="block font-bold mb-1 text-amber-900 text-xs">표시 안내</label>
+                    <div className="text-xs text-amber-800 font-medium py-1">
+                      ✨ 특정 날짜 대신 캘린더 하단 <strong className="font-extrabold text-amber-950">'N월 데뷔 예정'</strong> 영역에 소개됩니다.
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                  <div>
+                    <label className="block font-bold mb-1 text-[#334155] text-sm">날짜</label>
+                    <input
+                      type="date"
+                      required
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs sm:text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-bold mb-1 text-[#334155] text-sm">시간</label>
+                    <input
+                      type="time"
+                      required
+                      value={time}
+                      onChange={(e) => setTime(e.target.value)}
+                      className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs sm:text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
+                    />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block font-bold mb-1 text-[#334155] text-sm">기준 시간대</label>
+                    <select
+                      value={timezone}
+                      onChange={(e) => setTimezone(e.target.value)}
+                      className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs sm:text-sm focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all font-mono"
+                    >
+                      <option value="Asia/Seoul">Asia/Seoul (KST)</option>
+                      <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
+                      <option value="America/Los_Angeles">America/Los_Angeles (PST)</option>
+                      <option value="UTC">UTC</option>
+                    </select>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Step 4: 소속 선택 */}

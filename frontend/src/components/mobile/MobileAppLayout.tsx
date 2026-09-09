@@ -9,6 +9,7 @@ import { YearMonthPickerModal } from '../calendar/YearMonthPickerModal';
 import { FilterBar } from '../FilterBar';
 import { getAvatarUrl } from '../../utils/avatarUtils';
 import { ExternalLink } from 'lucide-react';
+import { UndecidedDebutSection } from '../calendar/UndecidedDebutSection';
 
 interface MobileAppLayoutProps {
   events: DebutEvent[];
@@ -21,6 +22,7 @@ interface MobileAppLayoutProps {
   setSearchQuery: (q: string) => void;
   onDownloadICS: (event: DebutEvent) => void;
   onOpenSubmitModal: (dateStr?: string) => void;
+  onEditEvent?: (event: DebutEvent) => void;
   currentLang: Language;
   eventsByDateMap: Map<string, DebutEvent[]>;
   todayStr: string;
@@ -36,6 +38,7 @@ export function MobileAppLayout({
   searchQuery,
   setSearchQuery,
   onOpenSubmitModal,
+  onEditEvent,
   currentLang,
   eventsByDateMap,
   todayStr,
@@ -140,6 +143,21 @@ export function MobileAppLayout({
             selectedTimezone={selectedTimezone}
             onOpenSubmitModal={onOpenSubmitModal}
           />
+
+          {/* N월 데뷔 예정 (일정 미정) 버튜버 전용 섹션 */}
+          <div className="px-3">
+            <UndecidedDebutSection
+              year={year}
+              month={month}
+              events={events}
+              selectedPlatform={selectedPlatform}
+              selectedCountry={selectedCountry}
+              searchQuery={searchQuery}
+              selectedTimezone={selectedTimezone}
+              onOpenSubmitModal={onOpenSubmitModal}
+              onEditEvent={onEditEvent}
+            />
+          </div>
         </>
       )}
 

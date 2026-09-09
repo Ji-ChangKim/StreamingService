@@ -7,6 +7,7 @@ import { CalendarWeekGrid } from './calendar/CalendarWeekGrid';
 import { ScheduleInspectorPanel } from './calendar/ScheduleInspectorPanel';
 import { ProfileLightboxModal } from './calendar/ProfileLightboxModal';
 import { YearMonthPickerModal } from './calendar/YearMonthPickerModal';
+import { UndecidedDebutSection, checkIsTbdEvent } from './calendar/UndecidedDebutSection';
 import { MobileAppLayout } from './mobile/MobileAppLayout';
 
 interface MonthlyCalendarGridProps {
@@ -85,7 +86,9 @@ export function MonthlyCalendarGrid({
   };
 
   const calendarCells = getCalendarGridCells(year, month);
-  const eventsByDateMap = buildEventsByDateMap(events, selectedTimezone);
+  // 날짜 셀 렌더링 시에는 '일자 미정' 이벤트를 제외하여 임의 날짜 셀에 섞이지 않도록 분리
+  const calendarEvents = events.filter((e) => !checkIsTbdEvent(e));
+  const eventsByDateMap = buildEventsByDateMap(calendarEvents, selectedTimezone);
   const todayStr = getTodayDateKey(selectedTimezone);
 
   const currentSelectedEvents = selectedDateStr
@@ -111,6 +114,7 @@ export function MonthlyCalendarGrid({
           setSearchQuery={setSearchQuery}
           onDownloadICS={onDownloadICS}
           onOpenSubmitModal={onOpenSubmitModal || (() => {})}
+          onEditEvent={onEditEvent}
           currentLang="ko"
           eventsByDateMap={eventsByDateMap}
           todayStr={todayStr}
@@ -119,7 +123,7 @@ export function MonthlyCalendarGrid({
 
       {/* 🖥️ 2. 데스크탑 / 대형 화면 전용 레이아웃 (>=640px) */}
       <div className="hidden sm:block space-y-4 mb-8">
-        {/* Main Container */}
+        {/* Main Calendar Container */}
         <div className="bg-white rounded-[16px] border border-[#CBD5E1] shadow-xs p-3 sm:p-5 flex flex-col justify-between">
           <CalendarControlBar
             year={year}
@@ -159,6 +163,19 @@ export function MonthlyCalendarGrid({
             />
           )}
         </div>
+
+        {/* 3. N월 데뷔 예정 (일자·시간 미정) 버튜버 전용 섹션 */}
+        <UndecidedDebutSection
+          year={year}
+          month={month}
+          events={events}
+          selectedPlatform={selectedPlatform}
+          selectedCountry={selectedCountry}
+          searchQuery={searchQuery}
+          selectedTimezone={selectedTimezone}
+          onOpenSubmitModal={onOpenSubmitModal}
+          onEditEvent={onEditEvent}
+        />
 
         {/* 우측 슬라이드-오버 드로어 모달 */}
         {selectedDateStr && (

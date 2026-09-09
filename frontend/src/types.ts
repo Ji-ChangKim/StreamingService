@@ -16,4 +16,7 @@ export interface DebutEvent {
   verificationStatus: string;
   links: { platform: string; url: string; isPrimary: boolean }[];
   description: string;
+  isTbd?: boolean;
+  tbdType?: 'DATE_TBD' | 'TIME_TBD';
+  targetMonth?: string; // YYYY-MM
 }
