@@ -138,11 +138,12 @@ export function PlatformMiniSpotlight({
   };
 
   // 5단 피라미드 덱 인덱스 계산: [1(소) - 2(중) - 3(대) - 4(중) - 5(소)]
+  // 2명 이상일 때는 원형 순환(Circular Modulo Loop)으로 5개 슬롯을 모두 채워 좌2 - 중1 - 우2 대칭 완성
   const currentItem = items.length > 0 ? items[activeIndex] : null;
-  const prevItem = items.length > 1 ? items[(activeIndex - 1 + items.length) % items.length] : null;
-  const nextItem = items.length > 2 ? items[(activeIndex + 1) % items.length] : null;
-  const farLeftItem = items.length > 3 ? items[(activeIndex - 2 + items.length) % items.length] : null;
-  const farRightItem = items.length > 4 ? items[(activeIndex + 2) % items.length] : null;
+  const prevItem = items.length >= 2 ? items[(activeIndex - 1 + items.length) % items.length] : null;
+  const nextItem = items.length >= 2 ? items[(activeIndex + 1) % items.length] : null;
+  const farLeftItem = items.length >= 2 ? items[(activeIndex - 2 + items.length) % items.length] : null;
+  const farRightItem = items.length >= 2 ? items[(activeIndex + 2) % items.length] : null;
 
   return (
     <section
