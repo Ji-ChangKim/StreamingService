@@ -203,38 +203,41 @@ export function PlatformMiniSpotlight({
         ) : (
           <div className="relative flex items-center justify-center w-full max-w-7xl mx-auto min-h-[300px] sm:min-h-[330px]">
             
-            {/* 5단 피라미드 카드 덱 컨테이너 (커버플로우 중첩 계층 구조) */}
+            {/* 5단 피라미드 카드 덱 컨테이너 (3분할 앵커: 좌측 윙 - 중앙 메인 카드 - 우측 윙) */}
             <div className="flex items-center justify-center w-full overflow-visible px-1">
               
-              {/* [1번 카드: 가장 작은 크기 - 맨 뒤 좌측] */}
-              {farLeftItem && (
-                <div
-                  onClick={handleFarPrev}
-                  className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[20px] border border-blue-200/70 p-3 opacity-70 scale-85 cursor-pointer hover:opacity-95 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -mr-6 lg:-mr-8 overflow-hidden"
-                >
-                  <SpotlightCardContent
-                    item={farLeftItem}
-                    timezone={selectedTimezone}
-                    tier="small"
-                  />
-                </div>
-              )}
+              {/* 좌측 윙 (Left Wing: flex-1, justify-end) - 중앙 카드의 왼쪽에 밀착 */}
+              <div className="flex-1 flex items-center justify-end overflow-visible">
+                {/* [1번 카드: 가장 작은 크기 - 맨 뒤 좌측] */}
+                {farLeftItem && (
+                  <div
+                    onClick={handleFarPrev}
+                    className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[20px] border border-blue-200/70 p-3 opacity-70 scale-85 cursor-pointer hover:opacity-95 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -mr-6 lg:-mr-8 overflow-hidden"
+                  >
+                    <SpotlightCardContent
+                      item={farLeftItem}
+                      timezone={selectedTimezone}
+                      tier="small"
+                    />
+                  </div>
+                )}
 
-              {/* [2번 카드: 중간 크기 - 중앙 카드 바로 뒤 좌측] */}
-              {prevItem && (
-                <div
-                  onClick={handlePrev}
-                  className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[22px] border border-blue-300/80 p-4 opacity-90 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -mr-7 lg:-mr-10 overflow-hidden"
-                >
-                  <SpotlightCardContent
-                    item={prevItem}
-                    timezone={selectedTimezone}
-                    tier="medium"
-                  />
-                </div>
-              )}
+                {/* [2번 카드: 중간 크기 - 중앙 카드 바로 뒤 좌측] */}
+                {prevItem && (
+                  <div
+                    onClick={handlePrev}
+                    className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[22px] border border-blue-300/80 p-4 opacity-90 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -mr-7 lg:-mr-10 overflow-hidden"
+                  >
+                    <SpotlightCardContent
+                      item={prevItem}
+                      timezone={selectedTimezone}
+                      tier="medium"
+                    />
+                  </div>
+                )}
+              </div>
 
-              {/* [3번 카드: 가장 크게 중앙 - 메인 주인공 & 최상위 z-30] */}
+              {/* [3번 카드: 중앙 메인 카드 - shrink-0, 영원히 50% 정중앙에 고정 & 최상위 z-30] */}
               {currentItem && (
                 <div className="relative shrink-0 z-30">
                   
@@ -279,33 +282,36 @@ export function PlatformMiniSpotlight({
                 </div>
               )}
 
-              {/* [4번 카드: 중간 크기 - 중앙 카드 바로 뒤 우측] */}
-              {nextItem && (
-                <div
-                  onClick={handleNext}
-                  className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[22px] border border-blue-300/80 p-4 opacity-90 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -ml-7 lg:-ml-10 overflow-hidden"
-                >
-                  <SpotlightCardContent
-                    item={nextItem}
-                    timezone={selectedTimezone}
-                    tier="medium"
-                  />
-                </div>
-              )}
+              {/* 우측 윙 (Right Wing: flex-1, justify-start) - 중앙 카드의 오른쪽에 밀착 */}
+              <div className="flex-1 flex items-center justify-start overflow-visible">
+                {/* [4번 카드: 중간 크기 - 중앙 카드 바로 뒤 우측] */}
+                {nextItem && (
+                  <div
+                    onClick={handleNext}
+                    className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[22px] border border-blue-300/80 p-4 opacity-90 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -ml-7 lg:-ml-10 overflow-hidden"
+                  >
+                    <SpotlightCardContent
+                      item={nextItem}
+                      timezone={selectedTimezone}
+                      tier="medium"
+                    />
+                  </div>
+                )}
 
-              {/* [5번 카드: 가장 작은 크기 - 맨 뒤 우측] */}
-              {farRightItem && (
-                <div
-                  onClick={handleFarNext}
-                  className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[20px] border border-blue-200/70 p-3 opacity-70 scale-85 cursor-pointer hover:opacity-95 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -ml-6 lg:-ml-8 overflow-hidden"
-                >
-                  <SpotlightCardContent
-                    item={farRightItem}
-                    timezone={selectedTimezone}
-                    tier="small"
-                  />
-                </div>
-              )}
+                {/* [5번 카드: 가장 작은 크기 - 맨 뒤 우측] */}
+                {farRightItem && (
+                  <div
+                    onClick={handleFarNext}
+                    className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[20px] border border-blue-200/70 p-3 opacity-70 scale-85 cursor-pointer hover:opacity-95 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -ml-6 lg:-ml-8 overflow-hidden"
+                  >
+                    <SpotlightCardContent
+                      item={farRightItem}
+                      timezone={selectedTimezone}
+                      tier="small"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
