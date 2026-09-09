@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroHeader } from './components/HeroHeader';
-import { TodayDebutsPromotionBanner } from './components/TodayDebutsPromotionBanner';
 import { PlatformMiniSpotlight } from './components/preview/PlatformMiniSpotlight';
 import { MonthlyCalendarGrid } from './components/MonthlyCalendarGrid';
 import { FooterBanner } from './components/FooterBanner';
@@ -58,7 +57,6 @@ export function App() {
   // 개발 프리뷰 모드 감지 (dev.vdebut.live 도메인 또는 /updatepage 경로)
   const isDevHost = typeof window !== 'undefined' && window.location.hostname === 'dev.vdebut.live';
   const isUpdatePath = currentPath === '/updatepage' || currentPath === '/upadepage';
-  const isDevMode = isDevHost || isUpdatePath;
 
   // Popstate event listener for client-side routing & /upload URL sync
   useEffect(() => {
@@ -98,7 +96,7 @@ export function App() {
     let pageTitle = seo.title;
     let pageDesc = seo.description;
 
-    if (isDevMode) {
+    if (isDevHost) {
       pageTitle = '[DEV] VDébut - 컴포넌트 랩 (Live DB)';
       let metaRobots = document.querySelector('meta[name="robots"]');
       if (!metaRobots) {
@@ -226,21 +224,23 @@ export function App() {
         onOpenSubmitModal={() => handleOpenSubmitModal()}
       />
 
-      {/* 1-1. DEV 모드 전용: 브라우저 좌우 100% Full-Bleed 무대 스포트라이트 섹션 */}
-      {isDevMode && !isCreatorPage && (currentPath === '/' || isUpdatePath) && (
+      {/* 1-1. 3D 무대 스포트라이트 쇼케이스 섹션 (Live & Dev 메인 홈 전면 적용) */}
+      {!isCreatorPage && (currentPath === '/' || isUpdatePath) && (
         <section
-          aria-label="Dev Stage Showcase"
+          aria-label="Stage Showcase"
           className="w-full relative bg-[url('/images/spotlight_stage_bg.png')] bg-cover bg-center sm:bg-bottom bg-no-repeat overflow-hidden"
         >
-          {/* DEV LAB 알림 바 */}
-          <div className="bg-amber-500/15 backdrop-blur-xs border-b border-amber-300/60 px-4 py-2 text-center text-xs font-bold text-amber-950 flex items-center justify-center gap-2">
-            <span className="bg-amber-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-2xs">
-              DEV LAB
-            </span>
-            <span>
-              dev.vdebut.live 프리뷰 모드 (Live DB 실시간 연동 • SEO/크롤링 차단됨)
-            </span>
-          </div>
+          {/* DEV 환경 전용 안내 바 (dev.vdebut.live 접속 시에만 표시) */}
+          {isDevHost && (
+            <div className="bg-amber-500/15 backdrop-blur-xs border-b border-amber-300/60 px-4 py-2 text-center text-xs font-bold text-amber-950 flex items-center justify-center gap-2">
+              <span className="bg-amber-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-2xs">
+                DEV LAB
+              </span>
+              <span>
+                dev.vdebut.live 프리뷰 모드 (Live DB 실시간 연동 • SEO/크롤링 차단됨)
+              </span>
+            </div>
+          )}
 
           <div className="max-w-[1440px] w-full mx-auto px-3 sm:px-6 pt-4 pb-6 sm:pb-8 relative z-10">
             {/* Hero Section (Desktop only) */}
@@ -307,30 +307,8 @@ export function App() {
           />
         ) : (
           <>
-            {/* 운영 모드(Non-Dev) 메인 상단 헤더 & 배너 */}
-            {!(isDevMode && (currentPath === '/' || isUpdatePath)) && (
-              <>
-                {/* Hero Section (Desktop only) */}
-                <div className="hidden sm:block">
-                  <HeroHeader
-                    allEvents={events}
-                    selectedTimezone={selectedTimezone}
-                    currentLang={currentLang}
-                  />
-                </div>
-
-                <TodayDebutsPromotionBanner
-                  allEvents={events}
-                  selectedTimezone={selectedTimezone}
-                  currentLang={currentLang}
-                  onDownloadICS={handleDownloadICS}
-                  onNavigate={handleNavigate}
-                />
-              </>
-            )}
-
             {/* Main Monthly / Mobile Calendar Grid Section */}
-            <div className={isDevMode && (currentPath === '/' || isUpdatePath) ? 'mt-6 sm:mt-8' : ''}>
+            <div className="mt-6 sm:mt-8">
               <MonthlyCalendarGrid
                 events={filteredEvents}
                 selectedTimezone={selectedTimezone}
