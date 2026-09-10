@@ -337,39 +337,142 @@ export function buildWeekDebutsEmbed(events: any[], targetPlatform: string = 'AL
 }
 
 /**
- * /데뷔등록 호출 시 Discord 모달 팝업 빌더
+ * 채널 URL 주소로부터 스트리밍 플랫폼 자동 판별
+ */
+export function detectPlatformFromUrl(url: string): 'CHZZK' | 'SOOP' | 'YOUTUBE' | 'TWITCH' {
+  if (!url) return 'CHZZK';
+  const lower = url.toLowerCase().trim();
+
+  if (lower.includes('sooplive.co.kr') || lower.includes('afreecatv.com') || lower.includes('bj.afreeca')) {
+    return 'SOOP';
+  }
+  if (lower.includes('youtube.com') || lower.includes('youtu.be')) {
+    return 'YOUTUBE';
+  }
+  if (lower.includes('twitch.tv')) {
+    return 'TWITCH';
+  }
+  if (lower.includes('chzzk.naver.com') || lower.includes('chzzk')) {
+    return 'CHZZK';
+  }
+
+  return 'CHZZK';
+}
+
+/**
+ * 데뷔일 입력 분석 결과 인터페이스
+ */
+export interface DebutDateStatus {
+  statusType: 'CONFIRMED' | 'UNDECIDED' | 'UNKNOWN';
+  label: string;
+  badge: string;
+  dateStr: string;
+  startAtUtc?: string;
+}
+
+/**
+ * 데뷔일 입력값 분석 (1. 날짜 직접 입력, 2. 데뷔일 미정, 3. 모름)
+ */
+export function parseDebutDateStatus(rawInput: string): DebutDateStatus {
+  const trimmed = (rawInput || '').trim();
+  const lower = trimmed.toLowerCase();
+
+  // 1. 데뷔일 미정 판단
+  if (
+    !trimmed ||
+    lower.includes('미정') ||
+    lower.includes('준비') ||
+    lower.includes('예정') ||
+    lower.includes('tbd') ||
+    lower.includes('undecided')
+  ) {
+    return {
+      statusType: 'UNDECIDED',
+      label: '데뷔일 미정 (준비 중)',
+      badge: '⏳ 데뷔 일정',
+      dateStr: '미정',
+      startAtUtc: undefined,
+    };
+  }
+
+  // 2. 데뷔일 모름 판단
+  if (
+    lower.includes('모름') ||
+    lower.includes('몰라') ||
+    lower.includes('모르') ||
+    lower.includes('정보없음') ||
+    lower.includes('확인필요') ||
+    lower === '?' ||
+    lower.includes('unknown')
+  ) {
+    return {
+      statusType: 'UNKNOWN',
+      label: '데뷔일 확인 필요 (정보 미입력)',
+      badge: '❓ 데뷔 일정',
+      dateStr: '모름',
+      startAtUtc: undefined,
+    };
+  }
+
+  // 3. 날짜 직접 입력 (숫자 추출 및 파싱)
+  try {
+    const cleanDate = trimmed.replace(/\./g, '-').replace(/\//g, '-').replace('T', ' ');
+    const parts = cleanDate.split(' ');
+    const datePart = parts[0];
+    const timePart = parts[1] || '20:00';
+
+    let dateObj: Date | null = null;
+    if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(datePart)) {
+      dateObj = new Date(`${datePart}T${timePart.length === 5 ? timePart : timePart + ':00'}+09:00`);
+    } else {
+      const fallback = new Date(cleanDate);
+      if (!isNaN(fallback.getTime())) {
+        dateObj = fallback;
+      }
+    }
+
+    if (dateObj && !isNaN(dateObj.getTime())) {
+      const formatted = formatKstDateTime(dateObj.toISOString());
+      return {
+        statusType: 'CONFIRMED',
+        label: formatted,
+        badge: '⏰ 데뷔 일시 (KST)',
+        dateStr: formatted,
+        startAtUtc: dateObj.toISOString(),
+      };
+    }
+  } catch (e) {
+    console.error('Date parse error:', e);
+  }
+
+  return {
+    statusType: 'UNKNOWN',
+    label: `${trimmed} (확인 필요)`,
+    badge: '❓ 데뷔 일정',
+    dateStr: trimmed,
+    startAtUtc: undefined,
+  };
+}
+
+/**
+ * /등록 또는 /데뷔등록 호출 시 Discord 모달 팝업 빌더 (2개 필드로 대폭 간소화)
  */
 export function buildDebutRegisterModal(): any {
   return {
     type: CALLBACK_TYPE.MODAL,
     data: {
       custom_id: 'modal_submit_debut',
-      title: '신입 버튜버 데뷔 일정 제보',
+      title: '신입 버튜버 데뷔 제보/등록',
       components: [
         {
           type: 1, // Action Row
           components: [
             {
               type: 4, // Text Input
-              custom_id: 'input_platform',
-              label: '방송 플랫폼 (CHZZK, SOOP, YOUTUBE)',
-              style: 1, // Short
-              min_length: 4,
-              max_length: 10,
-              placeholder: 'CHZZK 또는 SOOP 또는 YOUTUBE',
-              required: true,
-            },
-          ],
-        },
-        {
-          type: 1,
-          components: [
-            {
-              type: 4,
               custom_id: 'input_channel_url',
-              label: '방송국 / 채널 URL',
-              style: 1,
-              placeholder: 'https://chzzk.naver.com/... 또는 https://ch.sooplive.co.kr/...',
+              label: '방송국 / 채널 주소 (URL)',
+              style: 1, // Short
+              placeholder: '치지직, SOOP, 유튜브, 트위치 링크를 입력하세요',
               required: true,
             },
           ],
@@ -380,36 +483,10 @@ export function buildDebutRegisterModal(): any {
             {
               type: 4,
               custom_id: 'input_debut_date',
-              label: '데뷔 일시 (YYYY-MM-DD HH:mm, 24시간제)',
+              label: '데뷔일 (날짜 직접 입력 / 미정 / 모름)',
               style: 1,
-              placeholder: '2026-09-15 20:00 (시간 미정 시 2026-09-15 00:00)',
+              placeholder: '예: 2026-09-25 20:00 (또는 "미정", "모름" 입력)',
               required: true,
-            },
-          ],
-        },
-        {
-          type: 1,
-          components: [
-            {
-              type: 4,
-              custom_id: 'input_display_name',
-              label: '스트리머 닉네임 (자동 수집 실패 시 사용)',
-              style: 1,
-              placeholder: '스트리머 활동명을 입력해 주세요',
-              required: false,
-            },
-          ],
-        },
-        {
-          type: 1,
-          components: [
-            {
-              type: 4,
-              custom_id: 'input_description',
-              label: '한 줄 소개 / 데뷔 방송 안내',
-              style: 2, // Paragraph
-              placeholder: '데뷔 방송의 핵심 소개나 포부를 자유롭게 적어주세요',
-              required: false,
             },
           ],
         },
@@ -573,43 +650,74 @@ export function buildVerifyCodeCard(recordId: number, platform: string, code: st
 }
 
 /**
- * 데뷔 등록 성공 시 반환하는 카드
+ * 데뷔 등록 성공 시 반환하는 카드 (3개 데뷔일 유형 맞춤 렌더링)
  */
 export function buildDebutSuccessEmbed(eventData: any): any {
   const creator = eventData.creator || {};
-  const platform = eventData.links?.[0]?.platform || 'CHZZK';
+  const platform = (eventData.links?.[0]?.platform || 'CHZZK').toUpperCase();
   const color = getPlatformBrandColor(platform);
   const eventId = eventData.id || 'new';
   const widgetUrl = `${VDEBUT_WEB_BASE}/widget/d-day/${eventId}`;
+  const debutStatus: DebutDateStatus = eventData.debutStatus || {
+    statusType: 'CONFIRMED',
+    label: formatKstDateTime(eventData.startAtUtc),
+    badge: '⏰ 데뷔 일시 (KST)',
+    dateStr: formatKstDateTime(eventData.startAtUtc),
+  };
+
+  let title = `🎉 [신규 데뷔 등록] ${creator.displayName} 님의 데뷔 일정이 등록되었습니다!`;
+  let desc = `**${creator.displayName}** 님의 데뷔 방송 일정이 V-DEBUT HUB에 공식 등록되었습니다.\n웹 캘린더와 구독 디스코드 서버에 실시간 알림이 전파됩니다!`;
+
+  if (debutStatus.statusType === 'UNDECIDED') {
+    title = `⏳ [데뷔 예정 스트리머] ${creator.displayName} 님의 데뷔 준비 소식이 등록되었습니다!`;
+    desc = `**${creator.displayName}** 님의 데뷔 예정 정보가 접수되었습니다.\n데뷔 일정이 공식 확정되면 V-DEBUT 캘린더에 실시간 갱신 및 공지됩니다!`;
+  } else if (debutStatus.statusType === 'UNKNOWN') {
+    title = `🔎 [데뷔 제보 접수] ${creator.displayName} 님의 데뷔 소식이 제보되었습니다!`;
+    desc = `**${creator.displayName}** 님의 데뷔 소식이 제보되었습니다.\n상세 일정 확인 후 공식 데뷔 캘린더에 등재됩니다.`;
+  }
+
+  const fields: any[] = [
+    {
+      name: debutStatus.badge,
+      value: `**${debutStatus.label}**`,
+      inline: true,
+    },
+    {
+      name: '📺 플랫폼',
+      value: `**${platform}**`,
+      inline: true,
+    },
+  ];
+
+  // 소속이 있을 때만 표시 (개인세 제외)
+  if (creator.agency && creator.agency.trim() && creator.agency.trim() !== '개인세') {
+    fields.push({
+      name: '🏢 소속',
+      value: creator.agency.trim(),
+      inline: true,
+    });
+  }
+
+  if (debutStatus.statusType === 'CONFIRMED') {
+    fields.push({
+      name: '🔗 방송 위젯 URL (OBS 브라우저 소스용)',
+      value: `\`${widgetUrl}\`\n방송 화면에 실시간 D-Day 카운트다운을 띄울 수 있습니다.`,
+      inline: false,
+    });
+  }
 
   return {
     type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       embeds: [
         {
-          title: `🎉 데뷔 일정이 성공적으로 등록되었습니다!`,
-          description: `**${creator.displayName}** 님의 데뷔 방송 일정이 V-DEBUT HUB에 공식 등록되었습니다.\n웹 캘린더와 구독 디스코드 서버에 실시간 알림이 전파됩니다!`,
+          title,
+          description: desc,
           color,
-          fields: [
-            {
-              name: '⏰ 데뷔 일시 (KST)',
-              value: formatKstDateTime(eventData.startAtUtc),
-              inline: true,
-            },
-            {
-              name: '📺 플랫폼',
-              value: platform,
-              inline: true,
-            },
-            {
-              name: '🔗 방송 위젯 URL (OBS 브라우저 소스용)',
-              value: `\`${widgetUrl}\`\n방송 화면에 실시간 D-Day 카운트다운을 띄울 수 있습니다.`,
-              inline: false,
-            },
-          ],
+          fields,
           thumbnail: creator.avatarUrl ? { url: creator.avatarUrl } : undefined,
           footer: {
-            text: 'V-DEBUT HUB • 버튜버 데뷔 허브',
+            text: `V-DEBUT HUB • ${platform} 데뷔 등록`,
             icon_url: `${VDEBUT_WEB_BASE}/logo.png`,
           },
           timestamp: new Date().toISOString(),
@@ -622,7 +730,13 @@ export function buildDebutSuccessEmbed(eventData: any): any {
             {
               type: 2,
               style: 5,
-              label: '🌐 웹사이트에서 확인하기',
+              label: '📺 방송국 바로가기',
+              url: eventData.links?.[0]?.url || VDEBUT_WEB_BASE,
+            },
+            {
+              type: 2,
+              style: 5,
+              label: '📅 V-DEBUT 캘린더 보기',
               url: VDEBUT_WEB_BASE,
             },
           ],
@@ -735,7 +849,7 @@ export function buildDebutDateChangeEmbed(data: DebutDateChangePayload): any {
 }
 
 /**
- * 신규 데뷔 등록 시 구독 채널로 보낼 실시간 브로드캐스트 Embed
+ * 신규 데뷔 등록 시 구독 채널로 보낼 실시간 브로드캐스트 Embed (3개 데뷔일 유형 맞춤 렌더링)
  */
 export function buildBroadcastNewDebutEmbed(eventData: any): any {
   const creator = eventData.creator || {};
@@ -744,17 +858,33 @@ export function buildBroadcastNewDebutEmbed(eventData: any): any {
   const color = getPlatformBrandColor(platform);
   const isChzzk = platform === 'CHZZK';
   const isSoop = platform === 'SOOP';
+  const isYoutube = platform === 'YOUTUBE';
+  const isTwitch = platform === 'TWITCH';
 
-  const platformTitle = isChzzk
-    ? '🟢 [CHZZK 신규 데뷔 등록]'
-    : isSoop
-    ? '🔵 [SOOP 신규 데뷔 등록]'
-    : '📢 [신규 데뷔 소식]';
+  const debutStatus: DebutDateStatus = eventData.debutStatus || {
+    statusType: 'CONFIRMED',
+    label: formatKstDateTime(eventData.startAtUtc),
+    badge: '⏰ 데뷔 일시 (KST)',
+    dateStr: formatKstDateTime(eventData.startAtUtc),
+  };
+
+  const platformEmoji = isChzzk ? '🟢 [CHZZK]' : isSoop ? '🔵 [SOOP]' : isYoutube ? '🔴 [YouTube]' : isTwitch ? '🟣 [Twitch]' : '📢';
+
+  let title = `${platformEmoji} [신규 데뷔 등록] ${creator.displayName} 님의 데뷔가 등록되었습니다!`;
+  let desc = creator.description || `${creator.displayName} 버튜버의 데뷔 방송 일정이 등록되었습니다. 많은 관심과 응원 부탁드립니다!`;
+
+  if (debutStatus.statusType === 'UNDECIDED') {
+    title = `${platformEmoji} [데뷔 예정] ${creator.displayName} 님이 데뷔를 준비 중입니다!`;
+    desc = `${creator.displayName} 버튜버의 데뷔 예정 소식입니다. 일정 확정 시 실시간으로 안내됩니다!`;
+  } else if (debutStatus.statusType === 'UNKNOWN') {
+    title = `${platformEmoji} [데뷔 제보 접수] ${creator.displayName} 님의 데뷔 소식이 접수되었습니다!`;
+    desc = `${creator.displayName} 버튜버의 데뷔 소식이 접수되었습니다. 일정 확인 후 캘린더에 안내될 예정입니다.`;
+  }
 
   const fields: any[] = [
     {
-      name: '⏰ 데뷔 일시 (KST)',
-      value: formatKstDateTime(eventData.startAtUtc),
+      name: debutStatus.badge,
+      value: `**${debutStatus.label}**`,
       inline: true,
     },
     {
@@ -776,13 +906,13 @@ export function buildBroadcastNewDebutEmbed(eventData: any): any {
   return {
     embeds: [
       {
-        title: `${platformTitle} ${creator.displayName} 님의 데뷔가 등록되었습니다!`,
-        description: creator.description || `${creator.displayName} 버튜버의 데뷔 방송 일정이 등록되었습니다. 많은 관심과 응원 부탁드립니다!`,
+        title,
+        description: desc,
         color,
         fields,
         thumbnail: creator.avatarUrl ? { url: creator.avatarUrl } : undefined,
         footer: {
-          text: `V-DEBUT HUB • ${platform} 실시간 신규 등록 알림`,
+          text: `V-DEBUT HUB • ${platform} 실시간 데뷔 알림`,
           icon_url: `${VDEBUT_WEB_BASE}/logo.png`,
         },
         timestamp: new Date().toISOString(),
@@ -1130,8 +1260,8 @@ export async function handleDiscordInteraction(body: any, env: any): Promise<any
       return buildWeekDebutsEmbed(weekDebuts, platformOption);
     }
 
-    // C. /데뷔등록 ➔ 모달 팝업 띄우기
-    if (commandName === '데뷔등록') {
+    // C. /등록 또는 /데뷔등록 ➔ 모달 팝업 띄우기
+    if (commandName === '등록' || commandName === '데뷔등록') {
       return buildDebutRegisterModal();
     }
 
@@ -1407,7 +1537,7 @@ export async function handleDiscordInteraction(body: any, env: any): Promise<any
       return buildVerifyCodeCard(verifyRes.verificationId, platform, verifyRes.code, channelName);
     }
 
-    // 4-2. 데뷔 일정 등록 폼 제출 처리
+    // 4-2. 데뷔 일정 등록 폼 제출 처리 (채널 URL 자동 판별 + 데뷔일 3개 유형 분기)
     if (customId === 'modal_submit_debut') {
       const components = body.data?.components || [];
       const getField = (id: string) => {
@@ -1418,64 +1548,60 @@ export async function handleDiscordInteraction(body: any, env: any): Promise<any
         return '';
       };
 
-      const rawPlatform = getField('input_platform');
       const channelUrl = getField('input_channel_url');
-      const debutDateStr = getField('input_debut_date');
-      const customName = getField('input_display_name');
-      const description = getField('input_description');
+      const rawDebutDate = getField('input_debut_date');
 
-      // 플랫폼 표준화
-      let platform = 'CHZZK';
-      const upperPlat = rawPlatform.toUpperCase();
-      if (upperPlat.includes('SOOP') || upperPlat.includes('숲') || upperPlat.includes('아프리카')) {
-        platform = 'SOOP';
-      } else if (upperPlat.includes('YOU') || upperPlat.includes('유튜브')) {
-        platform = 'YOUTUBE';
+      if (!channelUrl) {
+        return {
+          type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: { flags: 64, content: '❌ 방송국 / 채널 URL을 입력해 주세요.' },
+        };
       }
 
-      // 프로필 자동 수집 시도
-      let displayName = customName;
+      // 1. URL로부터 스트리밍 플랫폼 자동 판별 (치지직 / SOOP / 유튜브 / 트위치)
+      const platform = detectPlatformFromUrl(channelUrl);
+
+      // 2. 데뷔일 3가지 유형 분석 (1. 날짜 직접 입력, 2. 데뷔일 미정, 3. 모름)
+      const debutStatus = parseDebutDateStatus(rawDebutDate);
+
+      // 3. 방송국 프로필 자동 스크랩 시도
+      let displayName = '';
       let avatarUrl = '';
-      let autoDesc = description;
+      let autoDesc = '';
 
-      if (channelUrl) {
-        try {
-          const profile = await fetchPlatformProfile(platform, channelUrl);
-          if (profile.success) {
-            displayName = displayName || profile.creatorName;
-            avatarUrl = profile.profileImageUrl || '';
-            autoDesc = autoDesc || profile.description;
-          }
-        } catch (e) {
-          console.error('[Discord Profile Crawl Error]:', e);
-        }
-      }
-
-      displayName = displayName || '신입 버튜버';
-
-      // 데뷔 일시 파싱 (KST ➔ UTC 변환)
-      let startAtUtc: string;
       try {
-        const parsedDate = new Date(`${debutDateStr.replace(' ', 'T')}:00+09:00`);
-        if (!isNaN(parsedDate.getTime())) {
-          startAtUtc = parsedDate.toISOString();
-        } else {
-          startAtUtc = new Date(Date.now() + 86400000 * 3).toISOString();
+        const profile = await fetchPlatformProfile(platform, channelUrl);
+        if (profile && profile.success) {
+          displayName = profile.creatorName || '';
+          avatarUrl = profile.profileImageUrl || '';
+          autoDesc = profile.description || '';
         }
-      } catch {
-        startAtUtc = new Date(Date.now() + 86400000 * 3).toISOString();
+      } catch (e) {
+        console.error('[Discord Profile Crawl Error]:', e);
       }
 
-      // DB 저장 (streamerChannel & streamerChannel_info 짝꿍 테이블)
+      // 닉네임 기본값 폴백
+      if (!displayName) {
+        const parsed = extractChannelIdentifier(platform, channelUrl);
+        displayName = (parsed.success && parsed.channelId)
+          ? `${parsed.channelId} (${platform})`
+          : `신입 ${platform} 버튜버`;
+      }
+
+      // 데뷔 일시 기본값 배정 (날짜가 없으면 7일 후 기준)
+      const startAtUtc = debutStatus.startAtUtc || new Date(Date.now() + 86400000 * 7).toISOString();
+
+      // 4. DB 저장 페이로드 구성 (streamerChannel & streamerChannel_info 짝꿍 테이블)
       const eventPayload: any = {
         id: '',
         displayName,
         avatarUrl,
         platform,
         watchUrl: channelUrl,
-        description: autoDesc,
+        description: autoDesc || `${displayName} 버튜버의 데뷔 소식입니다.`,
         startAtUtc,
         originalTimezone: 'Asia/Seoul',
+        debutStatus,
         creator: {
           displayName,
           avatarUrl,
@@ -1488,13 +1614,14 @@ export async function handleDiscordInteraction(body: any, env: any): Promise<any
       const eventId = await insertEventToD1(env.DB, eventPayload);
       eventPayload.id = eventId;
 
-      // 브로드캐스트 비동기 발송 (구독된 다른 서버들에 새 일정 공지)
+      // 5. 브로드캐스트 비동기 발송 (구독된 채널들로 3개 유형 맞춤 공지)
       if (env.DISCORD_BOT_TOKEN) {
         broadcastNewDebutToDiscord(env.DB, env.DISCORD_BOT_TOKEN, eventPayload).catch((e) =>
           console.error('[Broadcast on submit error]:', e)
         );
       }
 
+      // 6. 등록 성공 카드 응답 반환
       return buildDebutSuccessEmbed(eventPayload);
     }
   }

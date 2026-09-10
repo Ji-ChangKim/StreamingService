@@ -59,6 +59,11 @@ const commands = [
     options: [platformOption],
   },
   {
+    name: '등록',
+    description: '신입 버튜버 데뷔 일정 및 방송국 링크를 간편 제보/등록합니다.',
+    type: 1,
+  },
+  {
     name: '데뷔등록',
     description: '신입 버튜버 데뷔 일정 및 방송국 링크를 V-DEBUT HUB에 제보/등록합니다.',
     type: 1,
