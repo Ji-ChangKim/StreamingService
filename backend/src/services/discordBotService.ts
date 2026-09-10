@@ -589,40 +589,80 @@ export function buildDebutSuccessEmbed(eventData: any): any {
 }
 
 /**
- * 신규 데뷔 등록 시 구독 채널로 보낼 실시간 브로드캐스트 Embed
+ * 데뷔 일자 변경 Notice 데이터 페이로드
  */
-export function buildBroadcastNewDebutEmbed(eventData: any): any {
-  const creator = eventData.creator || {};
-  const platform = eventData.links?.[0]?.platform || 'CHZZK';
-  const channelUrl = eventData.links?.[0]?.url || VDEBUT_WEB_BASE;
+export interface DebutDateChangePayload {
+  displayName: string;
+  avatarUrl?: string;
+  platform: 'CHZZK' | 'SOOP' | 'YOUTUBE' | string;
+  channelUrl?: string;
+  agency?: string;
+  oldDebutDateStr: string;
+  newDebutDateStr: string;
+  reason?: string;
+}
+
+/**
+ * 데뷔 일자 변경(연기/조정) 시 전송할 맞춤형 공지 Notice Embed
+ */
+export function buildDebutDateChangeEmbed(data: DebutDateChangePayload): any {
+  const platform = (data.platform || 'CHZZK').toUpperCase();
   const color = getPlatformBrandColor(platform);
+  const isChzzk = platform === 'CHZZK';
+  const isSoop = platform === 'SOOP';
+  const channelUrl = data.channelUrl || VDEBUT_WEB_BASE;
+
+  const platformTitle = isChzzk
+    ? '🟢 [CHZZK 데뷔 일정 변경]'
+    : isSoop
+    ? '🔵 [SOOP 데뷔 일정 변경]'
+    : '📢 [데뷔 일정 변경 안내]';
+
+  const fields: any[] = [
+    {
+      name: '⏰ 이전 데뷔 일정',
+      value: `~~${data.oldDebutDateStr}~~`,
+      inline: true,
+    },
+    {
+      name: '🚀 변경된 데뷔 일정',
+      value: `**${data.newDebutDateStr}**`,
+      inline: true,
+    },
+    {
+      name: '📺 플랫폼',
+      value: `**${platform}**`,
+      inline: true,
+    },
+  ];
+
+  // [사용자 규칙]: 소속이 유효하게 존재할 때만 표시 (개인세 및 빈 값 생략)
+  if (data.agency && data.agency.trim() && data.agency.trim() !== '개인세') {
+    fields.push({
+      name: '🏢 소속',
+      value: data.agency.trim(),
+      inline: true,
+    });
+  }
+
+  if (data.reason && data.reason.trim()) {
+    fields.push({
+      name: '📝 변경 사유 / 안내',
+      value: data.reason.trim(),
+      inline: false,
+    });
+  }
 
   return {
     embeds: [
       {
-        title: `📢 [신규 데뷔 소식] ${creator.displayName} 님의 데뷔가 등록되었습니다!`,
-        description: creator.description || `${creator.displayName} 버튜버의 데뷔 방송 일정이 등록되었습니다. 많은 관심과 응원 부탁드립니다!`,
+        title: `${platformTitle} ${data.displayName} 님의 데뷔 일정이 변경되었습니다!`,
+        description: `${data.displayName} 버튜버의 데뷔 방송 일정이 조정되었습니다. 팬 여러분께서는 변경된 일정을 꼭 확인해 주세요!`,
         color,
-        fields: [
-          {
-            name: '⏰ 데뷔 일시 (KST)',
-            value: formatKstDateTime(eventData.startAtUtc),
-            inline: true,
-          },
-          {
-            name: '📺 플랫폼',
-            value: `**${platform}**`,
-            inline: true,
-          },
-          {
-            name: '🏢 소속',
-            value: creator.agency || '개인세',
-            inline: true,
-          },
-        ],
-        thumbnail: creator.avatarUrl ? { url: creator.avatarUrl } : undefined,
+        fields,
+        thumbnail: data.avatarUrl ? { url: data.avatarUrl } : undefined,
         footer: {
-          text: 'V-DEBUT HUB • 실시간 신규 등록 알림',
+          text: `V-DEBUT HUB • ${platform} 데뷔 일정 변경 Notice`,
           icon_url: `${VDEBUT_WEB_BASE}/logo.png`,
         },
         timestamp: new Date().toISOString(),
@@ -635,7 +675,83 @@ export function buildBroadcastNewDebutEmbed(eventData: any): any {
           {
             type: 2,
             style: 5,
-            label: '📺 방송국 바로가기',
+            label: isChzzk ? '📺 치지직 방송국 바로가기' : isSoop ? '📺 SOOP 방송국 바로가기' : '📺 방송국 바로가기',
+            url: channelUrl,
+          },
+          {
+            type: 2,
+            style: 5,
+            label: '📅 V-DEBUT 캘린더 보기',
+            url: VDEBUT_WEB_BASE,
+          },
+        ],
+      },
+    ],
+  };
+}
+
+/**
+ * 신규 데뷔 등록 시 구독 채널로 보낼 실시간 브로드캐스트 Embed
+ */
+export function buildBroadcastNewDebutEmbed(eventData: any): any {
+  const creator = eventData.creator || {};
+  const platform = (eventData.links?.[0]?.platform || 'CHZZK').toUpperCase();
+  const channelUrl = eventData.links?.[0]?.url || VDEBUT_WEB_BASE;
+  const color = getPlatformBrandColor(platform);
+  const isChzzk = platform === 'CHZZK';
+  const isSoop = platform === 'SOOP';
+
+  const platformTitle = isChzzk
+    ? '🟢 [CHZZK 신규 데뷔 등록]'
+    : isSoop
+    ? '🔵 [SOOP 신규 데뷔 등록]'
+    : '📢 [신규 데뷔 소식]';
+
+  const fields: any[] = [
+    {
+      name: '⏰ 데뷔 일시 (KST)',
+      value: formatKstDateTime(eventData.startAtUtc),
+      inline: true,
+    },
+    {
+      name: '📺 플랫폼',
+      value: `**${platform}**`,
+      inline: true,
+    },
+  ];
+
+  // [사용자 규칙]: 소속이 유효하게 존재할 때만 표시
+  if (creator.agency && creator.agency.trim() && creator.agency.trim() !== '개인세') {
+    fields.push({
+      name: '🏢 소속',
+      value: creator.agency.trim(),
+      inline: true,
+    });
+  }
+
+  return {
+    embeds: [
+      {
+        title: `${platformTitle} ${creator.displayName} 님의 데뷔가 등록되었습니다!`,
+        description: creator.description || `${creator.displayName} 버튜버의 데뷔 방송 일정이 등록되었습니다. 많은 관심과 응원 부탁드립니다!`,
+        color,
+        fields,
+        thumbnail: creator.avatarUrl ? { url: creator.avatarUrl } : undefined,
+        footer: {
+          text: `V-DEBUT HUB • ${platform} 실시간 신규 등록 알림`,
+          icon_url: `${VDEBUT_WEB_BASE}/logo.png`,
+        },
+        timestamp: new Date().toISOString(),
+      },
+    ],
+    components: [
+      {
+        type: 1,
+        components: [
+          {
+            type: 2,
+            style: 5,
+            label: isChzzk ? '📺 치지직 방송국 바로가기' : isSoop ? '📺 SOOP 방송국 바로가기' : '📺 방송국 바로가기',
             url: channelUrl,
           },
           {
@@ -661,20 +777,30 @@ export async function registerSubscribedChannel(
   db: D1Database,
   guildId: string,
   channelId: string,
-  guildName?: string
+  guildName?: string,
+  platform: string = 'ALL'
 ): Promise<{ success: boolean; message: string }> {
   try {
+    const validPlatform = ['CHZZK', 'SOOP'].includes(platform.toUpperCase()) ? platform.toUpperCase() : 'ALL';
+
     await db.prepare(`
       INSERT INTO discord_subscribed_channels (guild_id, channel_id, guild_name, subscribed_platforms)
-      VALUES (?, ?, ?, 'ALL')
+      VALUES (?, ?, ?, ?)
       ON CONFLICT(channel_id) DO UPDATE SET
         guild_id = excluded.guild_id,
-        guild_name = excluded.guild_name
-    `).bind(guildId, channelId, guildName || 'Unknown Guild').run();
+        guild_name = excluded.guild_name,
+        subscribed_platforms = excluded.subscribed_platforms
+    `).bind(guildId, channelId, guildName || 'Unknown Guild', validPlatform).run();
+
+    const platformLabel = validPlatform === 'CHZZK'
+      ? '🟢 치지직(CHZZK) 전용'
+      : validPlatform === 'SOOP'
+      ? '🔵 SOOP(숲) 전용'
+      : '🌐 전체 플랫폼(치지직+SOOP+유튜브)';
 
     return {
       success: true,
-      message: `✅ 이 채널(<#${channelId}>)이 V-DEBUT HUB의 공식 데뷔 알림 수신 채널로 설정되었습니다.\n앞으로 신규 데뷔 등록 소식과 모닝 브리핑이 이곳으로 실시간 발송됩니다!`,
+      message: `✅ 이 채널(<#${channelId}>)이 V-DEBUT HUB의 **${platformLabel}** 데뷔 알림 채널로 설정되었습니다.\n앞으로 해당 커뮤니티의 데뷔 등록 및 일정 변경 Notice가 이곳으로 실시간 자동 발송됩니다!`,
     };
   } catch (error: any) {
     console.error('[Discord DB Register Channel Error]:', error);
@@ -710,10 +836,18 @@ export async function unregisterSubscribedChannel(
 }
 
 /**
- * 전체 알림 구독 채널 목록 조회
+ * 플랫폼별 알림 구독 채널 목록 조회
  */
-export async function listSubscribedChannels(db: D1Database): Promise<any[]> {
+export async function listSubscribedChannels(db: D1Database, targetPlatform?: string): Promise<any[]> {
   try {
+    if (targetPlatform && targetPlatform.toUpperCase() !== 'ALL') {
+      const { results } = await db.prepare(`
+        SELECT guild_id, channel_id, guild_name, subscribed_platforms 
+        FROM discord_subscribed_channels
+        WHERE subscribed_platforms = 'ALL' OR UPPER(subscribed_platforms) = ?
+      `).bind(targetPlatform.toUpperCase()).all();
+      return results || [];
+    }
     const { results } = await db.prepare(`
       SELECT guild_id, channel_id, guild_name, subscribed_platforms FROM discord_subscribed_channels
     `).all();
@@ -759,7 +893,32 @@ export async function sendDiscordChannelMessage(
 }
 
 /**
- * 신규 데뷔 등록 시 모든 구독 채널로 실시간 브로드캐스트 발송
+ * 데뷔 일정 변경(연기/조정) 시 해당 플랫폼 구독 채널로 공지 Notice 실시간 브로드캐스트 발송
+ */
+export async function broadcastDebutDateChangeToDiscord(
+  db: D1Database,
+  botToken: string,
+  changeData: DebutDateChangePayload
+): Promise<number> {
+  if (!botToken || !db) return 0;
+
+  const targetPlatform = (changeData.platform || 'ALL').toUpperCase();
+  const channels = await listSubscribedChannels(db, targetPlatform);
+  if (channels.length === 0) return 0;
+
+  const payload = buildDebutDateChangeEmbed(changeData);
+  let successCount = 0;
+
+  for (const row of channels) {
+    const ok = await sendDiscordChannelMessage(botToken, row.channel_id, payload);
+    if (ok) successCount++;
+  }
+
+  return successCount;
+}
+
+/**
+ * 신규 데뷔 등록 시 해당 플랫폼 구독 채널로 실시간 브로드캐스트 발송
  */
 export async function broadcastNewDebutToDiscord(
   db: D1Database,
@@ -768,7 +927,8 @@ export async function broadcastNewDebutToDiscord(
 ): Promise<number> {
   if (!botToken || !db) return 0;
 
-  const channels = await listSubscribedChannels(db);
+  const targetPlatform = (debutData.links?.[0]?.platform || 'ALL').toUpperCase();
+  const channels = await listSubscribedChannels(db, targetPlatform);
   if (channels.length === 0) return 0;
 
   const payload = buildBroadcastNewDebutEmbed(debutData);
@@ -911,6 +1071,9 @@ export async function handleDiscordInteraction(body: any, env: any): Promise<any
       const guildId = body.guild_id || 'DM';
       const channelId = body.channel_id;
       const guildName = body.guild?.name || 'Discord Server';
+      const platformOption = body.data?.options?.find(
+        (opt: any) => opt.name === '플랫폼' || opt.name === 'platform'
+      )?.value || 'ALL';
 
       if (!channelId) {
         return {
@@ -919,7 +1082,7 @@ export async function handleDiscordInteraction(body: any, env: any): Promise<any
         };
       }
 
-      const result = await registerSubscribedChannel(env.DB, guildId, channelId, guildName);
+      const result = await registerSubscribedChannel(env.DB, guildId, channelId, guildName, platformOption);
       return {
         type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
         data: { content: result.message },

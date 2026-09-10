@@ -170,22 +170,46 @@ export interface UpdateCreatorInput {
   profileImageUrl?: string;
 }
 
+export interface UpdateCreatorResult {
+  success: boolean;
+  dateChanged: boolean;
+  changeDetails?: {
+    displayName: string;
+    avatarUrl?: string;
+    platform: string;
+    channelUrl?: string;
+    agency?: string;
+    oldDebutDateStr: string;
+    newDebutDateStr: string;
+  };
+}
+
 export async function updateCreatorProfileInD1(
   db: D1Database | null,
   slug: string,
   input: UpdateCreatorInput
-): Promise<boolean> {
-  if (!db) return true;
+): Promise<UpdateCreatorResult> {
+  if (!db) return { success: true, dateChanged: false };
 
   try {
     const row: any = await db
-      .prepare(`SELECT channel_id FROM streamerChannel_info WHERE slug = ? OR display_name = ? LIMIT 1`)
+      .prepare(`
+        SELECT 
+          i.channel_id, i.display_name, i.agency_name, i.debut_date, i.debut_time, i.start_at_utc, i.profile_image_url,
+          c.channel_url, c.platform
+        FROM streamerChannel_info i
+        LEFT JOIN streamerChannel c ON i.channel_id = c.id
+        WHERE i.slug = ? OR i.display_name = ?
+        LIMIT 1
+      `)
       .bind(slug.toLowerCase(), slug)
       .first();
 
-    if (!row) return false;
+    if (!row) return { success: false, dateChanged: false };
 
     const channelId = row.channel_id;
+    const oldDebutDate = row.debut_date || '';
+    const oldDebutTime = row.debut_time || '';
 
     let startAtUtc: string | undefined = undefined;
     if (input.debutDate && input.debutTime) {
@@ -241,10 +265,38 @@ export async function updateCreatorProfileInD1(
         .run();
     }
 
-    return true;
+    // 데뷔 일자 또는 시간 변경 여부 판단
+    const newDebutDate = input.debutDate !== undefined ? input.debutDate : oldDebutDate;
+    const newDebutTime = input.debutTime !== undefined ? input.debutTime : oldDebutTime;
+    const isDateChanged = (input.debutDate !== undefined && input.debutDate !== oldDebutDate) ||
+                          (input.debutTime !== undefined && input.debutTime !== oldDebutTime);
+
+    let changeDetails;
+    if (isDateChanged && (newDebutDate || newDebutTime)) {
+      const formatTimeStr = (d: string, t: string) => {
+        if (!d && !t) return '미정';
+        return t ? `${d} ${t} (KST)` : `${d} (KST)`;
+      };
+
+      changeDetails = {
+        displayName: input.displayName || row.display_name || slug,
+        avatarUrl: input.profileImageUrl || row.profile_image_url,
+        platform: row.platform || 'CHZZK',
+        channelUrl: row.channel_url || '',
+        agency: input.agencyName !== undefined ? input.agencyName : row.agency_name,
+        oldDebutDateStr: formatTimeStr(oldDebutDate, oldDebutTime),
+        newDebutDateStr: formatTimeStr(newDebutDate, newDebutTime),
+      };
+    }
+
+    return {
+      success: true,
+      dateChanged: isDateChanged,
+      changeDetails,
+    };
   } catch (err) {
     console.error('updateCreatorProfileInD1 Error:', err);
-    return false;
+    return { success: false, dateChanged: false };
   }
 }
 

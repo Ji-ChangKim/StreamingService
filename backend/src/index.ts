@@ -26,6 +26,8 @@ import {
   handleDiscordInteraction,
   broadcastNewDebutToDiscord,
   broadcastMorningBriefingToDiscord,
+  broadcastDebutDateChangeToDiscord,
+  DebutDateChangePayload,
 } from './services/discordBotService';
 
 type Bindings = {
@@ -522,11 +524,21 @@ app.get('/api/v1/creator/:slug', async (c) => {
 app.put('/api/v1/creator/:slug', async (c) => {
   const slug = c.req.param('slug');
   const body = await c.req.json();
-  const ok = await updateCreatorProfileInD1(c.env.DB || null, slug, body);
+  const res = await updateCreatorProfileInD1(c.env.DB || null, slug, body);
+
+  // 데뷔 일정이 변경되었을 경우 디스코드 해당 플랫폼 채널로 맞춤 Notice 자동 발송
+  if (res.success && res.dateChanged && res.changeDetails && c.env.DISCORD_BOT_TOKEN && c.env.DB) {
+    c.executionCtx.waitUntil(
+      broadcastDebutDateChangeToDiscord(c.env.DB, c.env.DISCORD_BOT_TOKEN, res.changeDetails)
+        .then((count) => console.log(`[Discord Debut Notice] Notified ${count} channels of debut date change for ${slug}`))
+        .catch((err) => console.error('[Discord Debut Notice Error]:', err))
+    );
+  }
 
   return c.json({
-    success: ok,
-    message: ok ? '크리에이터 프로필이 성공적으로 수정되었습니다.' : '프로필 수정에 실패했습니다.'
+    success: res.success,
+    dateChanged: res.dateChanged,
+    message: res.success ? '크리에이터 프로필이 성공적으로 수정되었습니다.' : '프로필 수정에 실패했습니다.'
   });
 });
 
@@ -804,6 +816,45 @@ app.post('/api/v1/admin/discord/test-broadcast', async (c) => {
   return c.json({
     success: true,
     message: `테스트 브로드캐스트 발송 완료: 총 ${sentCount}개 채널로 전송되었습니다.`,
+    sentCount,
+  });
+});
+
+// 12-2. 관리자 플랫폼별 데뷔 일자 변경 Notice 테스트 발송 API
+app.post('/api/v1/admin/discord/test-date-change-notice', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  if (!c.env.DISCORD_BOT_TOKEN) {
+    return c.json({ success: false, error: 'DISCORD_BOT_TOKEN 환경변수가 설정되지 않았습니다.' }, 400);
+  }
+
+  const body = await c.req.json().catch(() => ({}));
+  const platform = (body.platform || 'CHZZK').toUpperCase();
+  const isSoop = platform === 'SOOP';
+
+  const testPayload: DebutDateChangePayload = {
+    displayName: body.displayName || (isSoop ? '테스트 SOOP 버튜버' : '테스트 치지직 버튜버'),
+    avatarUrl: body.avatarUrl || 'https://vdebut.live/logo.png',
+    platform: platform,
+    channelUrl: body.channelUrl || (isSoop ? 'https://bj.afreecatv.com/sample' : 'https://chzzk.naver.com/sample'),
+    agency: body.agency || (body.includeAgency ? '스타버스 엔터테인먼트' : undefined),
+    oldDebutDateStr: body.oldDate || '2026-09-20 20:00 (KST)',
+    newDebutDateStr: body.newDate || '2026-09-25 19:00 (KST)',
+    reason: body.reason || '방송 장비 세팅 및 3D 모델링 리깅 보완 작업으로 인해 일정이 5일 연기되었습니다.',
+  };
+
+  const sentCount = await broadcastDebutDateChangeToDiscord(c.env.DB, c.env.DISCORD_BOT_TOKEN, testPayload);
+  return c.json({
+    success: true,
+    platform,
+    message: `${platform} 데뷔 일정 변경 테스트 Notice 발송 완료: 총 ${sentCount}개 채널로 전송되었습니다.`,
     sentCount,
   });
 });

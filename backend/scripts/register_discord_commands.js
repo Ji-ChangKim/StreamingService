@@ -40,6 +40,19 @@ const commands = [
     description: '현재 채널을 V-DEBUT HUB의 실시간 데뷔 공지 및 모닝 브리핑 수신 채널로 설정합니다.',
     type: 1,
     default_member_permissions: '32', // MANAGE_GUILD (서버 관리자 전용)
+    options: [
+      {
+        name: '플랫폼',
+        description: '수신할 스트리밍 플랫폼 알림을 선택합니다. (기본값: 전체)',
+        type: 3, // STRING
+        required: false,
+        choices: [
+          { name: '🌐 전체 플랫폼 (치지직 + SOOP + 유튜브)', value: 'ALL' },
+          { name: '🟢 치지직 전용 (CHZZK)', value: 'CHZZK' },
+          { name: '🔵 SOOP 전용 (숲)', value: 'SOOP' },
+        ],
+      },
+    ],
   },
   {
     name: '온보딩패널',
