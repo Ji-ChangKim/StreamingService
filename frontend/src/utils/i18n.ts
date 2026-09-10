@@ -93,6 +93,14 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     tabTodayDebut: '금일 데뷔',
     noLiveNow: '현재 진행 중인 데뷔 생방송이 없습니다.',
     noTodayDebuts: '오늘 예정된 데뷔 방송이 없습니다.',
+
+    // 에러 페이지 다국어
+    errorPageTitle: '현재 페이지를 불러올 수 없습니다.',
+    errorPageDesc404: '요청하신 페이지가 존재하지 않거나 주소가 변경되었습니다.',
+    errorPageDescGeneral: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+    errorCodePrefix: '오류코드',
+    btnReload: '새로고침',
+    btnHome: '홈으로',
   },
   ja: {
     heroTitle: '新人VTuber デビューカレンダー',
@@ -154,6 +162,14 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     tabTodayDebut: '本日デビュー',
     noLiveNow: '現在配信中のデビュー配信はありません。',
     noTodayDebuts: '本日予定のデビュー配信はありません。',
+
+    // 에러 페이지 다국어
+    errorPageTitle: '現在ページを読み込めません。',
+    errorPageDesc404: 'リクエストされたページが存在しないか、移動した可能性があります。',
+    errorPageDescGeneral: '一時的なエラーが発生しました。しばらくしてからもう一度お試しください。',
+    errorCodePrefix: 'エラーコード',
+    btnReload: '再読み込み',
+    btnHome: 'ホームへ戻る',
   },
   en: {
     heroTitle: 'Global VTuber Debut Schedule Calendar',
@@ -215,6 +231,14 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     tabTodayDebut: "Today's Debuts",
     noLiveNow: 'No live debut streams at the moment.',
     noTodayDebuts: 'No debuts scheduled for today.',
+
+    // 에러 페이지 다국어
+    errorPageTitle: 'Unable to Load Page',
+    errorPageDesc404: 'The page you requested does not exist or has been moved.',
+    errorPageDescGeneral: 'An unexpected error occurred. Please try again in a moment.',
+    errorCodePrefix: 'Error Code',
+    btnReload: 'Reload',
+    btnHome: 'Go to Home',
   }
 };
 

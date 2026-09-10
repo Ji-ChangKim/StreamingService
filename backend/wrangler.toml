@@ -5,6 +5,11 @@ compatibility_date = "2024-01-01"
 [site]
 bucket = "../frontend/dist"
 
+[vars]
+DISCORD_APPLICATION_ID = "1547493885733900351"
+DISCORD_PUBLIC_KEY = "5f3ac194f940bbe736f80fcc269b1df45da5cc86b60fe6b85a34a6705572f285"
+# 참고: DISCORD_BOT_TOKEN 등 비밀 토큰은 `wrangler secret put DISCORD_BOT_TOKEN`으로 안전하게 관리합니다.
+
 [[d1_databases]]
 binding = "DB"
 database_name = "vdebut-db"
@@ -17,6 +22,10 @@ name = "streaming-dev"
 routes = [
   { pattern = "dev.vdebut.live/*", zone_name = "vdebut.live" }
 ]
+[env.dev.vars]
+DISCORD_APPLICATION_ID = "1547493885733900351"
+DISCORD_PUBLIC_KEY = "5f3ac194f940bbe736f80fcc269b1df45da5cc86b60fe6b85a34a6705572f285"
+
 [env.dev.site]
 bucket = "../frontend/dist"
 [[env.dev.d1_databases]]
@@ -27,6 +36,10 @@ database_id = "888a8c04-5657-4bff-9b50-5002a47ac7c7"
 # Production (live) env
 [env.production]
 name = "streaming"
+[env.production.vars]
+DISCORD_APPLICATION_ID = "1547493885733900351"
+DISCORD_PUBLIC_KEY = "5f3ac194f940bbe736f80fcc269b1df45da5cc86b60fe6b85a34a6705572f285"
+
 [env.production.site]
 bucket = "../frontend/dist"
 [[env.production.d1_databases]]

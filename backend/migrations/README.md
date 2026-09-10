@@ -56,6 +56,7 @@
 - `0023_add_september_mid_late_debut_streamers.sql`: 2026년 9월 4일 ~ 9월 28일 신규 버추얼 스트리머 34인 등록 및 緋桜なこ 데뷔 일시 UPDATE (2026-09-01 -> 2026-09-04 21:00 KST)
 - `0024_add_september_second_week_streamers.sql`: 2026년 9월 7일 ~ 9월 13일 주간 신규 버추얼 스트리머 7인 추가 등록 (天井沢依留, 밀루아, 유메사키 후카, ヤドカリのドリィ, 音蓮みずの, むみつや, 眠来らむね) 및 프로필 최신화
 - `0025_update_admin_credentials.sql`: 관리자 보안 계정 비밀번호 갱신(`admin1234@`, SHA-256 해시) 및 `vedebut.admin` / `vdebut.admin` 복수 계정 완벽 지원
+- `0026_discord_subscribed_channels.sql`: 디스코드 봇 실시간 데뷔 알림 수신 채널(`discord_subscribed_channels`) 관리 테이블 및 채널 ID/길드 ID 인덱스 생성
 
 
 ---

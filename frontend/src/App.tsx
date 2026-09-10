@@ -6,6 +6,7 @@ import { MonthlyCalendarGrid } from './components/MonthlyCalendarGrid';
 import { FooterBanner } from './components/FooterBanner';
 import { Footer } from './components/Footer';
 import { StudioSubmitModal } from './components/StudioSubmitModal';
+import { DiscordBotModal } from './components/DiscordBotModal';
 import { CreatorProfilePage } from './components/profile/CreatorProfilePage';
 import { AboutPage } from './components/pages/AboutPage';
 import { GuidePage } from './components/pages/GuidePage';
@@ -13,11 +14,13 @@ import { PrivacyPage } from './components/pages/PrivacyPage';
 import { TermsPage } from './components/pages/TermsPage';
 import { ContactPage } from './components/pages/ContactPage';
 import { AdminCmsPage } from './components/pages/AdminCmsPage';
+import { ErrorPage } from './components/pages/ErrorPage';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { DebutEvent } from './types';
 import { fetchDebutEvents } from './services/eventService';
 import { generateICSContent, triggerFileDownload } from './utils/dateUtils';
 import { filterEventsByPlatform, filterEventsByQuery, filterEventsByCountry } from './utils/eventUtils';
-import { Language, SEO_DATA } from './utils/i18n';
+import { Language, SEO_DATA, UI_TRANSLATIONS } from './utils/i18n';
 
 export function App() {
   const [currentPath, setCurrentPath] = useState<string>(() => window.location.pathname);
@@ -51,12 +54,25 @@ export function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [events, setEvents] = useState<DebutEvent[]>([]);
   const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
+  const [showDiscordModal, setShowDiscordModal] = useState<boolean>(false);
   const [submitModalInitialDate, setSubmitModalInitialDate] = useState<string | undefined>(undefined);
   const [editingEvent, setEditingEvent] = useState<DebutEvent | null>(null);
 
   // 개발 프리뷰 모드 감지 (dev.vdebut.live 도메인 또는 /updatepage 경로)
   const isDevHost = typeof window !== 'undefined' && window.location.hostname === 'dev.vdebut.live';
   const isUpdatePath = currentPath === '/updatepage' || currentPath === '/upadepage';
+  const isMainPath = currentPath === '/' || currentPath === '/upload' || isUpdatePath;
+  const isCreatorPage = currentPath.startsWith('/creator/');
+  const creatorSlug = isCreatorPage ? currentPath.replace('/creator/', '').split('/')[0] : '';
+  const isKnownRoute =
+    isMainPath ||
+    isCreatorPage ||
+    currentPath === '/about' ||
+    currentPath === '/guide' ||
+    currentPath === '/privacy' ||
+    currentPath === '/terms' ||
+    currentPath === '/contact' ||
+    currentPath === '/admin';
 
   // Popstate event listener for client-side routing & /upload URL sync
   useEffect(() => {
@@ -122,6 +138,9 @@ export function App() {
     } else if (currentPath === '/contact') {
       pageTitle = '문의 및 제보 안내 | VDébut';
       pageDesc = 'VDébut 운영팀 문의, 일정 수정 및 삭제 요청, 비즈니스 제휴 안내입니다.';
+    } else if (!isKnownRoute) {
+      pageTitle = `${UI_TRANSLATIONS[currentLang]?.errorPageTitle || '페이지를 불러올 수 없습니다'} | VDébut`;
+      pageDesc = '요청하신 페이지를 찾을 수 없습니다.';
     }
 
     document.title = pageTitle;
@@ -205,147 +224,159 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const isCreatorPage = currentPath.startsWith('/creator/');
-  const creatorSlug = isCreatorPage ? currentPath.replace('/creator/', '').split('/')[0] : '';
-
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-['Inter'] selection:bg-[#2563EB] selection:text-white">
-      {/* 1. Desktop Header Bar */}
-      <Navbar
-        activeNav={activeNav}
-        setActiveNav={(nav) => {
-          setActiveNav(nav);
-          if (nav === 'schedule') handleNavigate('/');
-          else if (nav === 'about') handleNavigate('/about');
-          else if (nav === 'guide') handleNavigate('/guide');
-        }}
-        currentLang={currentLang}
-        onLanguageChange={setCurrentLang}
-        onOpenSubmitModal={() => handleOpenSubmitModal()}
-      />
+    <ErrorBoundary currentLang={currentLang}>
+      <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-['Inter'] selection:bg-[#2563EB] selection:text-white">
+        {/* 1. Desktop Header Bar */}
+        <Navbar
+          activeNav={activeNav}
+          setActiveNav={(nav) => {
+            setActiveNav(nav);
+            if (nav === 'schedule') handleNavigate('/');
+            else if (nav === 'about') handleNavigate('/about');
+            else if (nav === 'guide') handleNavigate('/guide');
+          }}
+          currentLang={currentLang}
+          onLanguageChange={setCurrentLang}
+          onOpenSubmitModal={() => handleOpenSubmitModal()}
+          onOpenDiscordModal={() => setShowDiscordModal(true)}
+        />
 
-      {/* 1-1. 3D 무대 스포트라이트 쇼케이스 섹션 (Live & Dev 메인 홈 전면 적용) */}
-      {!isCreatorPage && (currentPath === '/' || isUpdatePath) && (
-        <section
-          aria-label="Stage Showcase"
-          className="w-full relative bg-[url('/images/spotlight_stage_bg.png')] bg-cover bg-center sm:bg-bottom bg-no-repeat overflow-hidden"
-        >
-          {/* DEV 환경 전용 안내 바 (dev.vdebut.live 접속 시에만 표시) */}
-          {isDevHost && (
-            <div className="bg-amber-500/15 backdrop-blur-xs border-b border-amber-300/60 px-4 py-2 text-center text-xs font-bold text-amber-950 flex items-center justify-center gap-2">
-              <span className="bg-amber-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-2xs">
-                DEV LAB
-              </span>
-              <span>
-                dev.vdebut.live 프리뷰 모드 (Live DB 실시간 연동 • SEO/크롤링 차단됨)
-              </span>
-            </div>
-          )}
+        {/* 1-1. 3D 무대 스포트라이트 쇼케이스 섹션 (Live & Dev 메인 홈 전면 적용) */}
+        {!isCreatorPage && isKnownRoute && (currentPath === '/' || isUpdatePath) && (
+          <section
+            aria-label="Stage Showcase"
+            className="w-full relative bg-[url('/images/spotlight_stage_bg.png')] bg-cover bg-center sm:bg-bottom bg-no-repeat overflow-hidden"
+          >
+            {/* DEV 환경 전용 안내 바 (dev.vdebut.live 접속 시에만 표시) */}
+            {isDevHost && (
+              <div className="bg-amber-500/15 backdrop-blur-xs border-b border-amber-300/60 px-4 py-2 text-center text-xs font-bold text-amber-950 flex items-center justify-center gap-2">
+                <span className="bg-amber-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-2xs">
+                  DEV LAB
+                </span>
+                <span>
+                  dev.vdebut.live 프리뷰 모드 (Live DB 실시간 연동 • SEO/크롤링 차단됨)
+                </span>
+              </div>
+            )}
 
-          <div className="max-w-[1440px] w-full mx-auto px-3 sm:px-6 pt-4 pb-6 sm:pb-8 relative z-10">
-            {/* Hero Section (Desktop only) */}
-            <div className="hidden sm:block">
-              <HeroHeader
+            <div className="max-w-[1440px] w-full mx-auto px-3 sm:px-6 pt-4 pb-6 sm:pb-8 relative z-10">
+              {/* Hero Section (Desktop only) */}
+              <div className="hidden sm:block">
+                <HeroHeader
+                  allEvents={events}
+                  selectedTimezone={selectedTimezone}
+                  currentLang={currentLang}
+                />
+              </div>
+
+              {/* 신규 플랫폼별 컴팩트 스포트라이트 (무대 배경 일체형) */}
+              <PlatformMiniSpotlight
                 allEvents={events}
                 selectedTimezone={selectedTimezone}
-                currentLang={currentLang}
-              />
-            </div>
-
-            {/* 신규 플랫폼별 컴팩트 스포트라이트 (무대 배경 일체형) */}
-            <PlatformMiniSpotlight
-              allEvents={events}
-              selectedTimezone={selectedTimezone}
-              onDownloadICS={handleDownloadICS}
-              onNavigate={handleNavigate}
-            />
-          </div>
-
-          {/* 하단 본문(#F8FAFC) 연결 페이드 그라데이션 오버레이 (경계선 그림자 제거 및 스무스 블렌딩) */}
-          <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-36 pointer-events-none bg-gradient-to-b from-transparent via-[#F8FAFC]/50 to-[#F8FAFC] z-10" />
-        </section>
-      )}
-
-      {/* 2. Main Content Container */}
-      <main className="flex-grow max-w-[1280px] w-full mx-auto px-0 sm:px-6">
-        {isCreatorPage && creatorSlug ? (
-          <CreatorProfilePage
-            slug={creatorSlug}
-            onNavigateHome={() => handleNavigate('/')}
-            currentLang={currentLang}
-          />
-        ) : currentPath === '/about' ? (
-          <AboutPage
-            onNavigateHome={() => handleNavigate('/')}
-            currentLang={currentLang}
-          />
-        ) : currentPath === '/guide' ? (
-          <GuidePage
-            onNavigateHome={() => handleNavigate('/')}
-            onOpenSubmitModal={() => handleOpenSubmitModal()}
-            currentLang={currentLang}
-          />
-        ) : currentPath === '/privacy' ? (
-          <PrivacyPage
-            onNavigateHome={() => handleNavigate('/')}
-            currentLang={currentLang}
-          />
-        ) : currentPath === '/terms' ? (
-          <TermsPage
-            onNavigateHome={() => handleNavigate('/')}
-            currentLang={currentLang}
-          />
-        ) : currentPath === '/contact' ? (
-          <ContactPage
-            onNavigateHome={() => handleNavigate('/')}
-            onOpenSubmitModal={() => handleOpenSubmitModal()}
-            currentLang={currentLang}
-          />
-        ) : currentPath === '/admin' ? (
-          <AdminCmsPage
-            onNavigateHome={() => handleNavigate('/')}
-          />
-        ) : (
-          <>
-            {/* Main Monthly / Mobile Calendar Grid Section */}
-            <div className="mt-6 sm:mt-8">
-              <MonthlyCalendarGrid
-                events={filteredEvents}
-                selectedTimezone={selectedTimezone}
-                setSelectedTimezone={setSelectedTimezone}
-                selectedPlatform={selectedPlatform}
-                setSelectedPlatform={setSelectedPlatform}
-                selectedCountry={selectedCountry}
-                setSelectedCountry={setSelectedCountry}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
                 onDownloadICS={handleDownloadICS}
-                onOpenSubmitModal={handleOpenSubmitModal}
-                onEditEvent={handleEditEvent}
+                onNavigate={handleNavigate}
               />
             </div>
 
-            {/* Creator Callout Banner (Desktop only) */}
-            <div className="hidden sm:block">
-              <FooterBanner onOpenSubmitModal={() => handleOpenSubmitModal()} currentLang={currentLang} />
-            </div>
-          </>
+            {/* 하단 본문(#F8FAFC) 연결 페이드 그라데이션 오버레이 (경계선 그림자 제거 및 스무스 블렌딩) */}
+            <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-36 pointer-events-none bg-gradient-to-b from-transparent via-[#F8FAFC]/50 to-[#F8FAFC] z-10" />
+          </section>
         )}
-      </main>
 
-      {/* 3. Footer */}
-      <Footer currentLang={currentLang} onNavigate={handleNavigate} />
+        {/* 2. Main Content Container */}
+        <main className="flex-grow max-w-[1280px] w-full mx-auto px-0 sm:px-6">
+          {isCreatorPage && creatorSlug ? (
+            <CreatorProfilePage
+              slug={creatorSlug}
+              onNavigateHome={() => handleNavigate('/')}
+              currentLang={currentLang}
+            />
+          ) : currentPath === '/about' ? (
+            <AboutPage
+              onNavigateHome={() => handleNavigate('/')}
+              currentLang={currentLang}
+            />
+          ) : currentPath === '/guide' ? (
+            <GuidePage
+              onNavigateHome={() => handleNavigate('/')}
+              onOpenSubmitModal={() => handleOpenSubmitModal()}
+              currentLang={currentLang}
+            />
+          ) : currentPath === '/privacy' ? (
+            <PrivacyPage
+              onNavigateHome={() => handleNavigate('/')}
+              currentLang={currentLang}
+            />
+          ) : currentPath === '/terms' ? (
+            <TermsPage
+              onNavigateHome={() => handleNavigate('/')}
+              currentLang={currentLang}
+            />
+          ) : currentPath === '/contact' ? (
+            <ContactPage
+              onNavigateHome={() => handleNavigate('/')}
+              onOpenSubmitModal={() => handleOpenSubmitModal()}
+              currentLang={currentLang}
+            />
+          ) : currentPath === '/admin' ? (
+            <AdminCmsPage
+              onNavigateHome={() => handleNavigate('/')}
+            />
+          ) : !isKnownRoute ? (
+            <ErrorPage
+              code="404"
+              onNavigateHome={() => handleNavigate('/')}
+              currentLang={currentLang}
+            />
+          ) : (
+            <>
+              {/* Main Monthly / Mobile Calendar Grid Section */}
+              <div className="mt-6 sm:mt-8">
+                <MonthlyCalendarGrid
+                  events={filteredEvents}
+                  selectedTimezone={selectedTimezone}
+                  setSelectedTimezone={setSelectedTimezone}
+                  selectedPlatform={selectedPlatform}
+                  setSelectedPlatform={setSelectedPlatform}
+                  selectedCountry={selectedCountry}
+                  setSelectedCountry={setSelectedCountry}
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  onDownloadICS={handleDownloadICS}
+                  onOpenSubmitModal={handleOpenSubmitModal}
+                  onEditEvent={handleEditEvent}
+                />
+              </div>
 
-      {/* 4. Studio Submit & Edit Modal */}
-      <StudioSubmitModal
-        isOpen={showSubmitModal}
-        onClose={handleCloseModal}
-        onSubmitSuccess={handleAddEvent}
-        editEvent={editingEvent}
-        initialDate={submitModalInitialDate}
-        onUpdateSuccess={handleUpdateEvent}
-        currentLang={currentLang}
-      />
-    </div>
+              {/* Creator Callout Banner (Desktop only) */}
+              <div className="hidden sm:block">
+                <FooterBanner onOpenSubmitModal={() => handleOpenSubmitModal()} currentLang={currentLang} />
+              </div>
+            </>
+          )}
+        </main>
+
+        {/* 3. Footer */}
+        <Footer currentLang={currentLang} onNavigate={handleNavigate} />
+
+        {/* 4. Studio Submit & Edit Modal */}
+        <StudioSubmitModal
+          isOpen={showSubmitModal}
+          onClose={handleCloseModal}
+          onSubmitSuccess={handleAddEvent}
+          editEvent={editingEvent}
+          initialDate={submitModalInitialDate}
+          onUpdateSuccess={handleUpdateEvent}
+          currentLang={currentLang}
+        />
+
+        {/* 5. Discord Bot Info & Invite Modal */}
+        <DiscordBotModal
+          isOpen={showDiscordModal}
+          onClose={() => setShowDiscordModal(false)}
+        />
+      </div>
+    </ErrorBoundary>
   );
 }

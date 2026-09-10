@@ -70,6 +70,14 @@ export function Footer({ currentLang = 'ko', onNavigate }: FooterProps) {
             >
               {t.contactTab || '문의하기'}
             </a>
+            <a
+              href="https://discord.com/oauth2/authorize?client_id=1547493885733900351&permissions=2147485696&scope=bot%20applications.commands"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#5865F2] hover:text-[#4752C4] transition-colors flex items-center gap-1 font-extrabold"
+            >
+              <span>🤖 디스코드 봇</span>
+            </a>
           </div>
         </div>
 

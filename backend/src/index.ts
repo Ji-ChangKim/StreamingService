@@ -21,11 +21,20 @@ import {
 } from './services/submissionDbService';
 import { syncMissingProfilesInD1 } from './services/profileSyncService';
 import { runAutoReviewPipeline } from './services/autoReviewService';
+import {
+  verifyDiscordSignature,
+  handleDiscordInteraction,
+  broadcastNewDebutToDiscord,
+  broadcastMorningBriefingToDiscord,
+} from './services/discordBotService';
 
 type Bindings = {
   DB: D1Database;
   __STATIC_CONTENT: any;
   CRAWLER_SECRET?: string;
+  DISCORD_APPLICATION_ID?: string;
+  DISCORD_PUBLIC_KEY?: string;
+  DISCORD_BOT_TOKEN?: string;
 };
 
 // Cloudflare Durable Object Class Preservation
@@ -316,6 +325,34 @@ app.post('/api/v1/admin/submissions/:id/approve', async (c) => {
   const customSlug = body.customSlug;
 
   const result = await approveSubmissionInD1(c.env.DB, subId, customSlug);
+
+  // 디스코드 구독 채널 자동 브로드캐스트 (비동기 안전 백그라운드 발송)
+  if (result.success && c.env.DISCORD_BOT_TOKEN && c.env.DB) {
+    c.executionCtx.waitUntil(
+      c.env.DB.prepare(`
+        SELECT i.display_name, i.profile_image_url, i.description, i.agency_name, i.start_at_utc, c.platform, c.channel_url
+        FROM streamerChannel_info i
+        INNER JOIN streamerChannel c ON i.channel_id = c.id
+        WHERE i.slug = ?
+      `).bind(result.slug).first().then((row: any) => {
+        if (row) {
+          const eventPayload = {
+            id: result.eventId,
+            startAtUtc: row.start_at_utc,
+            creator: {
+              displayName: row.display_name,
+              avatarUrl: row.profile_image_url,
+              agency: row.agency_name,
+              description: row.description,
+            },
+            links: [{ platform: row.platform, url: row.channel_url, isPrimary: true }],
+          };
+          return broadcastNewDebutToDiscord(c.env.DB, c.env.DISCORD_BOT_TOKEN!, eventPayload);
+        }
+      }).catch((e) => console.error('[Discord Broadcast on Approve Error]:', e))
+    );
+  }
+
   return c.json({
     success: result.success,
     message: result.success ? `신청서가 승인되어 /creator/${result.slug} 주소로 캘린더에 즉시 발행되었습니다!` : '승인 처리에 실패했습니다.',
@@ -703,7 +740,94 @@ app.get('/api/v1/admin/crawler/logs', async (c) => {
   }
 });
 
-// 11. Safe Static Asset & SPA Fallback Handler
+// 11. Discord Interactions Webhook (서버리스 0원 Ed25519 인증 봇 엔드포인트)
+app.post('/api/v1/discord/interactions', async (c) => {
+  const signature = c.req.header('X-Signature-Ed25519') || '';
+  const timestamp = c.req.header('X-Signature-Timestamp') || '';
+  const rawBody = await c.req.text();
+
+  // 1. Ed25519 서명 유효성 검증 (DISCORD_PUBLIC_KEY 환경변수가 있는 경우 보안 강제)
+  if (c.env.DISCORD_PUBLIC_KEY) {
+    const isValid = await verifyDiscordSignature(
+      rawBody,
+      signature,
+      timestamp,
+      c.env.DISCORD_PUBLIC_KEY
+    );
+    if (!isValid) {
+      return c.text('Invalid request signature', 401);
+    }
+  }
+
+  // 2. 상호작용(Interaction) 디스패칭
+  try {
+    const body = JSON.parse(rawBody);
+    const responsePayload = await handleDiscordInteraction(body, c.env);
+    return c.json(responsePayload);
+  } catch (err: any) {
+    console.error('[Discord Interaction Handler Error]:', err);
+    return c.json(
+      { type: 4, data: { content: '⚠️ 디스코드 요청 처리 중 서버 내부 오류가 발생했습니다.' } },
+      500
+    );
+  }
+});
+
+// 12. 관리자 디스코드 브로드캐스트 즉시 테스트 API
+app.post('/api/v1/admin/discord/test-broadcast', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  if (!c.env.DISCORD_BOT_TOKEN) {
+    return c.json({ success: false, error: 'DISCORD_BOT_TOKEN 환경변수가 설정되지 않았습니다.' }, 400);
+  }
+
+  const testPayload = {
+    id: 'test_evt',
+    startAtUtc: new Date(Date.now() + 3600000).toISOString(),
+    creator: {
+      displayName: '테스트 버튜버',
+      avatarUrl: 'https://vdebut.live/logo.png',
+      agency: 'V-DEBUT HUB 테스트세',
+      description: '디스코드 봇 브로드캐스트 연동 테스트 메시지입니다.',
+    },
+    links: [{ platform: 'CHZZK', url: 'https://vdebut.live', isPrimary: true }],
+  };
+
+  const sentCount = await broadcastNewDebutToDiscord(c.env.DB, c.env.DISCORD_BOT_TOKEN, testPayload);
+  return c.json({
+    success: true,
+    message: `테스트 브로드캐스트 발송 완료: 총 ${sentCount}개 채널로 전송되었습니다.`,
+    sentCount,
+  });
+});
+
+// 13. 관리자 즉시 자동 심사 파이프라인 수동 기동 API
+app.post('/api/v1/admin/auto-review/run', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const report = await runAutoReviewPipeline(c.env.DB);
+  return c.json({
+    success: true,
+    message: `자동 심사 완료: 대기열 ${report.totalProcessed}건 검증 중 ${report.approvedCount}건 자동 승인, ${report.rejectedCount}건 반려, ${report.heldCount}건 보류`,
+    report,
+  });
+});
+
+// 14. Safe Static Asset & SPA Fallback Handler
 app.all('*', async (c) => {
   const assetManifest = JSON.parse(manifestJSON || '{}');
   try {
@@ -723,26 +847,7 @@ app.all('*', async (c) => {
   }
 });
 
-// 12. 관리자 즉시 자동 심사 파이프라인 수동 기동 API
-app.post('/api/v1/admin/auto-review/run', async (c) => {
-  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
-
-  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
-  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
-  const isAuthed = await validateAdminToken(token);
-  if (!isAuthed) {
-    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
-  }
-
-  const report = await runAutoReviewPipeline(c.env.DB);
-  return c.json({
-    success: true,
-    message: `자동 심사 완료: 대기열 ${report.totalProcessed}건 검증 중 ${report.approvedCount}건 자동 승인, ${report.rejectedCount}건 반려, ${report.heldCount}건 보류`,
-    report,
-  });
-});
-
-// Cloudflare Workers Scheduled Cron Handler (1시간 주기 자동 심사 및 정기 크롤러 수행)
+// Cloudflare Workers Scheduled Cron Handler (1시간 주기 자동 심사, 모닝 브리핑 및 정기 크롤러 수행)
 export default {
   fetch: app.fetch,
   async scheduled(event: any, env: Bindings, ctx: any) {
@@ -760,6 +865,16 @@ export default {
           .then((res) => console.log('[Scheduled Cron] Profile sync success:', res.updatedCount))
           .catch((err) => console.error('[Scheduled Cron] Profile sync error:', err))
       );
+
+      // 3. 디스코드 모닝 데뷔 브리핑 발송 (KST 오전 9시 = UTC 00시)
+      const nowUtc = new Date();
+      if (nowUtc.getUTCHours() === 0 && env.DISCORD_BOT_TOKEN) {
+        ctx.waitUntil(
+          broadcastMorningBriefingToDiscord(env.DB, env.DISCORD_BOT_TOKEN)
+            .then((sentCount) => console.log('[Scheduled Cron] Discord morning briefing sent to channels:', sentCount))
+            .catch((err) => console.error('[Scheduled Cron] Discord morning briefing error:', err))
+        );
+      }
     }
     ctx.waitUntil(
       runDebutCrawlerProcess(env.DB || null, 'kimjichang1234@gmail.com')
