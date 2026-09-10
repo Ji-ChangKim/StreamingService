@@ -41,6 +41,12 @@ const commands = [
     type: 1,
     default_member_permissions: '32', // MANAGE_GUILD (서버 관리자 전용)
   },
+  {
+    name: '온보딩패널',
+    description: '현재 채널에 시청자 역할 받기 및 스트리머 본인 인증 온보딩 안내 패널을 생성합니다.',
+    type: 1,
+    default_member_permissions: '32', // MANAGE_GUILD (서버 관리자 전용)
+  },
 ];
 
 const data = JSON.stringify(commands);

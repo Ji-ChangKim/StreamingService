@@ -57,6 +57,7 @@
 - `0024_add_september_second_week_streamers.sql`: 2026년 9월 7일 ~ 9월 13일 주간 신규 버추얼 스트리머 7인 추가 등록 (天井沢依留, 밀루아, 유메사키 후카, ヤドカリのドリィ, 音蓮みずの, むみつや, 眠来らむね) 및 프로필 최신화
 - `0025_update_admin_credentials.sql`: 관리자 보안 계정 비밀번호 갱신(`admin1234@`, SHA-256 해시) 및 `vedebut.admin` / `vdebut.admin` 복수 계정 완벽 지원
 - `0026_discord_subscribed_channels.sql`: 디스코드 봇 실시간 데뷔 알림 수신 채널(`discord_subscribed_channels`) 관리 테이블 및 채널 ID/길드 ID 인덱스 생성
+- `0027_discord_streamer_verifications.sql`: 치지직/SOOP 스트리머 방송국 소개글 본인 인증 및 디스코드 계정 1:1 매핑(`discord_streamer_verifications`) 테이블 생성
 
 
 ---

@@ -9,6 +9,18 @@
 
 import { fetchEventsFromD1, insertEventToD1 } from './eventDbService';
 import { fetchPlatformProfile } from './platformApiService';
+import {
+  extractChannelIdentifier,
+  fetchChzzkChannelBio,
+  fetchSoopChannelBio,
+  checkBioContainsCode,
+  findRoleIdByName,
+  addRoleToMember,
+  toggleViewerRole,
+  createStreamerVerification,
+  getVerificationRecord,
+  markVerificationComplete,
+} from './discordVerificationService';
 
 // Discord Interaction Types
 export const INTERACTION_TYPE = {
@@ -354,6 +366,160 @@ export function buildDebutRegisterModal(): any {
               style: 2, // Paragraph
               placeholder: '데뷔 방송의 핵심 소개나 포부를 자유롭게 적어주세요',
               required: false,
+            },
+          ],
+        },
+      ],
+    },
+  };
+}
+
+/**
+ * /온보딩패널 실행 시 채널에 출력되는 고정 온보딩 패널 카드
+ */
+export function buildOnboardingPanelMessage(): any {
+  return {
+    type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+    data: {
+      embeds: [
+        {
+          title: '🌟 V-DEBUT HUB 공식 커뮤니티 온보딩',
+          description:
+            'V-DEBUT HUB 서버에 오신 것을 환영합니다!\n' +
+            '원활한 소통과 맞춤 알림을 위해 본인에게 맞는 역할을 아래 버튼을 눌러 수령해 주세요.\n\n' +
+            '• **👀 시청자(팬)**: 아래 버튼을 누르면 관심 플랫폼 역할이 즉시 지급/해제됩니다.\n' +
+            '• **🎙️ 스트리머(버튜버)**: 본인 인증 버튼을 눌러 방송국 소개글 코드로 100% 인증 후 정식 스트리머 역할을 수령하세요!',
+          color: 0x2563EB,
+          fields: [
+            {
+              name: '🏷️ 현재 발급 가능한 역할 목록',
+              value:
+                '• `chzzk 시청자` (네이버 치지직 팬)\n' +
+                '• `SOOP 시청자` (숲/SOOP 팬)\n' +
+                '• `chzzk 스트리머` (치지직 공식 방송국 인증 완료)\n' +
+                '• `SOOP 스트리머` (SOOP 공식 방송국 인증 완료)',
+              inline: false,
+            },
+          ],
+          footer: {
+            text: 'V-DEBUT HUB • 공식 커뮤니티 온보딩 시스템',
+            icon_url: `${VDEBUT_WEB_BASE}/logo.png`,
+          },
+        },
+      ],
+      components: [
+        {
+          type: 1, // Action Row 1: 시청자 역할 즉시 지급 버튼
+          components: [
+            {
+              type: 2, // Button
+              custom_id: 'btn_role_chzzk_viewer',
+              style: 3, // Success (Green)
+              label: '🎮 chzzk 시청자',
+            },
+            {
+              type: 2,
+              custom_id: 'btn_role_soop_viewer',
+              style: 1, // Primary (Blue)
+              label: '📺 SOOP 시청자',
+            },
+          ],
+        },
+        {
+          type: 1, // Action Row 2: 스트리머 본인 인증 버튼
+          components: [
+            {
+              type: 2,
+              custom_id: 'btn_start_streamer_verify',
+              style: 2, // Secondary
+              label: '🎙️ 스트리머 본인 인증 받기 (치지직 / SOOP)',
+            },
+          ],
+        },
+      ],
+    },
+  };
+}
+
+/**
+ * 스트리머 본인 인증 버튼 클릭 시 호출되는 모달 팝업
+ */
+export function buildStreamerVerifyModal(): any {
+  return {
+    type: CALLBACK_TYPE.MODAL,
+    data: {
+      custom_id: 'modal_streamer_verify',
+      title: '스트리머 본인 방송국 인증',
+      components: [
+        {
+          type: 1,
+          components: [
+            {
+              type: 4,
+              custom_id: 'input_verify_platform',
+              label: '방송 플랫폼 (CHZZK 또는 SOOP)',
+              style: 1,
+              min_length: 4,
+              max_length: 10,
+              placeholder: 'CHZZK 또는 SOOP 입력',
+              required: true,
+            },
+          ],
+        },
+        {
+          type: 1,
+          components: [
+            {
+              type: 4,
+              custom_id: 'input_verify_url',
+              label: '내 방송국 / 채널 URL 주소',
+              style: 1,
+              placeholder: 'https://chzzk.naver.com/... 또는 https://ch.sooplive.co.kr/...',
+              required: true,
+            },
+          ],
+        },
+      ],
+    },
+  };
+}
+
+/**
+ * 1회용 인증 코드 발급 카드 (본인에게만 보임 - Ephemeral)
+ */
+export function buildVerifyCodeCard(recordId: number, platform: string, code: string, channelName: string): any {
+  const brandColor = getPlatformBrandColor(platform);
+
+  return {
+    type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+    data: {
+      flags: 64, // EPHEMERAL (본인에게만 보임)
+      embeds: [
+        {
+          title: `🎙️ [${platform}] 스트리머 본인 확인 인증 코드 발급`,
+          description:
+            `**${channelName}** 채널의 실제 소유자인지 확인하기 위한 절차입니다.\n\n` +
+            `1. **${platform} 방송국 설정** 페이지로 이동합니다.\n` +
+            `2. **방송국 소개글(또는 상태 메시지)**에 아래 코드를 임시로 적고 저장합니다:\n\n` +
+            `👉 발급된 인증 코드: **\` ${code} \`**\n\n` +
+            `3. 저장이 완료되면 아래 **[✅ 소개글 수정 완료 후 인증하기]** 버튼을 눌러주세요!\n` +
+            `*(인증이 완료된 직후 방송국 소개글의 코드는 바로 지우셔도 됩니다.)*`,
+          color: brandColor,
+          footer: {
+            text: 'V-DEBUT HUB • 100% 사칭 방지 본인 인증',
+            icon_url: `${VDEBUT_WEB_BASE}/logo.png`,
+          },
+        },
+      ],
+      components: [
+        {
+          type: 1,
+          components: [
+            {
+              type: 2,
+              custom_id: `btn_confirm_verify_${recordId}`,
+              style: 3, // Success
+              label: '✅ 소개글 수정 완료 후 인증하기',
             },
           ],
         },
@@ -760,16 +926,256 @@ export async function handleDiscordInteraction(body: any, env: any): Promise<any
       };
     }
 
+    // E. /온보딩패널 (관리자용 온보딩 패널 카드 출력)
+    if (commandName === '온보딩패널') {
+      return buildOnboardingPanelMessage();
+    }
+
     return {
       type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
       data: { content: `알 수 없는 명령어입니다: /${commandName}` },
     };
   }
 
-  // 3. 모달 제출 (Type 5) - 데뷔 등록 폼 제출 처리
+  // 3. 버튼 클릭 상호작용 (Type 3: MESSAGE_COMPONENT)
+  if (interactionType === INTERACTION_TYPE.MESSAGE_COMPONENT) {
+    const customId = body.data?.custom_id || '';
+    const guildId = body.guild_id;
+    const userId = body.member?.user?.id;
+    const memberRoles = body.member?.roles || [];
+
+    if (!guildId || !userId) {
+      return {
+        type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: { flags: 64, content: '❌ 서버 내에서만 사용 가능한 기능입니다.' },
+      };
+    }
+
+    // 3-1. 시청자 역할 즉시 지급/해제 (chzzk 시청자)
+    if (customId === 'btn_role_chzzk_viewer') {
+      const res = await toggleViewerRole(guildId, userId, memberRoles, 'chzzk 시청자', env.DISCORD_BOT_TOKEN);
+      return {
+        type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: { flags: 64, content: res.message },
+      };
+    }
+
+    // 3-2. 시청자 역할 즉시 지급/해제 (SOOP 시청자)
+    if (customId === 'btn_role_soop_viewer') {
+      const res = await toggleViewerRole(guildId, userId, memberRoles, 'SOOP 시청자', env.DISCORD_BOT_TOKEN);
+      return {
+        type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: { flags: 64, content: res.message },
+      };
+    }
+
+    // 3-3. 스트리머 본인 인증 버튼 클릭 ➔ 모달 팝업 호출
+    if (customId === 'btn_start_streamer_verify') {
+      return buildStreamerVerifyModal();
+    }
+
+    // 3-4. 스트리머 소개글 코드 확인 버튼 클릭
+    if (customId.startsWith('btn_confirm_verify_')) {
+      const verifyId = parseInt(customId.replace('btn_confirm_verify_', ''), 10);
+      if (isNaN(verifyId)) {
+        return {
+          type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: { flags: 64, content: '❌ 유효하지 않은 인증 요청입니다.' },
+        };
+      }
+
+      const record = await getVerificationRecord(env.DB, verifyId);
+      if (!record) {
+        return {
+          type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: { flags: 64, content: '❌ 인증 기록을 찾을 수 없습니다. 다시 인증을 신청해 주세요.' },
+        };
+      }
+
+      if (record.discord_user_id !== userId) {
+        return {
+          type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: { flags: 64, content: '❌ 본인이 요청한 인증만 확인할 수 있습니다.' },
+        };
+      }
+
+      if (record.status === 'VERIFIED') {
+        return {
+          type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: { flags: 64, content: '✅ 이미 인증이 완료된 방송국입니다!' },
+        };
+      }
+
+      // 플랫폼별 실제 소개글 실시간 조회
+      let bio = '';
+      let errorMsg = '';
+
+      if (record.platform === 'CHZZK') {
+        const fetchRes = await fetchChzzkChannelBio(record.channel_id);
+        if (fetchRes.success) bio = fetchRes.bio || '';
+        else errorMsg = fetchRes.error || '치지직 채널 조회 실패';
+      } else if (record.platform === 'SOOP') {
+        const fetchRes = await fetchSoopChannelBio(record.channel_id);
+        if (fetchRes.success) bio = fetchRes.bio || '';
+        else errorMsg = fetchRes.error || 'SOOP 방송국 조회 실패';
+      }
+
+      if (!bio && errorMsg) {
+        return {
+          type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: { flags: 64, content: `⚠️ ${errorMsg}\n방송국 주소가 올바른지 확인해 주세요.` },
+        };
+      }
+
+      // 소개글에 발급된 인증 코드가 포함되어 있는지 대조
+      const isMatched = checkBioContainsCode(bio, record.verification_code);
+
+      if (!isMatched) {
+        return {
+          type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            flags: 64,
+            content:
+              `❌ **인증 실패**: 방송국 소개글에서 코드 \`${record.verification_code}\`를 찾을 수 없습니다.\n\n` +
+              `• **확인 방법**: ${record.platform} 방송국 설정 ➔ 소개글에 \`${record.verification_code}\`를 정확히 입력하고 저장했는지 다시 한번 확인해 주세요.\n` +
+              `• 수정을 완료하신 후 아래 버튼을 다시 눌러주세요!`,
+            components: [
+              {
+                type: 1,
+                components: [
+                  {
+                    type: 2,
+                    custom_id: `btn_confirm_verify_${verifyId}`,
+                    style: 3,
+                    label: '🔄 소개글 저장 후 다시 확인하기',
+                  },
+                ],
+              },
+            ],
+          },
+        };
+      }
+
+      // 일치 확인! 역할 지급
+      const targetRoleName = record.platform === 'CHZZK' ? 'chzzk 스트리머' : 'SOOP 스트리머';
+      const roleId = await findRoleIdByName(guildId, targetRoleName, env.DISCORD_BOT_TOKEN);
+
+      if (!roleId) {
+        return {
+          type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            flags: 64,
+            content: `⚠️ 본인 확인은 성공하였으나, 디스코드 서버에 '${targetRoleName}' 역할이 없습니다. 관리자에게 문의해 주세요.`,
+          },
+        };
+      }
+
+      const roleGranted = await addRoleToMember(guildId, userId, roleId, env.DISCORD_BOT_TOKEN);
+      if (!roleGranted) {
+        return {
+          type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            flags: 64,
+            content: `⚠️ 역할 지급 중 오류가 발생했습니다. VDebut 봇의 역할 서열이 '${targetRoleName}'보다 높은지 서버 관리자에게 확인을 요청해 주세요.`,
+          },
+        };
+      }
+
+      // DB 인증 완료 갱신
+      await markVerificationComplete(env.DB, verifyId);
+
+      return {
+        type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+          flags: 64,
+          content:
+            `🎉 **축하합니다! ${record.channel_name || record.channel_id} 방송국 본인 인증이 완료되었습니다!**\n\n` +
+            `• **지급된 역할**: **\`@${targetRoleName}\`**\n` +
+            `• 이제 방송국 소개글에서 임시 인증 코드(\`${record.verification_code}\`)는 **삭제하셔도 좋습니다.**\n` +
+            `• V-DEBUT HUB 공식 커뮤니티의 스트리머 전용 혜택을 자유롭게 이용해 보세요!`,
+        },
+      };
+    }
+  }
+
+  // 4. 모달 제출 (Type 5: MODAL_SUBMIT)
   if (interactionType === INTERACTION_TYPE.MODAL_SUBMIT) {
     const customId = body.data?.custom_id;
 
+    // 4-1. 스트리머 본인 인증 모달 제출 처리
+    if (customId === 'modal_streamer_verify') {
+      const components = body.data?.components || [];
+      const getField = (id: string) => {
+        for (const row of components) {
+          const comp = row.components?.find((c: any) => c.custom_id === id);
+          if (comp) return comp.value?.trim() || '';
+        }
+        return '';
+      };
+
+      const rawPlatform = getField('input_verify_platform').toUpperCase();
+      const rawUrl = getField('input_verify_url');
+      const guildId = body.guild_id || 'DM';
+      const userId = body.member?.user?.id;
+      const username = body.member?.user?.username || 'Unknown';
+
+      // 플랫폼 표준화
+      let platform = 'CHZZK';
+      if (rawPlatform.includes('SOOP') || rawPlatform.includes('숲') || rawPlatform.includes('아프리카')) {
+        platform = 'SOOP';
+      }
+
+      // 방송국 ID 추출
+      const parsed = extractChannelIdentifier(platform, rawUrl);
+      if (!parsed.success || !parsed.channelId) {
+        return {
+          type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            flags: 64,
+            content: `❌ ${parsed.error || '방송국 URL 형식이 올바르지 않습니다.'}`,
+          },
+        };
+      }
+
+      const channelId = parsed.channelId;
+
+      // 방송국 실제 존재 여부 및 채널명 조회
+      let channelName = channelId;
+      if (platform === 'CHZZK') {
+        const info = await fetchChzzkChannelBio(channelId);
+        if (info.success && info.channelName) channelName = info.channelName;
+      } else if (platform === 'SOOP') {
+        const info = await fetchSoopChannelBio(channelId);
+        if (info.success && info.channelName) channelName = info.channelName;
+      }
+
+      // D1 DB에 인증 요청 등록 및 1회용 코드 발급
+      const verifyRes = await createStreamerVerification(env.DB, {
+        guildId,
+        discordUserId: userId,
+        discordUsername: username,
+        platform,
+        channelId,
+        channelName,
+        channelUrl: rawUrl,
+        verificationCode: '',
+      });
+
+      if (!verifyRes.success || !verifyRes.verificationId || !verifyRes.code) {
+        return {
+          type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            flags: 64,
+            content: `❌ ${verifyRes.error || '인증 코드 생성에 실패했습니다.'}`,
+          },
+        };
+      }
+
+      // 인증 코드 발급 카드 반환 (본인에게만 보임)
+      return buildVerifyCodeCard(verifyRes.verificationId, platform, verifyRes.code, channelName);
+    }
+
+    // 4-2. 데뷔 일정 등록 폼 제출 처리
     if (customId === 'modal_submit_debut') {
       const components = body.data?.components || [];
       const getField = (id: string) => {
