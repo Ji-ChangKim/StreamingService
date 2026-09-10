@@ -19,16 +19,44 @@ if (!appId || !botToken) {
   process.exit(1);
 }
 
+const platformOption = {
+  name: '방송국',
+  description: '조회할 스트리밍 방송국(플랫폼)을 선택합니다. (기본값: 전체)',
+  type: 3, // STRING
+  required: false,
+  choices: [
+    { name: '🌐 전체 방송국 (ALL)', value: 'ALL' },
+    { name: '🟢 치지직 (CHZZK)', value: 'CHZZK' },
+    { name: '🔵 SOOP (숲)', value: 'SOOP' },
+    { name: '🔴 유튜브 (YouTube)', value: 'YOUTUBE' },
+    { name: '🟣 트위치 (Twitch)', value: 'TWITCH' },
+  ],
+};
+
 const commands = [
+  {
+    name: '오늘',
+    description: '오늘 첫 데뷔 방송을 진행하는 버추얼 스트리머 목록을 확인합니다.',
+    type: 1, // CHAT_INPUT
+    options: [platformOption],
+  },
+  {
+    name: '금주',
+    description: '이번 주(월~일) 데뷔 예정인 버추얼 스트리머 주간 일정을 확인합니다.',
+    type: 1,
+    options: [platformOption],
+  },
   {
     name: '오늘데뷔',
     description: '오늘 첫 데뷔 방송을 진행하는 버추얼 스트리머 목록을 확인합니다.',
-    type: 1, // CHAT_INPUT
+    type: 1,
+    options: [platformOption],
   },
   {
     name: '이번주데뷔',
-    description: '이번 주(월~일) 데뷔 예정인 버추얼 스트리머 주간 타임라인을 확인합니다.',
+    description: '이번 주(월~일) 데뷔 예정인 버추얼 스트리머 주간 일정을 확인합니다.',
     type: 1,
+    options: [platformOption],
   },
   {
     name: '데뷔등록',

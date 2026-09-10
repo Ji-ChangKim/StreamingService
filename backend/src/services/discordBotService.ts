@@ -160,15 +160,29 @@ export function formatKstDateTime(utcDateStr?: string | null): string {
 /**
  * 오늘 데뷔하는 버튜버 목록 Embed 카드 생성
  */
-export function buildTodayDebutsEmbed(events: any[]): any {
+/**
+ * 오늘 데뷔하는 버튜버 목록 Embed 카드 생성
+ */
+export function buildTodayDebutsEmbed(events: any[], targetPlatform: string = 'ALL'): any {
+  const isPlatformFiltered = targetPlatform && targetPlatform.toUpperCase() !== 'ALL';
+  const platformUpper = (targetPlatform || 'ALL').toUpperCase();
+  const brandColor = isPlatformFiltered ? getPlatformBrandColor(platformUpper) : 0x2563EB;
+
   if (!events || events.length === 0) {
+    const emptyTitle = isPlatformFiltered
+      ? `✨ 오늘 예정된 [${platformUpper}] 버튜버 데뷔가 없습니다`
+      : '✨ 오늘 예정된 버튜버 데뷔가 없습니다';
+    const emptyDesc = isPlatformFiltered
+      ? `오늘 데뷔 방송을 진행하는 ${platformUpper} 스트리머가 아직 없습니다.\n새로운 신입 버튜버 데뷔 소식이 있다면 \`/데뷔등록\`으로 제보해 주세요!`
+      : '오늘 예정된 데뷔 방송이 아직 등록되지 않았습니다.\n새로운 신입 버튜버 데뷔 소식이 있다면 `/데뷔등록`으로 제보해 주세요!';
+
     return {
       type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
       data: {
         embeds: [
           {
-            title: '✨ 오늘 예정된 버튜버 데뷔가 없습니다',
-            description: '오늘 예정된 데뷔 방송이 아직 등록되지 않았습니다.\n새로운 신입 버튜버 데뷔 소식이 있다면 `/데뷔등록`으로 제보해 주세요!',
+            title: emptyTitle,
+            description: emptyDesc,
             color: 0x64748B,
             footer: {
               text: 'V-DEBUT HUB • 버추얼 스트리머 데뷔 아카이브',
@@ -187,24 +201,34 @@ export function buildTodayDebutsEmbed(events: any[]): any {
     const channelUrl = evt.links?.[0]?.url || VDEBUT_WEB_BASE;
     const timeStr = formatKstDateTime(evt.startAtUtc);
 
+    let val = `⏰ **데뷔 일시**: ${timeStr}\n🔗 **방송국 바로가기**: [방송국 링크](${channelUrl})`;
+    // 소속이 있을 때만 표시
+    if (creator.agency && creator.agency.trim() && creator.agency.trim() !== '개인세') {
+      val += `\n🏢 **소속**: ${creator.agency.trim()}`;
+    }
+
     return {
       name: `🎉 ${creator.displayName || '신입 버튜버'} (${platform})`,
-      value: `⏰ **데뷔 일시**: ${timeStr}\n🔗 **방송국 바로가기**: [방송국 링크](${channelUrl})\n🏢 **소속**: ${creator.agency || '개인세'}`,
+      value: val,
       inline: false,
     };
   });
+
+  const cardTitle = isPlatformFiltered
+    ? `🌟 오늘 데뷔하는 ${platformUpper} 신입 버튜버 (${events.length}명)`
+    : `🌟 오늘 데뷔하는 신입 버튜버 (${events.length}명)`;
 
   return {
     type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       embeds: [
         {
-          title: `🌟 오늘 데뷔하는 신입 버튜버 (${events.length}명)`,
+          title: cardTitle,
           description: `오늘 첫 방송을 시작하는 버추얼 스트리머들을 응원해 주세요!\n상세 정보 및 D-Day 위젯은 [V-DEBUT HUB](${VDEBUT_WEB_BASE})에서 확인하실 수 있습니다.`,
-          color: 0x2563EB,
+          color: brandColor,
           fields,
           footer: {
-            text: 'V-DEBUT HUB • 실시간 데뷔 알림',
+            text: `V-DEBUT HUB • ${platformUpper} 실시간 데뷔 알림`,
             icon_url: `${VDEBUT_WEB_BASE}/logo.png`,
           },
           timestamp: new Date().toISOString(),
@@ -230,16 +254,32 @@ export function buildTodayDebutsEmbed(events: any[]): any {
 /**
  * 이번 주 데뷔 타임라인 Embed 카드 생성
  */
-export function buildWeekDebutsEmbed(events: any[]): any {
+export function buildWeekDebutsEmbed(events: any[], targetPlatform: string = 'ALL'): any {
+  const isPlatformFiltered = targetPlatform && targetPlatform.toUpperCase() !== 'ALL';
+  const platformUpper = (targetPlatform || 'ALL').toUpperCase();
+  const brandColor = isPlatformFiltered ? getPlatformBrandColor(platformUpper) : 0x3B82F6;
+
   if (!events || events.length === 0) {
+    const emptyTitle = isPlatformFiltered
+      ? `📅 이번 주 예정된 [${platformUpper}] 데뷔가 없습니다`
+      : '📅 이번 주 예정된 데뷔가 없습니다';
+    const emptyDesc = isPlatformFiltered
+      ? `이번 주 예정된 ${platformUpper} 데뷔 일정이 비어있습니다.\n신규 일정을 \`/데뷔등록\`을 통해 제보해 보세요!`
+      : '이번 주 예정된 데뷔 일정이 비어있습니다. 신규 일정을 `/데뷔등록`을 통해 등록해 보세요!';
+
     return {
       type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
       data: {
         embeds: [
           {
-            title: '📅 이번 주 예정된 데뷔가 없습니다',
-            description: '이번 주 예정된 데뷔 일정이 비어있습니다. 신규 일정을 `/데뷔등록`을 통해 등록해 보세요!',
+            title: emptyTitle,
+            description: emptyDesc,
             color: 0x64748B,
+            footer: {
+              text: 'V-DEBUT HUB • 주간 데뷔 리포트',
+              icon_url: `${VDEBUT_WEB_BASE}/logo.png`,
+            },
+            timestamp: new Date().toISOString(),
           },
         ],
       },
@@ -259,17 +299,21 @@ export function buildWeekDebutsEmbed(events: any[]): any {
     };
   });
 
+  const cardTitle = isPlatformFiltered
+    ? `📅 이번 주 ${platformUpper} 데뷔 타임라인 (${events.length}명)`
+    : `📅 이번 주 데뷔 타임라인 (${events.length}명)`;
+
   return {
     type: CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       embeds: [
         {
-          title: `📅 이번 주 데뷔 타임라인 (${events.length}명)`,
-          description: '이번 주 데뷔 예정인 버추얼 스트리머 목록입니다.',
-          color: 0x3B82F6,
+          title: cardTitle,
+          description: `이번 주 데뷔 예정인 ${isPlatformFiltered ? platformUpper + ' ' : ''}버추얼 스트리머 목록입니다.`,
+          color: brandColor,
           fields,
           footer: {
-            text: 'V-DEBUT HUB • 주간 데뷔 리포트',
+            text: `V-DEBUT HUB • ${platformUpper} 주간 데뷔 리포트`,
             icon_url: `${VDEBUT_WEB_BASE}/logo.png`,
           },
           timestamp: new Date().toISOString(),
@@ -987,9 +1031,9 @@ export async function broadcastMorningBriefingToDiscord(
 // =====================================================================================
 
 /**
- * 오늘 데뷔 이벤트 필터링 유틸
+ * 오늘 데뷔 이벤트 필터링 유틸 (플랫폼 필터 지원)
  */
-export async function getTodayDebuts(db: D1Database): Promise<any[]> {
+export async function getTodayDebuts(db: D1Database, targetPlatform: string = 'ALL'): Promise<any[]> {
   const allEvents = await fetchEventsFromD1(db);
   if (!allEvents) return [];
 
@@ -998,17 +1042,27 @@ export async function getTodayDebuts(db: D1Database): Promise<any[]> {
   const kstDate = new Date(now.getTime() + kstOffset);
   const todayStr = kstDate.toISOString().split('T')[0];
 
+  const isPlatformFiltered = targetPlatform && targetPlatform.toUpperCase() !== 'ALL';
+  const filterUpper = (targetPlatform || '').toUpperCase();
+
   return allEvents.filter((evt) => {
     if (!evt.startAtUtc) return false;
     const evtKst = new Date(new Date(evt.startAtUtc).getTime() + kstOffset);
-    return evtKst.toISOString().split('T')[0] === todayStr;
+    const isToday = evtKst.toISOString().split('T')[0] === todayStr;
+    if (!isToday) return false;
+
+    if (isPlatformFiltered) {
+      const evtPlatform = (evt.links?.[0]?.platform || '').toUpperCase();
+      return evtPlatform === filterUpper;
+    }
+    return true;
   });
 }
 
 /**
- * 이번 주 데뷔 이벤트 필터링 유틸
+ * 이번 주 데뷔 이벤트 필터링 유틸 (플랫폼 필터 지원)
  */
-export async function getWeekDebuts(db: D1Database): Promise<any[]> {
+export async function getWeekDebuts(db: D1Database, targetPlatform: string = 'ALL'): Promise<any[]> {
   const allEvents = await fetchEventsFromD1(db);
   if (!allEvents) return [];
 
@@ -1027,10 +1081,20 @@ export async function getWeekDebuts(db: D1Database): Promise<any[]> {
   sunday.setUTCDate(monday.getUTCDate() + 6);
   sunday.setUTCHours(23, 59, 59, 999);
 
+  const isPlatformFiltered = targetPlatform && targetPlatform.toUpperCase() !== 'ALL';
+  const filterUpper = (targetPlatform || '').toUpperCase();
+
   return allEvents.filter((evt) => {
     if (!evt.startAtUtc) return false;
     const evtDate = new Date(new Date(evt.startAtUtc).getTime() + kstOffset);
-    return evtDate >= monday && evtDate <= sunday;
+    const isInWeek = evtDate >= monday && evtDate <= sunday;
+    if (!isInWeek) return false;
+
+    if (isPlatformFiltered) {
+      const evtPlatform = (evt.links?.[0]?.platform || '').toUpperCase();
+      return evtPlatform === filterUpper;
+    }
+    return true;
   });
 }
 
@@ -1049,16 +1113,21 @@ export async function handleDiscordInteraction(body: any, env: any): Promise<any
   if (interactionType === INTERACTION_TYPE.APPLICATION_COMMAND) {
     const commandName = body.data?.name;
 
-    // A. /오늘데뷔
-    if (commandName === '오늘데뷔') {
-      const todayDebuts = await getTodayDebuts(env.DB);
-      return buildTodayDebutsEmbed(todayDebuts);
+    // 공통 방송국 옵션 파싱 (기본값: ALL)
+    const platformOption = body.data?.options?.find(
+      (opt: any) => opt.name === '방송국' || opt.name === '플랫폼' || opt.name === 'platform'
+    )?.value || 'ALL';
+
+    // A. /오늘 또는 /오늘데뷔
+    if (commandName === '오늘' || commandName === '오늘데뷔') {
+      const todayDebuts = await getTodayDebuts(env.DB, platformOption);
+      return buildTodayDebutsEmbed(todayDebuts, platformOption);
     }
 
-    // B. /이번주데뷔
-    if (commandName === '이번주데뷔') {
-      const weekDebuts = await getWeekDebuts(env.DB);
-      return buildWeekDebutsEmbed(weekDebuts);
+    // B. /금주 또는 /이번주데뷔
+    if (commandName === '금주' || commandName === '이번주데뷔') {
+      const weekDebuts = await getWeekDebuts(env.DB, platformOption);
+      return buildWeekDebutsEmbed(weekDebuts, platformOption);
     }
 
     // C. /데뷔등록 ➔ 모달 팝업 띄우기
