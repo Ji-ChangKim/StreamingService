@@ -244,6 +244,15 @@ export interface CurrentContentTotals {
   unclassifiedLiveCount: number;
 }
 
+// 시장 실시간 상태 자동 브리핑 (합방 있을 때 / 없을 때 100% 자동화)
+export interface MarketBriefingInfo {
+  statusType: 'EVENT_CONCENTRATION' | 'BALANCED_OPPORTUNITY' | 'TALK_CROWDED';
+  badgeLabel: string;
+  headline: string;
+  factSummary: string;
+  rookieActionAdvice: string;
+}
+
 // 9. 사람이 몰리는 자석 태그 (Magnet Tag)
 export interface MagnetTagStat {
   tag: string;
@@ -302,6 +311,7 @@ export interface CurrentContentData {
   meta: CurrentContentMeta;
   totals: CurrentContentTotals;
   groups: ContentGroupStat[];
+  marketBriefing?: MarketBriefingInfo;
   magnetTags?: MagnetTagStat[];
   rookieRadar?: RookieRadarData;
   hourlyRankings?: Record<string, HourlyContentRanking>; // key: `${dayOfWeek}-${hour}`

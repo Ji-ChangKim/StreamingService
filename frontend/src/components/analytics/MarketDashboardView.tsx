@@ -35,12 +35,28 @@ export function MarketDashboardView({
   onNavigateTab,
   onOpenMethodology,
 }: MarketDashboardViewProps) {
-  // 대형 합방 이벤트 감지된 게임 탐색
   const eventGame = currentContent?.groups
     .flatMap((g) => g.children || [])
     .find((c) => c.eventCluster && c.eventCluster.eventDetected);
 
   const magnetTags = currentContent?.magnetTags || [];
+
+  const briefing = currentContent?.marketBriefing || (eventGame && eventGame.eventCluster ? {
+    statusType: 'EVENT_CONCENTRATION' as const,
+    badgeLabel: '실시간 대형 합방 감지',
+    headline: `[${eventGame.name}] ${eventGame.eventCluster.eventName} 진행 중`,
+    factSummary: `현재 ${eventGame.name} 시청자의 ${Math.round(eventGame.eventCluster.dominantTagShare * 100)}%(${eventGame.eventCluster.totalViewerSum.toLocaleString()}명)가 #${eventGame.eventCluster.dominantTag} 합방에 집중되어 있습니다. (${eventGame.eventCluster.channelCount}개 채널 중복)`,
+    rookieActionAdvice: eventGame.eventCluster.advice,
+  } : {
+    statusType: 'BALANCED_OPPORTUNITY' as const,
+    badgeLabel: '시청자 분산 양호',
+    headline: '특이 쏠림 없는 고른 시청자 분산 흐름',
+    factSummary: '대형 합방이나 독점 방송 없이 시청자가 여러 채널에 고르게 분산되어 있어 신규 방송 진입에 유리한 상태입니다.',
+    rookieActionAdvice: '원하는 카테고리를 자유롭게 선택하고, 방제에 구체적인 게임명을 명시하여 검색 유입을 확보하세요.',
+  });
+
+  const isEvent = briefing.statusType === 'EVENT_CONCENTRATION';
+  const isTalk = briefing.statusType === 'TALK_CROWDED';
 
   return (
     <div className="space-y-6">
@@ -55,40 +71,50 @@ export function MarketDashboardView({
 
       {/* 🔥 실시간 대형 합방/이슈 감지 요약 & 자석 태그 퀵 프리뷰 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* A. 실시간 대형 합방 이슈 감지 */}
-        <div className="bg-gradient-to-br from-rose-50/90 to-orange-50/80 border border-rose-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
+        {/* A. 실시간 시장 상태 지능형 브리핑 (100% 실데이터 자동화) */}
+        <div className={`border rounded-2xl p-5 shadow-xs flex flex-col justify-between ${
+          isEvent
+            ? 'bg-gradient-to-br from-rose-50/90 to-orange-50/80 border-rose-200'
+            : isTalk
+            ? 'bg-gradient-to-br from-purple-50/90 to-indigo-50/80 border-purple-200'
+            : 'bg-gradient-to-br from-emerald-50/90 to-blue-50/80 border-emerald-200'
+        }`}>
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="flex items-center gap-1.5 text-xs sm:text-sm font-black text-rose-800">
-                <Flame className="w-4 h-4 text-rose-600" />
-                <span>실시간 대형 이벤트 & 시청자 집중 원인</span>
+              <span className={`flex items-center gap-1.5 text-xs sm:text-sm font-black ${
+                isEvent ? 'text-rose-800' : isTalk ? 'text-purple-800' : 'text-emerald-800'
+              }`}>
+                <Flame className={`w-4 h-4 ${isEvent ? 'text-rose-600' : isTalk ? 'text-purple-600' : 'text-emerald-600'}`} />
+                <span>실시간 시장 상태 지능형 브리핑</span>
               </span>
-              <span className="px-2 py-0.5 rounded bg-rose-200 text-rose-900 font-black text-[11px]">
-                실시간 감지
+              <span className={`px-2.5 py-0.5 rounded-full font-black text-[11px] ${
+                isEvent
+                  ? 'bg-rose-200 text-rose-900'
+                  : isTalk
+                  ? 'bg-purple-200 text-purple-900'
+                  : 'bg-emerald-200 text-emerald-900'
+              }`}>
+                {briefing.badgeLabel}
               </span>
             </div>
-            {eventGame && eventGame.eventCluster ? (
-              <>
-                <h4 className="text-base sm:text-lg font-black text-[#0F172A] mb-1">
-                  [{eventGame.name}] {eventGame.eventCluster.eventName} 진행 중
-                </h4>
-                <p className="text-xs sm:text-sm font-semibold text-slate-800 leading-relaxed mb-3">
-                  {eventGame.eventCluster.advice}
-                </p>
-                <div className="text-xs font-black text-rose-700 bg-white/80 border border-rose-200 p-2.5 rounded-xl">
-                  집중도: {eventGame.name} 시청자의 {Math.round(eventGame.eventCluster.dominantTagShare * 100)}% ({eventGame.eventCluster.channelCount}개 채널 중복)
-                </div>
-              </>
-            ) : (
-              <>
-                <h4 className="text-base sm:text-lg font-black text-[#0F172A] mb-1">
-                  현재 특이 대형 합방 없는 평온한 시청 흐름
-                </h4>
-                <p className="text-xs sm:text-sm font-semibold text-slate-800 leading-relaxed">
-                  시청자가 특정 대형 서버에 극단적으로 쏠려있지 않아, 신규 스트리머의 일반 게임 방송 진입에 유리한 시장 상태입니다.
-                </p>
-              </>
-            )}
+
+            <h4 className="text-base sm:text-lg font-black text-[#0F172A] mb-1.5">
+              {briefing.headline}
+            </h4>
+            <p className="text-xs sm:text-sm font-semibold text-slate-800 leading-relaxed mb-3">
+              {briefing.factSummary}
+            </p>
+
+            <div className={`text-xs sm:text-sm font-bold p-3 rounded-xl border leading-relaxed ${
+              isEvent
+                ? 'bg-white/90 text-rose-900 border-rose-200'
+                : isTalk
+                ? 'bg-white/90 text-purple-900 border-purple-200'
+                : 'bg-white/90 text-emerald-900 border-emerald-200'
+            }`}>
+              <strong className="font-black">💡 신입 실전 조언: </strong>
+              {briefing.rookieActionAdvice}
+            </div>
           </div>
         </div>
 

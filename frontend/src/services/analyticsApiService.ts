@@ -232,6 +232,15 @@ export interface CurrentContentTotals {
   unclassifiedLiveCount: number;
 }
 
+// 실시간 시장 상태 자동 브리핑
+export interface MarketBriefingInfo {
+  statusType: 'EVENT_CONCENTRATION' | 'BALANCED_OPPORTUNITY' | 'TALK_CROWDED';
+  badgeLabel: string;
+  headline: string;
+  factSummary: string;
+  rookieActionAdvice: string;
+}
+
 // 사람이 몰리는 자석 태그
 export interface MagnetTagStat {
   tag: string;
@@ -290,6 +299,7 @@ export interface CurrentContentData {
   meta: CurrentContentMeta;
   totals: CurrentContentTotals;
   groups: ContentGroupStat[];
+  marketBriefing?: MarketBriefingInfo;
   magnetTags?: MagnetTagStat[];
   rookieRadar?: RookieRadarData;
   hourlyRankings?: Record<string, HourlyContentRanking>;

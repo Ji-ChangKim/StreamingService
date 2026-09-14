@@ -683,10 +683,74 @@ function generateHourlyRankings() {
   return result;
 }
 
+/**
+ * 실시간 시장 상태 자동 브리핑 생성 (합방 있을 때 / 없을 때 100% 실데이터 자동화)
+ */
+function generateMarketBriefing(groups: ContentGroupStat[], gameChildren: GameDetailStat[]) {
+  // 1. 대형 합방 / 이벤트 감지된 게임 탐색
+  const eventGame = gameChildren.find((g) => g.eventCluster && g.eventCluster.eventDetected);
+
+  if (eventGame && eventGame.eventCluster) {
+    const cluster = eventGame.eventCluster;
+    return {
+      statusType: 'EVENT_CONCENTRATION' as const,
+      badgeLabel: '실시간 대형 합방 감지',
+      headline: `[${eventGame.name}] ${cluster.eventName} 진행 중`,
+      factSummary: `현재 ${eventGame.name} 시청자의 ${Math.round(cluster.dominantTagShare * 100)}%(${cluster.totalViewerSum.toLocaleString()}명)가 #${cluster.dominantTag} 합방에 집중되어 있습니다. (${cluster.channelCount}개 채널 중복)`,
+      rookieActionAdvice: `합방 참여자가 아닌 일반 신입 스트리머의 솔로 플레이로는 시청자 낙수 유입을 받기 어려우니, 유입을 노린다면 틈새 종합게임이나 스팀 신작으로 우회하는 것을 강력히 추천합니다.`,
+    };
+  }
+
+  // 2. 대형 합방이 없고, 게임 카테고리가 1위인 경우
+  const topGroup = groups[0];
+  if (topGroup && topGroup.groupKey === 'GAME' && gameChildren.length > 0) {
+    const topGame = gameChildren[0];
+    const top1Share = topGame.top1Share || 0;
+
+    if (top1Share <= 0.35) {
+      return {
+        statusType: 'BALANCED_OPPORTUNITY' as const,
+        badgeLabel: '시청자 분산 양호',
+        headline: `[${topGame.name}] 시청자 분산형 골든 타임`,
+        factSummary: `특정 대형 채널의 독점 없이 ${topGame.liveCount}개 방송에 시청자가 고르게 분산(최대 방송 점유율 ${Math.round(top1Share * 100)}%)되어 있습니다.`,
+        rookieActionAdvice: `시청자 쏠림이 없어 신규 방송으로의 유입 가능성이 열려 있습니다. ${topGame.name}에 관심 있는 시청자들을 타깃으로 방송을 시작하기 좋은 상태입니다.`,
+      };
+    } else {
+      return {
+        statusType: 'BALANCED_OPPORTUNITY' as const,
+        badgeLabel: '상위 채널 집중',
+        headline: `[${topGame.name}] 상위 채널 중심 시청 집중`,
+        factSummary: `1위 방송이 ${topGame.name} 시청자의 ${Math.round(top1Share * 100)}%를 점유하고 있어, 채널 간 격차가 관측됩니다.`,
+        rookieActionAdvice: `대형 채널 방종 시점의 시청자 이동(방종 낙수)을 노리거나, 신입 경쟁이 덜한 틈새 인디 게임을 공략하세요.`,
+      };
+    }
+  }
+
+  // 3. 토크 / 소통 카테고리가 1위인 경우
+  if (topGroup && topGroup.groupKey === 'TALK') {
+    return {
+      statusType: 'TALK_CROWDED' as const,
+      badgeLabel: '소통 집중 시간대',
+      headline: `[잡담·소통] 심야 토크 중심 시청 흐름`,
+      factSummary: `전체 방송의 ${Math.round(topGroup.shareOfTotal * 100)}%가 Just Chatting에 집중되어 있어, 소통 방송 간 유입 경쟁이 치열합니다.`,
+      rookieActionAdvice: `단순 잡담은 신입 방송이 하단에 묻히기 쉽습니다. 2~3시간 몰입감 있는 틈새 게임을 진행하여 첫 시청자를 확보한 뒤 소통으로 전환하세요.`,
+    };
+  }
+
+  // 4. 일반 평온한 시장 흐름
+  return {
+    statusType: 'BALANCED_OPPORTUNITY' as const,
+    badgeLabel: '평온한 시청 흐름',
+    headline: `현재 특이 쏠림 없는 고른 시청 분포`,
+    factSummary: `특정 대형 서버나 합방에 시청자가 극단적으로 묶여있지 않아, 신규 스트리머의 일반 게임 방송 진입에 유리한 시장 상태입니다.`,
+    rookieActionAdvice: `원하는 카테고리를 자유롭게 선택하고, 방제에 구체적인 게임명을 명시하여 검색 유입을 확보하세요.`,
+  };
+}
 
 const GROUP_ORDER = ['GAME', 'TALK', 'MUSIC', 'ASMR', 'ART', 'ETC', 'UNCLASSIFIED'];
 const GROUP_NAME_MAP: Record<string, string> = {
   GAME: '게임',
+
   TALK: '잡담·소통',
   MUSIC: '음악·노래',
   ASMR: 'ASMR',
@@ -849,6 +913,7 @@ function aggregateToCurrentContentData(
       unclassifiedLiveCount: unclassifiedCount,
     },
     groups,
+    marketBriefing: generateMarketBriefing(groups, gameChildren),
     magnetTags: aggregateMagnetTags(lives),
     rookieRadar: aggregateRookieRadar(lives),
     hourlyRankings: generateHourlyRankings(),
