@@ -1,7 +1,7 @@
 import {
   AnalyticsFilterState,
 } from '../../services/analyticsApiService';
-import { Calendar, Clock, Layers, Users, RefreshCw } from 'lucide-react';
+import { Calendar, Clock, Layers, Users } from 'lucide-react';
 
 interface AnalyticsFilterBarProps {
   filters: AnalyticsFilterState;
@@ -13,8 +13,6 @@ interface AnalyticsFilterBarProps {
 export function AnalyticsFilterBar({
   filters,
   onChange,
-  onRefresh,
-  isLoading = false,
 }: AnalyticsFilterBarProps) {
   const updateFilter = <K extends keyof AnalyticsFilterState>(key: K, value: AnalyticsFilterState[K]) => {
     onChange({
@@ -26,69 +24,52 @@ export function AnalyticsFilterBar({
   return (
     <div className="bg-white border border-[#E2E8F0] rounded-2xl p-3 sm:p-4 shadow-sm mb-6">
       <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E2E8F0]">
-        {/* 플랫폼 선택 (치지직 전용 관측 기준) */}
-        <div className="flex items-center gap-1.5 bg-[#F1F5F9] p-1 rounded-[10px] border border-[#CBD5E1]">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-xs font-extrabold bg-white text-[#009E5A] border border-[#00FFA3] shadow-2xs">
-            <img
-              src="/icons/chzzk/chzzk Icon_01.png"
-              alt="CHZZK"
-              className="w-4 h-4 object-contain"
-            />
-            <span>치지직 (CHZZK) 확인 채널</span>
+        {/* 기간 선택 (오늘, 7일, 28일) */}
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-bold text-[#475569] flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5 text-[#2563EB]" />
+            <span>관측 기간:</span>
+          </span>
+          <div className="flex items-center gap-1 bg-[#F1F5F9] p-1 rounded-[10px] border border-[#CBD5E1] text-xs font-semibold">
+            <button
+              type="button"
+              onClick={() => updateFilter('period', 'today')}
+              className={`px-3 py-1 rounded-[6px] transition-all cursor-pointer ${
+                filters.period === 'today'
+                  ? 'bg-white text-[#0F172A] shadow-2xs font-bold'
+                  : 'text-[#475569] hover:text-[#0F172A]'
+              }`}
+            >
+              오늘 (24h)
+            </button>
+            <button
+              type="button"
+              onClick={() => updateFilter('period', '7d')}
+              className={`px-3 py-1 rounded-[6px] transition-all cursor-pointer ${
+                filters.period === '7d'
+                  ? 'bg-white text-[#0F172A] shadow-2xs font-bold'
+                  : 'text-[#475569] hover:text-[#0F172A]'
+              }`}
+            >
+              최근 7일
+            </button>
+            <button
+              type="button"
+              onClick={() => updateFilter('period', '28d')}
+              className={`px-3 py-1 rounded-[6px] transition-all cursor-pointer ${
+                filters.period === '28d'
+                  ? 'bg-white text-[#0F172A] shadow-2xs font-bold'
+                  : 'text-[#475569] hover:text-[#0F172A]'
+              }`}
+            >
+              최근 28일
+            </button>
           </div>
         </div>
 
-        {/* 기간 선택 (오늘, 7일, 28일) */}
-        <div className="flex items-center gap-1 bg-[#F1F5F9] p-1 rounded-[10px] border border-[#CBD5E1] text-xs font-semibold">
-          <Calendar className="w-3.5 h-3.5 text-[#2563EB] ml-2" />
-          <button
-            type="button"
-            onClick={() => updateFilter('period', 'today')}
-            className={`px-2.5 py-1 rounded-[6px] transition-all cursor-pointer ${
-              filters.period === 'today'
-                ? 'bg-white text-[#0F172A] shadow-2xs font-bold'
-                : 'text-[#475569] hover:text-[#0F172A]'
-            }`}
-          >
-            오늘 (24h)
-          </button>
-          <button
-            type="button"
-            onClick={() => updateFilter('period', '7d')}
-            className={`px-2.5 py-1 rounded-[6px] transition-all cursor-pointer ${
-              filters.period === '7d'
-                ? 'bg-white text-[#0F172A] shadow-2xs font-bold'
-                : 'text-[#475569] hover:text-[#0F172A]'
-            }`}
-          >
-            최근 7일
-          </button>
-          <button
-            type="button"
-            onClick={() => updateFilter('period', '28d')}
-            className={`px-2.5 py-1 rounded-[6px] transition-all cursor-pointer ${
-              filters.period === '28d'
-                ? 'bg-white text-[#0F172A] shadow-2xs font-bold'
-                : 'text-[#475569] hover:text-[#0F172A]'
-            }`}
-          >
-            최근 28일
-          </button>
+        <div className="text-[11px] text-[#64748B]">
+          * 시간대·요일별 집계는 선택된 기간의 정기 스냅샷 중앙값으로 산출됩니다.
         </div>
-
-        {/* 새로고침 버튼 */}
-        {onRefresh && (
-          <button
-            type="button"
-            onClick={onRefresh}
-            disabled={isLoading}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F1F5F9] hover:bg-[#E2E8F0] border border-[#CBD5E1] text-xs font-bold text-[#475569] hover:text-[#0F172A] transition-all cursor-pointer disabled:opacity-50"
-            title="데이터 새로고침"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-[#2563EB]' : ''}`} />
-            <span className="hidden sm:inline">새로고침</span>
-          </button>
-        )}
       </div>
 
       {/* 세부 필터 그룹 (요일, 시간대, 대분류, 규모) */}
