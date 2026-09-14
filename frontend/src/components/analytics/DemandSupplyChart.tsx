@@ -69,22 +69,22 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
     <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm mb-6">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div>
-          <h3 className="text-sm font-black text-[#0F172A] flex items-center gap-2">
-            <Activity className="w-4 h-4 text-[#2563EB]" />
+          <h3 className="text-base sm:text-lg font-black text-[#0F172A] flex items-center gap-2">
+            <Activity className="w-5 h-5 text-[#2563EB]" />
             <span>24시간 시장 수요·공급 관측 추이</span>
           </h3>
-          <p className="text-[11px] text-[#64748B] mt-0.5">
+          <p className="text-xs sm:text-sm font-semibold text-slate-700 mt-1">
             동시시청 합계, LIVE 수, 방송당 시청, 상위 집중도의 24시간 시간대별 실수치 변화 추이를 관측합니다.
           </p>
         </div>
 
         {/* 범례 및 지표 토글 */}
-        <div className="flex flex-wrap items-center gap-1 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs">
+        <div className="flex flex-wrap items-center gap-1.5 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs sm:text-sm">
           <button
             type="button"
             onClick={() => setActiveMetric('both')}
-            className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
-              activeMetric === 'both' ? 'bg-[#0F172A] text-white shadow-2xs' : 'text-[#475569] hover:text-[#0F172A]'
+            className={`px-3 py-1.5 rounded-lg font-black transition-all cursor-pointer ${
+              activeMetric === 'both' ? 'bg-[#0F172A] text-white shadow-2xs' : 'text-slate-700 hover:text-[#0F172A]'
             }`}
           >
             수요/공급 비교
@@ -92,49 +92,49 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
           <button
             type="button"
             onClick={() => setActiveMetric('viewers')}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-black transition-all cursor-pointer ${
               activeMetric === 'viewers'
                 ? 'bg-white text-[#2563EB] border border-blue-300 shadow-2xs'
-                : 'text-[#475569] hover:text-[#0F172A]'
+                : 'text-slate-700 hover:text-[#0F172A]'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#2563EB]" />
             <span>동시시청</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveMetric('live')}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-black transition-all cursor-pointer ${
               activeMetric === 'live'
                 ? 'bg-white text-emerald-700 border border-emerald-300 shadow-2xs'
-                : 'text-[#475569] hover:text-[#0F172A]'
+                : 'text-slate-700 hover:text-[#0F172A]'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-600" />
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
             <span>LIVE 수</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveMetric('vpl')}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-black transition-all cursor-pointer ${
               activeMetric === 'vpl'
                 ? 'bg-white text-purple-700 border border-purple-300 shadow-2xs'
-                : 'text-[#475569] hover:text-[#0F172A]'
+                : 'text-slate-700 hover:text-[#0F172A]'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-purple-600" />
+            <span className="w-2.5 h-2.5 rounded-full bg-purple-600" />
             <span>방송당 시청</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveMetric('top10')}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-black transition-all cursor-pointer ${
               activeMetric === 'top10'
                 ? 'bg-white text-amber-700 border border-amber-300 shadow-2xs'
-                : 'text-[#475569] hover:text-[#0F172A]'
+                : 'text-slate-700 hover:text-[#0F172A]'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-amber-600" />
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-600" />
             <span>상위 집중도</span>
           </button>
         </div>
@@ -255,9 +255,9 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
                 x={p.x}
                 y={height - 8}
                 textAnchor="middle"
-                fill="#64748B"
-                fontSize="10"
-                fontWeight="600"
+                fill="#334155"
+                fontSize="12"
+                fontWeight="800"
                 fontFamily="sans-serif"
               >
                 {p.label}
@@ -273,7 +273,7 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
                 x2={activePoint.x}
                 y2={height - paddingY}
                 stroke="#0F172A"
-                strokeOpacity="0.25"
+                strokeOpacity="0.35"
                 strokeWidth="1.5"
                 strokeDasharray="2 2"
               />
@@ -314,22 +314,22 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
         {/* 툴팁 오버레이 */}
         {activePoint && (
           <div
-            className="absolute top-2 left-1/2 -translate-x-1/2 bg-white/95 border border-[#CBD5E1] rounded-xl px-4 py-2 text-xs shadow-xl backdrop-blur-md flex items-center gap-4 pointer-events-none z-20"
+            className="absolute top-2 left-1/2 -translate-x-1/2 bg-white/95 border border-[#CBD5E1] rounded-xl px-4 py-2.5 text-xs sm:text-sm shadow-xl backdrop-blur-md flex items-center gap-4 pointer-events-none z-20"
           >
-            <div className="font-black text-[#0F172A] border-r border-[#E2E8F0] pr-3">
+            <div className="font-black text-[#0F172A] border-r border-[#CBD5E1] pr-3">
               {activePoint.label}
             </div>
-            <div className="flex items-center gap-1.5 text-[#2563EB] font-bold">
-              <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
-              <span>수요: {activePoint.viewers.toLocaleString()}명</span>
+            <div className="flex items-center gap-1.5 text-[#2563EB] font-black">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#2563EB]" />
+              <span>동시시청: {activePoint.viewers.toLocaleString()}명</span>
             </div>
-            <div className="flex items-center gap-1.5 text-emerald-700 font-bold">
-              <span className="w-2 h-2 rounded-full bg-emerald-600" />
-              <span>공급: {activePoint.liveCount}채널</span>
+            <div className="flex items-center gap-1.5 text-emerald-700 font-black">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
+              <span>LIVE 수: {activePoint.liveCount}개</span>
             </div>
-            <div className="flex items-center gap-1 text-[#64748B] border-l border-[#E2E8F0] pl-3">
-              <span>효율: </span>
-              <strong className="text-[#0F172A] font-bold">{activePoint.viewersPerLive}명/방</strong>
+            <div className="flex items-center gap-1.5 text-slate-800 font-bold border-l border-[#CBD5E1] pl-3">
+              <span>방송당: </span>
+              <strong className="text-[#0F172A] font-black">{activePoint.viewersPerLive}명</strong>
             </div>
           </div>
         )}

@@ -39,9 +39,10 @@ export function MarketDashboardView({
       {/* 1. 데이터 수집 범위와 상태 (VDébut 확인 채널 기준 고지) */}
       <AnalyticsDataScopeCard onOpenMethodology={onOpenMethodology} />
 
-      {/* 2. 현재 시장 핵심 관측 KPI (4개) */}
+      {/* 2. 현재 시장 핵심 관측 KPI (4개) - 실시간 데이터 수치 100% 일원화 */}
       <AnalyticsKpiCards
         kpis={overview?.kpis}
+        realtimeTotals={currentContent?.totals}
       />
 
       {/* 3. [핵심 기능] 현재 콘텐츠별 동시시청 (게임 드릴다운) */}

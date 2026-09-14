@@ -67,38 +67,38 @@ export function OpportunityMiniHeatmap({
   };
 
   return (
-    <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm mb-6">
+    <div className="bg-white border border-[#CBD5E1] rounded-2xl p-5 sm:p-6 shadow-sm mb-6">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div>
-          <h3 className="text-sm font-black text-[#0F172A] flex items-center gap-2">
-            <Grid className="w-4 h-4 text-[#2563EB]" />
+          <h3 className="text-base sm:text-lg font-black text-[#0F172A] flex items-center gap-2">
+            <Grid className="w-5 h-5 text-[#2563EB]" />
             <span>요일 × 시간대 시장 관측 히트맵 (Time Observation Heatmap)</span>
           </h3>
-          <p className="text-[11px] text-[#64748B] mt-0.5">
+          <p className="text-xs sm:text-sm font-semibold text-slate-700 mt-1">
             지표를 선택하여 168개 요일·시간대별 실수치 패턴을 한눈에 조망합니다.
           </p>
         </div>
 
         {/* 4대 관측 지표 탭 */}
-        <div className="flex items-center gap-1 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs">
+        <div className="flex items-center gap-1.5 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs sm:text-sm">
           <button
             type="button"
             onClick={() => setActiveMetric('viewersPerLive')}
-            className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg font-black transition-all cursor-pointer ${
               activeMetric === 'viewersPerLive'
                 ? 'bg-white text-emerald-700 shadow-2xs border border-[#CBD5E1]'
-                : 'text-[#475569] hover:text-[#0F172A]'
+                : 'text-slate-700 hover:text-[#0F172A]'
             }`}
           >
-            방송당 시청
+            방송당 평균
           </button>
           <button
             type="button"
             onClick={() => setActiveMetric('viewers')}
-            className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg font-black transition-all cursor-pointer ${
               activeMetric === 'viewers'
                 ? 'bg-white text-[#2563EB] shadow-2xs border border-[#CBD5E1]'
-                : 'text-[#475569] hover:text-[#0F172A]'
+                : 'text-slate-700 hover:text-[#0F172A]'
             }`}
           >
             동시시청
@@ -106,10 +106,10 @@ export function OpportunityMiniHeatmap({
           <button
             type="button"
             onClick={() => setActiveMetric('liveCount')}
-            className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg font-black transition-all cursor-pointer ${
               activeMetric === 'liveCount'
                 ? 'bg-white text-purple-700 shadow-2xs border border-[#CBD5E1]'
-                : 'text-[#475569] hover:text-[#0F172A]'
+                : 'text-slate-700 hover:text-[#0F172A]'
             }`}
           >
             LIVE 수
@@ -117,10 +117,10 @@ export function OpportunityMiniHeatmap({
           <button
             type="button"
             onClick={() => setActiveMetric('top10Share')}
-            className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg font-black transition-all cursor-pointer ${
               activeMetric === 'top10Share'
                 ? 'bg-white text-[#0F172A] shadow-2xs border border-[#CBD5E1]'
-                : 'text-[#475569] hover:text-[#0F172A]'
+                : 'text-slate-700 hover:text-[#0F172A]'
             }`}
           >
             상위 집중도
@@ -132,10 +132,10 @@ export function OpportunityMiniHeatmap({
       <div className="overflow-x-auto pb-2">
         <div className="min-w-[640px]">
           {/* 시간대 X축 헤더 (3시간 단위 표시) */}
-          <div className="grid grid-cols-[36px_repeat(24,_1fr)] gap-1 mb-1 text-[10px] text-[#64748B] font-mono text-center">
+          <div className="grid grid-cols-[40px_repeat(24,_1fr)] gap-1 mb-1.5 text-xs text-slate-700 font-mono font-bold text-center">
             <div />
             {Array.from({ length: 24 }).map((_, h) => (
-              <div key={h} className="truncate font-semibold">
+              <div key={h} className="truncate font-extrabold">
                 {h % 3 === 0 ? String(h).padStart(2, '0') : ''}
               </div>
             ))}
@@ -147,9 +147,9 @@ export function OpportunityMiniHeatmap({
             return (
               <div
                 key={dayIndex}
-                className="grid grid-cols-[36px_repeat(24,_1fr)] gap-1 mb-1 items-center"
+                className="grid grid-cols-[40px_repeat(24,_1fr)] gap-1 mb-1.5 items-center"
               >
-                <div className="text-[11px] font-bold text-[#475569] text-center">
+                <div className="text-xs sm:text-sm font-black text-slate-800 text-center">
                   {dayLabel}
                 </div>
                 {rowCells.map((cell) => (
@@ -159,7 +159,7 @@ export function OpportunityMiniHeatmap({
                     onClick={() => onSelectSlot && onSelectSlot(cell.dayOfWeek, cell.hour)}
                     onMouseEnter={() => setHoveredCell(cell)}
                     onMouseLeave={() => setHoveredCell(null)}
-                    className={`h-5 sm:h-6 rounded-md transition-all cursor-pointer ${getCellBg(cell)}`}
+                    className={`h-6 sm:h-7 rounded-md transition-all cursor-pointer ${getCellBg(cell)}`}
                     title={`${cell.dayName}요일 ${cell.hour}:00`}
                   />
                 ))}
@@ -170,33 +170,33 @@ export function OpportunityMiniHeatmap({
       </div>
 
       {/* 호버 상태 및 상세 이동 링크 */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mt-3 pt-3 border-t border-[#E2E8F0] text-[11px]">
+      <div className="flex flex-wrap items-center justify-between gap-3 mt-3.5 pt-3.5 border-t border-[#CBD5E1] text-xs sm:text-sm">
         {hoveredCell ? (
-          <div className="text-[#334155] flex items-center gap-2">
-            <span className="font-bold text-[#0F172A]">
+          <div className="text-slate-900 font-bold flex items-center gap-2 flex-wrap">
+            <span className="font-black text-[#0F172A] bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
               {hoveredCell.dayName}요일 {String(hoveredCell.hour).padStart(2, '0')}:00
             </span>
             <span>•</span>
-            <span className="text-[#2563EB] font-bold">동시시청: {hoveredCell.viewers.toLocaleString()}명</span>
+            <span className="text-[#2563EB] font-black">동시시청: {hoveredCell.viewers.toLocaleString()}명</span>
             <span>•</span>
-            <span className="text-purple-700 font-semibold">LIVE: {hoveredCell.liveCount}채널</span>
+            <span className="text-purple-800 font-bold">LIVE: {hoveredCell.liveCount}개</span>
             <span>•</span>
-            <span className="text-emerald-700 font-bold">방당 시청: {hoveredCell.viewersPerLive}명</span>
+            <span className="text-emerald-700 font-black">방송당: {hoveredCell.viewersPerLive}명</span>
             <span>•</span>
-            <span className="text-[#64748B]">상위10 점유: {Math.round(hoveredCell.top10Share * 100)}%</span>
+            <span className="text-amber-700 font-bold">상위10: {Math.round(hoveredCell.top10Share * 100)}%</span>
           </div>
         ) : (
-          <span className="text-[#64748B]">셀 위에 마우스를 올리면 해당 시간대의 관측 수치를 확인할 수 있습니다.</span>
+          <span className="text-slate-700 font-semibold">셀 위에 마우스를 올리면 해당 시간대의 관측 수치를 확인할 수 있습니다.</span>
         )}
 
         {onNavigateToFullTime && (
           <button
             type="button"
             onClick={onNavigateToFullTime}
-            className="flex items-center gap-1.5 text-xs font-bold text-[#2563EB] hover:text-blue-800 transition-colors cursor-pointer ml-auto"
+            className="flex items-center gap-1.5 text-xs sm:text-sm font-black text-[#2563EB] hover:text-blue-800 transition-colors cursor-pointer ml-auto"
           >
             <span>시간대 전체 분석 보기</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-4 h-4" />
           </button>
         )}
       </div>

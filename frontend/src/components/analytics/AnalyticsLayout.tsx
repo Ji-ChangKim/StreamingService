@@ -31,7 +31,6 @@ interface AnalyticsLayoutProps {
 export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPath }: AnalyticsLayoutProps) {
   // 최상위 플랫폼 상태 ('CHZZK' | 'SOOP')
   const [currentPlatform, setCurrentPlatform] = useState<PlatformFilter>('CHZZK');
-  const [showSoopNotice, setShowSoopNotice] = useState(false);
 
   // 필터 상태
   const [filters, setFilters] = useState<AnalyticsFilterState>({
@@ -63,15 +62,8 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
   const [meta, setMeta] = useState<any>();
   const [isLoading, setIsLoading] = useState(true);
 
-  // 플랫폼 전환 핸들러
+  // 플랫폼 전환 핸들러 (치지직 / SOOP 자유 전환)
   const handlePlatformChange = (p: PlatformFilter) => {
-    if (p === 'SOOP') {
-      setShowSoopNotice(true);
-      // 안내 후 4초 뒤 알림 숨김
-      setTimeout(() => setShowSoopNotice(false), 4000);
-      return;
-    }
-    setShowSoopNotice(false);
     setCurrentPlatform(p);
     setFilters((prev) => ({ ...prev, platform: p }));
   };
@@ -133,33 +125,33 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
             <h1 className="text-xl sm:text-2xl font-black text-[#0F172A] tracking-tight">
               VDébut Analytics <span className="text-[#2563EB]">시장 현황 관측소</span>
             </h1>
-            <span className="text-[10px] font-extrabold bg-blue-50 text-[#2563EB] border border-blue-200 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-black bg-blue-50 text-[#2563EB] border border-blue-200 px-2.5 py-0.5 rounded-full">
               Beta v0.1
             </span>
           </div>
-          <p className="text-xs text-[#475569] max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm font-medium text-slate-600 max-w-2xl leading-relaxed">
             VDébut에서 확인한 버튜버 채널의 방송 시장 현황을 시간·요일·콘텐츠별로 객관적으로 관측·비교합니다.
           </p>
         </div>
       </div>
 
-      {/* 1계층: 최상위 플랫폼 선택 탭 (치지직 / SOOP) */}
+      {/* 1계층: 최상위 플랫폼 선택 탭 (치지직 / SOOP 정식 토글) */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="inline-flex items-center gap-1.5 p-1 bg-[#F1F5F9] border border-[#CBD5E1] rounded-2xl shadow-2xs">
+        <div className="inline-flex items-center gap-2 p-1.5 bg-[#E2E8F0] border border-[#CBD5E1] rounded-2xl shadow-2xs">
           {/* 치지직 */}
           <button
             type="button"
             onClick={() => handlePlatformChange('CHZZK')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm sm:text-base transition-all cursor-pointer ${
               currentPlatform === 'CHZZK'
-                ? 'bg-white text-[#0F172A] shadow-xs border border-emerald-500/30'
-                : 'text-[#64748B] hover:text-[#0F172A] hover:bg-white/60'
+                ? 'bg-white text-[#0F172A] shadow-sm border border-emerald-500/50 font-black'
+                : 'text-slate-800 hover:text-[#0F172A] hover:bg-white/90 font-bold'
             }`}
           >
             <img
               src="/icons/chzzk_icon.png"
               alt="치지직"
-              className="w-4 h-4 object-contain shrink-0"
+              className="w-5 h-5 object-contain shrink-0"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = '/icons/logo_chzzk.png';
               }}
@@ -167,74 +159,64 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
             <span>치지직</span>
           </button>
 
-          {/* SOOP (준비중) */}
+          {/* SOOP */}
           <button
             type="button"
             onClick={() => handlePlatformChange('SOOP')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm sm:text-base transition-all cursor-pointer ${
               currentPlatform === 'SOOP'
-                ? 'bg-white text-[#0F172A] shadow-xs border border-blue-500/30'
-                : 'text-[#64748B] hover:text-[#0F172A] hover:bg-white/60'
+                ? 'bg-white text-[#0F172A] shadow-sm border border-blue-500/50 font-black'
+                : 'text-slate-800 hover:text-[#0F172A] hover:bg-white/90 font-bold'
             }`}
           >
             <img
               src="/icons/soop/soop_symbol_blue.svg"
               alt="SOOP"
-              className="w-4 h-4 object-contain shrink-0"
+              className="w-5 h-5 object-contain shrink-0"
             />
             <span>SOOP</span>
-            <span className="text-[10px] font-extrabold bg-blue-50 text-blue-600 border border-blue-200 px-1.5 py-0.5 rounded-md">
-              준비중
-            </span>
           </button>
         </div>
-
-        {/* SOOP 선택 시 연동 준비 안내 메시지 */}
-        {showSoopNotice && (
-          <div className="text-xs text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-xl flex items-center gap-1.5 animate-in fade-in duration-200">
-            <span>ℹ️ SOOP 버튜버 방송 데이터는 현재 수집 및 정제 연동 준비 중입니다.</span>
-          </div>
-        )}
       </div>
 
       {/* 2계층: 3대 핵심 서브 네비게이션 탭 (시장 현황 | 시간대 분석 | 콘텐츠 분석) */}
-      <div className="flex items-center gap-1.5 p-1 bg-[#F1F5F9] border border-[#CBD5E1] rounded-2xl mb-4 overflow-x-auto shadow-2xs">
+      <div className="flex items-center gap-2 p-1.5 bg-[#F1F5F9] border border-[#CBD5E1] rounded-2xl mb-4 overflow-x-auto shadow-2xs">
         <button
           type="button"
           onClick={() => handleTabChange('dashboard')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
+          className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm sm:text-base whitespace-nowrap transition-all cursor-pointer ${
             activeTab === 'dashboard'
-              ? 'bg-[#0F172A] text-white shadow-sm font-bold'
-              : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/80 font-semibold'
+              ? 'bg-[#0F172A] text-white shadow-sm font-black'
+              : 'text-slate-800 hover:text-[#0F172A] hover:bg-white/90 font-bold'
           }`}
         >
-          <LayoutDashboard className="w-4 h-4" />
+          <LayoutDashboard className="w-5 h-5" />
           <span>시장 현황</span>
         </button>
 
         <button
           type="button"
           onClick={() => handleTabChange('time')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
+          className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm sm:text-base whitespace-nowrap transition-all cursor-pointer ${
             activeTab === 'time'
-              ? 'bg-[#0F172A] text-white shadow-sm font-bold'
-              : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/80 font-semibold'
+              ? 'bg-[#0F172A] text-white shadow-sm font-black'
+              : 'text-slate-800 hover:text-[#0F172A] hover:bg-white/90 font-bold'
           }`}
         >
-          <Clock className="w-4 h-4" />
+          <Clock className="w-5 h-5" />
           <span>시간대 분석</span>
         </button>
 
         <button
           type="button"
           onClick={() => handleTabChange('category')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
+          className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm sm:text-base whitespace-nowrap transition-all cursor-pointer ${
             activeTab === 'category'
-              ? 'bg-[#0F172A] text-white shadow-sm font-bold'
-              : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/80 font-semibold'
+              ? 'bg-[#0F172A] text-white shadow-sm font-black'
+              : 'text-slate-800 hover:text-[#0F172A] hover:bg-white/90 font-bold'
           }`}
         >
-          <Layers className="w-4 h-4" />
+          <Layers className="w-5 h-5" />
           <span>콘텐츠 분석</span>
         </button>
       </div>

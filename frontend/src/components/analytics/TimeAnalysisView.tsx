@@ -83,38 +83,38 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
   return (
     <div className="space-y-6">
       {/* 시간대 분석 헤더 및 지표 전환 탭 */}
-      <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm">
+      <div className="bg-white border border-[#CBD5E1] rounded-2xl p-5 sm:p-6 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-[#0F172A] flex items-center gap-2">
+            <h2 className="text-lg sm:text-xl font-black text-[#0F172A] flex items-center gap-2">
               <Clock className="w-5 h-5 text-blue-600" />
               <span>요일 × 시간대 정밀 관측 분석 (Heatmap Matrix)</span>
             </h2>
-            <p className="text-xs text-[#64748B] mt-1">
+            <p className="text-xs sm:text-sm font-semibold text-slate-700 mt-1">
               확인된 버튜버 채널의 요일·시간대별 실수치 패턴을 4대 관측 지표로 교차 확인합니다.
             </p>
           </div>
 
           {/* 4개 관측 지표 토글 */}
-          <div className="flex flex-wrap items-center gap-1.5 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs">
+          <div className="flex flex-wrap items-center gap-1.5 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs sm:text-sm">
             <button
               type="button"
               onClick={() => setActiveMetric('viewersPerLive')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+              className={`px-3.5 py-2 rounded-lg font-black transition-all cursor-pointer ${
                 activeMetric === 'viewersPerLive'
                   ? 'bg-[#2563EB] text-white shadow-sm'
-                  : 'text-[#64748B] hover:text-[#0F172A]'
+                  : 'text-slate-700 hover:text-[#0F172A]'
               }`}
             >
-              방송당 시청
+              방송당 평균 시청
             </button>
             <button
               type="button"
               onClick={() => setActiveMetric('viewers')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+              className={`px-3.5 py-2 rounded-lg font-black transition-all cursor-pointer ${
                 activeMetric === 'viewers'
                   ? 'bg-[#2563EB] text-white shadow-sm'
-                  : 'text-[#64748B] hover:text-[#0F172A]'
+                  : 'text-slate-700 hover:text-[#0F172A]'
               }`}
             >
               동시시청 합계
@@ -122,10 +122,10 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
             <button
               type="button"
               onClick={() => setActiveMetric('liveCount')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+              className={`px-3.5 py-2 rounded-lg font-black transition-all cursor-pointer ${
                 activeMetric === 'liveCount'
                   ? 'bg-[#2563EB] text-white shadow-sm'
-                  : 'text-[#64748B] hover:text-[#0F172A]'
+                  : 'text-slate-700 hover:text-[#0F172A]'
               }`}
             >
               LIVE 방송 수
@@ -133,10 +133,10 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
             <button
               type="button"
               onClick={() => setActiveMetric('top10Share')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+              className={`px-3.5 py-2 rounded-lg font-black transition-all cursor-pointer ${
                 activeMetric === 'top10Share'
                   ? 'bg-[#2563EB] text-white shadow-sm'
-                  : 'text-[#64748B] hover:text-[#0F172A]'
+                  : 'text-slate-700 hover:text-[#0F172A]'
               }`}
             >
               상위 10 집중도
@@ -146,12 +146,12 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
 
         {/* 7 × 24 전체 히트맵 매트릭스 그리드 */}
         <div className="overflow-x-auto pb-2">
-          <div className="min-w-[700px]">
+          <div className="min-w-[750px]">
             {/* 시간 라벨 (0~23) */}
-            <div className="grid grid-cols-[40px_repeat(24,_1fr)] gap-1 mb-1.5 text-[10px] text-slate-500 font-mono text-center">
+            <div className="grid grid-cols-[44px_repeat(24,_1fr)] gap-1 mb-1.5 text-xs text-slate-700 font-mono font-bold text-center">
               <div />
               {Array.from({ length: 24 }).map((_, h) => (
-                <div key={h} className="font-semibold">
+                <div key={h} className="font-extrabold">
                   {h}
                 </div>
               ))}
@@ -163,9 +163,9 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
               return (
                 <div
                   key={dayIndex}
-                  className="grid grid-cols-[40px_repeat(24,_1fr)] gap-1 mb-1 items-center"
+                  className="grid grid-cols-[44px_repeat(24,_1fr)] gap-1 mb-1.5 items-center"
                 >
-                  <div className="text-xs font-bold text-slate-600 text-center">
+                  <div className="text-xs sm:text-sm font-black text-slate-800 text-center">
                     {dayLabel}
                   </div>
                   {rowCells.map((cell) => {
@@ -179,7 +179,7 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
                         key={`${cell.dayOfWeek}-${cell.hour}`}
                         type="button"
                         onClick={() => setSelectedCell(cell)}
-                        className={`h-7 sm:h-8 rounded-md text-[10px] font-bold flex items-center justify-center transition-all cursor-pointer ${getCellColor(
+                        className={`h-8 sm:h-9 rounded-lg text-xs font-black flex items-center justify-center transition-all cursor-pointer ${getCellColor(
                           cell
                         )} ${
                           isSelected
@@ -203,108 +203,107 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* 선택 시간대 정밀 상세 패널 */}
         {currentCell && (
-          <div className="bg-white border border-blue-200 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+          <div className="bg-white border border-[#CBD5E1] rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between gap-2 pb-3 border-b border-slate-100 mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#2563EB] flex items-center justify-center font-bold text-xs">
+              <div className="flex items-center justify-between gap-2 pb-3.5 border-b border-slate-200 mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-blue-100 text-[#2563EB] flex items-center justify-center font-black text-sm">
                     {currentCell.dayName}
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-[#0F172A]">
+                    <h3 className="text-base font-black text-[#0F172A]">
                       {currentCell.dayName}요일 {String(currentCell.hour).padStart(2, '0')}:00 구간 상세
                     </h3>
-                    <span className="text-[11px] text-[#64748B]">표본 일수: 28일 축적</span>
+                    <span className="text-xs text-slate-700 font-bold">표본 일수: 28일 축적</span>
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <span className="text-[10px] font-bold text-[#64748B] block">관측 상태</span>
-                  <span className="text-xs font-black text-[#2563EB] bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">
+                  <span className="text-xs font-black text-[#2563EB] bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg">
                     정규 표본
                   </span>
                 </div>
               </div>
 
               {/* 지표 리스트 */}
-              <div className="space-y-2.5 text-xs">
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                  <span className="text-[#64748B] flex items-center gap-1.5">
-                    <Users className="w-3.5 h-3.5 text-blue-600" />
+              <div className="space-y-3 text-xs sm:text-sm">
+                <div className="flex items-center justify-between p-3 rounded-xl bg-[#F8FAFC] border border-[#CBD5E1]">
+                  <span className="text-slate-700 font-bold flex items-center gap-1.5">
+                    <Users className="w-4 h-4 text-blue-600" />
                     <span>평균 동시시청 합계</span>
                   </span>
-                  <strong className="text-[#0F172A] font-mono">{currentCell.viewers.toLocaleString()}명</strong>
+                  <strong className="text-[#0F172A] font-mono font-black text-sm sm:text-base">{currentCell.viewers.toLocaleString()}명</strong>
                 </div>
 
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                  <span className="text-[#64748B] flex items-center gap-1.5">
-                    <Radio className="w-3.5 h-3.5 text-purple-600" />
+                <div className="flex items-center justify-between p-3 rounded-xl bg-[#F8FAFC] border border-[#CBD5E1]">
+                  <span className="text-slate-700 font-bold flex items-center gap-1.5">
+                    <Radio className="w-4 h-4 text-purple-600" />
                     <span>평균 LIVE 방송 수</span>
                   </span>
-                  <strong className="text-[#0F172A] font-mono">{currentCell.liveCount}채널</strong>
+                  <strong className="text-[#0F172A] font-mono font-black text-sm sm:text-base">{currentCell.liveCount}개 채널</strong>
                 </div>
 
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                  <span className="text-[#64748B] flex items-center gap-1.5">
-                    <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>방송당 시청자 수 (효율)</span>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-[#F8FAFC] border border-[#CBD5E1]">
+                  <span className="text-slate-700 font-bold flex items-center gap-1.5">
+                    <TrendingUp className="w-4 h-4 text-emerald-600" />
+                    <span>방송당 평균 시청자 수</span>
                   </span>
-                  <strong className="text-emerald-600 font-mono">{currentCell.viewersPerLive}명/방</strong>
+                  <strong className="text-emerald-700 font-mono font-black text-sm sm:text-base">{currentCell.viewersPerLive}명</strong>
                 </div>
 
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                  <span className="text-[#64748B] flex items-center gap-1.5">
-                    <PieChart className="w-3.5 h-3.5 text-amber-600" />
+                <div className="flex items-center justify-between p-3 rounded-xl bg-[#F8FAFC] border border-[#CBD5E1]">
+                  <span className="text-slate-700 font-bold flex items-center gap-1.5">
+                    <PieChart className="w-4 h-4 text-amber-600" />
                     <span>상위 10개 방송 점유율</span>
                   </span>
-                  <strong className="text-amber-700 font-mono">{Math.round(currentCell.top10Share * 100)}%</strong>
+                  <strong className="text-amber-700 font-mono font-black text-sm sm:text-base">{Math.round(currentCell.top10Share * 100)}%</strong>
                 </div>
               </div>
             </div>
 
             {/* 객관적 관측 요약 */}
-            <div className="mt-4 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[11px] text-[#334155] leading-relaxed">
-              <span className="font-bold text-[#2563EB]">📊 관측 요약: </span>
-              해당 시간대는 방송당 평균 {currentCell.viewersPerLive}명의 동시시청 슬롯이 관측되며, 상위 10개 방송의 점유율은 {Math.round(currentCell.top10Share * 100)}% 수준으로 집계됩니다.
+            <div className="mt-4 p-3.5 rounded-xl bg-[#F8FAFC] border border-[#CBD5E1] text-xs sm:text-sm text-slate-800 leading-relaxed">
+              <span className="font-black text-[#2563EB]">📊 관측 요약: </span>
+              해당 시간대는 방송당 평균 <strong className="text-[#0F172A]">{currentCell.viewersPerLive}명</strong>의 실시간 시청자가 관측되며, 상위 10개 방송의 점유율은 <strong className="text-[#0F172A]">{Math.round(currentCell.top10Share * 100)}%</strong> 수준으로 집계됩니다.
             </div>
           </div>
         )}
 
         {/* 평일 vs 주말 비교 및 변동성 분석 */}
-        <div className="lg:col-span-2 bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+        <div className="lg:col-span-2 bg-white border border-[#CBD5E1] rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col justify-between">
           <div>
-            <h3 className="text-sm font-bold text-[#0F172A] flex items-center gap-2 mb-2">
+            <h3 className="text-base sm:text-lg font-black text-[#0F172A] flex items-center gap-2 mb-2">
               <Calendar className="w-4 h-4 text-blue-600" />
               <span>평일(월~금) vs 주말(토·일) 시간대별 관측 수치 차이</span>
             </h3>
-            <p className="text-xs text-[#64748B] mb-4">
-              주말에는 낮(14~17시) 동시시청 슬롯이 평일 대비 +42% 높게 관측되며, 심야(00~03시)에도 지속적인 시청 슬롯이 유지됩니다.
+            <p className="text-xs sm:text-sm font-semibold text-slate-700 mb-4">
+              주말에는 낮(14~17시) 동시시청자 수가 평일 대비 +42% 높게 관측되며, 심야(00~03시)에도 지속적인 시청 풀이 유지됩니다.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="text-xs font-bold text-blue-700 mb-2">평일 (월~금) 관측 통계</div>
-                <ul className="text-xs text-[#475569] space-y-1.5">
-                  <li>• 시청 집중 구간: <strong className="text-[#0F172A]">21:00 ~ 24:00</strong> (일평균 최고치)</li>
+              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#CBD5E1]">
+                <div className="text-xs sm:text-sm font-black text-blue-700 mb-2">평일 (월~금) 관측 통계</div>
+                <ul className="text-xs sm:text-sm text-slate-800 font-medium space-y-2">
+                  <li>• 시청 집중 구간: <strong className="text-[#0F172A] font-bold">21:00 ~ 24:00</strong> (일평균 최고치)</li>
                   <li>• 토크/소통 및 종합게임 카테고리 중심 시청 분포</li>
-                  <li>• 심야 01시 이후 동시시청 슬롯 점진적 감소</li>
+                  <li>• 심야 01시 이후 동시 시청자 수 점진적 감소</li>
                 </ul>
               </div>
 
-              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="text-xs font-bold text-emerald-700 mb-2">주말 (토·일) 관측 통계</div>
-                <ul className="text-xs text-[#475569] space-y-1.5">
-                  <li>• 시청 지속 구간: <strong className="text-[#0F172A]">14:00 ~ 03:00</strong> 장시간 유지</li>
-                  <li>• 낮 시간대부터 게임/다양한 카테고리 시청 슬롯 형성</li>
+              <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#CBD5E1]">
+                <div className="text-xs sm:text-sm font-black text-emerald-700 mb-2">주말 (토·일) 관측 통계</div>
+                <ul className="text-xs sm:text-sm text-slate-800 font-medium space-y-2">
+                  <li>• 시청 지속 구간: <strong className="text-[#0F172A] font-bold">14:00 ~ 03:00</strong> 장시간 유지</li>
+                  <li>• 낮 시간대부터 게임/다양한 카테고리 시청 풀 형성</li>
                   <li>• 심야 00시 이후에도 방송당 시청 수치 안정적 유지</li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-[#64748B]">
+          <div className="mt-4 pt-3.5 border-t border-slate-200 flex items-center justify-between text-xs sm:text-sm text-slate-700 font-bold">
             <span>기준: 최근 28일 치지직 확인 버튜버 누적 데이터</span>
-            <span className="text-[#2563EB] font-semibold">객관적 시계열 관측</span>
+            <span className="text-[#2563EB] font-black">객관적 시계열 관측</span>
           </div>
         </div>
       </div>

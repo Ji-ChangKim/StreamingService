@@ -55,27 +55,27 @@ export function AnalyticsRawDataTable({ cells, isLoading }: AnalyticsRawDataTabl
   };
 
   return (
-    <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm mb-6">
+    <div className="bg-white border border-[#CBD5E1] rounded-2xl p-5 sm:p-6 shadow-sm mb-6">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div>
-          <h3 className="text-sm font-black text-[#0F172A] flex items-center gap-2">
-            <Table className="w-4 h-4 text-[#2563EB]" />
+          <h3 className="text-base sm:text-lg font-black text-[#0F172A] flex items-center gap-2">
+            <Table className="w-5 h-5 text-[#2563EB]" />
             <span>시간대별 관측 원본 데이터 표 (Raw Observation Data)</span>
           </h3>
-          <p className="text-[11px] text-[#64748B] mt-0.5">
+          <p className="text-xs sm:text-sm font-semibold text-slate-700 mt-1">
             차트의 원본이 되는 168개 요일×시간대별 집계 수치를 직접 확인하고 정렬할 수 있습니다.
           </p>
         </div>
 
         {/* 요일 필터 버튼들 */}
-        <div className="flex items-center gap-1 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs">
+        <div className="flex items-center gap-1.5 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs sm:text-sm">
           <button
             type="button"
             onClick={() => setSelectedDay('ALL')}
-            className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg font-black transition-all cursor-pointer ${
               selectedDay === 'ALL'
                 ? 'bg-[#0F172A] text-white shadow-2xs'
-                : 'text-[#475569] hover:text-[#0F172A]'
+                : 'text-slate-700 hover:text-[#0F172A]'
             }`}
           >
             전체
@@ -85,10 +85,10 @@ export function AnalyticsRawDataTable({ cells, isLoading }: AnalyticsRawDataTabl
               key={idx}
               type="button"
               onClick={() => setSelectedDay(idx)}
-              className={`px-2 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+              className={`px-2.5 py-1.5 rounded-lg font-black transition-all cursor-pointer ${
                 selectedDay === idx
                   ? 'bg-white text-[#2563EB] shadow-2xs border border-[#CBD5E1]'
-                  : 'text-[#475569] hover:text-[#0F172A]'
+                  : 'text-slate-700 hover:text-[#0F172A]'
               }`}
             >
               {name}
@@ -98,56 +98,56 @@ export function AnalyticsRawDataTable({ cells, isLoading }: AnalyticsRawDataTabl
       </div>
 
       {/* 테이블 */}
-      <div className="overflow-x-auto max-h-96 overflow-y-auto border border-[#E2E8F0] rounded-xl">
-        <table className="w-full text-left text-xs border-collapse">
-          <thead className="bg-[#F8FAFC] sticky top-0 z-10 text-[#475569] border-b border-[#E2E8F0]">
+      <div className="overflow-x-auto max-h-96 overflow-y-auto border border-[#CBD5E1] rounded-xl">
+        <table className="w-full text-left text-xs sm:text-sm border-collapse">
+          <thead className="bg-slate-100 sticky top-0 z-10 text-slate-900 border-b-2 border-[#CBD5E1]">
             <tr>
               <th
                 onClick={() => handleSort('time')}
-                className="py-2.5 px-3 font-bold cursor-pointer hover:text-[#0F172A]"
+                className="py-3 px-4 font-black cursor-pointer hover:text-blue-700"
               >
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   <span>요일 및 시간대</span>
-                  <ArrowUpDown className="w-3 h-3 text-[#94A3B8]" />
+                  <ArrowUpDown className="w-3.5 h-3.5 text-slate-500" />
                 </div>
               </th>
               <th
                 onClick={() => handleSort('viewers')}
-                className="py-2.5 px-3 text-right font-bold cursor-pointer hover:text-[#0F172A]"
+                className="py-3 px-4 text-right font-black cursor-pointer hover:text-blue-700"
               >
-                <div className="flex items-center justify-end gap-1">
+                <div className="flex items-center justify-end gap-1.5">
                   <span>동시시청 평균</span>
-                  <ArrowUpDown className="w-3 h-3 text-[#94A3B8]" />
+                  <ArrowUpDown className="w-3.5 h-3.5 text-slate-500" />
                 </div>
               </th>
               <th
                 onClick={() => handleSort('liveCount')}
-                className="py-2.5 px-3 text-right font-bold cursor-pointer hover:text-[#0F172A]"
+                className="py-3 px-4 text-right font-black cursor-pointer hover:text-blue-700"
               >
-                <div className="flex items-center justify-end gap-1">
+                <div className="flex items-center justify-end gap-1.5">
                   <span>LIVE 평균</span>
-                  <ArrowUpDown className="w-3 h-3 text-[#94A3B8]" />
+                  <ArrowUpDown className="w-3.5 h-3.5 text-slate-500" />
                 </div>
               </th>
               <th
                 onClick={() => handleSort('viewersPerLive')}
-                className="py-2.5 px-3 text-right font-bold cursor-pointer hover:text-[#0F172A]"
+                className="py-3 px-4 text-right font-black cursor-pointer hover:text-blue-700"
               >
-                <div className="flex items-center justify-end gap-1">
-                  <span>방송당 시청</span>
-                  <ArrowUpDown className="w-3 h-3 text-[#94A3B8]" />
+                <div className="flex items-center justify-end gap-1.5">
+                  <span>방송당 평균</span>
+                  <ArrowUpDown className="w-3.5 h-3.5 text-slate-500" />
                 </div>
               </th>
               <th
                 onClick={() => handleSort('top10Share')}
-                className="py-2.5 px-3 text-right font-bold cursor-pointer hover:text-[#0F172A]"
+                className="py-3 px-4 text-right font-black cursor-pointer hover:text-blue-700"
               >
-                <div className="flex items-center justify-end gap-1">
+                <div className="flex items-center justify-end gap-1.5">
                   <span>상위 10 집중도</span>
-                  <ArrowUpDown className="w-3 h-3 text-[#94A3B8]" />
+                  <ArrowUpDown className="w-3.5 h-3.5 text-slate-500" />
                 </div>
               </th>
-              <th className="py-2.5 px-3 text-center font-bold text-[#64748B]">
+              <th className="py-3 px-4 text-center font-black text-slate-800">
                 표본 기간
               </th>
             </tr>
@@ -155,25 +155,25 @@ export function AnalyticsRawDataTable({ cells, isLoading }: AnalyticsRawDataTabl
           <tbody className="divide-y divide-[#E2E8F0] text-[#0F172A]">
             {sorted.map((c) => (
               <tr key={`${c.dayOfWeek}-${c.hour}`} className="hover:bg-slate-50 transition-colors">
-                <td className="py-2 px-3 font-semibold">
-                  <span className="inline-block w-6 text-center font-bold text-[#2563EB] bg-blue-50 border border-blue-200 rounded mr-2 text-[10px]">
+                <td className="py-3 px-4 font-bold">
+                  <span className="inline-block w-7 text-center font-black text-[#2563EB] bg-blue-50 border border-blue-200 rounded mr-2.5 text-xs py-0.5">
                     {c.dayName}
                   </span>
-                  <span>{String(c.hour).padStart(2, '0')}:00 ~ {String((c.hour + 1) % 24).padStart(2, '0')}:00</span>
+                  <span className="font-mono">{String(c.hour).padStart(2, '0')}:00 ~ {String((c.hour + 1) % 24).padStart(2, '0')}:00</span>
                 </td>
-                <td className="py-2 px-3 text-right font-mono font-bold text-[#2563EB]">
+                <td className="py-3 px-4 text-right font-mono font-black text-[#2563EB]">
                   {c.viewers.toLocaleString()}명
                 </td>
-                <td className="py-2 px-3 text-right font-mono text-purple-700 font-semibold">
-                  {c.liveCount}채널
+                <td className="py-3 px-4 text-right font-mono text-purple-800 font-bold">
+                  {c.liveCount}개
                 </td>
-                <td className="py-2 px-3 text-right font-mono font-bold text-emerald-600">
-                  {c.viewersPerLive}명/방
+                <td className="py-3 px-4 text-right font-mono font-black text-emerald-700">
+                  {c.viewersPerLive}명
                 </td>
-                <td className="py-2 px-3 text-right font-mono text-[#475569]">
+                <td className="py-3 px-4 text-right font-mono font-bold text-slate-800">
                   {Math.round(c.top10Share * 100)}%
                 </td>
-                <td className="py-2 px-3 text-center text-[#64748B] text-[11px]">
+                <td className="py-3 px-4 text-center text-slate-700 font-semibold text-xs">
                   최근 28일
                 </td>
               </tr>
@@ -182,8 +182,8 @@ export function AnalyticsRawDataTable({ cells, isLoading }: AnalyticsRawDataTabl
         </table>
       </div>
 
-      <div className="flex items-center justify-between mt-3 text-[11px] text-[#64748B]">
-        <span>조회된 구간: 총 {sorted.length}개 슬롯</span>
+      <div className="flex items-center justify-between mt-3.5 text-xs sm:text-sm text-slate-700 font-bold">
+        <span>조회된 구간: 총 {sorted.length}개 시간대</span>
         <span>기준: 치지직 확인 버튜버 10분 스냅샷 누적 평균</span>
       </div>
     </div>
