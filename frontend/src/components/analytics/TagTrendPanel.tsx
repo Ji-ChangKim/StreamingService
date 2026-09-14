@@ -29,14 +29,11 @@ export function TagTrendPanel({ magnetTags = [], isLoading = false }: TagTrendPa
 
   // 데이터가 없을 때의 현실적 폴백
   const tags: MagnetTagStat[] = magnetTags.length > 0 ? magnetTags : [
-    { tag: '봉누도', viewerSum: 90723, liveCount: 31, averageViewers: 2927, shareOfTaggedViewers: 0.45, isEventTag: true, categoryType: '합방/서버' },
-    { tag: '스텔라이브', viewerSum: 29993, liveCount: 8, averageViewers: 3749, shareOfTaggedViewers: 0.15, isEventTag: false, categoryType: '버튜버/크루' },
-    { tag: '픽셀네트워크', viewerSum: 24651, liveCount: 7, averageViewers: 3522, shareOfTaggedViewers: 0.12, isEventTag: false, categoryType: '버튜버/크루' },
-    { tag: '인챈트', viewerSum: 23092, liveCount: 7, averageViewers: 3299, shareOfTaggedViewers: 0.11, isEventTag: false, categoryType: '버튜버/크루' },
-    { tag: '버튜버', viewerSum: 22097, liveCount: 14, averageViewers: 1578, shareOfTaggedViewers: 0.10, isEventTag: false, categoryType: '버튜버/크루' },
-    { tag: '봉누도2', viewerSum: 20773, liveCount: 7, averageViewers: 2968, shareOfTaggedViewers: 0.09, isEventTag: true, categoryType: '합방/서버' },
-    { tag: '종합게임', viewerSum: 8420, liveCount: 18, averageViewers: 468, shareOfTaggedViewers: 0.04, isEventTag: false, categoryType: '게임' },
-    { tag: '신입', viewerSum: 184, liveCount: 22, averageViewers: 8, shareOfTaggedViewers: 0.01, isEventTag: false, categoryType: '소통/신입' },
+    { tag: '버튜버', viewerSum: 48920, liveCount: 28, averageViewers: 1747, shareOfTaggedViewers: 0.35, isEventTag: false, categoryType: '버튜버/크루' },
+    { tag: '종합게임', viewerSum: 24650, liveCount: 22, averageViewers: 1120, shareOfTaggedViewers: 0.18, isEventTag: false, categoryType: '게임' },
+    { tag: '스팀게임', viewerSum: 15300, liveCount: 14, averageViewers: 1092, shareOfTaggedViewers: 0.12, isEventTag: false, categoryType: '게임' },
+    { tag: '소통', viewerSum: 9240, liveCount: 19, averageViewers: 486, shareOfTaggedViewers: 0.08, isEventTag: false, categoryType: '소통/신입' },
+    { tag: '신입', viewerSum: 1420, liveCount: 26, averageViewers: 54, shareOfTaggedViewers: 0.02, isEventTag: false, categoryType: '소통/신입' },
   ];
 
   const totalTaggedViewers = tags.reduce((a, b) => a + b.viewerSum, 0);
@@ -217,7 +214,7 @@ export function TagTrendPanel({ magnetTags = [], isLoading = false }: TagTrendPa
           </div>
           <ul className="space-y-1 font-semibold text-slate-700 mt-1">
             <li>• <strong>단독 태그 지양</strong>: 단순히 <code className="bg-white px-1.5 py-0.5 rounded text-blue-700 font-mono font-bold">#신입</code> 하나만 달면 유입 풀이 좁습니다. 전체 유입량이 가장 큰 <code className="bg-white px-1.5 py-0.5 rounded text-blue-700 font-mono font-bold">#버튜버</code>와 구체적인 <code className="bg-white px-1.5 py-0.5 rounded text-blue-700 font-mono font-bold">#게임명</code>을 반드시 함께 조합하세요.</li>
-            <li>• <strong>합방 이벤트 태그 주의</strong>: <code className="bg-white px-1.5 py-0.5 rounded text-rose-700 font-mono font-bold">#봉누도</code> 같은 대형 서버 태그는 시청자가 압도적으로 몰리지만, 참여 멤버가 아닌 신입이 임의로 달면 시청자 이탈 및 반감을 살 수 있으므로 본인 관련 태그만 사용해야 합니다.</li>
+            <li>• <strong>합방·대형 서버 태그 주의</strong>: 실시간으로 유행하는 대형 서버·합방 태그는 시청자가 압도적으로 몰리지만, 실제 참여 멤버가 아닌 신입이 임의로 달면 시청자 이탈 및 반감을 살 수 있으므로 본인 방송과 직접 관련된 정직한 태그를 사용해야 합니다.</li>
           </ul>
         </div>
       </div>

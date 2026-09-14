@@ -184,7 +184,7 @@ export interface MethodologyInfo {
 // 8. Current Content & Game Drilldown
 export interface EventClusterInfo {
   eventDetected: boolean;
-  eventName: string; // 예: '봉누도 / 봉누도2'
+  eventName: string; // 예: '#[태그명] 그룹·합방 이벤트'
   dominantTag: string;
   dominantTagShare: number; // 0.0 ~ 1.0 (예: 0.89 = 89%)
   channelCount: number; // 중복 태그 채널 수

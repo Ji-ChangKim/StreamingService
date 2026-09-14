@@ -481,8 +481,7 @@ function detectEventClusters(gameLives: NormalizedLiveItem[], gameName: string) 
 
   if (!isCluster) return null;
 
-  const isBongnudo = top.tag.includes('봉누도');
-  const eventName = isBongnudo ? '봉누도 / 봉누도2 대형 합방' : `#${top.tag} 서버/합방 이벤트`;
+  const eventName = `#${top.tag} 그룹·합방 이벤트`;
 
   return {
     eventDetected: true,
@@ -518,7 +517,7 @@ function aggregateMagnetTags(lives: NormalizedLiveItem[]) {
 
   const list = Object.entries(tagMap)
     .map(([tag, stat]) => {
-      const isEvent = tag.includes('봉누도') || tag.includes('서버') || tag.includes('합방') || tag.includes('배틀');
+      const isEvent = tag.includes('서버') || tag.includes('합방') || tag.includes('배틀') || tag.includes('대회') || tag.includes('마을') || tag.includes('시즌') || tag.includes('내전');
       let categoryType = '게임';
       if (isEvent) categoryType = '합방/서버';
       else if (tag.includes('버튜버') || tag.includes('버츄얼') || tag.includes('스텔') || tag.includes('인챈트') || tag.includes('픽셀')) categoryType = '버튜버/크루';

@@ -137,11 +137,11 @@ export function MarketDashboardView({
             </div>
             <div className="flex flex-wrap gap-2 my-2.5">
               {(magnetTags.length > 0 ? magnetTags.slice(0, 5) : [
-                { tag: '봉누도', viewerSum: 90723 },
-                { tag: '스텔라이브', viewerSum: 29993 },
-                { tag: '버튜버', viewerSum: 22097 },
-                { tag: '종합게임', viewerSum: 8420 },
-                { tag: '신입', viewerSum: 184 },
+                { tag: '버튜버', viewerSum: 48920 },
+                { tag: '종합게임', viewerSum: 24650 },
+                { tag: '스팀게임', viewerSum: 15300 },
+                { tag: '소통', viewerSum: 9240 },
+                { tag: '신입', viewerSum: 1420 },
               ]).map((t) => (
                 <span
                   key={t.tag}
