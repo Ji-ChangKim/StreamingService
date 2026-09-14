@@ -120,36 +120,36 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
   }, [filters.platform, filters.period, filters.dayScope, filters.categoryGroup, filters.creatorTier]);
 
   return (
-    <div className="min-h-screen bg-[#0b0e17] text-white pt-20 sm:pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] pt-4 sm:pt-6 pb-16 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {/* 타이틀 및 헤더 영역 */}
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+          <div className="flex items-center gap-2.5 mb-1.5">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#2563EB] to-indigo-600 flex items-center justify-center shadow-md shadow-blue-500/20">
               <BarChart3 className="w-4 h-4 text-white" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              VDébut Analytics <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">방송 인사이트</span>
+            <h1 className="text-xl sm:text-2xl font-black text-[#0F172A] tracking-tight">
+              VDébut Analytics <span className="text-[#2563EB]">방송 인사이트</span>
             </h1>
-            <span className="text-[10px] font-extrabold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] font-extrabold bg-blue-50 text-[#2563EB] border border-blue-200 px-2 py-0.5 rounded-full">
               Beta v0.1
             </span>
           </div>
-          <p className="text-xs text-gray-400 max-w-2xl leading-relaxed">
+          <p className="text-xs text-[#475569] max-w-2xl leading-relaxed">
             치지직·SOOP 버튜버 라이브 데이터를 시간·요일·콘텐츠별로 분석하여, 신규·중소 버튜버가 언제 어떤 콘텐츠로 방송해야 가장 유리한지 판단을 지원합니다.
           </p>
         </div>
       </div>
 
       {/* 4대 핵심 서브 네비게이션 탭 (LNB/Tab Bar) */}
-      <div className="flex items-center gap-1.5 p-1 bg-[#121626]/90 backdrop-blur-xl border border-white/10 rounded-2xl mb-5 overflow-x-auto">
+      <div className="flex items-center gap-1.5 p-1 bg-[#F1F5F9] border border-[#CBD5E1] rounded-2xl mb-6 overflow-x-auto shadow-2xs">
         <button
           type="button"
           onClick={() => handleTabChange('dashboard')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
             activeTab === 'dashboard'
-              ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-600/30'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
+              ? 'bg-[#0F172A] text-white shadow-sm font-bold'
+              : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/80 font-semibold'
           }`}
         >
           <LayoutDashboard className="w-4 h-4" />
@@ -159,10 +159,10 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
         <button
           type="button"
           onClick={() => handleTabChange('time')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
             activeTab === 'time'
-              ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-600/30'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
+              ? 'bg-[#0F172A] text-white shadow-sm font-bold'
+              : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/80 font-semibold'
           }`}
         >
           <Clock className="w-4 h-4" />
@@ -172,10 +172,10 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
         <button
           type="button"
           onClick={() => handleTabChange('category')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
             activeTab === 'category'
-              ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-600/30'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
+              ? 'bg-[#0F172A] text-white shadow-sm font-bold'
+              : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/80 font-semibold'
           }`}
         >
           <Layers className="w-4 h-4" />
@@ -185,13 +185,13 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
         <button
           type="button"
           onClick={() => handleTabChange('opportunity')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
             activeTab === 'opportunity'
-              ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-600/30'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
+              ? 'bg-[#2563EB] text-white shadow-md shadow-blue-600/20 font-bold'
+              : 'text-[#475569] hover:text-[#0F172A] hover:bg-white/80 font-semibold'
           }`}
         >
-          <Compass className="w-4 h-4 text-emerald-400" />
+          <Compass className="w-4 h-4" />
           <span>방송 기회 제안기</span>
         </button>
       </div>

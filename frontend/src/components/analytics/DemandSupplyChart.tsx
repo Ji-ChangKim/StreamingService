@@ -13,7 +13,7 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
 
   if (isLoading || !data || data.length === 0) {
     return (
-      <div className="h-72 bg-[#121626]/80 border border-white/10 rounded-2xl flex items-center justify-center text-gray-500 text-xs animate-pulse">
+      <div className="h-72 bg-white border border-[#E2E8F0] rounded-2xl flex items-center justify-center text-[#64748B] text-xs animate-pulse">
         수요·공급 추이 분석 데이터를 불러오는 중입니다...
       </div>
     );
@@ -25,7 +25,7 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
 
   const width = 800;
   const height = 240;
-  const paddingX = 40;
+  const paddingX = 45;
   const paddingY = 30;
   const chartW = width - paddingX * 2;
   const chartH = height - paddingY * 2;
@@ -53,25 +53,25 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
   const activePoint = hoverIndex !== null ? points[hoverIndex] : null;
 
   return (
-    <div className="bg-[#131627]/90 border border-white/10 rounded-2xl p-5 shadow-xl mb-6">
+    <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm mb-6">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div>
-          <h3 className="text-sm font-bold text-white flex items-center gap-2">
-            <Activity className="w-4 h-4 text-indigo-400" />
+          <h3 className="text-sm font-black text-[#0F172A] flex items-center gap-2">
+            <Activity className="w-4 h-4 text-[#2563EB]" />
             <span>24시간 시장 수요(동시시청) vs 공급(LIVE 수) 추이</span>
           </h3>
-          <p className="text-[11px] text-gray-400 mt-0.5">
+          <p className="text-[11px] text-[#64748B] mt-0.5">
             시청 수요의 급증 시점과 방송 경쟁(LIVE 수)의 분산 구간을 비교 분석합니다.
           </p>
         </div>
 
         {/* 범례 및 지표 토글 */}
-        <div className="flex items-center gap-2 text-xs">
+        <div className="flex items-center gap-1.5 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs">
           <button
             type="button"
             onClick={() => setActiveMetric('both')}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium transition-all ${
-              activeMetric === 'both' ? 'bg-white/15 text-white' : 'text-gray-400 hover:text-white'
+            className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+              activeMetric === 'both' ? 'bg-[#0F172A] text-white shadow-2xs' : 'text-[#475569] hover:text-[#0F172A]'
             }`}
           >
             전체 비교
@@ -79,21 +79,25 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
           <button
             type="button"
             onClick={() => setActiveMetric('viewers')}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium transition-all ${
-              activeMetric === 'viewers' ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/40' : 'text-gray-400 hover:text-white'
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+              activeMetric === 'viewers'
+                ? 'bg-white text-[#2563EB] border border-blue-300 shadow-2xs'
+                : 'text-[#475569] hover:text-[#0F172A]'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-indigo-400" />
+            <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
             <span>수요 (동시시청)</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveMetric('live')}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium transition-all ${
-              activeMetric === 'live' ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/40' : 'text-gray-400 hover:text-white'
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+              activeMetric === 'live'
+                ? 'bg-white text-emerald-700 border border-emerald-300 shadow-2xs'
+                : 'text-[#475569] hover:text-[#0F172A]'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span className="w-2 h-2 rounded-full bg-emerald-600" />
             <span>공급 (LIVE 수)</span>
           </button>
         </div>
@@ -106,9 +110,9 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
           className="w-full h-auto overflow-visible select-none"
         >
           <defs>
-            <linearGradient id="viewerAreaGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#6366f1" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="#6366f1" stopOpacity="0.0" />
+            <linearGradient id="viewerAreaGradientLight" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#2563EB" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#2563EB" stopOpacity="0.0" />
             </linearGradient>
           </defs>
 
@@ -122,28 +126,30 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
                   y1={y}
                   x2={width - paddingX}
                   y2={y}
-                  stroke="#ffffff"
-                  strokeOpacity="0.07"
+                  stroke="#CBD5E1"
+                  strokeOpacity="0.7"
                   strokeDasharray="4 4"
                 />
                 {/* 좌측 Y축 라벨 (동시시청) */}
                 <text
-                  x={paddingX - 6}
+                  x={paddingX - 8}
                   y={y + 3}
                   textAnchor="end"
-                  fill="#818cf8"
+                  fill="#2563EB"
                   fontSize="9"
+                  fontWeight="bold"
                   fontFamily="monospace"
                 >
                   {Math.round(ratio * maxViewers).toLocaleString()}
                 </text>
                 {/* 우측 Y축 라벨 (LIVE 수) */}
                 <text
-                  x={width - paddingX + 6}
+                  x={width - paddingX + 8}
                   y={y + 3}
                   textAnchor="start"
-                  fill="#34d399"
+                  fill="#059669"
                   fontSize="9"
+                  fontWeight="bold"
                   fontFamily="monospace"
                 >
                   {Math.round(ratio * maxLive)}개
@@ -155,11 +161,11 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
           {/* 수요 (동시시청) Area & Line */}
           {(activeMetric === 'both' || activeMetric === 'viewers') && (
             <>
-              <path d={viewerAreaPath} fill="url(#viewerAreaGradient)" />
+              <path d={viewerAreaPath} fill="url(#viewerAreaGradientLight)" />
               <path
                 d={viewerLinePath}
                 fill="none"
-                stroke="#818cf8"
+                stroke="#2563EB"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -172,7 +178,7 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
             <path
               d={liveLinePath}
               fill="none"
-              stroke="#34d399"
+              stroke="#059669"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -188,8 +194,9 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
                 x={p.x}
                 y={height - 8}
                 textAnchor="middle"
-                fill="#9ca3af"
+                fill="#64748B"
                 fontSize="10"
+                fontWeight="600"
                 fontFamily="sans-serif"
               >
                 {p.label}
@@ -204,13 +211,13 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
                 y1={paddingY}
                 x2={activePoint.x}
                 y2={height - paddingY}
-                stroke="#ffffff"
-                strokeOpacity="0.4"
-                strokeWidth="1"
+                stroke="#0F172A"
+                strokeOpacity="0.25"
+                strokeWidth="1.5"
                 strokeDasharray="2 2"
               />
-              <circle cx={activePoint.x} cy={activePoint.yViewer} r="5" fill="#818cf8" stroke="#ffffff" strokeWidth="2" />
-              <circle cx={activePoint.x} cy={activePoint.yLive} r="5" fill="#34d399" stroke="#ffffff" strokeWidth="2" />
+              <circle cx={activePoint.x} cy={activePoint.yViewer} r="5" fill="#2563EB" stroke="#ffffff" strokeWidth="2" />
+              <circle cx={activePoint.x} cy={activePoint.yLive} r="5" fill="#059669" stroke="#ffffff" strokeWidth="2" />
             </g>
           )}
 
@@ -236,22 +243,22 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
         {/* 툴팁 오버레이 */}
         {activePoint && (
           <div
-            className="absolute top-2 left-1/2 -translate-x-1/2 bg-[#0d101d]/95 border border-indigo-500/40 rounded-xl px-4 py-2 text-xs shadow-2xl backdrop-blur-md flex items-center gap-4 pointer-events-none z-20"
+            className="absolute top-2 left-1/2 -translate-x-1/2 bg-white/95 border border-[#CBD5E1] rounded-xl px-4 py-2 text-xs shadow-xl backdrop-blur-md flex items-center gap-4 pointer-events-none z-20"
           >
-            <div className="font-bold text-white border-r border-white/10 pr-3">
+            <div className="font-black text-[#0F172A] border-r border-[#E2E8F0] pr-3">
               {activePoint.label}
             </div>
-            <div className="flex items-center gap-1.5 text-indigo-300 font-semibold">
-              <span className="w-2 h-2 rounded-full bg-indigo-400" />
+            <div className="flex items-center gap-1.5 text-[#2563EB] font-bold">
+              <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
               <span>수요: {activePoint.viewers.toLocaleString()}명</span>
             </div>
-            <div className="flex items-center gap-1.5 text-emerald-300 font-semibold">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <div className="flex items-center gap-1.5 text-emerald-700 font-bold">
+              <span className="w-2 h-2 rounded-full bg-emerald-600" />
               <span>공급: {activePoint.liveCount}채널</span>
             </div>
-            <div className="flex items-center gap-1 text-gray-400 border-l border-white/10 pl-3">
+            <div className="flex items-center gap-1 text-[#64748B] border-l border-[#E2E8F0] pl-3">
               <span>효율: </span>
-              <strong className="text-white">{activePoint.viewersPerLive}명/방</strong>
+              <strong className="text-[#0F172A] font-bold">{activePoint.viewersPerLive}명/방</strong>
             </div>
           </div>
         )}

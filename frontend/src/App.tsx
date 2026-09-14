@@ -244,7 +244,7 @@ export function App() {
 
   return (
     <ErrorBoundary currentLang={currentLang}>
-      <div className={`min-h-screen ${isAnalyticsPath ? 'bg-[#0b0e17] text-white' : 'bg-[#F8FAFC] text-[#0F172A]'} flex flex-col font-['Inter'] selection:bg-[#2563EB] selection:text-white`}>
+      <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-['Inter'] selection:bg-[#2563EB] selection:text-white">
         {/* 1. Desktop Header Bar */}
         <Navbar
           activeNav={activeNav}
