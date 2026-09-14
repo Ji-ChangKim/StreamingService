@@ -1,4 +1,4 @@
-import { X, Bot, Bell, Sparkles, ExternalLink, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { X, Bell, Sparkles, ExternalLink, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 interface DiscordBotModalProps {
   isOpen: boolean;
@@ -55,7 +55,11 @@ export function DiscordBotModal({
 
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur flex items-center justify-center border border-white/20 shrink-0">
-              <Bot className="w-7 h-7 text-white" />
+              <img
+                src="/icons/discord/Discord-Symbol-White.svg"
+                alt="Discord"
+                className="h-7 w-auto object-contain"
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -134,6 +138,11 @@ export function DiscordBotModal({
               rel="noopener noreferrer"
               className="flex-1 sm:flex-none bg-[#5865F2] hover:bg-[#4752C4] text-white text-xs font-extrabold px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-[#5865F2]/25 flex items-center justify-center gap-2 cursor-pointer"
             >
+              <img
+                src="/icons/discord/Discord-Symbol-White.svg"
+                alt="Discord"
+                className="h-[18px] w-auto object-contain shrink-0"
+              />
               <span>디스코드 봇 서버에 초대하기</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>

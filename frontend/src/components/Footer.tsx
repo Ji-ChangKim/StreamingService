@@ -74,9 +74,14 @@ export function Footer({ currentLang = 'ko', onNavigate }: FooterProps) {
               href="https://discord.com/oauth2/authorize?client_id=1547493885733900351&permissions=2147485696&scope=bot%20applications.commands"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#5865F2] hover:text-[#4752C4] transition-colors flex items-center gap-1 font-extrabold"
+              className="text-[#5865F2] hover:text-[#4752C4] transition-colors flex items-center gap-1.5 font-extrabold"
             >
-              <span>🤖 디스코드 봇</span>
+              <img
+                src="/icons/discord/Discord-Symbol-Blurple.svg"
+                alt="Discord"
+                className="h-4 w-auto object-contain shrink-0"
+              />
+              <span>디스코드 봇</span>
             </a>
           </div>
         </div>

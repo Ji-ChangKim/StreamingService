@@ -54,6 +54,7 @@ export function UndecidedDebutSection({
   selectedPlatform,
   selectedCountry = 'ALL',
   searchQuery = '',
+  selectedTimezone = 'Asia/Seoul',
   onOpenSubmitModal,
   onEditEvent,
 }: UndecidedDebutSectionProps) {
@@ -151,7 +152,18 @@ export function UndecidedDebutSection({
             const countryBadge = getCountryBadge(evt.creator.countryCode);
             const agency = evt.creator.agency?.trim();
             const hasRealAgency = agency && agency !== '개인세' && agency !== 'None';
-            const isTimeTbd = evt.tbdType === 'TIME_TBD';
+            const isTimeTbd = evt.tbdType === 'TIME_TBD' || evt.description?.includes('시간 미정');
+            let tbdLabel = `✨ ${monthNumber}월 중 데뷔 예정 (일자 미정)`;
+            if (isTimeTbd) {
+              try {
+                const tz = selectedTimezone || 'Asia/Seoul';
+                const d = new Date(evt.startAtUtc);
+                const dayStr = new Intl.DateTimeFormat('ko-KR', { timeZone: tz, month: 'numeric', day: 'numeric' }).format(d);
+                tbdLabel = `${dayStr} 데뷔 (시간 미정)`;
+              } catch {
+                tbdLabel = `${monthNumber}월 데뷔 (시간 미정)`;
+              }
+            }
 
             return (
               <div
@@ -210,7 +222,7 @@ export function UndecidedDebutSection({
                   <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200/80 text-amber-900 text-xs font-extrabold w-full">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
                     <span className="truncate">
-                      {isTimeTbd ? `${monthNumber}월 데뷔 (시간 미정)` : `✨ ${monthNumber}월 중 데뷔 예정 (일자 미정)`}
+                      {tbdLabel}
                     </span>
                   </div>
 

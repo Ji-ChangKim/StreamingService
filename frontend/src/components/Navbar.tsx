@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Globe, ChevronDown, Check, Bot } from 'lucide-react';
+import { Globe, ChevronDown, Check } from 'lucide-react';
 import { Language, UI_TRANSLATIONS } from '../utils/i18n';
 
 interface NavbarProps {
@@ -118,7 +118,11 @@ export function Navbar({
               className="flex items-center gap-1.5 bg-[#5865F2]/10 hover:bg-[#5865F2]/20 text-[#5865F2] border border-[#5865F2]/30 rounded-[8px] px-2.5 sm:px-3 py-1.5 transition-all text-[11px] sm:text-xs font-extrabold cursor-pointer shrink-0"
               title="디스코드 봇 초대 및 안내"
             >
-              <Bot className="w-3.5 h-3.5" />
+              <img
+                src="/icons/discord/Discord-Symbol-Blurple.svg"
+                alt="Discord"
+                className="h-4 w-auto object-contain shrink-0"
+              />
               <span className="hidden sm:inline">디스코드 봇</span>
             </button>
           )}
