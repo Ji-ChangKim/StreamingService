@@ -23,52 +23,103 @@ export function AnalyticsFilterBar({
 
   return (
     <div className="bg-white border border-[#CBD5E1] rounded-2xl p-4 sm:p-5 shadow-sm mb-6">
+      {/* 상단 스트리머 검색창 영역 (추후 유저 검색 기능 진입점) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3.5 mb-3.5 border-b border-[#CBD5E1]">
+        <div className="flex-1 min-w-[280px] max-w-md relative">
+          <input
+            type="text"
+            disabled
+            placeholder="🔍 치지직 / SOOP 스트리머 채널 검색 (Beta 준비중)"
+            className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-500 cursor-not-allowed"
+          />
+          <span className="absolute right-3 top-2.5 text-[10px] font-black bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
+            NEXT
+          </span>
+        </div>
+        <div className="text-xs text-slate-600 font-bold hidden md:block">
+          💡 특정 스트리머의 방송 패턴과 선호 태그 분석 기능이 곧 오픈됩니다.
+        </div>
+      </div>
+
       <div className="flex flex-wrap items-center justify-between gap-3 pb-3.5 border-b border-[#CBD5E1]">
-        {/* 기간 선택 (오늘, 7일, 28일) */}
-        <div className="flex items-center gap-2.5">
+        {/* 6대 기간 선택 (오늘, 어제, 1주, 한달, 3개월, 6개월) */}
+        <div className="flex flex-wrap items-center gap-2.5">
           <span className="text-xs sm:text-sm font-black text-slate-800 flex items-center gap-1.5">
             <Calendar className="w-4 h-4 text-[#2563EB]" />
             <span>관측 기간:</span>
           </span>
-          <div className="flex items-center gap-1 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs sm:text-sm font-bold">
+          <div className="flex flex-wrap items-center gap-1 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs sm:text-sm font-bold">
             <button
               type="button"
               onClick={() => updateFilter('period', 'today')}
-              className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                 filters.period === 'today'
                   ? 'bg-white text-[#0F172A] shadow-2xs font-black'
                   : 'text-slate-700 hover:text-[#0F172A]'
               }`}
             >
-              오늘 (24h)
+              오늘 (실시간)
+            </button>
+            <button
+              type="button"
+              onClick={() => updateFilter('period', 'yesterday')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                filters.period === 'yesterday'
+                  ? 'bg-white text-[#0F172A] shadow-2xs font-black'
+                  : 'text-slate-700 hover:text-[#0F172A]'
+              }`}
+            >
+              어제 (1일)
             </button>
             <button
               type="button"
               onClick={() => updateFilter('period', '7d')}
-              className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                 filters.period === '7d'
                   ? 'bg-white text-[#0F172A] shadow-2xs font-black'
                   : 'text-slate-700 hover:text-[#0F172A]'
               }`}
             >
-              최근 7일
+              1주 (7일)
             </button>
             <button
               type="button"
-              onClick={() => updateFilter('period', '28d')}
-              className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
-                filters.period === '28d'
+              onClick={() => updateFilter('period', '30d')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                filters.period === '30d'
                   ? 'bg-white text-[#0F172A] shadow-2xs font-black'
                   : 'text-slate-700 hover:text-[#0F172A]'
               }`}
             >
-              최근 28일
+              한달 (30일)
+            </button>
+            <button
+              type="button"
+              onClick={() => updateFilter('period', '90d')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                filters.period === '90d'
+                  ? 'bg-white text-[#0F172A] shadow-2xs font-black'
+                  : 'text-slate-700 hover:text-[#0F172A]'
+              }`}
+            >
+              3개월
+            </button>
+            <button
+              type="button"
+              onClick={() => updateFilter('period', '180d')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                filters.period === '180d'
+                  ? 'bg-white text-[#0F172A] shadow-2xs font-black'
+                  : 'text-slate-700 hover:text-[#0F172A]'
+              }`}
+            >
+              6개월
             </button>
           </div>
         </div>
 
         <div className="text-xs text-slate-700 font-semibold">
-          * 시간대·요일별 집계는 선택된 기간의 정기 스냅샷 중앙값으로 산출됩니다.
+          * 기간별 집계는 정기 스냅샷 중앙값으로 산출됩니다.
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CategoryStat, CurrentContentData } from '../../services/analyticsApiService';
 import { CurrentContentPanel } from './CurrentContentPanel';
+import { RookieRadarPanel } from './RookieRadarPanel';
 import { Layers, Compass, Search } from 'lucide-react';
 
 interface CategoryAnalysisViewProps {
@@ -51,13 +52,19 @@ export function CategoryAnalysisView({ categories, currentContent, isLoading }: 
 
   return (
     <div className="space-y-6">
-      {/* 1. [핵심 기능] 현재 콘텐츠별 동시시청 (게임 드릴다운) */}
+      {/* 1. 🎯 신입 스트리머 레이더 (신입들은 어디에 모여있는가?) */}
+      <RookieRadarPanel
+        rookieRadar={currentContent?.rookieRadar}
+        isLoading={isLoading}
+      />
+
+      {/* 2. [핵심 기능] 현재 콘텐츠별 동시시청 (게임 드릴다운 & 대형 합방 원인 감지) */}
       <CurrentContentPanel
         data={currentContent}
         isLoading={isLoading}
       />
 
-      {/* 2. 콘텐츠 수요·공급 4분면 매트릭스 (Quadrant Chart) */}
+      {/* 3. 콘텐츠 수요·공급 4분면 매트릭스 (Quadrant Chart) */}
       <div className="bg-white border border-[#CBD5E1] rounded-2xl p-5 sm:p-6 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>

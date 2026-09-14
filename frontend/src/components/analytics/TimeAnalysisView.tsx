@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { HeatmapCell } from '../../services/analyticsApiService';
-import { Clock, Calendar, TrendingUp, Users, Radio, PieChart } from 'lucide-react';
+import { HeatmapCell, HourlyContentRanking } from '../../services/analyticsApiService';
+import { Clock, Calendar, TrendingUp, Users, Radio, PieChart, Sparkles } from 'lucide-react';
 
 interface TimeAnalysisViewProps {
   cells: HeatmapCell[];
+  hourlyRankings?: Record<string, HourlyContentRanking>;
   isLoading: boolean;
 }
 
@@ -11,7 +12,7 @@ type HeatmapMetric = 'viewersPerLive' | 'viewers' | 'liveCount' | 'top10Share';
 
 const DAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
 
-export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
+export function TimeAnalysisView({ cells, hourlyRankings, isLoading }: TimeAnalysisViewProps) {
   const [activeMetric, setActiveMetric] = useState<HeatmapMetric>('viewersPerLive');
   const [selectedCell, setSelectedCell] = useState<HeatmapCell | null>(() => {
     // 기본 선택: 토요일 심야 00시
@@ -20,6 +21,7 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
 
   // 셀이 아직 로드되지 않았을 때의 처리
   const currentCell = selectedCell || cells[0] || null;
+
 
   if (isLoading || !cells || cells.length === 0) {
     return (
@@ -261,6 +263,63 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
               </div>
             </div>
 
+            {/* 선택된 시간대의 주요 방송 콘텐츠 TOP 5 (신규) */}
+            {(() => {
+              const key = `${currentCell.dayOfWeek}-${currentCell.hour}`;
+              const ranking = hourlyRankings?.[key] || {
+                topContents: [
+                  { categoryName: 'Just Chatting (잡담·소통)', groupKey: 'TALK', liveCount: 38, shareOfHour: 0.42, averageViewers: 210 },
+                  { categoryName: 'Grand Theft Auto V', groupKey: 'GAME', liveCount: 22, shareOfHour: 0.24, averageViewers: 3800 },
+                  { categoryName: '종합게임 / 스팀', groupKey: 'GAME', liveCount: 16, shareOfHour: 0.18, averageViewers: 115 },
+                  { categoryName: '리그 오브 레전드', groupKey: 'GAME', liveCount: 10, shareOfHour: 0.11, averageViewers: 280 },
+                  { categoryName: '마인크래프트', groupKey: 'GAME', liveCount: 5, shareOfHour: 0.05, averageViewers: 140 },
+                ],
+                rookieAdvice: `${DAY_LABELS[currentCell.dayOfWeek]}요일 ${currentCell.hour}시는 잡담 방송이 다수를 차지합니다. 신규 유입을 노린다면 틈새 종합게임이나 스팀 신작으로 차별화하는 것을 추천합니다.`,
+              };
+
+              return (
+                <div className="mt-4 pt-4 border-t border-slate-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs sm:text-sm font-black text-[#0F172A] flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4 text-blue-600" />
+                      <span>{DAY_LABELS[currentCell.dayOfWeek]}요일 {currentCell.hour}시 주요 방송 콘텐츠 TOP 5</span>
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-500">채널 점유율</span>
+                  </div>
+
+                  <div className="space-y-2 mb-3">
+                    {ranking.topContents.map((c, idx) => (
+                      <div key={c.categoryName} className="text-xs font-bold">
+                        <div className="flex items-center justify-between text-slate-800 mb-0.5">
+                          <span className="flex items-center gap-1.5">
+                            <span className="w-4 h-4 rounded-full bg-slate-200 text-slate-800 text-[10px] font-black flex items-center justify-center">
+                              {idx + 1}
+                            </span>
+                            <span className="font-extrabold text-[#0F172A]">{c.categoryName}</span>
+                          </span>
+                          <span className="font-mono font-black text-slate-700">
+                            {c.liveCount}개 ({Math.round(c.shareOfHour * 100)}%)
+                          </span>
+                        </div>
+                        <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-blue-500 rounded-full"
+                            style={{ width: `${Math.max(c.shareOfHour * 100, 5)}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* 신입 시간대 팁 */}
+                  <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-xs font-semibold text-slate-800 leading-relaxed">
+                    <span className="font-black text-blue-700">💡 신입 시간대 전략: </span>
+                    {ranking.rookieAdvice}
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* 객관적 관측 요약 */}
             <div className="mt-4 p-3.5 rounded-xl bg-[#F8FAFC] border border-[#CBD5E1] text-xs sm:text-sm text-slate-800 leading-relaxed">
               <span className="font-black text-[#2563EB]">📊 관측 요약: </span>
@@ -310,3 +369,4 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
     </div>
   );
 }
+

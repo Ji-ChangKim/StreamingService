@@ -399,6 +399,24 @@ export function CurrentContentPanel({ data, isLoading = false }: CurrentContentP
                                           </div>
                                         </div>
 
+                                        {/* 대형 합방 / 이벤트 감지 배너 (있는 경우) */}
+                                        {item.eventCluster && item.eventCluster.eventDetected && (
+                                          <div className="p-4 rounded-xl bg-gradient-to-r from-rose-50 to-orange-50 border border-rose-200">
+                                            <div className="flex items-center gap-2 mb-1.5">
+                                              <span className="text-base">🔥</span>
+                                              <span className="text-xs sm:text-sm font-black text-rose-800">
+                                                시청자 집중 원인: {item.eventCluster.eventName} 진행 중
+                                              </span>
+                                              <span className="px-2 py-0.5 rounded bg-rose-200 text-rose-900 font-mono font-black text-xs">
+                                                {item.eventCluster.channelCount}개 채널 중복
+                                              </span>
+                                            </div>
+                                            <div className="text-xs sm:text-sm font-semibold text-slate-800 leading-relaxed">
+                                              {item.eventCluster.advice}
+                                            </div>
+                                          </div>
+                                        )}
+
                                         {/* 신입 스트리머를 위한 실전 팁 (타깃층 중심 가이드) */}
                                         <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-900 bg-blue-50 p-4 rounded-xl border border-blue-200">
                                           <span className="text-lg shrink-0">💡</span>

@@ -170,6 +170,16 @@ export interface MethodologyInfo {
 }
 
 // Current Content & Game Drilldown (기획서: VDebut_현재콘텐츠_게임드릴다운_개발기획서_v1.0)
+export interface EventClusterInfo {
+  eventDetected: boolean;
+  eventName: string;
+  dominantTag: string;
+  dominantTagShare: number;
+  channelCount: number;
+  totalViewerSum: number;
+  advice: string;
+}
+
 export interface GameDetailStat {
   detailKey: string;
   name: string;
@@ -181,6 +191,7 @@ export interface GameDetailStat {
   medianViewers: number | null;
   top1Share: number | null; // 0.0 ~ 1.0 (최대 방송 점유율)
   classificationStatus: 'SOURCE_GAME' | 'UNSET' | 'OTHER';
+  eventCluster?: EventClusterInfo | null;
 }
 
 export interface ContentGroupStat {
@@ -221,21 +232,80 @@ export interface CurrentContentTotals {
   unclassifiedLiveCount: number;
 }
 
+// 사람이 몰리는 자석 태그
+export interface MagnetTagStat {
+  tag: string;
+  viewerSum: number;
+  liveCount: number;
+  averageViewers: number;
+  shareOfTaggedViewers: number;
+  isEventTag: boolean;
+  categoryType: string;
+}
+
+// 신입 스트리머 레이더
+export interface RookieCategoryShare {
+  categoryName: string;
+  groupKey: string;
+  rookieLiveCount: number;
+  rookieShare: number;
+  averageViewers: number;
+  competitionStatus: 'RED_OCEAN' | 'BLUE_OCEAN' | 'NORMAL';
+  statusReason: string;
+}
+
+export interface RookieRadarData {
+  totalRookieLives: number;
+  rookieViewerSum: number;
+  averageViewers: number;
+  medianViewers: number;
+  distribution: RookieCategoryShare[];
+  rookieRecommendations: {
+    recommendedCategories: string[];
+    cautions: string[];
+    recommendedTags: string[];
+  };
+}
+
+// 시간대별 주요 방송 콘텐츠
+export interface HourlyContentItem {
+  categoryName: string;
+  groupKey: string;
+  liveCount: number;
+  shareOfHour: number;
+  averageViewers: number;
+}
+
+export interface HourlyContentRanking {
+  dayOfWeek: number;
+  dayName: string;
+  hour: number;
+  totalViewers: number;
+  totalLives: number;
+  topContents: HourlyContentItem[];
+  rookieAdvice: string;
+}
+
 export interface CurrentContentData {
   meta: CurrentContentMeta;
   totals: CurrentContentTotals;
   groups: ContentGroupStat[];
+  magnetTags?: MagnetTagStat[];
+  rookieRadar?: RookieRadarData;
+  hourlyRankings?: Record<string, HourlyContentRanking>;
 }
 
+export type PeriodFilter = 'today' | 'yesterday' | '7d' | '30d' | '90d' | '180d';
 
 export interface AnalyticsFilterState {
   platform: PlatformFilter;
-  period: 'today' | '7d' | '28d';
+  period: PeriodFilter;
   dayScope: DayScopeFilter;
   timeSlot: 'ALL' | 'DAWN' | 'MORNING' | 'AFTERNOON' | 'PRIME' | 'NIGHT';
   categoryGroup: CategoryGroup;
   creatorTier: CreatorTier;
 }
+
 
 const API_BASE = '/api/analytics';
 

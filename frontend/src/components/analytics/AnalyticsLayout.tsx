@@ -21,7 +21,8 @@ import { MethodologyModal } from './MethodologyModal';
 import { MarketDashboardView } from './MarketDashboardView';
 import { TimeAnalysisView } from './TimeAnalysisView';
 import { CategoryAnalysisView } from './CategoryAnalysisView';
-import { LayoutDashboard, Clock, Layers, BarChart3 } from 'lucide-react';
+import { TagTrendPanel } from './TagTrendPanel';
+import { LayoutDashboard, Clock, Layers, Tag, BarChart3 } from 'lucide-react';
 
 interface AnalyticsLayoutProps {
   currentSubPath?: string;
@@ -35,16 +36,17 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
   // 필터 상태
   const [filters, setFilters] = useState<AnalyticsFilterState>({
     platform: 'CHZZK',
-    period: '28d',
+    period: 'today',
     dayScope: 'ALL',
     timeSlot: 'ALL',
     categoryGroup: 'ALL',
     creatorTier: 'ALL',
   });
 
-  // 서브탭 상태 (dashboard, time, category)
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'time' | 'category'>(() => {
+  // 서브탭 상태 (dashboard, time, tags, category)
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'time' | 'tags' | 'category'>(() => {
     if (currentSubPath.includes('/time')) return 'time';
+    if (currentSubPath.includes('/tags')) return 'tags';
     if (currentSubPath.includes('/category')) return 'category';
     return 'dashboard';
   });
@@ -69,10 +71,11 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
   };
 
   // 탭 변경 핸들러
-  const handleTabChange = (tab: 'dashboard' | 'time' | 'category') => {
+  const handleTabChange = (tab: 'dashboard' | 'time' | 'tags' | 'category') => {
     setActiveTab(tab);
     let targetPath = '/analytics';
     if (tab === 'time') targetPath = '/analytics/time';
+    else if (tab === 'tags') targetPath = '/analytics/tags';
     else if (tab === 'category') targetPath = '/analytics/category';
 
     if (onNavigateSubPath) {
@@ -179,7 +182,7 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
         </div>
       </div>
 
-      {/* 2계층: 3대 핵심 서브 네비게이션 탭 (시장 현황 | 시간대 분석 | 콘텐츠 분석) */}
+      {/* 2계층: 4대 핵심 서브 네비게이션 탭 (시장 개요 | 시간대 분석 | 태그 트렌드 | 콘텐츠 & 신입) */}
       <div className="flex items-center gap-2 p-1.5 bg-[#F1F5F9] border border-[#CBD5E1] rounded-2xl mb-4 overflow-x-auto shadow-2xs">
         <button
           type="button"
@@ -191,7 +194,7 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
           }`}
         >
           <LayoutDashboard className="w-5 h-5" />
-          <span>시장 현황</span>
+          <span>시장 개요</span>
         </button>
 
         <button
@@ -209,6 +212,19 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
 
         <button
           type="button"
+          onClick={() => handleTabChange('tags')}
+          className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm sm:text-base whitespace-nowrap transition-all cursor-pointer ${
+            activeTab === 'tags'
+              ? 'bg-[#0F172A] text-white shadow-sm font-black'
+              : 'text-slate-800 hover:text-[#0F172A] hover:bg-white/90 font-bold'
+          }`}
+        >
+          <Tag className="w-5 h-5 text-blue-500" />
+          <span>태그 트렌드</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => handleTabChange('category')}
           className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm sm:text-base whitespace-nowrap transition-all cursor-pointer ${
             activeTab === 'category'
@@ -216,8 +232,8 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
               : 'text-slate-800 hover:text-[#0F172A] hover:bg-white/90 font-bold'
           }`}
         >
-          <Layers className="w-5 h-5" />
-          <span>콘텐츠 분석</span>
+          <Layers className="w-5 h-5 text-emerald-500" />
+          <span>콘텐츠 & 신입</span>
         </button>
       </div>
 
@@ -229,7 +245,7 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
         isLoading={isLoading}
       />
 
-      {/* 4계층: 공통 세부 필터 바 (기간, 요일, 시간대, 대분류, 규모) */}
+      {/* 4계층: 공통 세부 필터 바 (6대 기간, 요일, 시간대, 대분류, 규모) */}
       <AnalyticsFilterBar
         filters={filters}
         onChange={setFilters}
@@ -252,6 +268,14 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
       {activeTab === 'time' && (
         <TimeAnalysisView
           cells={heatmap}
+          hourlyRankings={currentContent?.hourlyRankings}
+          isLoading={isLoading}
+        />
+      )}
+
+      {activeTab === 'tags' && (
+        <TagTrendPanel
+          magnetTags={currentContent?.magnetTags}
           isLoading={isLoading}
         />
       )}

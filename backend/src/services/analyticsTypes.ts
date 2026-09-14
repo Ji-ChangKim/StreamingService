@@ -181,7 +181,17 @@ export interface MethodologyInfo {
   principles: string[];
 }
 
-// 8. Current Content & Game Drilldown (기획서: VDebut_현재콘텐츠_게임드릴다운_개발기획서_v1.0)
+// 8. Current Content & Game Drilldown
+export interface EventClusterInfo {
+  eventDetected: boolean;
+  eventName: string; // 예: '봉누도 / 봉누도2'
+  dominantTag: string;
+  dominantTagShare: number; // 0.0 ~ 1.0 (예: 0.89 = 89%)
+  channelCount: number; // 중복 태그 채널 수
+  totalViewerSum: number; // 해당 태그 총 시청자 수
+  advice: string; // 신입 스트리머를 위한 실전 시사점
+}
+
 export interface GameDetailStat {
   detailKey: string;
   name: string;
@@ -193,6 +203,7 @@ export interface GameDetailStat {
   medianViewers: number | null;
   top1Share: number | null; // 0.0 ~ 1.0 (최대 방송 점유율)
   classificationStatus: 'SOURCE_GAME' | 'UNSET' | 'OTHER';
+  eventCluster?: EventClusterInfo | null;
 }
 
 export interface ContentGroupStat {
@@ -233,9 +244,69 @@ export interface CurrentContentTotals {
   unclassifiedLiveCount: number;
 }
 
+// 9. 사람이 몰리는 자석 태그 (Magnet Tag)
+export interface MagnetTagStat {
+  tag: string;
+  viewerSum: number;
+  liveCount: number;
+  averageViewers: number;
+  shareOfTaggedViewers: number; // 0.0 ~ 1.0
+  isEventTag: boolean; // 대형 합방/서버 태그 여부
+  categoryType: string; // '합방/서버' | '버튜버/크루' | '게임' | '소통/신입'
+}
+
+// 10. 신입 스트리머 레이더 (Rookie Radar)
+export interface RookieCategoryShare {
+  categoryName: string;
+  groupKey: string;
+  rookieLiveCount: number;
+  rookieShare: number; // 0.0 ~ 1.0 (신입 중 해당 카테고리 비율)
+  averageViewers: number;
+  competitionStatus: 'RED_OCEAN' | 'BLUE_OCEAN' | 'NORMAL';
+  statusReason: string;
+}
+
+export interface RookieRadarData {
+  totalRookieLives: number;
+  rookieViewerSum: number;
+  averageViewers: number;
+  medianViewers: number;
+  distribution: RookieCategoryShare[];
+  rookieRecommendations: {
+    recommendedCategories: string[];
+    cautions: string[];
+    recommendedTags: string[];
+  };
+}
+
+// 11. 시간대별 주요 방송 콘텐츠 순위
+export interface HourlyContentItem {
+  categoryName: string;
+  groupKey: string;
+  liveCount: number;
+  shareOfHour: number; // 0.0 ~ 1.0
+  averageViewers: number;
+}
+
+export interface HourlyContentRanking {
+  dayOfWeek: number;
+  dayName: string;
+  hour: number;
+  totalViewers: number;
+  totalLives: number;
+  topContents: HourlyContentItem[];
+  rookieAdvice: string;
+}
+
 export interface CurrentContentData {
   meta: CurrentContentMeta;
   totals: CurrentContentTotals;
   groups: ContentGroupStat[];
+  magnetTags?: MagnetTagStat[];
+  rookieRadar?: RookieRadarData;
+  hourlyRankings?: Record<string, HourlyContentRanking>; // key: `${dayOfWeek}-${hour}`
 }
+
+export type PeriodFilter = 'today' | 'yesterday' | '7d' | '30d' | '90d' | '180d';
+
 
