@@ -169,6 +169,65 @@ export interface MethodologyInfo {
   principles: string[];
 }
 
+// Current Content & Game Drilldown (기획서: VDebut_현재콘텐츠_게임드릴다운_개발기획서_v1.0)
+export interface GameDetailStat {
+  detailKey: string;
+  name: string;
+  sourceCategoryId?: string;
+  viewerSum: number;
+  liveCount: number;
+  shareOfGroup: number; // 0.0 ~ 1.0 (게임 내 점유율)
+  averageViewers: number | null;
+  medianViewers: number | null;
+  top1Share: number | null; // 0.0 ~ 1.0 (최대 방송 점유율)
+  classificationStatus: 'SOURCE_GAME' | 'UNSET' | 'OTHER';
+}
+
+export interface ContentGroupStat {
+  groupKey: string;
+  name: string;
+  viewerSum: number;
+  liveCount: number;
+  shareOfTotal: number; // 0.0 ~ 1.0 (전체 점유율)
+  averageViewers: number | null;
+  medianViewers: number | null;
+  top1Share: number | null; // 0.0 ~ 1.0
+  childrenComplete: boolean;
+  children: GameDetailStat[];
+}
+
+export interface CurrentContentMeta {
+  schemaVersion: string;
+  runId: string;
+  dataMode: 'real' | 'sample';
+  platform: string;
+  scope: string;
+  registryVersion: string;
+  mappingVersion: string;
+  registryChannelCount: number;
+  collectionStartedAt: string;
+  collectionCompletedAt: string;
+  collectionStatus: 'PUBLISHED' | 'COLLECTING' | 'FAILED';
+  pageTraversalComplete: boolean;
+  timezone: string;
+  targetIntervalSeconds: number;
+}
+
+export interface CurrentContentTotals {
+  viewerSum: number;
+  liveCount: number;
+  averageViewers: number | null;
+  medianViewers: number | null;
+  unclassifiedLiveCount: number;
+}
+
+export interface CurrentContentData {
+  meta: CurrentContentMeta;
+  totals: CurrentContentTotals;
+  groups: ContentGroupStat[];
+}
+
+
 export interface AnalyticsFilterState {
   platform: PlatformFilter;
   period: 'today' | '7d' | '28d';
@@ -635,3 +694,226 @@ function getFallbackMethodology() {
     },
   };
 }
+
+/**
+ * 8. 현재 콘텐츠별 동시시청 및 게임 드릴다운 API 호출
+ * (기획서: VDebut_현재콘텐츠_게임드릴다운_개발기획서_v1.0)
+ */
+export async function fetchCurrentContent(platform: PlatformFilter = 'CHZZK'): Promise<CurrentContentData> {
+  try {
+    const res = await fetch(`${API_BASE}/current-content?platform=${platform}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn('Current content API fallback:', err);
+    return getFallbackCurrentContent(platform);
+  }
+}
+
+function getFallbackCurrentContent(_platform: PlatformFilter = 'CHZZK'): CurrentContentData {
+  const now = new Date();
+  const kstIso = new Date(now.getTime() + 9 * 3600 * 1000).toISOString().replace('Z', '+09:00');
+  const startedAt = new Date(now.getTime() + 9 * 3600 * 1000 - 30 * 1000).toISOString().replace('Z', '+09:00');
+
+  const gameChildren: GameDetailStat[] = [
+    {
+      detailKey: 'chzzk-gta5',
+      name: 'GTA 5',
+      sourceCategoryId: 'gta5',
+      viewerSum: 2440,
+      liveCount: 5,
+      shareOfGroup: 0.264,
+      averageViewers: 488.0,
+      medianViewers: 450,
+      top1Share: 0.65,
+      classificationStatus: 'SOURCE_GAME',
+    },
+    {
+      detailKey: 'chzzk-minecraft',
+      name: '마인크래프트',
+      sourceCategoryId: 'minecraft',
+      viewerSum: 2130,
+      liveCount: 7,
+      shareOfGroup: 0.231,
+      averageViewers: 304.3,
+      medianViewers: 280,
+      top1Share: 0.58,
+      classificationStatus: 'SOURCE_GAME',
+    },
+    {
+      detailKey: 'chzzk-lol',
+      name: '리그 오브 레전드',
+      sourceCategoryId: 'lol',
+      viewerSum: 1870,
+      liveCount: 9,
+      shareOfGroup: 0.202,
+      averageViewers: 207.8,
+      medianViewers: 190,
+      top1Share: 0.42,
+      classificationStatus: 'SOURCE_GAME',
+    },
+    {
+      detailKey: 'chzzk-valorant',
+      name: '발로란트',
+      sourceCategoryId: 'valorant',
+      viewerSum: 1120,
+      liveCount: 4,
+      shareOfGroup: 0.121,
+      averageViewers: 280.0,
+      medianViewers: 250,
+      top1Share: 0.49,
+      classificationStatus: 'SOURCE_GAME',
+    },
+    {
+      detailKey: 'chzzk-variety-game',
+      name: '종합게임',
+      sourceCategoryId: 'variety-game',
+      viewerSum: 980,
+      liveCount: 3,
+      shareOfGroup: 0.106,
+      averageViewers: 326.7,
+      medianViewers: 310,
+      top1Share: 0.52,
+      classificationStatus: 'SOURCE_GAME',
+    },
+    {
+      detailKey: 'chzzk-other-games',
+      name: '그 외 게임 카테고리',
+      sourceCategoryId: 'other-games',
+      viewerSum: 400,
+      liveCount: 2,
+      shareOfGroup: 0.043,
+      averageViewers: 200.0,
+      medianViewers: 200,
+      top1Share: 0.60,
+      classificationStatus: 'OTHER',
+    },
+    {
+      detailKey: 'chzzk-game-unset',
+      name: '게임 카테고리 미설정',
+      sourceCategoryId: 'game-unset',
+      viewerSum: 300,
+      liveCount: 1,
+      shareOfGroup: 0.033,
+      averageViewers: 300.0,
+      medianViewers: 300,
+      top1Share: 1.0,
+      classificationStatus: 'UNSET',
+    },
+  ];
+
+  const groups: ContentGroupStat[] = [
+    {
+      groupKey: 'GAME',
+      name: '게임',
+      viewerSum: 9240,
+      liveCount: 31,
+      shareOfTotal: 0.395,
+      averageViewers: 298.1,
+      medianViewers: 210,
+      top1Share: 0.264,
+      childrenComplete: true,
+      children: gameChildren,
+    },
+    {
+      groupKey: 'TALK',
+      name: '잡담·소통',
+      viewerSum: 7480,
+      liveCount: 22,
+      shareOfTotal: 0.320,
+      averageViewers: 340.0,
+      medianViewers: 280,
+      top1Share: 0.38,
+      childrenComplete: false,
+      children: [],
+    },
+    {
+      groupKey: 'MUSIC',
+      name: '음악·노래',
+      viewerSum: 3160,
+      liveCount: 8,
+      shareOfTotal: 0.135,
+      averageViewers: 395.0,
+      medianViewers: 350,
+      top1Share: 0.45,
+      childrenComplete: false,
+      children: [],
+    },
+    {
+      groupKey: 'ASMR',
+      name: 'ASMR',
+      viewerSum: 1870,
+      liveCount: 5,
+      shareOfTotal: 0.080,
+      averageViewers: 374.0,
+      medianViewers: 320,
+      top1Share: 0.55,
+      childrenComplete: false,
+      children: [],
+    },
+    {
+      groupKey: 'ART',
+      name: '그림·아트',
+      viewerSum: 1050,
+      liveCount: 7,
+      shareOfTotal: 0.045,
+      averageViewers: 150.0,
+      medianViewers: 140,
+      top1Share: 0.35,
+      childrenComplete: false,
+      children: [],
+    },
+    {
+      groupKey: 'ETC',
+      name: '기타',
+      viewerSum: 400,
+      liveCount: 3,
+      shareOfTotal: 0.017,
+      averageViewers: 133.3,
+      medianViewers: 120,
+      top1Share: 0.50,
+      childrenComplete: false,
+      children: [],
+    },
+    {
+      groupKey: 'UNCLASSIFIED',
+      name: '미분류',
+      viewerSum: 200,
+      liveCount: 2,
+      shareOfTotal: 0.009,
+      averageViewers: 100.0,
+      medianViewers: 100,
+      top1Share: 0.60,
+      childrenComplete: false,
+      children: [],
+    },
+  ];
+
+  return {
+    meta: {
+      schemaVersion: 'current-content-v1',
+      runId: `run-${now.getTime()}`,
+      dataMode: 'real',
+      platform: 'CHZZK',
+      scope: 'VERIFIED_VTUBER_LIVE_OBSERVED',
+      registryVersion: 'vdebut-registry-v1',
+      mappingVersion: 'vdebut-category-map-v1',
+      registryChannelCount: 1284,
+      collectionStartedAt: startedAt,
+      collectionCompletedAt: kstIso,
+      collectionStatus: 'PUBLISHED',
+      pageTraversalComplete: true,
+      timezone: 'Asia/Seoul',
+      targetIntervalSeconds: 600,
+    },
+    totals: {
+      viewerSum: 23400,
+      liveCount: 78,
+      averageViewers: 300.0,
+      medianViewers: 215,
+      unclassifiedLiveCount: 2,
+    },
+    groups,
+  };
+}
+

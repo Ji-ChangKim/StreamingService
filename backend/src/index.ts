@@ -37,6 +37,7 @@ import {
   getAnalyticsOpportunities,
   getAnalyticsLiveSamples,
   getAnalyticsMethodology,
+  getCurrentContentDrilldown,
 } from './services/analyticsService';
 
 type Bindings = {
@@ -931,6 +932,19 @@ app.get('/api/analytics/live-samples', async (c) => {
 
 app.get('/api/analytics/methodology', (c) => {
   const result = getAnalyticsMethodology();
+  return c.json(result);
+});
+
+app.get('/api/analytics/current-content', async (c) => {
+  const platform = c.req.query('platform') || 'CHZZK';
+  if (platform === 'SOOP') {
+    return c.json({
+      error: 'PLATFORM_UNAVAILABLE',
+      message: 'SOOP 버튜버 방송 데이터는 현재 수집 및 정제 연동 준비 중입니다.',
+    }, 422);
+  }
+  const result = await getCurrentContentDrilldown(c.env.DB, platform);
+  c.header('Cache-Control', 'public, max-age=30, s-maxage=60');
   return c.json(result);
 });
 

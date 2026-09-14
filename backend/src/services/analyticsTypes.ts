@@ -180,3 +180,62 @@ export interface MethodologyInfo {
   }>;
   principles: string[];
 }
+
+// 8. Current Content & Game Drilldown (기획서: VDebut_현재콘텐츠_게임드릴다운_개발기획서_v1.0)
+export interface GameDetailStat {
+  detailKey: string;
+  name: string;
+  sourceCategoryId?: string;
+  viewerSum: number;
+  liveCount: number;
+  shareOfGroup: number; // 0.0 ~ 1.0 (게임 내 점유율)
+  averageViewers: number | null;
+  medianViewers: number | null;
+  top1Share: number | null; // 0.0 ~ 1.0 (최대 방송 점유율)
+  classificationStatus: 'SOURCE_GAME' | 'UNSET' | 'OTHER';
+}
+
+export interface ContentGroupStat {
+  groupKey: string;
+  name: string;
+  viewerSum: number;
+  liveCount: number;
+  shareOfTotal: number; // 0.0 ~ 1.0 (전체 점유율)
+  averageViewers: number | null;
+  medianViewers: number | null;
+  top1Share: number | null; // 0.0 ~ 1.0
+  childrenComplete: boolean;
+  children: GameDetailStat[];
+}
+
+export interface CurrentContentMeta {
+  schemaVersion: string;
+  runId: string;
+  dataMode: 'real' | 'sample';
+  platform: string;
+  scope: string;
+  registryVersion: string;
+  mappingVersion: string;
+  registryChannelCount: number;
+  collectionStartedAt: string;
+  collectionCompletedAt: string;
+  collectionStatus: 'PUBLISHED' | 'COLLECTING' | 'FAILED';
+  pageTraversalComplete: boolean;
+  timezone: string;
+  targetIntervalSeconds: number;
+}
+
+export interface CurrentContentTotals {
+  viewerSum: number;
+  liveCount: number;
+  averageViewers: number | null;
+  medianViewers: number | null;
+  unclassifiedLiveCount: number;
+}
+
+export interface CurrentContentData {
+  meta: CurrentContentMeta;
+  totals: CurrentContentTotals;
+  groups: ContentGroupStat[];
+}
+

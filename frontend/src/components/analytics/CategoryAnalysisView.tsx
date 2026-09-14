@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { CategoryStat } from '../../services/analyticsApiService';
+import { CategoryStat, CurrentContentData } from '../../services/analyticsApiService';
+import { CurrentContentPanel } from './CurrentContentPanel';
 import { Layers, Compass, Search } from 'lucide-react';
 
 interface CategoryAnalysisViewProps {
   categories: CategoryStat[];
+  currentContent?: CurrentContentData;
   isLoading: boolean;
 }
 
-export function CategoryAnalysisView({ categories, isLoading }: CategoryAnalysisViewProps) {
+export function CategoryAnalysisView({ categories, currentContent, isLoading }: CategoryAnalysisViewProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CategoryStat | null>(() => categories[0] || null);
 
@@ -49,7 +51,13 @@ export function CategoryAnalysisView({ categories, isLoading }: CategoryAnalysis
 
   return (
     <div className="space-y-6">
-      {/* 1. 콘텐츠 수요·공급 4분면 매트릭스 (Quadrant Chart) */}
+      {/* 1. [핵심 기능] 현재 콘텐츠별 동시시청 (게임 드릴다운) */}
+      <CurrentContentPanel
+        data={currentContent}
+        isLoading={isLoading}
+      />
+
+      {/* 2. 콘텐츠 수요·공급 4분면 매트릭스 (Quadrant Chart) */}
       <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>

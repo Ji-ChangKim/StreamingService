@@ -7,11 +7,13 @@ import {
   CategoryStat,
   MethodologyInfo,
   PlatformFilter,
+  CurrentContentData,
   fetchAnalyticsOverview,
   fetchAnalyticsTimeseries,
   fetchAnalyticsHeatmap,
   fetchAnalyticsCategories,
   fetchAnalyticsMethodology,
+  fetchCurrentContent,
 } from '../../services/analyticsApiService';
 import { AnalyticsFilterBar } from './AnalyticsFilterBar';
 import { AnalyticsStatusBar } from './AnalyticsStatusBar';
@@ -53,6 +55,7 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
 
   // 데이터 상태
   const [overview, setOverview] = useState<AnalyticsOverviewData | undefined>();
+  const [currentContent, setCurrentContent] = useState<CurrentContentData | undefined>();
   const [timeseries, setTimeseries] = useState<TimeseriesPoint[]>([]);
   const [heatmap, setHeatmap] = useState<HeatmapCell[]>([]);
   const [categories, setCategories] = useState<CategoryStat[]>([]);
@@ -91,12 +94,13 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
   const loadAllData = async () => {
     setIsLoading(true);
     try {
-      const [ovRes, tsRes, hmRes, catRes, methRes] = await Promise.all([
+      const [ovRes, tsRes, hmRes, catRes, methRes, curRes] = await Promise.all([
         fetchAnalyticsOverview(filters.platform),
         fetchAnalyticsTimeseries(filters.platform, filters.dayScope),
         fetchAnalyticsHeatmap(filters.platform),
         fetchAnalyticsCategories(filters.platform),
         fetchAnalyticsMethodology(),
+        fetchCurrentContent(filters.platform),
       ]);
 
       setOverview(ovRes.data);
@@ -105,6 +109,7 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
       setHeatmap(hmRes.data);
       setCategories(catRes.data);
       setMethodology(methRes.data);
+      setCurrentContent(curRes);
     } catch (err) {
       console.error('Failed to load analytics data:', err);
     } finally {
@@ -129,7 +134,7 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
               VDébut Analytics <span className="text-[#2563EB]">시장 현황 관측소</span>
             </h1>
             <span className="text-[10px] font-extrabold bg-blue-50 text-[#2563EB] border border-blue-200 px-2 py-0.5 rounded-full">
-              Beta v0.2
+              Beta v0.1
             </span>
           </div>
           <p className="text-xs text-[#475569] max-w-2xl leading-relaxed">
@@ -252,6 +257,7 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
       {activeTab === 'dashboard' && (
         <MarketDashboardView
           overview={overview}
+          currentContent={currentContent}
           timeseries={timeseries}
           heatmap={heatmap}
           categories={categories}
@@ -271,6 +277,7 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
       {activeTab === 'category' && (
         <CategoryAnalysisView
           categories={categories}
+          currentContent={currentContent}
           isLoading={isLoading}
         />
       )}

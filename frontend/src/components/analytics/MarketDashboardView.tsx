@@ -3,9 +3,11 @@ import {
   TimeseriesPoint,
   HeatmapCell,
   CategoryStat,
+  CurrentContentData,
 } from '../../services/analyticsApiService';
 import { AnalyticsDataScopeCard } from './AnalyticsDataScopeCard';
 import { AnalyticsKpiCards } from './AnalyticsKpiCards';
+import { CurrentContentPanel } from './CurrentContentPanel';
 import { DemandSupplyChart } from './DemandSupplyChart';
 import { OpportunityMiniHeatmap } from './OpportunityMiniHeatmap';
 import { CategoryShareBar } from './CategoryShareBar';
@@ -13,6 +15,7 @@ import { AnalyticsRawDataTable } from './AnalyticsRawDataTable';
 
 interface MarketDashboardViewProps {
   overview?: AnalyticsOverviewData;
+  currentContent?: CurrentContentData;
   timeseries: TimeseriesPoint[];
   heatmap: HeatmapCell[];
   categories: CategoryStat[];
@@ -23,6 +26,7 @@ interface MarketDashboardViewProps {
 
 export function MarketDashboardView({
   overview,
+  currentContent,
   timeseries,
   heatmap,
   categories,
@@ -40,24 +44,30 @@ export function MarketDashboardView({
         kpis={overview?.kpis}
       />
 
-      {/* 3. 24시간 수요·공급 관측 추이 차트 */}
+      {/* 3. [핵심 기능] 현재 콘텐츠별 동시시청 (게임 드릴다운) */}
+      <CurrentContentPanel
+        data={currentContent}
+        isLoading={isLoading}
+      />
+
+      {/* 4. 24시간 수요·공급 관측 추이 차트 */}
       <DemandSupplyChart data={timeseries} isLoading={isLoading} />
 
-      {/* 4. 요일 × 시간대 시장 관측 히트맵 */}
+      {/* 5. 요일 × 시간대 시장 관측 히트맵 */}
       <OpportunityMiniHeatmap
         cells={heatmap}
         onNavigateToFullTime={() => onNavigateTab('time')}
         isLoading={isLoading}
       />
 
-      {/* 5. 콘텐츠 소비 점유율 vs 공급 점유율 비교 바 */}
+      {/* 6. 콘텐츠 소비 점유율 vs 공급 점유율 비교 바 */}
       <CategoryShareBar
         categories={categories}
         onNavigateToCategory={() => onNavigateTab('category')}
         isLoading={isLoading}
       />
 
-      {/* 6. 시간대별 관측 원본 데이터 표 */}
+      {/* 7. 시간대별 관측 원본 데이터 표 */}
       <AnalyticsRawDataTable
         cells={heatmap}
         isLoading={isLoading}
