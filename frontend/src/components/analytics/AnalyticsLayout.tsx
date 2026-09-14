@@ -152,9 +152,12 @@ export function AnalyticsLayout({ currentSubPath = '/analytics', onNavigateSubPa
             }`}
           >
             <img
-              src="/icons/chzzk/chzzk Icon_01.png"
+              src="/icons/chzzk_icon.png"
               alt="치지직"
               className="w-4 h-4 object-contain shrink-0"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = '/icons/logo_chzzk.png';
+              }}
             />
             <span>치지직</span>
           </button>

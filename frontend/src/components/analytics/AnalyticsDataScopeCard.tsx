@@ -10,7 +10,14 @@ export function AnalyticsDataScopeCard({ onOpenMethodology }: AnalyticsDataScope
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E2E8F0]">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-extrabold text-emerald-800">
-            <img src="/icons/chzzk/chzzk Icon_01.png" alt="CHZZK" className="w-3.5 h-3.5 object-contain" />
+            <img
+              src="/icons/chzzk_icon.png"
+              alt="CHZZK"
+              className="w-3.5 h-3.5 object-contain shrink-0"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = '/icons/logo_chzzk.png';
+              }}
+            />
             <span>CHZZK (치지직) 기준</span>
           </div>
           <span className="text-xs font-bold text-[#0F172A]">
