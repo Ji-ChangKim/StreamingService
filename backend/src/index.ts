@@ -29,6 +29,15 @@ import {
   broadcastDebutDateChangeToDiscord,
   DebutDateChangePayload,
 } from './services/discordBotService';
+import {
+  getAnalyticsOverview,
+  getAnalyticsTimeseries,
+  getAnalyticsHeatmap,
+  getAnalyticsCategories,
+  getAnalyticsOpportunities,
+  getAnalyticsLiveSamples,
+  getAnalyticsMethodology,
+} from './services/analyticsService';
 
 type Bindings = {
   DB: D1Database;
@@ -878,7 +887,54 @@ app.post('/api/v1/admin/auto-review/run', async (c) => {
   });
 });
 
-// 14. Safe Static Asset & SPA Fallback Handler
+// 14. VDébut Analytics Dashboard API Endpoints
+app.get('/api/analytics/overview', async (c) => {
+  const platform = c.req.query('platform') || 'ALL';
+  const result = await getAnalyticsOverview(c.env.DB, platform);
+  return c.json(result);
+});
+
+app.get('/api/analytics/timeseries', async (c) => {
+  const platform = c.req.query('platform') || 'ALL';
+  const dayScope = c.req.query('day_scope') || 'ALL';
+  const result = await getAnalyticsTimeseries(c.env.DB, platform, dayScope);
+  return c.json(result);
+});
+
+app.get('/api/analytics/heatmap', async (c) => {
+  const platform = c.req.query('platform') || 'ALL';
+  const result = await getAnalyticsHeatmap(c.env.DB, platform);
+  return c.json(result);
+});
+
+app.get('/api/analytics/categories', async (c) => {
+  const platform = c.req.query('platform') || 'ALL';
+  const result = await getAnalyticsCategories(c.env.DB, platform);
+  return c.json(result);
+});
+
+app.post('/api/analytics/opportunities', async (c) => {
+  try {
+    const body = await c.req.json();
+    const result = await getAnalyticsOpportunities(c.env.DB, body);
+    return c.json(result);
+  } catch (err: any) {
+    return c.json({ error: 'Invalid opportunity payload', details: err?.message }, 400);
+  }
+});
+
+app.get('/api/analytics/live-samples', async (c) => {
+  const platform = c.req.query('platform') || 'ALL';
+  const result = await getAnalyticsLiveSamples(c.env.DB, platform);
+  return c.json(result);
+});
+
+app.get('/api/analytics/methodology', (c) => {
+  const result = getAnalyticsMethodology();
+  return c.json(result);
+});
+
+// 15. Safe Static Asset & SPA Fallback Handler
 app.all('*', async (c) => {
   const assetManifest = JSON.parse(manifestJSON || '{}');
   try {

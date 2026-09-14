@@ -59,6 +59,8 @@
 - `0026_discord_subscribed_channels.sql`: 디스코드 봇 실시간 데뷔 알림 수신 채널(`discord_subscribed_channels`) 관리 테이블 및 채널 ID/길드 ID 인덱스 생성
 - `0027_discord_streamer_verifications.sql`: 치지직/SOOP 스트리머 방송국 소개글 본인 인증 및 디스코드 계정 1:1 매핑(`discord_streamer_verifications`) 테이블 생성
 - `0028_add_mid_september_debut_streamers.sql`: 2026년 9월 16일 ~ 20일 신규 버추얼 스트리머 추가 및 최신화 (이루 SOOP 활동명/프로필 UPDATE, 김멜트·Astera·순진·신예리 정규 등록, 피요냥·세르온 시간 미정 00:00 처리 및 전용 섹션 연동, 덕고미 기등록 유지 검증)
+- `0029_create_analytics_schema.sql`: VDébut Analytics 대시보드 전용 스키마 생성 (`analytics_channels`, `analytics_live_sessions`, `analytics_live_snapshots`, `analytics_category_map`, `analytics_market_hourly`, `analytics_opportunity_scores`) 및 카테고리 매핑 시드, 기존 버튜버 레지스트리 연계
+
 
 
 ---

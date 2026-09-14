@@ -51,17 +51,32 @@ export function Navbar({
             <img src="/logo.png" alt="VDébut Logo" className="h-7 sm:h-9 w-auto object-contain" />
           </div>
 
-          {/* 좌측 로고 옆 데뷔 일정 탭 */}
-          <nav className="flex items-center h-full">
+          {/* 좌측 로고 옆 GNB: 데뷔 일정 & 방송 인사이트 */}
+          <nav className="flex items-center gap-4 sm:gap-6 h-full">
             <button
               onClick={() => setActiveNav('schedule')}
-              className={`relative h-full flex items-center text-xs sm:text-sm font-bold transition-colors px-1 ${
+              className={`relative h-full flex items-center text-xs sm:text-sm font-bold transition-colors px-1 cursor-pointer ${
                 activeNav === 'schedule' ? 'text-[#2563EB]' : 'text-[#475569] hover:text-[#0F172A]'
               }`}
             >
               {t.scheduleTab || '데뷔 일정'}
               {activeNav === 'schedule' && (
                 <div className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#2563EB] rounded-t-full" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveNav('analytics')}
+              className={`relative h-full flex items-center gap-1.5 text-xs sm:text-sm font-bold transition-colors px-1 cursor-pointer ${
+                activeNav === 'analytics' ? 'text-[#6366F1]' : 'text-[#475569] hover:text-[#0F172A]'
+              }`}
+            >
+              <span>방송 인사이트</span>
+              <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-[#6366F1]/15 text-[#6366F1]">
+                Beta
+              </span>
+              {activeNav === 'analytics' && (
+                <div className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#6366F1] rounded-t-full" />
               )}
             </button>
           </nav>

@@ -15,6 +15,7 @@ import { TermsPage } from './components/pages/TermsPage';
 import { ContactPage } from './components/pages/ContactPage';
 import { AdminCmsPage } from './components/pages/AdminCmsPage';
 import { ErrorPage } from './components/pages/ErrorPage';
+import { AnalyticsLayout } from './components/analytics/AnalyticsLayout';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { DebutEvent } from './types';
 import { fetchDebutEvents } from './services/eventService';
@@ -61,11 +62,13 @@ export function App() {
   // 개발 프리뷰 모드 감지 (dev.vdebut.live 도메인 또는 /updatepage 경로)
   const isDevHost = typeof window !== 'undefined' && window.location.hostname === 'dev.vdebut.live';
   const isUpdatePath = currentPath === '/updatepage' || currentPath === '/upadepage';
+  const isAnalyticsPath = currentPath.startsWith('/analytics');
   const isMainPath = currentPath === '/' || currentPath === '/upload' || isUpdatePath;
   const isCreatorPage = currentPath.startsWith('/creator/');
   const creatorSlug = isCreatorPage ? currentPath.replace('/creator/', '').split('/')[0] : '';
   const isKnownRoute =
     isMainPath ||
+    isAnalyticsPath ||
     isCreatorPage ||
     currentPath === '/about' ||
     currentPath === '/guide' ||
@@ -85,7 +88,8 @@ export function App() {
         setShowSubmitModal(false);
       }
 
-      if (path === '/about') setActiveNav('about');
+      if (path.startsWith('/analytics')) setActiveNav('analytics');
+      else if (path === '/about') setActiveNav('about');
       else if (path === '/guide') setActiveNav('guide');
       else if (path === '/') setActiveNav('schedule');
     };
@@ -95,6 +99,8 @@ export function App() {
     const initialPath = window.location.pathname;
     if (initialPath === '/upload') {
       setShowSubmitModal(true);
+    } else if (initialPath.startsWith('/analytics')) {
+      setActiveNav('analytics');
     } else if (initialPath === '/about') {
       setActiveNav('about');
     } else if (initialPath === '/guide') {
@@ -121,6 +127,9 @@ export function App() {
         document.head.appendChild(metaRobots);
       }
       metaRobots.setAttribute('content', 'noindex, nofollow, noarchive');
+    } else if (isAnalyticsPath) {
+      pageTitle = '방송 인사이트 | VDébut Analytics - 버튜버 시장 및 편성 분석 대시보드';
+      pageDesc = '치지직·SOOP 버튜버 라이브 데이터를 시간·요일·콘텐츠별로 분석하여 신규·중소 버튜버를 위한 최적의 방송 기회 시간대를 제안합니다.';
     } else if (currentPath === '/upload') {
       pageTitle = '데뷔 일정 등록 | VDébut';
     } else if (currentPath === '/about') {
@@ -147,14 +156,16 @@ export function App() {
     document.documentElement.lang = currentLang;
 
     const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute('content', pageDesc);
+    if (metaDesc) {
+      metaDesc.setAttribute('content', pageDesc);
+    }
 
     const ogTitle = document.querySelector('meta[property="og:title"]');
     if (ogTitle) ogTitle.setAttribute('content', pageTitle);
 
     const ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogDesc) ogDesc.setAttribute('content', pageDesc);
-  }, [currentLang, currentPath]);
+  }, [currentPath, currentLang, isDevHost, isKnownRoute, isAnalyticsPath]);
 
   useEffect(() => {
     fetchDebutEvents().then(setEvents);
@@ -168,18 +179,24 @@ export function App() {
     searchQuery
   );
 
-  const handleDownloadICS = (evt: DebutEvent) => {
-    const icsContent = generateICSContent(evt);
-    triggerFileDownload(`V-DEBUT_${evt.creator.displayName}.ics`, icsContent);
+  // Handle ICS Download
+  const handleDownloadICS = (evt?: DebutEvent) => {
+    if (evt) {
+      const icsContent = generateICSContent(evt);
+      triggerFileDownload(`V-DEBUT_${evt.creator.displayName}.ics`, icsContent);
+    } else if (events.length > 0) {
+      const icsContent = generateICSContent(events[0]);
+      triggerFileDownload(`V-DEBUT_Schedule.ics`, icsContent);
+    }
   };
 
   const handleAddEvent = (newEvent: DebutEvent) => {
     setEvents((prev) => [newEvent, ...prev]);
   };
 
-  const handleOpenSubmitModal = (dateStr?: string) => {
+  const handleOpenSubmitModal = (initialDate?: string) => {
     setEditingEvent(null);
-    setSubmitModalInitialDate(dateStr);
+    setSubmitModalInitialDate(initialDate);
     setShowSubmitModal(true);
     if (window.location.pathname !== '/upload') {
       window.history.pushState(null, '', '/upload');
@@ -217,7 +234,8 @@ export function App() {
   const handleNavigate = (path: string) => {
     window.history.pushState({}, '', path);
     setCurrentPath(path);
-    if (path === '/about') setActiveNav('about');
+    if (path.startsWith('/analytics')) setActiveNav('analytics');
+    else if (path === '/about') setActiveNav('about');
     else if (path === '/guide') setActiveNav('guide');
     else if (path === '/') setActiveNav('schedule');
     else setActiveNav('');
@@ -226,13 +244,14 @@ export function App() {
 
   return (
     <ErrorBoundary currentLang={currentLang}>
-      <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-['Inter'] selection:bg-[#2563EB] selection:text-white">
+      <div className={`min-h-screen ${isAnalyticsPath ? 'bg-[#0b0e17] text-white' : 'bg-[#F8FAFC] text-[#0F172A]'} flex flex-col font-['Inter'] selection:bg-[#2563EB] selection:text-white`}>
         {/* 1. Desktop Header Bar */}
         <Navbar
           activeNav={activeNav}
           setActiveNav={(nav) => {
             setActiveNav(nav);
             if (nav === 'schedule') handleNavigate('/');
+            else if (nav === 'analytics') handleNavigate('/analytics');
             else if (nav === 'about') handleNavigate('/about');
             else if (nav === 'guide') handleNavigate('/guide');
           }}
@@ -243,7 +262,7 @@ export function App() {
         />
 
         {/* 1-1. 3D 무대 스포트라이트 쇼케이스 섹션 (Live & Dev 메인 홈 전면 적용) */}
-        {!isCreatorPage && isKnownRoute && (currentPath === '/' || isUpdatePath) && (
+        {!isCreatorPage && !isAnalyticsPath && isKnownRoute && (currentPath === '/' || isUpdatePath) && (
           <section
             aria-label="Stage Showcase"
             className="w-full relative bg-[url('/images/spotlight_stage_bg.png')] bg-cover bg-center sm:bg-bottom bg-no-repeat overflow-hidden"
@@ -285,12 +304,17 @@ export function App() {
         )}
 
         {/* 2. Main Content Container */}
-        <main className="flex-grow max-w-[1280px] w-full mx-auto px-0 sm:px-6">
+        <main className={`flex-grow ${isAnalyticsPath ? 'w-full' : 'max-w-[1280px] w-full mx-auto px-0 sm:px-6'}`}>
           {isCreatorPage && creatorSlug ? (
             <CreatorProfilePage
               slug={creatorSlug}
               onNavigateHome={() => handleNavigate('/')}
               currentLang={currentLang}
+            />
+          ) : isAnalyticsPath ? (
+            <AnalyticsLayout
+              currentSubPath={currentPath}
+              onNavigateSubPath={handleNavigate}
             />
           ) : currentPath === '/about' ? (
             <AboutPage
