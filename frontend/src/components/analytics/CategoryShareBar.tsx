@@ -56,8 +56,8 @@ export function CategoryShareBar({ categories, onNavigateToCategory, isLoading }
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-[#0F172A]">{cat.name}</span>
                   {isDemandAdvantage && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      수요 우위 (효율 {cat.efficiencyIndex}x)
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      공급 대비 시청 우위 (비율 {cat.efficiencyIndex.toFixed(2)})
                     </span>
                   )}
                 </div>

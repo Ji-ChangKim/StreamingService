@@ -34,6 +34,19 @@ export function CategoryAnalysisView({ categories, isLoading }: CategoryAnalysis
       c.groupId.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const getQuadrantLabel = (q: string) => {
+    switch (q) {
+      case 'BLUE_OCEAN':
+        return '공급 대비 시청 우위';
+      case 'RED_OCEAN':
+        return '고수요 · 고공급';
+      case 'NICHE':
+        return '저수요 · 저공급';
+      default:
+        return '공급 대비 시청 열위';
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* 1. 콘텐츠 수요·공급 4분면 매트릭스 (Quadrant Chart) */}
@@ -45,13 +58,13 @@ export function CategoryAnalysisView({ categories, isLoading }: CategoryAnalysis
               <span>콘텐츠 수요·공급 4분면 매트릭스 (Category Quadrant)</span>
             </h2>
             <p className="text-xs text-[#64748B] mt-1">
-              어떤 콘텐츠가 인기인지 단순 나열하는 것이 아니라, 수요(동시시청)와 공급(LIVE 수)이 어긋나는 블루오션 영역을 포착합니다.
+              카테고리별 수요(동시시청 점유율)와 공급(LIVE 방송 점유율)의 상대적 분포를 4개 구간으로 분류해 비교합니다.
             </p>
           </div>
 
           <div className="flex items-center gap-2 text-xs">
-            <span className="flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-bold">
-              ★ 블루오션: 수요 높음 · 공급 적음
+            <span className="flex items-center gap-1 text-[#2563EB] bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200 font-mono font-bold">
+              계산식: 수요·공급 비율 = 시청 점유율 ÷ LIVE 점유율
             </span>
           </div>
         </div>
@@ -61,7 +74,7 @@ export function CategoryAnalysisView({ categories, isLoading }: CategoryAnalysis
           <div className="lg:col-span-2 relative bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-4 overflow-hidden">
             <svg viewBox={`0 0 ${chartW} ${chartH}`} className="w-full h-auto select-none">
               {/* 사분면 배경 구분 */}
-              {/* 좌상단: 블루오션 (수요 높고 공급 낮음) */}
+              {/* 좌상단: 공급 대비 시청 우위 */}
               <rect
                 x={pad}
                 y={pad}
@@ -71,10 +84,10 @@ export function CategoryAnalysisView({ categories, isLoading }: CategoryAnalysis
                 fillOpacity="0.09"
               />
               <text x={pad + 10} y={pad + 20} fill="#059669" fontSize="11" fontWeight="bold">
-                [블루오션] 고수요 · 저공급 (추천)
+                [공급 대비 시청 우위] 고시청 · 저공급
               </text>
 
-              {/* 우상단: 레드오션 (수요 높고 공급 높음) */}
+              {/* 우상단: 고수요 · 고공급 */}
               <rect
                 x={pad + (chartW - pad * 2) / 2}
                 y={pad}
@@ -84,10 +97,10 @@ export function CategoryAnalysisView({ categories, isLoading }: CategoryAnalysis
                 fillOpacity="0.06"
               />
               <text x={chartW - pad - 10} y={pad + 20} textAnchor="end" fill="#dc2626" fontSize="11" fontWeight="bold">
-                [레드오션] 고수요 · 치열한 경쟁
+                [고수요 · 고공급] 고시청 · 고경쟁
               </text>
 
-              {/* 좌하단: 롱테일/니치 */}
+              {/* 좌하단: 저수요 · 저공급 */}
               <rect
                 x={pad}
                 y={pad + (chartH - pad * 2) / 2}
@@ -97,7 +110,20 @@ export function CategoryAnalysisView({ categories, isLoading }: CategoryAnalysis
                 fillOpacity="0.05"
               />
               <text x={pad + 10} y={chartH - pad - 10} fill="#2563eb" fontSize="11" fontWeight="bold">
-                [틈새/니치] 안정적 마니아
+                [저수요 · 저공급] 틈새 마니아
+              </text>
+
+              {/* 우하단: 공급 대비 시청 열위 */}
+              <rect
+                x={pad + (chartW - pad * 2) / 2}
+                y={pad + (chartH - pad * 2) / 2}
+                width={(chartW - pad * 2) / 2}
+                height={(chartH - pad * 2) / 2}
+                fill="#f59e0b"
+                fillOpacity="0.04"
+              />
+              <text x={chartW - pad - 10} y={chartH - pad - 10} textAnchor="end" fill="#d97706" fontSize="11" fontWeight="bold">
+                [공급 대비 시청 열위] 저시청 · 고공급
               </text>
 
               {/* 중심 십자 가이드라인 */}
@@ -191,33 +217,33 @@ export function CategoryAnalysisView({ categories, isLoading }: CategoryAnalysis
                 <span
                   className={`text-[11px] font-black px-2.5 py-0.5 rounded-md border ${
                     currentCat.efficiencyIndex >= 1.1
-                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                      : 'bg-blue-50 text-blue-700 border-blue-200'
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                      : 'bg-blue-50 text-blue-800 border-blue-200'
                   }`}
                 >
-                  {currentCat.quadrant}
+                  {getQuadrantLabel(currentCat.quadrant)}
                 </span>
               </div>
 
               <div className="space-y-2.5 text-xs">
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E2E8F0]">
                   <span className="text-[#64748B]">동시시청 합계 (수요)</span>
-                  <strong className="text-[#0F172A]">{currentCat.viewersSum.toLocaleString()}명</strong>
+                  <strong className="text-[#0F172A] font-mono">{currentCat.viewersSum.toLocaleString()}명</strong>
                 </div>
 
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E2E8F0]">
                   <span className="text-[#64748B]">LIVE 방송 수 (공급)</span>
-                  <strong className="text-[#0F172A]">{currentCat.liveCount}채널</strong>
+                  <strong className="text-[#0F172A] font-mono">{currentCat.liveCount}채널</strong>
                 </div>
 
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E2E8F0]">
-                  <span className="text-[#64748B]">방송당 시청 효율</span>
-                  <strong className="text-emerald-600 font-bold">{currentCat.viewersPerLive}명/방</strong>
+                  <span className="text-[#64748B]">방송당 시청 수치</span>
+                  <strong className="text-emerald-600 font-bold font-mono">{currentCat.viewersPerLive}명/방</strong>
                 </div>
 
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E2E8F0]">
-                  <span className="text-[#64748B]">수요/공급 효율 지수</span>
-                  <strong className="text-blue-600 font-mono font-bold">{currentCat.efficiencyIndex}x</strong>
+                  <span className="text-[#64748B]">수요·공급 비율</span>
+                  <strong className="text-blue-600 font-mono font-bold">{currentCat.efficiencyIndex.toFixed(2)}</strong>
                 </div>
               </div>
 
@@ -238,9 +264,7 @@ export function CategoryAnalysisView({ categories, isLoading }: CategoryAnalysis
             </div>
 
             <div className="mt-4 p-2.5 rounded-xl bg-blue-50/80 border border-blue-200 text-[11px] text-[#334155]">
-              💡 {currentCat.efficiencyIndex >= 1.0
-                ? '시청 수요 대비 방송자가 적어 신규 버튜버가 방송 시 시청자 분산 유입 효과가 큽니다.'
-                : '공급 경쟁이 치열하므로 시간대를 심야/주말 낮으로 우회 편성하는 것을 권장합니다.'}
+              💡 <strong>지표 해석:</strong> 공급 점유율(LIVE 수) 대비 시청 수요 점유율의 상대적 비율({currentCat.efficiencyIndex.toFixed(2)})을 나타내며, 특정 채널의 시청자 유입이나 성공을 단정하지 않습니다.
             </div>
           </div>
         </div>
@@ -277,7 +301,8 @@ export function CategoryAnalysisView({ categories, isLoading }: CategoryAnalysis
                 <th className="py-2.5 px-3 text-right">시청 점유율</th>
                 <th className="py-2.5 px-3 text-right">LIVE 공급 수</th>
                 <th className="py-2.5 px-3 text-right">방송당 시청</th>
-                <th className="py-2.5 px-3 text-center">사분면 분류</th>
+                <th className="py-2.5 px-3 text-right">수요·공급 비율</th>
+                <th className="py-2.5 px-3 text-center">분류 구간</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E2E8F0]">
@@ -305,17 +330,20 @@ export function CategoryAnalysisView({ categories, isLoading }: CategoryAnalysis
                   <td className="py-2.5 px-3 text-right font-mono text-emerald-600 font-bold">
                     {c.viewersPerLive}명
                   </td>
+                  <td className="py-2.5 px-3 text-right font-mono text-blue-700 font-bold">
+                    {c.efficiencyIndex.toFixed(2)}
+                  </td>
                   <td className="py-2.5 px-3 text-center">
                     <span
                       className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
                         c.quadrant === 'BLUE_OCEAN'
-                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                           : c.quadrant === 'RED_OCEAN'
-                          ? 'bg-rose-50 text-rose-700 border-rose-200'
-                          : 'bg-blue-50 text-blue-700 border-blue-200'
+                          ? 'bg-rose-50 text-rose-800 border-rose-200'
+                          : 'bg-blue-50 text-blue-800 border-blue-200'
                       }`}
                     >
-                      {c.quadrant}
+                      {getQuadrantLabel(c.quadrant)}
                     </span>
                   </td>
                 </tr>

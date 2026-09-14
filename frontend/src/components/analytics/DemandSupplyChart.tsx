@@ -9,7 +9,7 @@ interface DemandSupplyChartProps {
 
 export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
-  const [activeMetric, setActiveMetric] = useState<'both' | 'viewers' | 'live'>('both');
+  const [activeMetric, setActiveMetric] = useState<'both' | 'viewers' | 'live' | 'vpl' | 'top10'>('both');
 
   if (isLoading || !data || data.length === 0) {
     return (
@@ -22,6 +22,7 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
   // 차트 스케일 계산
   const maxViewers = Math.max(...data.map((d) => d.viewers), 1000);
   const maxLive = Math.max(...data.map((d) => d.liveCount), 20);
+  const maxVpl = Math.max(...data.map((d) => d.viewersPerLive), 50);
 
   const width = 800;
   const height = 240;
@@ -35,7 +36,9 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
     const x = paddingX + (i / (data.length - 1)) * chartW;
     const yViewer = height - paddingY - (d.viewers / maxViewers) * chartH;
     const yLive = height - paddingY - (d.liveCount / maxLive) * chartH;
-    return { ...d, x, yViewer, yLive };
+    const yVpl = height - paddingY - (d.viewersPerLive / maxVpl) * chartH;
+    const yTop10 = height - paddingY - (d.top10Share || 0.4) * chartH;
+    return { ...d, x, yViewer, yLive, yVpl, yTop10 };
   });
 
   // SVG 패스 생성
@@ -50,6 +53,16 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
     ''
   );
 
+  const vplLinePath = points.reduce(
+    (acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.yVpl}`,
+    ''
+  );
+
+  const top10LinePath = points.reduce(
+    (acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.yTop10}`,
+    ''
+  );
+
   const activePoint = hoverIndex !== null ? points[hoverIndex] : null;
 
   return (
@@ -58,47 +71,71 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
         <div>
           <h3 className="text-sm font-black text-[#0F172A] flex items-center gap-2">
             <Activity className="w-4 h-4 text-[#2563EB]" />
-            <span>24시간 시장 수요(동시시청) vs 공급(LIVE 수) 추이</span>
+            <span>24시간 시장 수요·공급 관측 추이</span>
           </h3>
           <p className="text-[11px] text-[#64748B] mt-0.5">
-            시청 수요의 급증 시점과 방송 경쟁(LIVE 수)의 분산 구간을 비교 분석합니다.
+            동시시청 합계, LIVE 수, 방송당 시청, 상위 집중도의 24시간 시간대별 실수치 변화 추이를 관측합니다.
           </p>
         </div>
 
         {/* 범례 및 지표 토글 */}
-        <div className="flex items-center gap-1.5 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs">
+        <div className="flex flex-wrap items-center gap-1 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs">
           <button
             type="button"
             onClick={() => setActiveMetric('both')}
-            className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+            className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
               activeMetric === 'both' ? 'bg-[#0F172A] text-white shadow-2xs' : 'text-[#475569] hover:text-[#0F172A]'
             }`}
           >
-            전체 비교
+            수요/공급 비교
           </button>
           <button
             type="button"
             onClick={() => setActiveMetric('viewers')}
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
               activeMetric === 'viewers'
                 ? 'bg-white text-[#2563EB] border border-blue-300 shadow-2xs'
                 : 'text-[#475569] hover:text-[#0F172A]'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
-            <span>수요 (동시시청)</span>
+            <span>동시시청</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveMetric('live')}
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
               activeMetric === 'live'
                 ? 'bg-white text-emerald-700 border border-emerald-300 shadow-2xs'
                 : 'text-[#475569] hover:text-[#0F172A]'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-600" />
-            <span>공급 (LIVE 수)</span>
+            <span>LIVE 수</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveMetric('vpl')}
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+              activeMetric === 'vpl'
+                ? 'bg-white text-purple-700 border border-purple-300 shadow-2xs'
+                : 'text-[#475569] hover:text-[#0F172A]'
+            }`}
+          >
+            <span className="w-2 h-2 rounded-full bg-purple-600" />
+            <span>방송당 시청</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveMetric('top10')}
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+              activeMetric === 'top10'
+                ? 'bg-white text-amber-700 border border-amber-300 shadow-2xs'
+                : 'text-[#475569] hover:text-[#0F172A]'
+            }`}
+          >
+            <span className="w-2 h-2 rounded-full bg-amber-600" />
+            <span>상위 집중도</span>
           </button>
         </div>
       </div>
@@ -185,6 +222,30 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
             />
           )}
 
+          {/* 방송당 시청 Line */}
+          {(activeMetric === 'vpl') && (
+            <path
+              d={vplLinePath}
+              fill="none"
+              stroke="#9333ea"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          )}
+
+          {/* 상위 10 집중도 Line */}
+          {(activeMetric === 'top10') && (
+            <path
+              d={top10LinePath}
+              fill="none"
+              stroke="#d97706"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          )}
+
           {/* X축 시간 라벨 (4시간 단위) */}
           {points
             .filter((_, i) => i % 4 === 0 || i === points.length - 1)
@@ -216,8 +277,18 @@ export function DemandSupplyChart({ data, isLoading }: DemandSupplyChartProps) {
                 strokeWidth="1.5"
                 strokeDasharray="2 2"
               />
-              <circle cx={activePoint.x} cy={activePoint.yViewer} r="5" fill="#2563EB" stroke="#ffffff" strokeWidth="2" />
-              <circle cx={activePoint.x} cy={activePoint.yLive} r="5" fill="#059669" stroke="#ffffff" strokeWidth="2" />
+              {(activeMetric === 'both' || activeMetric === 'viewers') && (
+                <circle cx={activePoint.x} cy={activePoint.yViewer} r="5" fill="#2563EB" stroke="#ffffff" strokeWidth="2" />
+              )}
+              {(activeMetric === 'both' || activeMetric === 'live') && (
+                <circle cx={activePoint.x} cy={activePoint.yLive} r="5" fill="#059669" stroke="#ffffff" strokeWidth="2" />
+              )}
+              {activeMetric === 'vpl' && (
+                <circle cx={activePoint.x} cy={activePoint.yVpl} r="5" fill="#9333ea" stroke="#ffffff" strokeWidth="2" />
+              )}
+              {activeMetric === 'top10' && (
+                <circle cx={activePoint.x} cy={activePoint.yTop10} r="5" fill="#d97706" stroke="#ffffff" strokeWidth="2" />
+              )}
             </g>
           )}
 

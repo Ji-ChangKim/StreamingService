@@ -7,12 +7,12 @@ interface TimeAnalysisViewProps {
   isLoading: boolean;
 }
 
-type HeatmapMetric = 'opportunity' | 'viewersPerLive' | 'viewers' | 'liveCount' | 'top10Share';
+type HeatmapMetric = 'viewersPerLive' | 'viewers' | 'liveCount' | 'top10Share';
 
 const DAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
 
 export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
-  const [activeMetric, setActiveMetric] = useState<HeatmapMetric>('opportunity');
+  const [activeMetric, setActiveMetric] = useState<HeatmapMetric>('viewersPerLive');
   const [selectedCell, setSelectedCell] = useState<HeatmapCell | null>(() => {
     // 기본 선택: 토요일 심야 00시
     return cells.find((c) => c.dayOfWeek === 6 && c.hour === 0) || null;
@@ -32,14 +32,6 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
   // 지표별 색상 스케일 계산 (라이트 테마 최적화)
   const getCellColor = (cell: HeatmapCell) => {
     switch (activeMetric) {
-      case 'opportunity': {
-        const s = cell.opportunityScore;
-        if (s >= 80) return 'bg-emerald-500 text-white font-bold';
-        if (s >= 70) return 'bg-emerald-400 text-slate-900 font-semibold';
-        if (s >= 60) return 'bg-blue-400 text-white font-semibold';
-        if (s >= 50) return 'bg-blue-200 text-slate-800';
-        return 'bg-slate-100 text-slate-600 hover:bg-slate-200';
-      }
       case 'viewersPerLive': {
         const v = cell.viewersPerLive;
         if (v >= 450) return 'bg-emerald-500 text-white font-bold';
@@ -58,17 +50,17 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
       }
       case 'liveCount': {
         const l = cell.liveCount;
-        if (l >= 120) return 'bg-rose-500 text-white font-bold';
-        if (l >= 90) return 'bg-amber-400 text-slate-900 font-semibold';
-        if (l >= 60) return 'bg-amber-200 text-slate-800';
+        if (l >= 120) return 'bg-purple-600 text-white font-bold';
+        if (l >= 90) return 'bg-purple-400 text-white font-semibold';
+        if (l >= 60) return 'bg-purple-200 text-slate-800';
         return 'bg-slate-100 text-slate-600 hover:bg-slate-200';
       }
       case 'top10Share': {
         const t = cell.top10Share;
-        if (t <= 0.35) return 'bg-emerald-500 text-white font-bold'; // 분산 우수
+        if (t <= 0.35) return 'bg-emerald-500 text-white font-bold';
         if (t <= 0.45) return 'bg-blue-400 text-white font-semibold';
         if (t <= 0.55) return 'bg-amber-400 text-slate-900 font-semibold';
-        return 'bg-rose-500 text-white font-bold'; // 대형 쏠림 심함
+        return 'bg-rose-500 text-white font-bold';
       }
       default:
         return 'bg-slate-100 text-slate-700';
@@ -77,8 +69,6 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
 
   const getMetricDisplayValue = (cell: HeatmapCell) => {
     switch (activeMetric) {
-      case 'opportunity':
-        return `${Math.round(cell.opportunityScore)}`;
       case 'viewersPerLive':
         return `${Math.round(cell.viewersPerLive)}`;
       case 'viewers':
@@ -98,30 +88,19 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
           <div>
             <h2 className="text-base sm:text-lg font-bold text-[#0F172A] flex items-center gap-2">
               <Clock className="w-5 h-5 text-blue-600" />
-              <span>요일 × 시간대 정밀 교차 분석 (Heatmap Matrix)</span>
+              <span>요일 × 시간대 정밀 관측 분석 (Heatmap Matrix)</span>
             </h2>
             <p className="text-xs text-[#64748B] mt-1">
-              "사람이 많은 시간(수요)"과 "신규 버튜버가 방송하기 유리한 시간(기회)"의 차이를 5개 지표로 교차 확인합니다.
+              확인된 버튜버 채널의 요일·시간대별 실수치 패턴을 4대 관측 지표로 교차 확인합니다.
             </p>
           </div>
 
-          {/* 5개 지표 토글 */}
+          {/* 4개 관측 지표 토글 */}
           <div className="flex flex-wrap items-center gap-1.5 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs">
             <button
               type="button"
-              onClick={() => setActiveMetric('opportunity')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                activeMetric === 'opportunity'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-[#64748B] hover:text-[#0F172A]'
-              }`}
-            >
-              방송 기회 점수
-            </button>
-            <button
-              type="button"
               onClick={() => setActiveMetric('viewersPerLive')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                 activeMetric === 'viewersPerLive'
                   ? 'bg-[#2563EB] text-white shadow-sm'
                   : 'text-[#64748B] hover:text-[#0F172A]'
@@ -132,7 +111,7 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
             <button
               type="button"
               onClick={() => setActiveMetric('viewers')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                 activeMetric === 'viewers'
                   ? 'bg-[#2563EB] text-white shadow-sm'
                   : 'text-[#64748B] hover:text-[#0F172A]'
@@ -143,7 +122,7 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
             <button
               type="button"
               onClick={() => setActiveMetric('liveCount')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                 activeMetric === 'liveCount'
                   ? 'bg-[#2563EB] text-white shadow-sm'
                   : 'text-[#64748B] hover:text-[#0F172A]'
@@ -154,7 +133,7 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
             <button
               type="button"
               onClick={() => setActiveMetric('top10Share')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                 activeMetric === 'top10Share'
                   ? 'bg-[#2563EB] text-white shadow-sm'
                   : 'text-[#64748B] hover:text-[#0F172A]'
@@ -240,9 +219,9 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
                 </div>
 
                 <div className="text-right">
-                  <span className="text-[10px] font-bold text-[#64748B] block">기회 점수</span>
-                  <span className="text-lg font-black text-emerald-600">
-                    {currentCell.opportunityScore}점
+                  <span className="text-[10px] font-bold text-[#64748B] block">관측 상태</span>
+                  <span className="text-xs font-black text-[#2563EB] bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">
+                    정규 표본
                   </span>
                 </div>
               </div>
@@ -283,12 +262,10 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
               </div>
             </div>
 
-            {/* 판단 코멘트 */}
-            <div className="mt-4 p-3 rounded-xl bg-blue-50/80 border border-blue-200 text-[11px] text-[#334155] leading-relaxed">
-              <span className="font-bold text-[#2563EB]">💡 편성 판단: </span>
-              {currentCell.opportunityScore >= 75
-                ? '수요 대비 경쟁이 낮아 신규·중소 버튜버가 메인 탐색 탭에서 노출 기회를 잡기에 매우 유리한 슬롯입니다.'
-                : '대형 스트리머 집중도가 높거나 방송 공급이 많아, 특색 있는 방제 및 확실한 타깃 콘텐츠 준비가 권장됩니다.'}
+            {/* 객관적 관측 요약 */}
+            <div className="mt-4 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[11px] text-[#334155] leading-relaxed">
+              <span className="font-bold text-[#2563EB]">📊 관측 요약: </span>
+              해당 시간대는 방송당 평균 {currentCell.viewersPerLive}명의 동시시청 슬롯이 관측되며, 상위 10개 방송의 점유율은 {Math.round(currentCell.top10Share * 100)}% 수준으로 집계됩니다.
             </div>
           </div>
         )}
@@ -298,36 +275,36 @@ export function TimeAnalysisView({ cells, isLoading }: TimeAnalysisViewProps) {
           <div>
             <h3 className="text-sm font-bold text-[#0F172A] flex items-center gap-2 mb-2">
               <Calendar className="w-4 h-4 text-blue-600" />
-              <span>평일(월~금) vs 주말(토·일) 시간대별 패턴 차이</span>
+              <span>평일(월~금) vs 주말(토·일) 시간대별 관측 수치 차이</span>
             </h3>
             <p className="text-xs text-[#64748B] mb-4">
-              주말에는 낮(14~17시) 수요가 평일 대비 +42% 이상 급증하며, 심야(00~03시) 방송당 시청 효율이 극대화됩니다.
+              주말에는 낮(14~17시) 동시시청 슬롯이 평일 대비 +42% 높게 관측되며, 심야(00~03시)에도 지속적인 시청 슬롯이 유지됩니다.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="text-xs font-bold text-blue-700 mb-2">평일 (월~금) 특징</div>
+                <div className="text-xs font-bold text-blue-700 mb-2">평일 (월~금) 관측 통계</div>
                 <ul className="text-xs text-[#475569] space-y-1.5">
-                  <li>• 골든타임: <strong className="text-[#0F172A]">21:00 ~ 24:00</strong> 집중</li>
-                  <li>• 직장인/학생 퇴근 후 소통 토크 방송에 높은 체류</li>
-                  <li>• 심야 01시 이후 시청자 감소 속도 빠름</li>
+                  <li>• 시청 집중 구간: <strong className="text-[#0F172A]">21:00 ~ 24:00</strong> (일평균 최고치)</li>
+                  <li>• 토크/소통 및 종합게임 카테고리 중심 시청 분포</li>
+                  <li>• 심야 01시 이후 동시시청 슬롯 점진적 감소</li>
                 </ul>
               </div>
 
               <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="text-xs font-bold text-emerald-700 mb-2">주말 (토·일) 특징</div>
+                <div className="text-xs font-bold text-emerald-700 mb-2">주말 (토·일) 관측 통계</div>
                 <ul className="text-xs text-[#475569] space-y-1.5">
-                  <li>• 골든타임: <strong className="text-[#0F172A]">14:00 ~ 03:00</strong> 장기 유지</li>
-                  <li>• 장시간 종합게임(마크/스토리) 소비율 우수</li>
-                  <li>• 심야 00시 이후에도 대형 채널 쏠림 적고 분산 우수</li>
+                  <li>• 시청 지속 구간: <strong className="text-[#0F172A]">14:00 ~ 03:00</strong> 장시간 유지</li>
+                  <li>• 낮 시간대부터 게임/다양한 카테고리 시청 슬롯 형성</li>
+                  <li>• 심야 00시 이후에도 방송당 시청 수치 안정적 유지</li>
                 </ul>
               </div>
             </div>
           </div>
 
           <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-[#64748B]">
-            <span>기준: 28일 평균 데이터</span>
-            <span className="text-[#2563EB] font-semibold">반복 편성 설계에 활용 권장</span>
+            <span>기준: 최근 28일 치지직 확인 버튜버 누적 데이터</span>
+            <span className="text-[#2563EB] font-semibold">객관적 시계열 관측</span>
           </div>
         </div>
       </div>

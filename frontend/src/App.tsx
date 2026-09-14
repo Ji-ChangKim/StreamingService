@@ -128,8 +128,8 @@ export function App() {
       }
       metaRobots.setAttribute('content', 'noindex, nofollow, noarchive');
     } else if (isAnalyticsPath) {
-      pageTitle = '방송 인사이트 | VDébut Analytics - 버튜버 시장 및 편성 분석 대시보드';
-      pageDesc = '치지직·SOOP 버튜버 라이브 데이터를 시간·요일·콘텐츠별로 분석하여 신규·중소 버튜버를 위한 최적의 방송 기회 시간대를 제안합니다.';
+      pageTitle = '방송 현황 분석 | VDébut Analytics - 버튜버 방송 시장 관측 대시보드';
+      pageDesc = '치지직 공식 API 기준, 확인된 버튜버 채널의 실시간 방송 시장 현황을 시간·요일·콘텐츠별로 투명하게 관측·비교합니다.';
     } else if (currentPath === '/upload') {
       pageTitle = '데뷔 일정 등록 | VDébut';
     } else if (currentPath === '/about') {

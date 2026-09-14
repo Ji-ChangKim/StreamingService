@@ -26,53 +26,16 @@ export function AnalyticsFilterBar({
   return (
     <div className="bg-white border border-[#E2E8F0] rounded-2xl p-3 sm:p-4 shadow-sm mb-6">
       <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E2E8F0]">
-        {/* 플랫폼 선택 (메인 캘린더 플랫폼 필터와 동일한 톤앤매너) */}
+        {/* 플랫폼 선택 (치지직 전용 관측 기준) */}
         <div className="flex items-center gap-1.5 bg-[#F1F5F9] p-1 rounded-[10px] border border-[#CBD5E1]">
-          <button
-            type="button"
-            onClick={() => updateFilter('platform', 'ALL')}
-            className={`px-3 py-1.5 rounded-[8px] text-xs font-bold transition-all cursor-pointer ${
-              filters.platform === 'ALL'
-                ? 'bg-[#0F172A] text-white shadow-2xs font-extrabold'
-                : 'text-[#475569] hover:text-[#0F172A]'
-            }`}
-          >
-            전체 플랫폼
-          </button>
-
-          <button
-            type="button"
-            onClick={() => updateFilter('platform', 'CHZZK')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-xs font-bold transition-all cursor-pointer ${
-              filters.platform === 'CHZZK'
-                ? 'bg-white text-[#009E5A] border border-[#00FFA3] shadow-2xs font-extrabold'
-                : 'text-[#475569] hover:text-[#0F172A]'
-            }`}
-          >
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-xs font-extrabold bg-white text-[#009E5A] border border-[#00FFA3] shadow-2xs">
             <img
               src="/icons/chzzk/chzzk Icon_01.png"
               alt="CHZZK"
               className="w-4 h-4 object-contain"
             />
-            <span>치지직</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => updateFilter('platform', 'SOOP')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-xs font-bold transition-all cursor-pointer ${
-              filters.platform === 'SOOP'
-                ? 'bg-white text-[#0066DB] border border-[#0075FF]/60 shadow-2xs font-extrabold'
-                : 'text-[#475569] hover:text-[#0F172A]'
-            }`}
-          >
-            <img
-              src="/icons/soop/soop_symbol_blue.svg"
-              alt="SOOP"
-              className="w-4 h-4 object-contain"
-            />
-            <span>SOOP</span>
-          </button>
+            <span>치지직 (CHZZK) 확인 채널</span>
+          </div>
         </div>
 
         {/* 기간 선택 (오늘, 7일, 28일) */}
