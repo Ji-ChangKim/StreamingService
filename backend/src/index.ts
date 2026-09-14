@@ -39,6 +39,7 @@ import {
   getAnalyticsMethodology,
   getCurrentContentDrilldown,
 } from './services/analyticsService';
+import { collectChzzkLiveSnapshot } from './services/chzzkCollector';
 
 type Bindings = {
   DB: D1Database;
@@ -937,12 +938,6 @@ app.get('/api/analytics/methodology', (c) => {
 
 app.get('/api/analytics/current-content', async (c) => {
   const platform = c.req.query('platform') || 'CHZZK';
-  if (platform === 'SOOP') {
-    return c.json({
-      error: 'PLATFORM_UNAVAILABLE',
-      message: 'SOOP 버튜버 방송 데이터는 현재 수집 및 정제 연동 준비 중입니다.',
-    }, 422);
-  }
   const result = await getCurrentContentDrilldown(c.env.DB, platform);
   c.header('Cache-Control', 'public, max-age=30, s-maxage=60');
   return c.json(result);
@@ -987,7 +982,14 @@ export default {
           .catch((err) => console.error('[Scheduled Cron] Profile sync error:', err))
       );
 
-      // 3. 디스코드 모닝 데뷔 브리핑 발송 (KST 오전 9시 = UTC 00시)
+      // 3. 치지직 실시간 라이브 스냅샷 정기 수집
+      ctx.waitUntil(
+        collectChzzkLiveSnapshot(env.DB)
+          .then((res) => console.log('[Scheduled Cron] Chzzk live snapshot collected:', res.collectedCount, 'lives /', res.vtuberMatchCount, 'matched'))
+          .catch((err) => console.error('[Scheduled Cron] Chzzk live snapshot error:', err))
+      );
+
+      // 4. 디스코드 모닝 데뷔 브리핑 발송 (KST 오전 9시 = UTC 00시)
       const nowUtc = new Date();
       if (nowUtc.getUTCHours() === 0 && env.DISCORD_BOT_TOKEN) {
         ctx.waitUntil(

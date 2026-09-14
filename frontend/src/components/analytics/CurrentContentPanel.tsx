@@ -27,7 +27,7 @@ export function CurrentContentPanel({ data, isLoading = false }: CurrentContentP
   const [childSort, setChildSort] = useState<SortOption>('viewers_desc');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [visibleChildCount, setVisibleChildCount] = useState<number>(5);
-  const [selectedDetailKey, setSelectedDetailKey] = useState<string | null>('chzzk-gta5'); // 기본 1개 상세 열림
+  const [selectedDetailKey, setSelectedDetailKey] = useState<string | null>(null); // 동적 1위 자동 선택
 
   // 수집 시각 포맷
   const collectionTimeStr = useMemo(() => {
@@ -86,6 +86,13 @@ export function CurrentContentPanel({ data, isLoading = false }: CurrentContentP
     return filteredChildren.slice(0, visibleChildCount);
   }, [filteredChildren, visibleChildCount]);
 
+  // 선택된 세부 게임 (미선택 시 1위 게임 기본 선택)
+  const activeDetailKey = useMemo(() => {
+    if (selectedDetailKey) return selectedDetailKey;
+    if (displayedChildren.length > 0) return displayedChildren[0].detailKey;
+    return null;
+  }, [selectedDetailKey, displayedChildren]);
+
   const hasMoreChildren = filteredChildren.length > visibleChildCount;
   const remainingCount = Math.max(0, filteredChildren.length - visibleChildCount);
 
@@ -105,6 +112,12 @@ export function CurrentContentPanel({ data, isLoading = false }: CurrentContentP
 
   if (!data) return null;
 
+  const platformDisplay = data.meta?.platform === 'ALL'
+    ? '치지직 · SOOP 종합'
+    : data.meta?.platform === 'SOOP'
+    ? 'SOOP (숲)'
+    : 'CHZZK (치지직)';
+
   return (
     <div className="bg-white border border-[#E2E8F0] rounded-2xl shadow-sm mb-6 overflow-hidden">
       {/* A. 헤더 영역 */}
@@ -122,7 +135,7 @@ export function CurrentContentPanel({ data, isLoading = false }: CurrentContentP
             </span>
           </div>
           <p className="text-xs text-[#64748B]">
-            CHZZK · 확인된 버튜버 LIVE 기준 · 수집 {collectionTimeStr} KST
+            {platformDisplay} · 실시간 LIVE 기준 · 수집 {collectionTimeStr} KST
           </p>
         </div>
 
@@ -293,7 +306,7 @@ export function CurrentContentPanel({ data, isLoading = false }: CurrentContentP
 
                               {/* 자식 행 목록 */}
                               {displayedChildren.map((item) => {
-                                const isSelected = selectedDetailKey === item.detailKey;
+                                const isSelected = activeDetailKey === item.detailKey;
                                 const childSharePercent = (item.shareOfGroup * 100).toFixed(1);
 
                                 return (
