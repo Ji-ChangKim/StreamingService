@@ -10,7 +10,6 @@ import {
   HelpCircle,
   Layers,
   ArrowUpDown,
-  Info,
 } from 'lucide-react';
 
 interface CurrentContentPanelProps {
@@ -392,15 +391,6 @@ export function CurrentContentPanel({ data, isLoading = false }: CurrentContentP
                                                 : '-'}
                                             </div>
                                           </div>
-                                        </div>
-
-                                        {/* 표준 주의 문구 */}
-                                        <div className="flex items-start gap-1.5 text-[11px] text-[#64748B] bg-slate-50 p-2 rounded-lg border border-slate-200">
-                                          <Info className="w-3.5 h-3.5 text-blue-600 mt-0.5 shrink-0" />
-                                          <span>
-                                            이 수치는 해당 게임 방송들의 관측값이며, 새로 방송하는
-                                            채널의 예상 시청자 수가 아닙니다.
-                                          </span>
                                         </div>
                                       </div>
                                     )}
