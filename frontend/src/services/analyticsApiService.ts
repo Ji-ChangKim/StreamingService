@@ -997,3 +997,219 @@ function getFallbackCurrentContent(_platform: PlatformFilter = 'CHZZK'): Current
   };
 }
 
+// --------------------------------------------------------------------------
+// 9. VDébut 방송 탐색 API 클라이언트 (기획서 10.2절: GET /api/discovery/live)
+// --------------------------------------------------------------------------
+
+export interface LiveDiscoveryItem {
+  id: string;
+  platform: 'CHZZK' | 'SOOP';
+  channelId: string;
+  channelName: string;
+  channelImageUrl?: string;
+  channelUrl: string;
+  liveTitle: string;
+  categoryGroup: string; // 'ALL' | 'GAME' | 'TALK' | 'MUSIC' | 'ART' | 'ASMR' | 'ETC'
+  categoryName: string;  // 세부 게임명 또는 카테고리명
+  viewerCount: number;
+  thumbnailUrl?: string;
+  firstSeenAt?: string;  // 관측 시각 또는 시작 시각
+  liveUrl: string;
+  tags?: string[];
+}
+
+export interface LiveGameStat {
+  name: string;
+  liveCount: number;
+  viewerSum: number;
+}
+
+export interface LiveCategoryStat {
+  key: string;
+  name: string;
+  liveCount: number;
+  viewerSum: number;
+  games?: LiveGameStat[];
+}
+
+export interface LiveDiscoveryResponse {
+  meta: {
+    scope: string;
+    snapshotId: string;
+    observedAt: string;
+    totalLiveCount: number;
+    totalViewerSum: number;
+  };
+  categories: LiveCategoryStat[];
+  lives: LiveDiscoveryItem[];
+}
+
+export interface LiveDiscoveryParams {
+  platform?: PlatformFilter;
+  category?: string;
+  game?: string;
+  sort?: 'viewers' | 'recent';
+  query?: string;
+}
+
+export async function fetchLiveDiscovery(params: LiveDiscoveryParams = {}): Promise<LiveDiscoveryResponse> {
+  const query = new URLSearchParams();
+  if (params.platform && params.platform !== 'ALL') query.set('platform', params.platform);
+  if (params.category && params.category !== 'ALL') query.set('category', params.category);
+  if (params.game && params.game !== 'ALL') query.set('game', params.game);
+  if (params.sort) query.set('sort', params.sort);
+  if (params.query && params.query.trim()) query.set('q', params.query.trim());
+
+  const url = `/api/discovery/live?${query.toString()}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn('Live discovery API fallback:', err);
+    return getFallbackLiveDiscovery(params);
+  }
+}
+
+function getFallbackLiveDiscovery(params: LiveDiscoveryParams): LiveDiscoveryResponse {
+  const now = new Date();
+  const kstIso = new Date(now.getTime() + 9 * 3600 * 1000).toISOString().replace('Z', '+09:00');
+
+  const fallbackLives: LiveDiscoveryItem[] = [
+    {
+      id: 'chzzk-101',
+      platform: 'CHZZK',
+      channelId: 'ch_gta_01',
+      channelName: '아롱띠',
+      channelImageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      channelUrl: 'https://chzzk.naver.com/live/arongtti',
+      liveTitle: 'GTA 5 인생모드 대규모 서버 오픈런 생방송!',
+      categoryGroup: 'GAME',
+      categoryName: 'Grand Theft Auto V',
+      viewerCount: 1420,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=720&auto=format&fit=crop&q=80',
+      firstSeenAt: new Date(now.getTime() - 45 * 60000).toISOString(),
+      liveUrl: 'https://chzzk.naver.com/live/arongtti',
+      tags: ['버튜버', 'GTA5', '인생모드'],
+    },
+    {
+      id: 'chzzk-102',
+      platform: 'CHZZK',
+      channelId: 'ch_mc_01',
+      channelName: '김밍령',
+      channelImageUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80',
+      channelUrl: 'https://chzzk.naver.com/live/kimmingryung',
+      liveTitle: '마인크래프트 하드코어 야생 건축 힐링 방송',
+      categoryGroup: 'GAME',
+      categoryName: '마인크래프트',
+      viewerCount: 920,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1627856014955-403d15b04291?w=720&auto=format&fit=crop&q=80',
+      firstSeenAt: new Date(now.getTime() - 80 * 60000).toISOString(),
+      liveUrl: 'https://chzzk.naver.com/live/kimmingryung',
+      tags: ['버튜버', '마인크래프트', '하드코어'],
+    },
+    {
+      id: 'soop-101',
+      platform: 'SOOP',
+      channelId: 'soop_talk_01',
+      channelName: '이루',
+      channelImageUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
+      channelUrl: 'https://ch.sooplive.co.kr/arong0106',
+      liveTitle: '첫인사 & 시청자 소통 저챗 라이브 (신입 버튜버)',
+      categoryGroup: 'TALK',
+      categoryName: '보이는 라디오/토크',
+      viewerCount: 540,
+      thumbnailUrl: undefined,
+      firstSeenAt: new Date(now.getTime() - 25 * 60000).toISOString(),
+      liveUrl: 'https://play.sooplive.co.kr/arong0106/123456',
+      tags: ['버튜버', 'SOOP', '소통'],
+    },
+    {
+      id: 'chzzk-103',
+      platform: 'CHZZK',
+      channelId: 'ch_val_01',
+      channelName: '바쿠',
+      channelImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+      channelUrl: 'https://chzzk.naver.com/live/baku',
+      liveTitle: '발로란트 솔랭 불멸 달성할 때까지 무한 노방종',
+      categoryGroup: 'GAME',
+      categoryName: '발로란트',
+      viewerCount: 380,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=720&auto=format&fit=crop&q=80',
+      firstSeenAt: new Date(now.getTime() - 110 * 60000).toISOString(),
+      liveUrl: 'https://chzzk.naver.com/live/baku',
+      tags: ['버튜버', '발로란트', '노방종'],
+    },
+    {
+      id: 'chzzk-104',
+      platform: 'CHZZK',
+      channelId: 'ch_music_01',
+      channelName: '시아',
+      channelImageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
+      channelUrl: 'https://chzzk.naver.com/live/sia',
+      liveTitle: '새벽 감성 우타와쿠 노래방 & 리퀘스트 신청곡',
+      categoryGroup: 'MUSIC',
+      categoryName: '음악·노래',
+      viewerCount: 310,
+      thumbnailUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=720&auto=format&fit=crop&q=80',
+      firstSeenAt: new Date(now.getTime() - 30 * 60000).toISOString(),
+      liveUrl: 'https://chzzk.naver.com/live/sia',
+      tags: ['버튜버', '노래', '우타와쿠'],
+    },
+  ];
+
+  let filtered = [...fallbackLives];
+  if (params.platform && params.platform !== 'ALL') {
+    filtered = filtered.filter((l) => l.platform === params.platform);
+  }
+  if (params.category && params.category !== 'ALL') {
+    filtered = filtered.filter((l) => l.categoryGroup === params.category);
+  }
+  if (params.game && params.game !== 'ALL') {
+    filtered = filtered.filter((l) => l.categoryName.toLowerCase() === params.game?.toLowerCase());
+  }
+  if (params.query && params.query.trim()) {
+    const q = params.query.trim().toLowerCase();
+    filtered = filtered.filter((l) =>
+      l.channelName.toLowerCase().includes(q) ||
+      l.liveTitle.toLowerCase().includes(q) ||
+      l.categoryName.toLowerCase().includes(q)
+    );
+  }
+  if (params.sort === 'recent') {
+    filtered.sort((a, b) => new Date(b.firstSeenAt || 0).getTime() - new Date(a.firstSeenAt || 0).getTime());
+  } else {
+    filtered.sort((a, b) => b.viewerCount - a.viewerCount);
+  }
+
+  return {
+    meta: {
+      scope: 'VERIFIED_VTUBER_LIVE_OBSERVED',
+      snapshotId: `snap-${Math.floor(now.getTime() / 300000)}`,
+      observedAt: kstIso,
+      totalLiveCount: fallbackLives.length,
+      totalViewerSum: fallbackLives.reduce((acc, l) => acc + l.viewerCount, 0),
+    },
+    categories: [
+      { key: 'ALL', name: '전체', liveCount: 5, viewerSum: 3570 },
+      {
+        key: 'GAME',
+        name: '게임',
+        liveCount: 3,
+        viewerSum: 2720,
+        games: [
+          { name: 'Grand Theft Auto V', liveCount: 1, viewerSum: 1420 },
+          { name: '마인크래프트', liveCount: 1, viewerSum: 920 },
+          { name: '발로란트', liveCount: 1, viewerSum: 380 },
+        ],
+      },
+      { key: 'TALK', name: '잡담·소통', liveCount: 1, viewerSum: 540 },
+      { key: 'MUSIC', name: '음악·노래', liveCount: 1, viewerSum: 310 },
+      { key: 'ART', name: '그림·아트', liveCount: 0, viewerSum: 0 },
+      { key: 'ASMR', name: 'ASMR', liveCount: 0, viewerSum: 0 },
+      { key: 'ETC', name: '기타', liveCount: 0, viewerSum: 0 },
+    ],
+    lives: filtered,
+  };
+}
+

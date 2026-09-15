@@ -128,8 +128,8 @@ export function App() {
       }
       metaRobots.setAttribute('content', 'noindex, nofollow, noarchive');
     } else if (isAnalyticsPath) {
-      pageTitle = '방송 현황 분석 | VDébut Analytics - 버튜버 방송 시장 관측 대시보드';
-      pageDesc = '치지직 공식 API 기준, 확인된 버튜버 채널의 실시간 방송 시장 현황을 시간·요일·콘텐츠별로 투명하게 관측·비교합니다.';
+      pageTitle = '방송 탐색 | VDébut - 지금 방송 중인 버튜버 및 방송 기록';
+      pageDesc = '시청자와 스트리머가 지금 볼 방송을 찾고, 지난 방송과 스트리머의 활동 기록을 투명하게 확인하는 방송 탐색 서비스입니다.';
     } else if (currentPath === '/upload') {
       pageTitle = '데뷔 일정 등록 | VDébut';
     } else if (currentPath === '/about') {

@@ -40,6 +40,7 @@ import {
   getCurrentContentDrilldown,
 } from './services/analyticsService';
 import { collectChzzkLiveSnapshot } from './services/chzzkCollector';
+import { getLiveDiscovery } from './services/liveDiscoveryService';
 
 type Bindings = {
   DB: D1Database;
@@ -939,6 +940,26 @@ app.get('/api/analytics/methodology', (c) => {
 app.get('/api/analytics/current-content', async (c) => {
   const platform = c.req.query('platform') || 'CHZZK';
   const result = await getCurrentContentDrilldown(c.env.DB, platform);
+  c.header('Cache-Control', 'public, max-age=30, s-maxage=60');
+  return c.json(result);
+});
+
+// 14.2 VDébut 실시간 방송 탐색 API (기획서 10.2절: GET /api/discovery/live)
+app.get('/api/discovery/live', async (c) => {
+  const platform = (c.req.query('platform') || 'ALL').toUpperCase() as 'ALL' | 'CHZZK' | 'SOOP';
+  const categoryGroup = c.req.query('category') || c.req.query('categoryGroup') || 'ALL';
+  const game = c.req.query('game') || 'ALL';
+  const sort = (c.req.query('sort') || 'viewers') as 'viewers' | 'recent';
+  const query = c.req.query('q') || c.req.query('query') || '';
+
+  const result = await getLiveDiscovery(c.env.DB, {
+    platform,
+    categoryGroup,
+    game,
+    sort,
+    query,
+  });
+
   c.header('Cache-Control', 'public, max-age=30, s-maxage=60');
   return c.json(result);
 });
