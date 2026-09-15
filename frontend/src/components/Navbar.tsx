@@ -71,7 +71,7 @@ export function Navbar({
                 activeNav === 'analytics' ? 'text-[#2563EB]' : 'text-[#475569] hover:text-[#0F172A]'
               }`}
             >
-              <span>방송 탐색</span>
+              <span>대시보드</span>
               <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-[#2563EB]/15 text-[#2563EB]">
                 LIVE
               </span>

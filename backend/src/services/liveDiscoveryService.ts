@@ -41,6 +41,11 @@ export interface LiveDiscoveryFilters {
   query?: string;
 }
 
+export interface PlatformTotalStat {
+  liveCount: number;
+  viewerSum: number;
+}
+
 export interface LiveDiscoveryResponse {
   meta: {
     scope: string;
@@ -48,6 +53,10 @@ export interface LiveDiscoveryResponse {
     observedAt: string;
     totalLiveCount: number;
     totalViewerSum: number;
+    platformTotals: {
+      chzzk: PlatformTotalStat;
+      soop: PlatformTotalStat;
+    };
   };
   categories: LiveCategoryStat[];
   lives: LiveDiscoveryItem[];
@@ -276,6 +285,21 @@ export async function getLiveDiscovery(
 
   const allObservedLives = Array.from(uniqueMap.values());
 
+  // 플랫폼별 분리 집계
+  const chzzkLives = allObservedLives.filter((l) => l.platform === 'CHZZK');
+  const soopLives = allObservedLives.filter((l) => l.platform === 'SOOP');
+
+  const platformTotals = {
+    chzzk: {
+      liveCount: chzzkLives.length,
+      viewerSum: chzzkLives.reduce((acc, l) => acc + l.viewerCount, 0),
+    },
+    soop: {
+      liveCount: soopLives.length,
+      viewerSum: soopLives.reduce((acc, l) => acc + l.viewerCount, 0),
+    },
+  };
+
   // 전체 방송 대상 카테고리 집계 (동일 스냅샷 기준)
   const categories = aggregateCategoriesAndGames(allObservedLives);
 
@@ -289,6 +313,7 @@ export async function getLiveDiscovery(
       observedAt: kstIso,
       totalLiveCount: allObservedLives.length,
       totalViewerSum: allObservedLives.reduce((acc, l) => acc + l.viewerCount, 0),
+      platformTotals,
     },
     categories,
     lives: filteredLives,

@@ -1032,6 +1032,11 @@ export interface LiveCategoryStat {
   games?: LiveGameStat[];
 }
 
+export interface PlatformTotalStat {
+  liveCount: number;
+  viewerSum: number;
+}
+
 export interface LiveDiscoveryResponse {
   meta: {
     scope: string;
@@ -1039,6 +1044,10 @@ export interface LiveDiscoveryResponse {
     observedAt: string;
     totalLiveCount: number;
     totalViewerSum: number;
+    platformTotals?: {
+      chzzk: PlatformTotalStat;
+      soop: PlatformTotalStat;
+    };
   };
   categories: LiveCategoryStat[];
   lives: LiveDiscoveryItem[];
@@ -1189,6 +1198,16 @@ function getFallbackLiveDiscovery(params: LiveDiscoveryParams): LiveDiscoveryRes
       observedAt: kstIso,
       totalLiveCount: fallbackLives.length,
       totalViewerSum: fallbackLives.reduce((acc, l) => acc + l.viewerCount, 0),
+      platformTotals: {
+        chzzk: {
+          liveCount: fallbackLives.filter((l) => l.platform === 'CHZZK').length,
+          viewerSum: fallbackLives.filter((l) => l.platform === 'CHZZK').reduce((acc, l) => acc + l.viewerCount, 0),
+        },
+        soop: {
+          liveCount: fallbackLives.filter((l) => l.platform === 'SOOP').length,
+          viewerSum: fallbackLives.filter((l) => l.platform === 'SOOP').reduce((acc, l) => acc + l.viewerCount, 0),
+        },
+      },
     },
     categories: [
       { key: 'ALL', name: '전체', liveCount: 5, viewerSum: 3570 },
