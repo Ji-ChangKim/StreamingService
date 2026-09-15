@@ -41,6 +41,7 @@ import {
 } from './services/analyticsService';
 import { collectChzzkLiveSnapshot } from './services/chzzkCollector';
 import { getLiveDiscovery } from './services/liveDiscoveryService';
+import { getLiveHistory, getCreatorHistory } from './services/liveHistoryService';
 
 type Bindings = {
   DB: D1Database;
@@ -961,6 +962,45 @@ app.get('/api/discovery/live', async (c) => {
   });
 
   c.header('Cache-Control', 'public, max-age=30, s-maxage=60');
+  return c.json(result);
+});
+
+// 14.3 VDébut 방송 기록(History) 타임라인 조회 API
+app.get('/api/discovery/history', async (c) => {
+  const date = c.req.query('date') || '';
+  const hourParam = c.req.query('hour');
+  const hour = hourParam !== undefined && hourParam !== '' ? Number(hourParam) : undefined;
+  const platform = (c.req.query('platform') || 'ALL').toUpperCase() as 'ALL' | 'CHZZK' | 'SOOP';
+  const category = c.req.query('category') || c.req.query('categoryGroup') || 'ALL';
+  const streamer = c.req.query('streamer') || '';
+  const query = c.req.query('q') || c.req.query('query') || '';
+
+  const result = await getLiveHistory(c.env.DB, {
+    date,
+    hour,
+    platform,
+    category,
+    streamer,
+    query,
+  });
+
+  c.header('Cache-Control', 'public, max-age=60, s-maxage=120');
+  return c.json(result);
+});
+
+// 14.4 VDébut 스트리머 방송 이력 요약 API
+app.get('/api/discovery/history/creator', async (c) => {
+  const name = c.req.query('name') || c.req.query('streamer') || '';
+  if (!name.trim()) {
+    return c.json({ error: 'Streamer name is required' }, 400);
+  }
+
+  const result = await getCreatorHistory(c.env.DB, name);
+  if (!result) {
+    return c.json({ error: 'Creator not found' }, 404);
+  }
+
+  c.header('Cache-Control', 'public, max-age=120, s-maxage=300');
   return c.json(result);
 });
 

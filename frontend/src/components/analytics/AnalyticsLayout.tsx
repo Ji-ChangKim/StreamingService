@@ -18,7 +18,8 @@ import { AnalyticsStatusBar } from './AnalyticsStatusBar';
 import { MethodologyModal } from './MethodologyModal';
 import { MarketDashboardView } from './MarketDashboardView';
 import { LiveDiscoveryView } from './LiveDiscoveryView';
-import { Radio, History, TrendingUp, Calendar, Clock } from 'lucide-react';
+import { HistoryDiscoveryView } from './HistoryDiscoveryView';
+import { Radio, History, TrendingUp } from 'lucide-react';
 
 interface AnalyticsLayoutProps {
   currentSubPath?: string;
@@ -204,48 +205,10 @@ export function AnalyticsLayout({
 
       {/* B. 지난 방송 (타임라인 조회 화면) */}
       {activeTab === 'history' && (
-        <div className="bg-white border border-[#CBD5E1] rounded-2xl p-6 sm:p-10 shadow-2xs space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-slate-100">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <History className="w-5 h-5 text-indigo-600" />
-                <h3 className="text-base sm:text-lg font-black text-[#0F172A]">
-                  특정 날짜·시간의 방송 기록 조회
-                </h3>
-              </div>
-              <p className="text-xs sm:text-sm text-slate-600">
-                특정 날짜와 시간대에 겹쳐 관측된 버튜버 방송 목록과 당시 콘텐츠를 확인합니다. (KST 기준)
-              </p>
-            </div>
-
-            {/* 날짜 선택 간이 바 */}
-            <div className="flex items-center gap-2 self-start sm:self-auto bg-[#F8FAFC] border border-[#CBD5E1] p-1.5 rounded-xl text-xs font-bold">
-              <Calendar className="w-4 h-4 text-slate-500 ml-1" />
-              <span>오늘 기준 최근 관측 기록</span>
-            </div>
-          </div>
-
-          <div className="py-12 text-center max-w-lg mx-auto space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 mx-auto">
-              <Clock className="w-6 h-6" />
-            </div>
-            <h4 className="text-sm sm:text-base font-black text-[#0F172A]">
-              지난 방송 타임라인 서비스 순차 연동 중
-            </h4>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              날짜·시간대별 가로 시간선 및 구간별 콘텐츠 변화 기록을 정밀 구축하고 있습니다.
-              현재는 <strong>'지금 방송'</strong> 탭에서 실시간 라이브를 바로 확인하실 수 있습니다.
-            </p>
-            <button
-              type="button"
-              onClick={() => handleTabChange('live')}
-              className="px-4 py-2 rounded-xl text-xs sm:text-sm font-black bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-2xs cursor-pointer inline-flex items-center gap-1.5"
-            >
-              <Radio className="w-3.5 h-3.5" />
-              <span>지금 방송 보러가기</span>
-            </button>
-          </div>
-        </div>
+        <HistoryDiscoveryView
+          initialPlatform={filters.platform}
+          onNavigateTab={(tab) => handleTabChange(tab as DiscoveryTab)}
+        />
       )}
 
       {/* C. 방송 동향 (종합 통계 대시보드 - 투명하고 객관적인 통계) */}

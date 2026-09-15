@@ -1232,3 +1232,226 @@ function getFallbackLiveDiscovery(params: LiveDiscoveryParams): LiveDiscoveryRes
   };
 }
 
+/**
+ * ============================================================================
+ * 14. 방송 기록 (History) 타임라인 조회 관련 인터페이스 및 API 함수
+ * ============================================================================
+ */
+export interface HistoryRecordItem {
+  id: string;
+  platform: 'CHZZK' | 'SOOP';
+  channelId?: number | string | null;
+  channelName: string;
+  channelImageUrl?: string | null;
+  channelUrl?: string | null;
+  liveTitle: string;
+  categoryGroup: string;
+  categoryName: string;
+  viewerCount: number;
+  observedAt: string;
+  recordedHour: number;
+  liveUrl?: string;
+  tags?: string[];
+}
+
+export interface HourlyDistributionItem {
+  hour: number;
+  liveCount: number;
+  avgViewers: number;
+}
+
+export interface CreatorHistoryItem {
+  streamerName: string;
+  platform: 'CHZZK' | 'SOOP';
+  channelImageUrl?: string | null;
+  channelUrl?: string | null;
+  totalRecordedStreams: number;
+  frequentCategories: Array<{ name: string; count: number }>;
+  recentStreams: Array<{
+    date: string;
+    hour: number;
+    title: string;
+    categoryName: string;
+    viewerCount: number;
+  }>;
+}
+
+export interface LiveHistoryResponse {
+  meta: {
+    targetDate: string;
+    targetHour: number;
+    totalRecords: number;
+    platform: string;
+    category: string;
+  };
+  hourlyDistribution: HourlyDistributionItem[];
+  records: HistoryRecordItem[];
+}
+
+export interface LiveHistoryParams {
+  date?: string;
+  hour?: number;
+  platform?: PlatformFilter;
+  category?: string;
+  streamer?: string;
+  query?: string;
+}
+
+export async function fetchLiveHistory(params: LiveHistoryParams = {}): Promise<LiveHistoryResponse> {
+  const query = new URLSearchParams();
+  if (params.date) query.set('date', params.date);
+  if (params.hour !== undefined) query.set('hour', String(params.hour));
+  if (params.platform && params.platform !== 'ALL') query.set('platform', params.platform);
+  if (params.category && params.category !== 'ALL') query.set('category', params.category);
+  if (params.streamer && params.streamer.trim()) query.set('streamer', params.streamer.trim());
+  if (params.query && params.query.trim()) query.set('q', params.query.trim());
+
+  const url = `/api/discovery/history?${query.toString()}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn('Live history API fallback:', err);
+    return getFallbackLiveHistory(params);
+  }
+}
+
+export async function fetchCreatorHistory(streamerName: string): Promise<CreatorHistoryItem | null> {
+  const cleanName = streamerName.trim();
+  if (!cleanName) return null;
+
+  const url = `/api/discovery/history/creator?name=${encodeURIComponent(cleanName)}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn('Creator history API fallback:', err);
+    return null;
+  }
+}
+
+function getFallbackLiveHistory(params: LiveHistoryParams): LiveHistoryResponse {
+  const now = new Date();
+  const kst = new Date(now.getTime() + 9 * 3600 * 1000);
+  const targetDate = params.date || kst.toISOString().slice(0, 10);
+  const targetHour = params.hour !== undefined ? params.hour : kst.getUTCHours();
+  const platform = params.platform || 'ALL';
+  const category = params.category || 'ALL';
+
+  const hourlyDistribution: HourlyDistributionItem[] = [
+    25, 18, 12, 8, 5, 4, 6, 9, 14, 20, 26, 32,
+    38, 42, 45, 48, 52, 58, 65, 74, 82, 88, 79, 48
+  ].map((count, hour) => ({
+    hour,
+    liveCount: count,
+    avgViewers: Math.round(count * 28.5),
+  }));
+
+  const sampleRecords: HistoryRecordItem[] = [
+    {
+      id: 'hist-101',
+      platform: 'CHZZK',
+      channelId: 'ch_arisa',
+      channelName: '아리사',
+      channelImageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      channelUrl: 'https://chzzk.naver.com/live/arisa',
+      liveTitle: '일단 실버가고 골드 권왕중입니다 정까이',
+      categoryGroup: 'GAME',
+      categoryName: '리그 오브 레전드',
+      viewerCount: 6688,
+      observedAt: `${targetDate} ${String(targetHour).padStart(2, '0')}:15:00`,
+      recordedHour: targetHour,
+      liveUrl: 'https://chzzk.naver.com',
+      tags: ['버튜버', '롤', '랭크게임'],
+    },
+    {
+      id: 'hist-102',
+      platform: 'CHZZK',
+      channelId: 'ch_honey',
+      channelName: '허니츄러스',
+      channelImageUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
+      channelUrl: 'https://chzzk.naver.com/live/honeychurros',
+      liveTitle: '덕코프랑 비슷하다던데 딱 내 스탈일듯',
+      categoryGroup: 'GAME',
+      categoryName: '종합 게임',
+      viewerCount: 2470,
+      observedAt: `${targetDate} ${String(targetHour).padStart(2, '0')}:24:00`,
+      recordedHour: targetHour,
+      liveUrl: 'https://chzzk.naver.com',
+      tags: ['버튜버', '신작게임', '생방송'],
+    },
+    {
+      id: 'hist-103',
+      platform: 'CHZZK',
+      channelId: 'ch_rooftop',
+      channelName: '옥냥이 RoofTopCAT',
+      channelImageUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80',
+      channelUrl: 'https://chzzk.naver.com/live/rooftopcat',
+      liveTitle: '신작 마블 울버린 PS5 독점작 플레이',
+      categoryGroup: 'GAME',
+      categoryName: '마블 울버린',
+      viewerCount: 1845,
+      observedAt: `${targetDate} ${String(targetHour).padStart(2, '0')}:35:00`,
+      recordedHour: targetHour,
+      liveUrl: 'https://chzzk.naver.com',
+      tags: ['PS5', '울버린', '콘솔게임'],
+    },
+    {
+      id: 'hist-104',
+      platform: 'CHZZK',
+      channelId: 'ch_ming',
+      channelName: '김밍령',
+      channelImageUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80',
+      channelUrl: 'https://chzzk.naver.com/live/kimmingryung',
+      liveTitle: '마인크래프트 하드코어 야생 건축 힐링 방송',
+      categoryGroup: 'GAME',
+      categoryName: '마인크래프트',
+      viewerCount: 920,
+      observedAt: `${targetDate} ${String(targetHour).padStart(2, '0')}:42:00`,
+      recordedHour: targetHour,
+      liveUrl: 'https://chzzk.naver.com',
+      tags: ['마인크래프트', '힐링', '건축'],
+    },
+    {
+      id: 'hist-105',
+      platform: 'CHZZK',
+      channelId: 'ch_sing',
+      channelName: '루나 보컬',
+      channelImageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
+      channelUrl: 'https://chzzk.naver.com/live/luna_vocal',
+      liveTitle: '비 오는 날 듣기 좋은 감성 발라드 노래방',
+      categoryGroup: 'MUSIC',
+      categoryName: '음악·노래',
+      viewerCount: 1140,
+      observedAt: `${targetDate} ${String(targetHour).padStart(2, '0')}:50:00`,
+      recordedHour: targetHour,
+      liveUrl: 'https://chzzk.naver.com',
+      tags: ['노래방', '발라드', '우타와쿠'],
+    },
+  ];
+
+  const filtered = sampleRecords.filter((item) => {
+    if (platform !== 'ALL' && item.platform !== platform) return false;
+    if (category !== 'ALL' && item.categoryGroup !== category) return false;
+    if (params.query) {
+      const q = params.query.toLowerCase();
+      if (!item.liveTitle.toLowerCase().includes(q) && !item.channelName.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+
+  return {
+    meta: {
+      targetDate,
+      targetHour,
+      totalRecords: filtered.length,
+      platform,
+      category,
+    },
+    hourlyDistribution,
+    records: filtered,
+  };
+}
+
