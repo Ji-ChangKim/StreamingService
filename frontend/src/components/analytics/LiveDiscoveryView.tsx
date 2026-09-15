@@ -462,27 +462,61 @@ export function LiveDiscoveryView({
           2. 콘텐츠 선택: 플랫폼 선택 토글 & 카테고리 대분류 칩
           =================================================================== */}
       <div className="bg-white border border-[#CBD5E1] p-3.5 sm:p-4 rounded-2xl shadow-2xs space-y-3">
-        {/* 플랫폼 토글 */}
+        {/* 플랫폼 토글: 공식 브랜딩 아이콘 적용 및 균일한 캡슐 버튼 규격 */}
         <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
-          <div className="flex items-center gap-1 sm:gap-1.5">
-            {(['ALL', 'CHZZK', 'SOOP'] as PlatformFilter[]).map((p) => {
-              const isActive = platform === p;
-              const label = p === 'ALL' ? '전체 플랫폼' : p === 'CHZZK' ? '치지직 (CHZZK)' : 'SOOP (숲)';
-              return (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => handlePlatformChange(p)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-[#0F172A] text-white shadow-2xs'
-                      : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                  }`}
-                >
-                  {label}
-                </button>
-              );
-            })}
+          <div className="inline-flex items-center gap-1.5 p-1 bg-slate-100 border border-slate-200 rounded-2xl shadow-2xs">
+            {/* 전체 플랫폼 */}
+            <button
+              type="button"
+              onClick={() => handlePlatformChange('ALL')}
+              className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer ${
+                platform === 'ALL'
+                  ? 'bg-[#0F172A] text-white shadow-sm'
+                  : 'text-slate-700 hover:text-[#0F172A] hover:bg-white/80'
+              }`}
+            >
+              <Layers className={`w-4 h-4 ${platform === 'ALL' ? 'text-blue-400' : 'text-slate-500'}`} />
+              <span>전체 플랫폼</span>
+            </button>
+
+            {/* 치지직 (공식 브랜딩 아이콘) */}
+            <button
+              type="button"
+              onClick={() => handlePlatformChange('CHZZK')}
+              className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer ${
+                platform === 'CHZZK'
+                  ? 'bg-[#0F172A] text-white shadow-sm border border-emerald-500/40'
+                  : 'text-slate-700 hover:text-[#0F172A] hover:bg-white/80'
+              }`}
+            >
+              <img
+                src="/icons/chzzk_icon.png"
+                alt="치지직"
+                className="w-4 h-4 object-contain shrink-0"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/icons/logo_chzzk.png';
+                }}
+              />
+              <span>치지직</span>
+            </button>
+
+            {/* SOOP (공식 브랜딩 아이콘) */}
+            <button
+              type="button"
+              onClick={() => handlePlatformChange('SOOP')}
+              className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer ${
+                platform === 'SOOP'
+                  ? 'bg-[#0F172A] text-white shadow-sm border border-blue-500/40'
+                  : 'text-slate-700 hover:text-[#0F172A] hover:bg-white/80'
+              }`}
+            >
+              <img
+                src={platform === 'SOOP' ? '/icons/soop/soop_symbol_white.svg' : '/icons/soop/soop_symbol_blue.svg'}
+                alt="SOOP"
+                className="w-4 h-4 object-contain shrink-0"
+              />
+              <span>SOOP</span>
+            </button>
           </div>
 
           <div className="flex items-center gap-2">

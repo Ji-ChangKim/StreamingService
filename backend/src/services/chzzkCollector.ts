@@ -24,6 +24,7 @@ export interface ChzzkLiveItem {
  */
 export async function fetchChzzkLiveList(maxCount: number = 100): Promise<ChzzkLiveItem[]> {
   const allLives: ChzzkLiveItem[] = [];
+  const seenLiveIds = new Set<string | number>();
   let nextCursor: string | null = null;
   const pageSize = 50;
 
@@ -50,7 +51,13 @@ export async function fetchChzzkLiveList(maxCount: number = 100): Promise<ChzzkL
       const items: ChzzkLiveItem[] = json?.content?.data || [];
       if (items.length === 0) break;
 
-      allLives.push(...items);
+      for (const item of items) {
+        if (!seenLiveIds.has(item.liveId)) {
+          seenLiveIds.add(item.liveId);
+          allLives.push(item);
+          if (allLives.length >= maxCount) break;
+        }
+      }
 
       // 다음 페이지 커서
       const nextObj = json?.content?.page?.next;

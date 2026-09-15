@@ -238,13 +238,13 @@ export async function getLiveDiscovery(
   const kstIso = new Date(now.getTime() + 9 * 3600 * 1000).toISOString().replace('Z', '+09:00');
   const snapshotId = `snap-${Math.floor(now.getTime() / (5 * 60 * 1000))}`;
 
-  const allObservedLives: LiveDiscoveryItem[] = [];
+  const rawList: LiveDiscoveryItem[] = [];
 
   try {
     // 1. 치지직 데이터 수집 (최대 100개 순회)
     const chzzkItems = await fetchChzzkLiveList(100);
     for (const item of chzzkItems) {
-      allObservedLives.push(normalizeChzzkItem(item, kstIso));
+      rawList.push(normalizeChzzkItem(item, kstIso));
     }
   } catch (err) {
     console.error('[getLiveDiscovery] Chzzk fetch failed:', err);
@@ -255,12 +255,26 @@ export async function getLiveDiscovery(
     if (db) {
       const soopItems = await fetchRegisteredSoopLives(db, 40);
       for (const item of soopItems) {
-        allObservedLives.push(normalizeSoopItem(item, kstIso));
+        rawList.push(normalizeSoopItem(item, kstIso));
       }
     }
   } catch (err) {
     console.error('[getLiveDiscovery] SOOP fetch failed:', err);
   }
+
+  // 3. 채널 단위 중복 방송 완벽 제거 (Deduplication)
+  const uniqueMap = new Map<string, LiveDiscoveryItem>();
+  for (const live of rawList) {
+    const dedupeKey = `${live.platform}:${live.channelId || live.id}`;
+    const existing = uniqueMap.get(dedupeKey);
+    if (!existing) {
+      uniqueMap.set(dedupeKey, live);
+    } else if (live.viewerCount > existing.viewerCount) {
+      uniqueMap.set(dedupeKey, live);
+    }
+  }
+
+  const allObservedLives = Array.from(uniqueMap.values());
 
   // 전체 방송 대상 카테고리 집계 (동일 스냅샷 기준)
   const categories = aggregateCategoriesAndGames(allObservedLives);
