@@ -67,14 +67,11 @@ export function Navbar({
 
             <button
               onClick={() => setActiveNav('analytics')}
-              className={`relative h-full flex items-center gap-1.5 text-xs sm:text-sm font-bold transition-colors px-1 cursor-pointer ${
+              className={`relative h-full flex items-center text-xs sm:text-sm font-bold transition-colors px-1 cursor-pointer ${
                 activeNav === 'analytics' ? 'text-[#2563EB]' : 'text-[#475569] hover:text-[#0F172A]'
               }`}
             >
-              <span>대시보드</span>
-              <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-[#2563EB]/15 text-[#2563EB]">
-                LIVE
-              </span>
+              <span>방송 통계</span>
               {activeNav === 'analytics' && (
                 <div className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#2563EB] rounded-t-full" />
               )}

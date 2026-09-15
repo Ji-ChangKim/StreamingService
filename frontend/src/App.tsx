@@ -128,8 +128,8 @@ export function App() {
       }
       metaRobots.setAttribute('content', 'noindex, nofollow, noarchive');
     } else if (isAnalyticsPath) {
-      pageTitle = '방송 탐색 | VDébut - 지금 방송 중인 버튜버 및 방송 기록';
-      pageDesc = '시청자와 스트리머가 지금 볼 방송을 찾고, 지난 방송과 스트리머의 활동 기록을 투명하게 확인하는 방송 탐색 서비스입니다.';
+      pageTitle = '방송 통계 | VDébut - 지금 방송 중인 버튜버 및 방송 기록';
+      pageDesc = '시청자와 스트리머가 지금 볼 방송을 찾고, 지난 방송과 스트리머의 활동 기록을 확인하는 방송 통계 서비스입니다.';
     } else if (currentPath === '/upload') {
       pageTitle = '데뷔 일정 등록 | VDébut';
     } else if (currentPath === '/about') {

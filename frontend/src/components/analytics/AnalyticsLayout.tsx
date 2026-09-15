@@ -133,11 +133,8 @@ export function AnalyticsLayout({
               <Radio className="w-4 h-4 text-white animate-pulse" />
             </div>
             <h1 className="text-xl sm:text-2xl font-black text-[#0F172A] tracking-tight">
-              VDébut <span className="text-[#2563EB]">대시보드</span>
+              VDébut <span className="text-[#2563EB]">방송 통계</span>
             </h1>
-            <span className="text-[11px] font-black bg-blue-50 text-[#2563EB] border border-blue-200 px-2 py-0.5 rounded-full">
-              LIVE
-            </span>
           </div>
           <p className="text-xs sm:text-sm font-medium text-slate-600 max-w-2xl leading-relaxed">
             시청자와 스트리머가 지금 볼 방송을 찾고, 지난 방송과 스트리머의 활동 기록을 확인하는 곳입니다.
