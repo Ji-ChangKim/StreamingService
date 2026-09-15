@@ -7,7 +7,6 @@ import {
 } from '../../services/analyticsApiService';
 import {
   Search,
-  ExternalLink,
   Clock,
   Radio,
   Gamepad2,
@@ -66,27 +65,57 @@ function formatObservedTime(isoString?: string): string {
 }
 
 /**
- * 3. 플랫폼 공식 배지 (타사 브랜드 무가공 원칙 준수)
+ * 3. 경과 시간 포맷터 (단일 책임)
+ */
+function formatElapsedTime(isoString?: string): string | null {
+  if (!isoString) return null;
+  try {
+    const diffMin = Math.floor((Date.now() - new Date(isoString).getTime()) / 60000);
+    if (diffMin <= 0) return '방금 시작';
+    if (diffMin < 60) return `${diffMin}분 전 시작`;
+    const hours = Math.floor(diffMin / 60);
+    return `${hours}시간 전 시작`;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * 4. 플랫폼 공식 배지 (타사 브랜드 무가공 원칙 준수)
  */
 function PlatformBrandBadge({ platform }: { platform: 'CHZZK' | 'SOOP' }) {
   if (platform === 'CHZZK') {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-black bg-[#00FFA3]/15 text-[#00A868] border border-[#00FFA3]/40">
-        <span className="w-1.5 h-1.5 rounded-full bg-[#00FFA3]" />
-        CHZZK
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-bold bg-black/75 text-white backdrop-blur-xs border border-white/10">
+        <img
+          src="/icons/chzzk_icon.png"
+          alt="치지직"
+          className="w-3.5 h-3.5 object-contain shrink-0"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src = '/icons/logo_chzzk.png';
+          }}
+        />
+        <span>치지직</span>
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-black bg-[#0066FF]/15 text-[#0066FF] border border-[#0066FF]/30">
-      <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF]" />
-      SOOP
+    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-bold bg-black/75 text-white backdrop-blur-xs border border-white/10">
+      <img
+        src="/icons/soop/soop_symbol_white.svg"
+        alt="SOOP"
+        className="w-3.5 h-3.5 object-contain shrink-0"
+        onError={(e) => {
+          (e.currentTarget as HTMLImageElement).src = '/icons/soop/soop_symbol_blue.svg';
+        }}
+      />
+      <span>SOOP</span>
     </span>
   );
 }
 
 /**
- * 4. 개별 방송 카드 컴포넌트 (단일 책임: 방송 정보 렌더링)
+ * 5. 개별 방송 카드 컴포넌트 (단일 책임: 방송 정보 렌더링 및 원클릭 방송 시청)
  */
 function LiveStreamCard({
   live,
@@ -96,9 +125,16 @@ function LiveStreamCard({
   onSelectCreator?: (name: string) => void;
 }) {
   const [imageError, setImageError] = useState(false);
+  const elapsedTime = useMemo(() => formatElapsedTime(live.firstSeenAt), [live.firstSeenAt]);
 
   return (
-    <div className="bg-white border border-[#CBD5E1] hover:border-blue-400 rounded-2xl overflow-hidden shadow-2xs hover:shadow-md transition-all duration-200 flex flex-col group">
+    <a
+      href={live.liveUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="bg-white border border-[#CBD5E1] hover:border-blue-500 rounded-2xl overflow-hidden shadow-2xs hover:shadow-lg transition-all duration-200 flex flex-col group cursor-pointer"
+      title={`${live.liveTitle} - 바로 시청하기`}
+    >
       {/* 썸네일 영역 */}
       <div className="relative aspect-video bg-slate-900 overflow-hidden">
         {live.thumbnailUrl && !imageError ? (
@@ -129,12 +165,13 @@ function LiveStreamCard({
         {/* 상단 좌우 오버레이 배지 */}
         <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
           <PlatformBrandBadge platform={live.platform} />
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-black bg-rose-600/90 text-white backdrop-blur-xs">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-black bg-rose-600 text-white backdrop-blur-xs shadow-xs">
             <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
             LIVE
           </span>
         </div>
 
+        {/* 우하단 시청자 수 */}
         <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-md text-xs font-mono font-black bg-black/75 text-white backdrop-blur-xs">
           {live.viewerCount.toLocaleString()}명 시청
         </div>
@@ -143,7 +180,7 @@ function LiveStreamCard({
       {/* 본문 정보 영역 */}
       <div className="p-4 flex-1 flex flex-col justify-between gap-3">
         <div>
-          {/* 스트리머 프로필 & 이름 */}
+          {/* 스트리머 프로필 & 이름 (프로필 클릭 시 방송 기록 이동 분기 지원) */}
           <div className="flex items-center gap-2 mb-2">
             {live.channelImageUrl && (
               <img
@@ -154,8 +191,13 @@ function LiveStreamCard({
             )}
             <button
               type="button"
-              onClick={() => onSelectCreator?.(live.channelName)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onSelectCreator?.(live.channelName);
+              }}
               className="text-xs sm:text-sm font-black text-[#0F172A] hover:text-blue-600 transition-colors text-left truncate cursor-pointer"
+              title={`${live.channelName} 방송 기록 보기`}
             >
               {live.channelName}
             </button>
@@ -163,42 +205,28 @@ function LiveStreamCard({
 
           {/* 방송 제목 */}
           <h3
-            className="text-sm sm:text-base font-bold text-[#0F172A] line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors mb-2"
+            className="text-sm sm:text-base font-bold text-[#0F172A] line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors mb-2.5"
             title={live.liveTitle}
           >
             {live.liveTitle}
           </h3>
 
-          {/* 카테고리 / 게임 태그 */}
+          {/* 카테고리 태그 및 경과 시간 */}
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
               {getCategoryIcon(live.categoryGroup)}
               <span className="truncate max-w-[150px]">{live.categoryName}</span>
             </span>
+            {elapsedTime && (
+              <span className="inline-flex items-center gap-1 text-[11px] text-slate-500 font-medium">
+                <Clock className="w-3 h-3 text-slate-400" />
+                <span>{elapsedTime}</span>
+              </span>
+            )}
           </div>
         </div>
-
-        {/* 하단 링크 버튼들 */}
-        <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
-          <button
-            type="button"
-            onClick={() => onSelectCreator?.(live.channelName)}
-            className="text-xs font-bold text-slate-600 hover:text-blue-600 transition-colors cursor-pointer py-1"
-          >
-            기록 보기
-          </button>
-          <a
-            href={live.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-black bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white border border-blue-200 hover:border-blue-600 transition-all cursor-pointer shadow-2xs"
-          >
-            <span>방송 보기</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
-        </div>
       </div>
-    </div>
+    </a>
   );
 }
 
@@ -227,42 +255,59 @@ function LiveSkeletonGrid() {
 }
 
 /**
- * 6. 결과 없음 컴포넌트 (단일 책임)
+ * 6. 결과 없음 컴포넌트 (단일 책임: 빈 상태 안내)
  */
 function LiveEmptyState({
+  platform,
   onResetFilters,
+  onSelectChzzk,
   onNavigateHistory,
 }: {
+  platform?: PlatformFilter;
   onResetFilters: () => void;
+  onSelectChzzk?: () => void;
   onNavigateHistory?: () => void;
 }) {
+  const isSoopOnly = platform === 'SOOP';
+
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-10 sm:p-14 text-center my-6 shadow-2xs">
       <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 mx-auto mb-4">
         <Radio className="w-7 h-7" />
       </div>
       <h3 className="text-base sm:text-lg font-black text-[#0F172A] mb-1.5">
-        현재 조건에서 확인된 방송이 없습니다
+        {isSoopOnly ? 'SOOP 라이브 연동 준비 중' : '현재 조건에서 진행 중인 방송이 없습니다'}
       </h3>
       <p className="text-xs sm:text-sm font-medium text-slate-600 max-w-md mx-auto mb-6">
-        선택한 플랫폼이나 게임에 진행 중인 방송이 없거나 검색 결과가 없습니다.
-        필터를 변경하거나 이전 시간대의 방송 기록을 확인해보세요.
+        {isSoopOnly
+          ? '현재 SOOP 버튜버 라이브 데이터 연동을 준비하고 있습니다. 치지직 LIVE 방송을 먼저 확인해보세요.'
+          : '선택한 카테고리나 게임에 진행 중인 방송이 없거나 검색 결과가 없습니다. 필터를 변경하거나 지난 방송 기록을 확인해보세요.'}
       </p>
       <div className="flex flex-wrap items-center justify-center gap-3">
-        <button
-          type="button"
-          onClick={onResetFilters}
-          className="px-4 py-2 rounded-xl text-xs sm:text-sm font-black bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-2xs cursor-pointer"
-        >
-          전체 방송 보기
-        </button>
+        {isSoopOnly && onSelectChzzk ? (
+          <button
+            type="button"
+            onClick={onSelectChzzk}
+            className="px-4 py-2 rounded-xl text-xs sm:text-sm font-black bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-2xs cursor-pointer"
+          >
+            치지직 LIVE 확인하기
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={onResetFilters}
+            className="px-4 py-2 rounded-xl text-xs sm:text-sm font-black bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-2xs cursor-pointer"
+          >
+            전체 방송 보기
+          </button>
+        )}
         {onNavigateHistory && (
           <button
             type="button"
             onClick={onNavigateHistory}
             className="px-4 py-2 rounded-xl text-xs sm:text-sm font-black bg-slate-100 text-slate-800 hover:bg-slate-200 transition-colors border border-slate-300 cursor-pointer"
           >
-            지난 방송 확인하기
+            방송 기록 확인하기
           </button>
         )}
       </div>
@@ -418,18 +463,18 @@ export function LiveDiscoveryView({
   return (
     <div className="space-y-5 sm:space-y-6">
       {/* ===================================================================
-          1. 상단 헤더: "지금 방송 중인 버튜버" + 스트리머/채널 검색창
+          1. 상단 헤더: "LIVE 방송" + 스트리머/채널 검색창
           =================================================================== */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4 bg-white border border-[#CBD5E1] p-4 sm:p-5 rounded-2xl shadow-2xs">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
             <h2 className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight">
-              지금 방송 중인 버튜버
+              LIVE 방송
             </h2>
           </div>
           <p className="text-xs sm:text-sm font-medium text-slate-600">
-            실시간으로 관측된 버튜버 방송을 찾고 바로 시청하거나 활동 기록을 확인하세요.
+            현재 온에어 중인 버튜버 방송을 확인하고 바로 시청할 수 있습니다.
           </p>
         </div>
 
@@ -631,13 +676,13 @@ export function LiveDiscoveryView({
           <span className="text-sm sm:text-base font-black text-[#0F172A]">
             {conditionSummary}
           </span>
-          <span className="text-xs font-black px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-            {data?.lives?.length ?? 0}개 방송 관측
+          <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+            {isLoading ? '방송 확인 중...' : `${data?.lives?.length ?? 0}개 LIVE`}
           </span>
-          {data?.meta?.observedAt && (
+          {data?.meta?.observedAt && !isLoading && (
             <span className="inline-flex items-center gap-1 text-xs text-slate-600 font-medium">
               <Clock className="w-3.5 h-3.5 text-slate-500" />
-              <span>{formatObservedTime(data.meta.observedAt)} 관측 기준</span>
+              <span>{formatObservedTime(data.meta.observedAt)} 기준</span>
             </span>
           )}
         </div>
@@ -676,7 +721,9 @@ export function LiveDiscoveryView({
         <LiveSkeletonGrid />
       ) : !data || data.lives.length === 0 ? (
         <LiveEmptyState
+          platform={platform}
           onResetFilters={handleResetFilters}
+          onSelectChzzk={() => handlePlatformChange('CHZZK')}
           onNavigateHistory={() => onNavigateTab?.('history')}
         />
       ) : (

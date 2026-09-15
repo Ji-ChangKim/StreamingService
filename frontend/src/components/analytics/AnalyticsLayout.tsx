@@ -146,7 +146,7 @@ export function AnalyticsLayout({
           2. 네비게이션 탭 (지금 방송 | 지난 방송 | 방송 동향)
           =================================================================== */}
       <div className="flex items-center gap-1 sm:gap-2 p-1.5 bg-[#F1F5F9] border border-[#CBD5E1] rounded-2xl mb-5 overflow-x-auto shadow-2xs">
-        {/* 탭 1: 지금 방송 (기본) */}
+        {/* 탭 1: LIVE (기본) */}
         <button
           type="button"
           onClick={() => handleTabChange('live')}
@@ -157,13 +157,10 @@ export function AnalyticsLayout({
           }`}
         >
           <Radio className="w-4 h-4 text-rose-500" />
-          <span>지금 방송</span>
-          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-rose-500/20 text-rose-300 font-mono font-black">
-            실시간
-          </span>
+          <span>LIVE</span>
         </button>
 
-        {/* 탭 2: 지난 방송 */}
+        {/* 탭 2: 방송 기록 */}
         <button
           type="button"
           onClick={() => handleTabChange('history')}
@@ -174,10 +171,10 @@ export function AnalyticsLayout({
           }`}
         >
           <History className="w-4 h-4 text-indigo-500" />
-          <span>지난 방송</span>
+          <span>방송 기록</span>
         </button>
 
-        {/* 탭 3: 방송 동향 (통계 탭) */}
+        {/* 탭 3: 방송 동향 */}
         <button
           type="button"
           onClick={() => handleTabChange('trends')}
@@ -189,9 +186,6 @@ export function AnalyticsLayout({
         >
           <TrendingUp className="w-4 h-4 text-emerald-500" />
           <span>방송 동향</span>
-          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-200 text-slate-700 font-mono">
-            통계
-          </span>
         </button>
       </div>
 
