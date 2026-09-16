@@ -44,9 +44,9 @@ export function Navbar({
 
   return (
     <header className="bg-white border-b border-[#E5E7EB] sticky top-0 z-30">
-      <div className="max-w-[1280px] mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
+      <div className="max-w-[1280px] mx-auto px-3 sm:px-6 min-h-14 sm:h-16 flex flex-wrap sm:flex-nowrap items-center justify-between gap-y-2 py-2 sm:py-0">
         {/* Left: Brand Logo & Left-aligned Nav Links */}
-        <div className="flex items-center gap-3 sm:gap-8 h-full">
+        <div className="flex items-center justify-between sm:justify-start gap-3 sm:gap-8 h-10 sm:h-full w-full sm:w-auto">
           <div className="flex items-center cursor-pointer py-1" onClick={() => setActiveNav('schedule')}>
             <img src="/logo.png" alt="VDébut Logo" className="h-7 sm:h-9 w-auto object-contain" />
           </div>
@@ -80,7 +80,7 @@ export function Navbar({
         </div>
 
         {/* Right: Custom Language Dropdown & Submit CTA Button */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center justify-end gap-2 sm:gap-3 w-full sm:w-auto">
           {/* Sleek Custom Language Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button

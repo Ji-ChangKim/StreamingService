@@ -42,6 +42,7 @@ import {
 import { collectChzzkLiveSnapshot } from './services/chzzkCollector';
 import { getLiveDiscovery } from './services/liveDiscoveryService';
 import { getLiveHistory, getCreatorHistory } from './services/liveHistoryService';
+import { getBroadcastStatistics } from './services/broadcastStatisticsService';
 
 type Bindings = {
   DB: D1Database;
@@ -892,6 +893,23 @@ app.post('/api/v1/admin/auto-review/run', async (c) => {
 });
 
 // 14. VDébut Analytics Dashboard API Endpoints
+// 새 대시보드는 예시 자료를 사용하지 않고 실제 수집 결과만 전달한다.
+app.get('/api/analytics/broadcast-statistics', async (c) => {
+  const cacheKey = new Request(`${new URL(c.req.url).origin}/api/analytics/broadcast-statistics`);
+  const cached = await caches.default.match(cacheKey);
+  if (cached) return cached;
+  try {
+    const result = await getBroadcastStatistics(c.env.DB);
+    const response = new Response(JSON.stringify(result), {
+      headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30, s-maxage=60' },
+    });
+    c.executionCtx.waitUntil(caches.default.put(cacheKey, response.clone()));
+    return response;
+  } catch (error) {
+    console.error('[Statistics] Request failed', String(error));
+    return c.json({ error: '방송 통계를 불러오지 못했습니다.' }, 503);
+  }
+});
 app.get('/api/analytics/overview', async (c) => {
   const platform = c.req.query('platform') || 'ALL';
   const result = await getAnalyticsOverview(c.env.DB, platform);
