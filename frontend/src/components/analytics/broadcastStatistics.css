@@ -145,3 +145,39 @@
 @media(max-width:1050px){.bs-top-grid{grid-template-columns:minmax(0,1.6fr) minmax(290px,1fr)}.bs-categories{grid-template-columns:repeat(4,minmax(0,1fr))}.bs-chart-panel .bs-panel-head{flex-wrap:wrap}.bs-lower-grid{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}.bs-lower-grid .bs-panel-head{flex-wrap:wrap}}
 @media(max-width:760px){.bs-dashboard{padding:22px 16px 30px}.bs-top-grid,.bs-lower-grid{grid-template-columns:1fr}.bs-heading{align-items:flex-start;flex-direction:column;gap:18px}.bs-heading h1{font-size:26px}.bs-search-wrap{width:100%}.bs-toolbar{gap:14px}.bs-platform-tabs{gap:3px}.bs-platform-tabs>button{padding:4px 8px}.bs-notice{align-items:flex-start;flex-wrap:wrap}.bs-notice>span:nth-child(2){flex:1;min-width:180px}.bs-notice>button{margin-left:0}.bs-categories{grid-template-columns:repeat(3,minmax(0,1fr))}.bs-chart-panel .bs-panel-head{flex-wrap:nowrap}.bs-platform-row{padding:10px 0}.bs-chart-summary strong{font-size:25px}.bs-chart-summary span{font-size:10px}.bs-panel-head{padding:16px 16px 0}.bs-chart-foot{padding:8px 16px 14px}.bs-lower-grid .bs-panel-head{flex-wrap:nowrap}}
 @media(max-width:480px){.bs-dashboard{padding:20px 12px 28px}.bs-platform-tabs>button{padding:4px 6px;font-size:11px}.bs-brand{font-size:11px}.bs-toolbar>.bs-button{margin-left:auto}.bs-categories{grid-template-columns:repeat(2,minmax(0,1fr));padding:14px;gap:9px}.bs-panel-head{flex-wrap:wrap}.bs-chart-panel .bs-panel-head{flex-wrap:wrap}.bs-panel-head h2{font-size:14px}.bs-chart-summary{padding:15px 14px 0}.bs-chart-summary span{display:block;margin:4px 0 0}.bs-chart-box{margin:4px 6px 0}.bs-legend{padding-left:15px;gap:13px}.bs-chart-foot{flex-wrap:wrap;font-size:9px}.bs-update-bar{font-size:10px;align-items:flex-start}.bs-ranking-list{padding:4px 14px 10px}.bs-broadcast-row{grid-template-columns:12px 28px minmax(0,1fr) auto;gap:7px}.bs-avatar{width:28px;height:28px}.bs-values strong{font-size:14px}.bs-broadcast-row .bs-live-tag{display:none}.bs-person{font-size:11px}.bs-row-content>.bs-small{font-size:9px}.bs-peak-row{grid-template-columns:12px minmax(0,1fr) auto;gap:8px}.bs-lower-grid .bs-panel-head{flex-wrap:wrap}.bs-dialog-content{padding:16px}.bs-dialog-heading{padding:16px}.bs-source-status{grid-template-columns:85px minmax(0,1fr);gap:8px}.bs-download-scope{grid-template-columns:90px minmax(0,1fr)}.bs-record-stats{gap:8px}.bs-record-stats>div{padding:10px}}
+
+/* 스트리머 검색은 방송 여부와 관계없이 등록 채널로 이어진다. */
+.bs-streamer-search{position:relative;width:390px;max-width:100%;flex-shrink:0}
+.bs-search-form{display:flex;align-items:center;gap:8px;border:1px solid #cbd5e1;background:white;border-radius:10px;padding:5px 6px 5px 12px;min-height:44px}
+.bs-search-form>svg{flex-shrink:0;color:#94a3b8}
+.bs-search-form input{width:100%;min-width:0;border:0;padding:6px 0;background:transparent;font-size:12px;outline-offset:1px}
+.bs-search-form button{flex-shrink:0;border:0;border-radius:6px}
+.bs-search-submit{background:#0f172a;color:white;font-size:12px;padding:8px 12px}
+.bs-search-clear{background:transparent;color:#64748b;padding:5px}
+.bs-search-hint{font-size:10px;color:#64748b;margin-top:6px!important}
+.bs-streamer-results{top:50px;max-height:min(460px,60dvh)}
+.bs-streamer-results [role=option]{display:flex;flex-direction:row;align-items:center;gap:9px;width:100%;min-width:0}
+.bs-streamer-results [role=option][aria-selected=true]{background:#eff6ff;outline:1px solid #93c5fd;outline-offset:-1px}
+.bs-search-person{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.bs-search-person strong{display:flex;align-items:center;gap:5px;overflow-wrap:anywhere}
+.bs-search-avatar{width:32px;height:32px;border-radius:50%;background:#eef2ff;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#6366f1}
+.bs-search-avatar img{width:100%;height:100%;object-fit:cover}
+.bs-streamer-results .bs-search-error{color:#9a3412;background:#fff7ed}
+.bs-streamer-results .bs-search-error button{display:inline;padding:2px;color:#2563eb;background:transparent;width:auto;font-size:11px}
+.bs-streamer-profile{display:flex;gap:14px;align-items:center}
+.bs-streamer-profile>img{width:56px;height:56px;border-radius:50%;object-fit:cover}
+.bs-streamer-profile h3{margin:0!important;font-size:18px!important}
+.bs-streamer-broadcast{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;padding:12px;border:1px solid #e2e8f0;border-radius:8px;background:white;margin-top:8px}
+.bs-streamer-broadcast:hover{background:#f8fafc;border-color:#93c5fd}
+.bs-streamer-broadcast>span{min-width:0;display:flex;flex-direction:column;gap:4px}
+.bs-streamer-broadcast strong{font-size:12px;overflow-wrap:anywhere}
+.bs-streamer-broadcast>b{white-space:nowrap;font-size:12px}
+.bs-badge-tag{display:inline-flex;align-items:center;padding:1px 5px;border-radius:4px;font-size:9px;font-weight:700;line-height:1.4}
+.bs-badge-registered{background:#e0e7ff;color:#4338ca}
+.bs-badge-external{background:#f1f5f9;color:#475569}
+.bs-feedback-banner{margin-top:6px;padding:6px 10px;border-radius:6px;font-size:11px;font-weight:600;display:flex;align-items:center;animation:bs-fade-in 0.2s ease-out}
+.bs-feedback-success{background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}
+.bs-feedback-info{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+.bs-feedback-error{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+@keyframes bs-fade-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){.bs-streamer-search{width:100%}}

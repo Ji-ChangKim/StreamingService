@@ -43,6 +43,8 @@ import { collectChzzkLiveSnapshot } from './services/chzzkCollector';
 import { getLiveDiscovery } from './services/liveDiscoveryService';
 import { getLiveHistory, getCreatorHistory } from './services/liveHistoryService';
 import { getBroadcastStatistics } from './services/broadcastStatisticsService';
+import { searchStatisticsStreamers } from './services/statisticsStreamerSearchService';
+import { registerExternalStreamerToD1 } from './services/externalPlatformSearchService';
 
 type Bindings = {
   DB: D1Database;
@@ -894,6 +896,38 @@ app.post('/api/v1/admin/auto-review/run', async (c) => {
 
 // 14. VDébut Analytics Dashboard API Endpoints
 // 새 대시보드는 예시 자료를 사용하지 않고 실제 수집 결과만 전달한다.
+// 등록된 채널 및 치지직/SOOP 플랫폼 전체에서 스트리머를 실시간 검색한다.
+app.get('/api/analytics/streamers/search', async (c) => {
+  const query = c.req.query('q') || '';
+  if (query.length > 80) return c.json({ error: '검색어는 80자 이내로 입력해 주세요.' }, 400);
+  const includeExternal = c.req.query('external') !== 'false';
+  try {
+    const result = await searchStatisticsStreamers(c.env.DB, query, includeExternal);
+    c.header('Cache-Control', 'public, max-age=15');
+    return c.json(result);
+  } catch (error) {
+    console.error('[Statistics] Streamer search failed', String(error));
+    return c.json({ error: '스트리머 정보를 불러오지 못했습니다.' }, 503);
+  }
+});
+
+// 외부 검색 스트리머를 VDébut DB에 정식 등록/수집 연동하는 1-클릭 엔드포인트
+app.post('/api/analytics/streamers/register', async (c) => {
+  if (!c.env.DB) {
+    return c.json({ success: false, message: 'D1 데이터베이스가 구성되지 않았습니다.' }, 503);
+  }
+  try {
+    const body = await c.req.json();
+    if (!body || !body.platform || !body.channelUrl || !body.name) {
+      return c.json({ success: false, message: '필수 스트리머 정보가 누락되었습니다.' }, 400);
+    }
+    const result = await registerExternalStreamerToD1(c.env.DB, body);
+    return c.json(result);
+  } catch (error: any) {
+    console.error('[Statistics] Streamer auto-register failed', error);
+    return c.json({ success: false, message: error?.message || '스트리머 등록에 실패했습니다.' }, 500);
+  }
+});
 app.get('/api/analytics/broadcast-statistics', async (c) => {
   const cacheKey = new Request(`${new URL(c.req.url).origin}/api/analytics/broadcast-statistics`);
   const cached = await caches.default.match(cacheKey);

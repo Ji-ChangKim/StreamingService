@@ -1,3 +1,4 @@
+import type { StatisticsCollectionStatus } from './statisticsCollection';
 export type StatisticsPlatform = 'SOOP' | 'CHZZK' | 'TWITCH' | 'CHZZM';
 export type StatisticsPlatformFilter = StatisticsPlatform | 'ALL';
 export type SourceState = 'available' | 'partial' | 'unavailable' | 'unsupported';
@@ -52,6 +53,8 @@ export interface BroadcastStatistics {
     historyFrom: string;
     historyScope: string;
     unlinkedPeakChannels: number;
+    historyIntervalMinutes?: number;
+    collection?: StatisticsCollectionStatus;
   };
   sources: PlatformSource[];
   lives: StatisticsBroadcast[];

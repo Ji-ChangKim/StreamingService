@@ -89,7 +89,7 @@ export function Footer({ currentLang = 'ko', onNavigate }: FooterProps) {
         {/* Brand Compliance & Copyright Disclaimer */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#94A3B8]">
           <p>
-            치지직, SOOP, YouTube, Twitch 등 각 플랫폼 로고 및 크리에이터 창작물의 저작권은 해당 권리자에게 있습니다.
+            각 플랫폼 로고 및 크리에이터 창작물의 저작권은 해당 권리자에게 있습니다.
           </p>
           <div className="font-medium text-[#64748B]">
             © 2026 VDebut. All rights reserved.

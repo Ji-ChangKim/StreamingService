@@ -8,5 +8,7 @@ export async function fetchBroadcastStatistics(signal: AbortSignal): Promise<Bro
   if (!data.meta?.generatedAt || !Array.isArray(data.sources) || !Array.isArray(data.lives) || !Array.isArray(data.points) || !Array.isArray(data.peaks)) {
     throw new Error('통계 응답을 확인하지 못했습니다. 다시 시도해 주세요.');
   }
-  return data;
+  // 이전 캐시에 준비 중 플랫폼이 남아 있어도 화면과 다운로드에 포함하지 않는다.
+  const visible = (row: { platform: string }) => row.platform === 'SOOP' || row.platform === 'CHZZK';
+  return { ...data, sources: data.sources.filter(visible), lives: data.lives.filter(visible), points: data.points.filter(visible), peaks: data.peaks.filter(visible) };
 }

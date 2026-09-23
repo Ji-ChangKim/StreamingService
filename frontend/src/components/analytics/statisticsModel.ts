@@ -3,8 +3,6 @@ import type { BroadcastStatistics, StatisticsBroadcast, StatisticsPeak, Statisti
 export const STATISTICS_PLATFORMS: Array<{ id: StatisticsPlatform; name: string; color: string; logo?: string }> = [
   { id: 'SOOP', name: 'SOOP', color: '#2563eb', logo: '/icons/soop/soop_symbol_blue.svg' },
   { id: 'CHZZK', name: '치지직', color: '#009c68', logo: '/icons/chzzk/chzzk-icon-01.png' },
-  { id: 'TWITCH', name: '트위치', color: '#9146ff', logo: '/icons/twitch/glitch_flat_purple.svg' },
-  { id: 'CHZZM', name: '씨미', color: '#b54c9c' },
 ];
 
 export interface StatisticsCategory {
@@ -25,7 +23,7 @@ export interface StatisticsFilters {
 export const countFormat = (value: number) => value.toLocaleString('ko-KR');
 export const platformName = (id: StatisticsPlatformFilter) => STATISTICS_PLATFORMS.find((platform) => platform.id === id)?.name || '전체';
 export const categoryKey = (row: StatisticsBroadcast) => `${row.platform}:${row.categoryId}`;
-export const inPlatform = (row: { platform: StatisticsPlatform }, platform: StatisticsPlatformFilter) => platform === 'ALL' || row.platform === platform;
+export const inPlatform = (row: { platform: StatisticsPlatform }, platform: StatisticsPlatformFilter) => STATISTICS_PLATFORMS.some((item) => item.id === row.platform) && (platform === 'ALL' || row.platform === platform);
 
 // 모든 시간 표시는 사용자의 장치 시간대와 관계없이 한국 시각을 사용한다.
 export function statisticsTime(value: string | null, withDate = false): string {
@@ -82,7 +80,7 @@ export function readStatisticsFilters(): StatisticsFilters {
   const metric = params.get('metric');
   return {
     platform: STATISTICS_PLATFORMS.some((item) => item.id === platform) ? platform as StatisticsPlatform : 'ALL',
-    category: params.get('category'), hours: [6, 12, 24].includes(hours) ? hours : 24,
+    category: /^(CHZZK|SOOP):/.test(params.get('category') || '') ? params.get('category') : null, hours: [6, 12, 24].includes(hours) ? hours : 24,
     metric: metric === 'channels' || metric === 'chats' ? metric : 'viewers',
   };
 }

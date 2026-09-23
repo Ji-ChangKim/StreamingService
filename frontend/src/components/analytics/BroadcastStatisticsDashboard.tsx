@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Download, Info, RefreshCw, Search, X, ExternalLink } from 'lucide-react';
+import { Download, Info, RefreshCw, X, ExternalLink } from 'lucide-react';
 import type { BroadcastStatistics, StatisticsBroadcast } from '../../../../shared/broadcastStatistics';
 import { StatisticsBrand } from './StatisticsBrand';
 import { StatisticsChart } from './StatisticsChart';
 import { StatisticsCategoryRanking, StatisticsLiveRanking, StatisticsPeakRanking, StatisticsPlatformRanking } from './StatisticsPanels';
 import { useBroadcastStatistics } from './useBroadcastStatistics';
 import { aggregateStatisticsCategories, categoryKey, countFormat, downloadBroadcastStatistics, inPlatform, platformName, readStatisticsFilters, safeStatisticsUrl, STATISTICS_PLATFORMS, statisticsTime, type StatisticsCategory, type StatisticsFilters } from './statisticsModel';
+import { StatisticsStreamerSearch } from './StatisticsStreamerSearch';
+import { StatisticsStreamerRecord } from './StatisticsStreamerRecord';
+import type { StatisticsStreamer } from '../../../../shared/statisticsStreamerSearch';
 import './broadcastStatistics.css';
 
 // 기본 dialog의 초점 이동과 Escape 닫기를 사용한다.
@@ -56,7 +59,7 @@ function StatisticsScope({ data }: { data: BroadcastStatistics | null }) {
 export function BroadcastStatisticsDashboard({ currentSubPath }: { currentSubPath?: string }) {
   const { data, loading, error, refresh } = useBroadcastStatistics();
   const [filters, setFilters] = useState(readStatisticsFilters);
-  const [query, setQuery] = useState('');
+  const [selectedStreamer, setSelectedStreamer] = useState<StatisticsStreamer | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [panel, setPanel] = useState<'scope' | 'download' | null>(null);
   const [downloadBusy, setDownloadBusy] = useState(false);
@@ -64,7 +67,7 @@ export function BroadcastStatisticsDashboard({ currentSubPath }: { currentSubPat
   const legacyScrolled = useRef(false);
   useEffect(() => {
     setFilters(readStatisticsFilters());
-    const sync = () => { setFilters(readStatisticsFilters()); setSelectedId(null); setPanel(null); };
+    const sync = () => { setFilters(readStatisticsFilters()); setSelectedId(null); setSelectedStreamer(null); setPanel(null); };
     window.addEventListener('popstate', sync);
     return () => window.removeEventListener('popstate', sync);
   }, [currentSubPath]);
@@ -84,7 +87,7 @@ export function BroadcastStatisticsDashboard({ currentSubPath }: { currentSubPat
     if (next.metric !== 'viewers') params.set('metric', next.metric);
     window.history.pushState({}, '', `/analytics?${params.toString()}`);
     setFilters(next);
-    setQuery('');
+
   };
   const scopedLives = (data?.lives || []).filter((row) => inPlatform(row, filters.platform));
   const categories = aggregateStatisticsCategories(scopedLives);
@@ -93,14 +96,11 @@ export function BroadcastStatisticsDashboard({ currentSubPath }: { currentSubPat
   const liveRows = scopedLives.filter((row) => !filters.category || categoryKey(row) === filters.category);
   const peakRows = (data?.peaks || []).filter((row) => inPlatform(row, filters.platform) && (!filters.category || categoryKey(row) === filters.category));
   const selected = data?.lives.find((row) => row.id === selectedId) || data?.peaks.find((row) => row.id === selectedId);
-  const searchTerm = query.trim().toLocaleLowerCase();
-  const matchingPeople = searchTerm ? (data?.lives || []).filter((row) => row.channelName?.toLocaleLowerCase().includes(searchTerm)).slice(0, 5) : [];
-  const matchingCategories = searchTerm ? allCategories.filter((category) => category.name.toLocaleLowerCase().includes(searchTerm)).slice(0, 5) : [];
   const selectCategory = (category: StatisticsCategory) => {
     changeFilters({ platform: category.platform, category: filters.category === category.key ? null : category.key });
     document.getElementById('bs-live-ranking')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
-  const openRecord = (id: string) => { setSelectedId(id); setQuery(''); };
+  const openRecord = (id: string) => { setSelectedStreamer(null); setSelectedId(id); };
   const handleDownload = async () => {
     if (!data || downloadBusy) return;
     setDownloadBusy(true);
@@ -112,9 +112,7 @@ export function BroadcastStatisticsDashboard({ currentSubPath }: { currentSubPat
   const currentDelayed = !!data && Date.now() - Date.parse(data.meta.generatedAt) > 120000;
   return <div className="bs-dashboard">
     <div className="bs-heading"><div><div className="bs-eyebrow">BROADCAST INSIGHTS</div><h1>방송 통계</h1><p>지금의 방송 흐름부터, 주목받는 콘텐츠까지.</p></div>
-      <div className="bs-search-wrap"><label htmlFor="bs-search" className="bs-sr-only">스트리머·카테고리 검색</label><Search size={17} aria-hidden="true" /><input id="bs-search" type="search" value={query} placeholder="스트리머·카테고리 검색" autoComplete="off" onChange={(event) => setQuery(event.target.value)} onKeyDown={(event) => { if (event.key === 'Escape') setQuery(''); }} />
-        {searchTerm && <div className="bs-search-results" aria-label="검색 결과"><p>현재 수집된 방송에서 검색</p>{matchingPeople.map((row) => <button type="button" key={row.id} onClick={() => openRecord(row.id)}><span className="bs-small">스트리머 · {platformName(row.platform)}</span><strong>{row.channelName}</strong></button>)}{matchingCategories.map((category) => <button type="button" key={category.key} onClick={() => selectCategory(category)}><span className="bs-small">카테고리 · {platformName(category.platform)}</span><strong>{category.name}</strong></button>)}{!matchingPeople.length && !matchingCategories.length && <p>검색 결과가 없어요.</p>}</div>}
-      </div>
+      <StatisticsStreamerSearch data={data} onSelectStreamer={setSelectedStreamer} onSelectCategory={selectCategory} />
     </div>
     <div className="bs-toolbar"><nav className="bs-platform-tabs" aria-label="통계 플랫폼"><button type="button" aria-pressed={filters.platform === 'ALL'} onClick={() => changeFilters({ platform: 'ALL', category: null })}>전체</button>{STATISTICS_PLATFORMS.map((platform) => <button type="button" key={platform.id} aria-pressed={filters.platform === platform.id} onClick={() => changeFilters({ platform: platform.id, category: null })}><StatisticsBrand platform={platform.id} /></button>)}</nav><button type="button" className="bs-button" onClick={() => { setPanel('download'); setDownloadMessage(''); }} disabled={!data}><Download size={15} />데이터 다운로드</button></div>
     <div className="bs-notice"><span className="bs-notice-label">안내</span><span>치지직 인기 방송과 SOOP 등록 채널의 통계를 제공해요.</span><button type="button" onClick={() => setPanel('scope')}><Info size={14} />수집 현황·기준</button></div>
@@ -127,6 +125,7 @@ export function BroadcastStatisticsDashboard({ currentSubPath }: { currentSubPat
     <aside className="bs-ad-slot" data-ad-slot="broadcast-statistics" hidden aria-label="광고" />
     <div className="bs-footer-note"><span>VDébut · Every debut deserves an audience.</span><button type="button" onClick={() => setPanel('scope')}>통계 기준 및 수집 현황 <Info size={12} /></button></div>
     {selected && data && <StatisticsDialog title={`${selected.channelName || `방송 #${selected.streamId}`} · 방송 기록`} onClose={() => setSelectedId(null)}><BroadcastRecord row={selected} data={data} /></StatisticsDialog>}
+    {selectedStreamer && <StatisticsDialog title={`${selectedStreamer.name} · 스트리머 정보`} onClose={() => setSelectedStreamer(null)}><StatisticsStreamerRecord streamer={selectedStreamer} data={data} onOpenBroadcast={openRecord} /></StatisticsDialog>}
     {panel === 'scope' && <StatisticsDialog title="방송 통계 안내" onClose={() => setPanel(null)}><StatisticsScope data={data} /></StatisticsDialog>}
     {panel === 'download' && <StatisticsDialog title="전체 데이터 다운로드" onClose={() => setPanel(null)}><p>화면에 보이는 상위 항목을 포함해, 선택 범위의 전체 자료를 엑셀 파일로 저장해요.</p><dl className="bs-download-scope"><dt>플랫폼</dt><dd>{platformName(filters.platform)}</dd><dt>방송·최고 기록</dt><dd>{selectedCategoryName || '전체 카테고리'}</dd><dt>추이</dt><dd>최근 {filters.hours}시간 · 선택 플랫폼 전체</dd><dt>최고 기록</dt><dd>최근 18시간</dd></dl><p className="bs-small">집계 기준, 플랫폼, 실시간 방송, 카테고리, 시계열, 방송 최고, 채널 최고 — 총 7개 시트에 제공돼요. 미제공 수치는 빈칸으로 저장합니다.</p><button type="button" className="bs-button bs-primary" disabled={downloadBusy} onClick={() => void handleDownload()}><Download size={15} />{downloadBusy ? '파일 준비 중' : '전체 데이터 저장 (.xlsx)'}</button><p role="status" className="bs-download-status">{downloadMessage}</p></StatisticsDialog>}
   </div>;

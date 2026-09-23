@@ -60,6 +60,8 @@
 - `0027_discord_streamer_verifications.sql`: 치지직/SOOP 스트리머 방송국 소개글 본인 인증 및 디스코드 계정 1:1 매핑(`discord_streamer_verifications`) 테이블 생성
 - `0028_add_mid_september_debut_streamers.sql`: 2026년 9월 16일 ~ 20일 신규 버추얼 스트리머 추가 및 최신화 (이루 SOOP 활동명/프로필 UPDATE, 김멜트·Astera·순진·신예리 정규 등록, 피요냥·세르온 시간 미정 00:00 처리 및 전용 섹션 연동, 덕고미 기등록 유지 검증)
 - `0029_create_analytics_schema.sql`: VDébut Analytics 대시보드 전용 스키마 생성 (`analytics_channels`, `analytics_live_sessions`, `analytics_live_snapshots`, `analytics_category_map`, `analytics_market_hourly`, `analytics_opportunity_scores`) 및 카테고리 매핑 시드, 기존 버튜버 레지스트리 연계
+- `0030_broadcast_statistics_collection.sql`: 방송 통계 10분 주기 수집 회차(`analytics_broadcast_runs`) 및 원본 방송 스냅샷(`analytics_broadcast_snapshots`) 스키마 및 시간 인덱스 생성
+- `0031_add_late_september_early_october_streamers.sql`: 2026년 9월 23일 ~ 10월 4일 신규 버추얼 스트리머 13인 추가 등록 (송이, 조하구, 아므 AMU, 코모리 레이, 설도담, 유지해, 아마노미야 미유키, 서라별, 해몽실, 동그리아, 양태양, 강두식, 하은비) 및 정식 채널 완전값, 고화질 아바타, 공식 X 링크, 시간 미정(00:00) 표준 처리 반영
 
 
 
