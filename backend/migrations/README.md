@@ -62,6 +62,7 @@
 - `0029_create_analytics_schema.sql`: VDébut Analytics 대시보드 전용 스키마 생성 (`analytics_channels`, `analytics_live_sessions`, `analytics_live_snapshots`, `analytics_category_map`, `analytics_market_hourly`, `analytics_opportunity_scores`) 및 카테고리 매핑 시드, 기존 버튜버 레지스트리 연계
 - `0030_broadcast_statistics_collection.sql`: 방송 통계 10분 주기 수집 회차(`analytics_broadcast_runs`) 및 원본 방송 스냅샷(`analytics_broadcast_snapshots`) 스키마 및 시간 인덱스 생성
 - `0031_add_late_september_early_october_streamers.sql`: 2026년 9월 23일 ~ 10월 4일 신규 버추얼 스트리머 13인 추가 등록 (송이, 조하구, 아므 AMU, 코모리 레이, 설도담, 유지해, 아마노미야 미유키, 서라별, 해몽실, 동그리아, 양태양, 강두식, 하은비) 및 정식 채널 완전값, 고화질 아바타, 공식 X 링크, 시간 미정(00:00) 표준 처리 반영
+- `0032_add_rain_streamer.sql`: 2026년 10월 1일 01:30 신규 첫 데뷔 치지직 버추얼 스트리머 래인(rain) 추가 등록 (32자리 정식 채널 완전값, 네이버 고화질 프로필 이미지, 공식 X 링크 반영)
 
 
 
