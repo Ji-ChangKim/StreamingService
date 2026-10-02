@@ -2,8 +2,12 @@ import type { BroadcastStatistics } from '../../../shared/broadcastStatistics';
 import type { StreamerHistoryResponse } from '../../../shared/statisticsStreamerSearch';
 
 // 새 통계 화면은 요청 실패를 예시 데이터로 대체하지 않는다 (단일 책임)
-export async function fetchBroadcastStatistics(signal: AbortSignal, date?: string | null): Promise<BroadcastStatistics> {
-  const url = date ? `/api/analytics/broadcast-statistics?date=${encodeURIComponent(date)}` : '/api/analytics/broadcast-statistics';
+export async function fetchBroadcastStatistics(signal: AbortSignal, date?: string | null, fresh = false): Promise<BroadcastStatistics> {
+  const params = new URLSearchParams();
+  if (date) params.set('date', date);
+  if (fresh) params.set('fresh', 'true');
+  const queryStr = params.toString() ? `?${params.toString()}` : '';
+  const url = `/api/analytics/broadcast-statistics${queryStr}`;
   const response = await fetch(url, { signal });
   if (!response.ok) throw new Error('방송 통계를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
   const data: BroadcastStatistics = await response.json();

@@ -931,15 +931,18 @@ app.post('/api/analytics/streamers/register', async (c) => {
 });
 app.get('/api/analytics/broadcast-statistics', async (c) => {
   const date = c.req.query('date');
+  const forceFresh = c.req.query('fresh') === 'true';
   const isPastDate = !!date && /^\d{4}-\d{2}-\d{2}$/.test(date);
   const cacheUrl = isPastDate
     ? `${new URL(c.req.url).origin}/api/analytics/broadcast-statistics?date=${date}`
     : `${new URL(c.req.url).origin}/api/analytics/broadcast-statistics`;
   const cacheKey = new Request(cacheUrl);
-  const cached = await caches.default.match(cacheKey);
-  if (cached) return cached;
+  if (!forceFresh) {
+    const cached = await caches.default.match(cacheKey);
+    if (cached) return cached;
+  }
   try {
-    const result = await getBroadcastStatistics(c.env.DB, date);
+    const result = await getBroadcastStatistics(c.env.DB, date, forceFresh);
     const cacheControl = isPastDate
       ? 'public, max-age=86400, s-maxage=86400'
       : 'public, max-age=30, s-maxage=60';

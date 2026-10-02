@@ -1,5 +1,11 @@
 import type { BroadcastStatistics, StatisticsBroadcast, StatisticsPeak, StatisticsPoint } from '../../../shared/broadcastStatistics';
-import { getChzzkStatisticsSource, getSoopStatisticsSource, type StatisticsSourceResult } from './broadcastStatisticsSources';
+import {
+  getChzzkStatisticsSource,
+  getSoopStatisticsSource,
+  deduplicateLiveChannels,
+  isRookieStreamer,
+  type StatisticsSourceResult
+} from './broadcastStatisticsSources';
 
 import { readStatisticsHistory, readStatisticsRuns, getStatisticsCollectionStatus, type StatisticsHistoryRow, type StatisticsHistoryRun } from './broadcastStatisticsHistory';
 import { STATISTICS_COLLECTION_MINUTES } from '../../../shared/statisticsCollection';
@@ -164,8 +170,104 @@ export async function getBroadcastStatisticsForDate(db: D1Database, dateStr: str
   return response;
 }
 
+// D1 DB에서 특정 플랫폼의 최근 스냅샷(기본 30분 이내)을 조회하여 외부 API 왕복 없이 즉시 반환 (단일 책임)
+export async function readLatestPlatformSnapshotFromD1(
+  db: D1Database,
+  platform: 'CHZZK' | 'SOOP',
+  maxAgeMinutes = 30
+): Promise<StatisticsSourceResult | null> {
+  try {
+    const minObservedAt = new Date(Date.now() - maxAgeMinutes * 60 * 1000).toISOString();
+
+    // 가장 최근 유효 회차 조회
+    const run = await db.prepare(`
+      SELECT run_id, platform, state, scope, observed_at, checked_channels
+      FROM analytics_broadcast_runs
+      WHERE platform = ? AND state IN ('available', 'partial') AND observed_at >= ?
+      ORDER BY observed_at DESC
+      LIMIT 1
+    `).bind(platform, minObservedAt).first<{
+      run_id: string;
+      platform: 'CHZZK' | 'SOOP';
+      state: 'available' | 'partial';
+      scope: string;
+      observed_at: string;
+      checked_channels: number | null;
+    }>();
+
+    if (!run || !run.run_id) {
+      return null;
+    }
+
+    // 해당 회차의 방송 스냅샷 목록 조회 (등록 스트리머 데뷔일 조인)
+    const { results } = await db.prepare(`
+      SELECT s.stream_id, s.channel_key, s.channel_name, s.channel_url, s.image_url,
+             s.live_url, s.title, s.category_id, s.category_name, s.viewers, s.started_at,
+             (SELECT info.debut_date FROM streamerChannel_info info
+              JOIN streamerChannel c ON c.id = info.channel_id
+              WHERE c.channel_url = s.channel_url LIMIT 1) AS debut_date
+      FROM analytics_broadcast_snapshots s
+      WHERE s.run_id = ?
+      ORDER BY s.viewers DESC
+    `).bind(run.run_id).all<{
+      stream_id: string;
+      channel_key: string;
+      channel_name: string | null;
+      channel_url: string | null;
+      image_url: string | null;
+      live_url: string | null;
+      title: string;
+      category_id: string;
+      category_name: string;
+      viewers: number;
+      started_at: string | null;
+      debut_date: string | null;
+    }>();
+
+    if (!results || results.length === 0) {
+      return null;
+    }
+
+    const lives: StatisticsBroadcast[] = (results as any[]).map((s) => {
+      const isRookie = isRookieStreamer(s.debut_date, s.title, undefined);
+      return {
+        id: `${platform}:${s.stream_id}`,
+        platform,
+        streamId: s.stream_id,
+        channelKey: s.channel_key,
+        channelName: s.channel_name || '제목 없음',
+        channelUrl: s.channel_url || '',
+        imageUrl: s.image_url,
+        liveUrl: s.live_url,
+        title: s.title || '제목 없음',
+        categoryId: s.category_id || 'unknown',
+        categoryName: s.category_name || '카테고리 미제공',
+        viewers: s.viewers || 0,
+        startedAt: s.started_at || null,
+        isVtuber: true,
+        isRookie,
+        debutDate: s.debut_date || null,
+      };
+    });
+
+    return {
+      source: {
+        platform,
+        state: run.state,
+        scope: run.scope || (platform === 'CHZZK' ? '치지직 실시간 방송' : 'SOOP 버추얼 스트리머'),
+        observedAt: run.observed_at,
+        checkedChannels: run.checked_channels,
+      },
+      lives: deduplicateLiveChannels(lives),
+    };
+  } catch (err) {
+    console.warn(`[readLatestPlatformSnapshotFromD1] Failed for ${platform}:`, err);
+    return null;
+  }
+}
+
 // 현재 방송 또는 과거 특정 날짜의 수집 기록을 읽는다.
-export async function getBroadcastStatistics(db: D1Database, targetDate?: string): Promise<BroadcastStatistics> {
+export async function getBroadcastStatistics(db: D1Database, targetDate?: string, forceFresh = false): Promise<BroadcastStatistics> {
   const todayKst = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
   if (targetDate && /^\d{4}-\d{2}-\d{2}$/.test(targetDate) && targetDate !== todayKst) {
     return getBroadcastStatisticsForDate(db, targetDate);
@@ -173,16 +275,49 @@ export async function getBroadcastStatistics(db: D1Database, targetDate?: string
 
   const startedAt = new Date();
   const from = new Date(startedAt.getTime() - 24 * 3600000).toISOString();
-  const results = await Promise.allSettled([
-    getChzzkStatisticsSource(db), getSoopStatisticsSource(db), readStatisticsHistory(db, from, startedAt.toISOString()), readStatisticsRuns(db, from, startedAt.toISOString()),
-  ] as const);
-  const chzzk = results[0].status === 'fulfilled' ? results[0].value : { source: { platform: 'CHZZK' as const, state: 'unavailable' as const, scope: '치지직 실시간 방송', observedAt: null, checkedChannels: null }, lives: [] };
-  const soop = results[1].status === 'fulfilled' ? results[1].value : { source: { platform: 'SOOP' as const, state: 'unavailable' as const, scope: 'SOOP 버추얼 스트리머', observedAt: null, checkedChannels: null }, lives: [] };
-  const rows = results[2].status === 'fulfilled' ? results[2].value : [];
-  if (results[2].status === 'rejected') console.warn('[Statistics] History unavailable', String(results[2].reason));
-  const runs = results[3].status === 'fulfilled' ? results[3].value : [];
+
+  // 1. 💡 빠른 DB 스냅샷 우선 조회 (Read-from-DB: 외부 API 150회 순회 대기 제거)
+  let chzzkSource: StatisticsSourceResult | null = null;
+  let soopSource: StatisticsSourceResult | null = null;
+
+  if (!forceFresh) {
+    const [cachedChzzk, cachedSoop] = await Promise.all([
+      readLatestPlatformSnapshotFromD1(db, 'CHZZK', 30),
+      readLatestPlatformSnapshotFromD1(db, 'SOOP', 30),
+    ]);
+    chzzkSource = cachedChzzk;
+    soopSource = cachedSoop;
+  }
+
+  // 2. 만약 최근 30분 이내 DB 스냅샷이 없다면 Fallback으로 외부 API 실시간 호출
+  const fallbackTasks: Promise<any>[] = [];
+  if (!chzzkSource) fallbackTasks.push(getChzzkStatisticsSource(db));
+  if (!soopSource) fallbackTasks.push(getSoopStatisticsSource(db));
+
+  const [rowsResult, runsResult, ...fallbackResults] = await Promise.allSettled([
+    readStatisticsHistory(db, from, startedAt.toISOString()),
+    readStatisticsRuns(db, from, startedAt.toISOString()),
+    ...fallbackTasks,
+  ]);
+
+  let fallbackIdx = 0;
+  if (!chzzkSource) {
+    const r = fallbackResults[fallbackIdx++];
+    chzzkSource = r && r.status === 'fulfilled' ? r.value : null;
+  }
+  if (!soopSource) {
+    const r = fallbackResults[fallbackIdx++];
+    soopSource = r && r.status === 'fulfilled' ? r.value : null;
+  }
+
+  const chzzk = chzzkSource || { source: { platform: 'CHZZK' as const, state: 'unavailable' as const, scope: '치지직 실시간 방송', observedAt: null, checkedChannels: null }, lives: [] };
+  const soop = soopSource || { source: { platform: 'SOOP' as const, state: 'unavailable' as const, scope: 'SOOP 버추얼 스트리머', observedAt: null, checkedChannels: null }, lives: [] };
+
+  const rows = rowsResult.status === 'fulfilled' ? rowsResult.value : [];
+  if (rowsResult.status === 'rejected') console.warn('[Statistics] History unavailable', String(rowsResult.reason));
+  const runs = runsResult.status === 'fulfilled' ? runsResult.value : [];
   const validRuns = runs.filter((run) => run.observed_at && Date.parse(run.observed_at) >= Date.parse(from) && Date.parse(run.observed_at) <= Date.now());
-  const failed = results[2].status === 'rejected' || results[3].status === 'rejected';
+  const failed = rowsResult.status === 'rejected' || runsResult.status === 'rejected';
   const historyState = failed ? 'unavailable' : validRuns.some((run) => run.state === 'available' || run.state === 'partial') ? 'available' : 'empty';
   const response = assembleBroadcastStatistics([chzzk, soop], rows, historyState, new Date(), validRuns);
   try { response.meta.collection = await getStatisticsCollectionStatus(db, new Date(), runs); }
