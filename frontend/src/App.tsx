@@ -6,7 +6,6 @@ import { MonthlyCalendarGrid } from './components/MonthlyCalendarGrid';
 import { FooterBanner } from './components/FooterBanner';
 import { Footer } from './components/Footer';
 import { StudioSubmitModal } from './components/StudioSubmitModal';
-import { DiscordBotModal } from './components/DiscordBotModal';
 import { CreatorProfilePage } from './components/profile/CreatorProfilePage';
 import { AboutPage } from './components/pages/AboutPage';
 import { GuidePage } from './components/pages/GuidePage';
@@ -55,7 +54,6 @@ export function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [events, setEvents] = useState<DebutEvent[]>([]);
   const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
-  const [showDiscordModal, setShowDiscordModal] = useState<boolean>(false);
   const [submitModalInitialDate, setSubmitModalInitialDate] = useState<string | undefined>(undefined);
   const [editingEvent, setEditingEvent] = useState<DebutEvent | null>(null);
 
@@ -258,7 +256,6 @@ export function App() {
           currentLang={currentLang}
           onLanguageChange={setCurrentLang}
           onOpenSubmitModal={() => handleOpenSubmitModal()}
-          onOpenDiscordModal={() => setShowDiscordModal(true)}
         />
 
         {/* 1-1. 3D 무대 스포트라이트 쇼케이스 섹션 (Live & Dev 메인 홈 전면 적용) */}
@@ -393,12 +390,6 @@ export function App() {
           initialDate={submitModalInitialDate}
           onUpdateSuccess={handleUpdateEvent}
           currentLang={currentLang}
-        />
-
-        {/* 5. Discord Bot Info & Invite Modal */}
-        <DiscordBotModal
-          isOpen={showDiscordModal}
-          onClose={() => setShowDiscordModal(false)}
         />
       </div>
     </ErrorBoundary>

@@ -88,10 +88,71 @@ export function calculateWeeklyAuditDateRange(baseDate: Date = new Date()): Audi
 }
 
 /**
- * 4. 주어진 데뷔 날짜(YYYY-MM-DD)가 검사 대상 범위에 포함되는지 검사 (SRP)
+ * 4. 올바른 날짜 포맷(YYYY-MM-DD)인지 엄격 검증하는 순수 헬퍼 (SRP)
+ */
+export function isValidDateFormat(dateStr: string): boolean {
+  if (!dateStr || typeof dateStr !== 'string') return false;
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!regex.test(dateStr)) return false;
+  const [y, m, d] = dateStr.split('-').map(Number);
+  if (m < 1 || m > 12 || d < 1 || d > 31) return false;
+  return true;
+}
+
+/**
+ * 5. 주어진 데뷔 날짜(YYYY-MM-DD)가 검사 대상 범위에 포함되는지 검사 (SRP)
  */
 export function isDebutInAuditRange(debutDate: string, range: { startDate: string; endDate: string }): boolean {
   if (!debutDate) return false;
   const cleanDate = debutDate.trim().replace(/\//g, '-').replace(/\./g, '-');
+  if (!isValidDateFormat(cleanDate)) return false;
   return cleanDate >= range.startDate && cleanDate <= range.endDate;
+}
+
+/**
+ * 6. 오늘 기준 KST 날짜 문자열(YYYY-MM-DD) 산출 전용 헬퍼 (SRP)
+ */
+export function getTodayKstDateString(baseDate: Date = new Date()): string {
+  const { year, month, date } = getKstDateComponents(baseDate);
+  return `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+}
+
+/**
+ * 7. 캘린더 자동 등록을 위한 데뷔 일정 적격성 종합 판정 함수 (SRP)
+ * - 올바른 YYYY-MM-DD 날짜 포맷이어야 함
+ * - 요일별 점검 범위(당주/차주)에 포함되거나,
+ * - 오늘(KST) 이후로 예정된 미래 데뷔 일정(디니야, 말리부 등)인 경우
+ * - 또는 최근 pastGraceDays일(기본 45일) 이내에 데뷔한 신인 데뷔 누락 보완
+ */
+export function isEligibleDebutForSync(
+  debutDate: string,
+  auditRange: AuditDateRange,
+  todayKst: string = getTodayKstDateString(),
+  pastGraceDays: number = 45
+): boolean {
+  if (!debutDate) return false;
+  const cleanDate = debutDate.trim().replace(/\//g, '-').replace(/\./g, '-');
+  if (!isValidDateFormat(cleanDate)) return false;
+
+  // 1) 요일별 집중 검사 범위 내인 경우
+  if (isDebutInAuditRange(cleanDate, auditRange)) {
+    return true;
+  }
+
+  // 2) 오늘(KST) 이후에 예정된 미래 데뷔 일정인 경우 (캘린더 사전 노출 목적)
+  if (cleanDate >= todayKst) {
+    return true;
+  }
+
+  // 3) 최근 데뷔한 신인 중 DB 누락 건 자동 보완 (기본 45일)
+  if (pastGraceDays > 0) {
+    const todayMs = Date.parse(todayKst);
+    const debutMs = Date.parse(cleanDate);
+    const diffDays = (todayMs - debutMs) / (1000 * 60 * 60 * 24);
+    if (diffDays >= 0 && diffDays <= pastGraceDays) {
+      return true;
+    }
+  }
+
+  return false;
 }

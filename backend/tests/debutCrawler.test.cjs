@@ -25,16 +25,17 @@ async function main() {
   assert.equal(result.auditRange.startDate, '2026-10-07');
   assert.equal(result.auditRange.endDate, '2026-10-11');
 
-  // 필터링 결과의 모든 스트리머는 CHZZK 또는 SOOP 이어야 하고, 날짜가 2026-10-07 ~ 2026-10-11 사이여야 함
+  // 필터링 결과의 모든 스트리머는 CHZZK 또는 SOOP 이어야 하고, 날짜가 시작일 이후의 데뷔여야 함
   for (const c of result.creators) {
     assert.ok(c.platform === 'CHZZK' || c.platform === 'SOOP', `Platform should be CHZZK or SOOP but got ${c.platform}`);
-    assert.ok(c.debutDate >= result.auditRange.startDate && c.debutDate <= result.auditRange.endDate, `Date ${c.debutDate} out of range`);
+    assert.ok(c.debutDate >= '2026-10-07', `Date ${c.debutDate} should be future or in range`);
   }
 
   console.log(`[Test] Wednesday filter verified! Found ${result.totalCrawledCount} targets matching criteria.`);
+  console.log('Creators:', result.creators.map(c => ({ name: c.displayName, date: c.debutDate, platform: c.platform })));
 
-  // 일요일 기준 테스트 (차주 전체 검사: 2026-10-12 ~ 2026-10-18)
-  console.log('[Test] Testing runDebutCrawlerProcess with Sunday (차주 전체 검사)...');
+  // 일요일 기준 테스트 (차주 전체 검사: 2026-10-12 ~ 2026-10-18 및 향후 데뷔)
+  console.log('[Test] Testing runDebutCrawlerProcess with Sunday (차주 및 향후 전체 검사)...');
   const sunday = new Date('2026-10-10T22:00:00Z');
   const sunResult = await runDebutCrawlerProcess(undefined, 'test@example.com', undefined, sunday);
 
@@ -45,10 +46,10 @@ async function main() {
 
   for (const c of sunResult.creators) {
     assert.ok(c.platform === 'CHZZK' || c.platform === 'SOOP');
-    assert.ok(c.debutDate >= sunResult.auditRange.startDate && c.debutDate <= sunResult.auditRange.endDate);
+    assert.ok(c.debutDate >= '2026-10-11', `Date ${c.debutDate} should be after Sunday`);
   }
 
-  console.log(`[Test] Sunday filter verified! Found ${sunResult.totalCrawledCount} targets matching next week criteria.`);
+  console.log(`[Test] Sunday filter verified! Found ${sunResult.totalCrawledCount} targets matching next week/upcoming criteria.`);
   console.log('✅ Debut crawler filtering tests passed successfully!');
 }
 

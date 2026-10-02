@@ -1,6 +1,11 @@
 import { sendDebutReportEmail } from './emailService';
 import { fetchPlatformProfile } from './platformApiService';
-import { calculateWeeklyAuditDateRange, isDebutInAuditRange, type AuditDateRange } from './weeklyAuditRangeService';
+import {
+  calculateWeeklyAuditDateRange,
+  isEligibleDebutForSync,
+  getTodayKstDateString,
+  type AuditDateRange,
+} from './weeklyAuditRangeService';
 import { generateCleanSlug, resolveUniqueSlug } from '../utils/slugUtils';
 
 export interface CrawledCreatorData {
@@ -38,9 +43,11 @@ export async function runDebutCrawlerProcess(
   forcedBaseDate?: Date
 ): Promise<CrawlerRunResult> {
   const runAt = new Date().toISOString();
-  // KST 요일별 검사 날짜 범위 산출
-  const auditRange = calculateWeeklyAuditDateRange(forcedBaseDate || new Date());
-  console.log(`[Crawler] Starting Debut Auto Web Search & Sync at ${runAt}... Range: ${auditRange.description}`);
+  // KST 요일별 검사 날짜 범위 및 오늘(KST) 날짜 산출
+  const baseDate = forcedBaseDate || new Date();
+  const auditRange = calculateWeeklyAuditDateRange(baseDate);
+  const todayKst = getTodayKstDateString(baseDate);
+  console.log(`[Crawler] Starting Debut Auto Web Search & Sync at ${runAt}... Range: ${auditRange.description} (Today KST: ${todayKst})`);
 
   const crawledList: CrawledCreatorData[] = [];
 
@@ -81,8 +88,8 @@ export async function runDebutCrawlerProcess(
               formattedDate = `${y}-${m}-${d}`;
             }
 
-            // 💡 [필터 1: 요일별 검사 범위 내 데뷔 건만 대상 선정]
-            if (!isDebutInAuditRange(formattedDate, auditRange)) {
+            // 💡 [필터 1: 요일별 검사 범위 + 향후 예정된 미래 데뷔 일정 상시 수집]
+            if (!isEligibleDebutForSync(formattedDate, auditRange, todayKst)) {
               continue;
             }
 

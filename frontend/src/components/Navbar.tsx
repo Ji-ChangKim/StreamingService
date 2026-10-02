@@ -6,7 +6,6 @@ interface NavbarProps {
   activeNav: string;
   setActiveNav: (nav: string) => void;
   onOpenSubmitModal: () => void;
-  onOpenDiscordModal?: () => void;
   currentLang: Language;
   onLanguageChange: (lang: Language) => void;
 }
@@ -15,7 +14,6 @@ export function Navbar({
   activeNav,
   setActiveNav,
   onOpenSubmitModal,
-  onOpenDiscordModal,
   currentLang,
   onLanguageChange,
 }: NavbarProps) {
@@ -123,21 +121,7 @@ export function Navbar({
             )}
           </div>
 
-          {/* Discord Bot Modal Trigger Button */}
-          {onOpenDiscordModal && (
-            <button
-              onClick={onOpenDiscordModal}
-              className="flex items-center gap-1.5 bg-[#5865F2]/10 hover:bg-[#5865F2]/20 text-[#5865F2] border border-[#5865F2]/30 rounded-[8px] px-2.5 sm:px-3 py-1.5 transition-all text-[11px] sm:text-xs font-extrabold cursor-pointer shrink-0"
-              title="디스코드 봇 초대 및 안내"
-            >
-              <img
-                src="/icons/discord/Discord-Symbol-Blurple.svg"
-                alt="Discord"
-                className="h-4 w-auto object-contain shrink-0"
-              />
-              <span className="hidden sm:inline">디스코드 봇</span>
-            </button>
-          )}
+
 
           <button
             onClick={onOpenSubmitModal}
