@@ -1168,10 +1168,11 @@ export default {
         );
       }
     }
-    if (new Date().getUTCMinutes() < 10) {
+    const isKst7Am = (new Date(scheduledTime).getUTCHours() === 22 && new Date().getUTCMinutes() < 10) || event?.cron === '0 22 * * *';
+    if (isKst7Am) {
       ctx.waitUntil(
       runDebutCrawlerProcess(env.DB || null, 'kimjichang1234@gmail.com')
-        .then((res) => console.log('[Scheduled Cron] Debut search & email report success:', res.totalCrawledCount))
+        .then((res) => console.log(`[Scheduled Cron] 07:00 KST Debut sync success: Range=${res.auditRange?.description}, Total=${res.totalCrawledCount}, New=${res.newDiscoveredCount}`))
         .catch((err) => console.error('[Scheduled Cron] Error:', err))
     );
     }

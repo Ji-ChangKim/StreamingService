@@ -216,13 +216,13 @@ export async function registerExternalStreamerToD1(
       };
     }
 
-    // 2. 신규 채널 등록 (streamerChannel)
+    // 2. 신규 채널 등록 (streamerChannel, RETURNING id로 안전하게 channel_id 획득)
     const channelInsert = await db
-      .prepare('INSERT INTO streamerChannel (platform, channel_url, channel_name) VALUES (?, ?, ?)')
+      .prepare('INSERT INTO streamerChannel (platform, channel_url, channel_name) VALUES (?, ?, ?) RETURNING id')
       .bind(item.platform, cleanUrl, safeName)
-      .run();
+      .first<{ id: number }>();
 
-    const newChannelId = channelInsert.meta.last_row_id;
+    const newChannelId = channelInsert?.id;
     if (!newChannelId) {
       throw new Error('채널 ID 생성에 실패했습니다.');
     }

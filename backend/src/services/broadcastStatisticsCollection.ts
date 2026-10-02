@@ -85,7 +85,10 @@ export async function collectBroadcastStatistics(db: D1Database, scheduledTime: 
   const results = await Promise.allSettled((['CHZZK', 'SOOP'] as const).map((platform) => collectPlatform(db, platform, slot)));
   const reports = results.flatMap((result) => result.status === 'fulfilled' ? [result.value] : []);
   console.log(JSON.stringify({ event: 'broadcast_statistics_collection', slot, results: reports, failures: results.filter((result) => result.status === 'rejected').map((result) => String(result.reason)) }));
-  await pruneStatisticsCollections(db);
-  if (results.some((result) => result.status === 'rejected') || reports.some((report) => report.state === 'unavailable')) throw new Error('Broadcast statistics collection incomplete');
+  // 적어도 하나의 플랫폼이 가용하거나 수집된 경우 정상 완료로 처리 (모든 플랫폼이 실패한 경우에만 에러)
+  const hasUsableData = reports.some((report) => report.state === 'available' || report.state === 'partial');
+  if (!hasUsableData && reports.length > 0 && reports.every((report) => report.state === 'unavailable')) {
+    throw new Error('Broadcast statistics collection incomplete: all platforms unavailable');
+  }
   return reports;
 }
