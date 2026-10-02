@@ -42,7 +42,8 @@ import {
 import { collectChzzkLiveSnapshot } from './services/chzzkCollector';
 import { getLiveDiscovery } from './services/liveDiscoveryService';
 import { getLiveHistory, getCreatorHistory } from './services/liveHistoryService';
-import { getBroadcastStatistics } from './services/broadcastStatisticsService';
+import { getBroadcastStatistics, getStreamerBroadcastHistory } from './services/broadcastStatisticsService';
+import { collectBroadcastStatistics } from './services/broadcastStatisticsCollection';
 import { searchStatisticsStreamers } from './services/statisticsStreamerSearchService';
 import { registerExternalStreamerToD1 } from './services/externalPlatformSearchService';
 
@@ -929,19 +930,42 @@ app.post('/api/analytics/streamers/register', async (c) => {
   }
 });
 app.get('/api/analytics/broadcast-statistics', async (c) => {
-  const cacheKey = new Request(`${new URL(c.req.url).origin}/api/analytics/broadcast-statistics`);
+  const date = c.req.query('date');
+  const isPastDate = !!date && /^\d{4}-\d{2}-\d{2}$/.test(date);
+  const cacheUrl = isPastDate
+    ? `${new URL(c.req.url).origin}/api/analytics/broadcast-statistics?date=${date}`
+    : `${new URL(c.req.url).origin}/api/analytics/broadcast-statistics`;
+  const cacheKey = new Request(cacheUrl);
   const cached = await caches.default.match(cacheKey);
   if (cached) return cached;
   try {
-    const result = await getBroadcastStatistics(c.env.DB);
+    const result = await getBroadcastStatistics(c.env.DB, date);
+    const cacheControl = isPastDate
+      ? 'public, max-age=86400, s-maxage=86400'
+      : 'public, max-age=30, s-maxage=60';
     const response = new Response(JSON.stringify(result), {
-      headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30, s-maxage=60' },
+      headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': cacheControl },
     });
     c.executionCtx.waitUntil(caches.default.put(cacheKey, response.clone()));
     return response;
   } catch (error) {
     console.error('[Statistics] Request failed', String(error));
     return c.json({ error: '방송 통계를 불러오지 못했습니다.' }, 503);
+  }
+});
+
+// 특정 스트리머의 방송 이력 타임라인 엔드포인트 (주간 7일 / 월간 30일 지원)
+app.get('/api/analytics/streamers/:key/history', async (c) => {
+  const key = decodeURIComponent(c.req.param('key') || '');
+  const days = Number(c.req.query('days')) || 7;
+  if (!key) return c.json({ error: '스트리머 키가 필요합니다.' }, 400);
+  try {
+    const result = await getStreamerBroadcastHistory(c.env.DB, key, days);
+    c.header('Cache-Control', 'public, max-age=120');
+    return c.json(result);
+  } catch (error) {
+    console.error('[Statistics] Streamer history failed', String(error));
+    return c.json({ error: '스트리머 방송 이력을 불러오지 못했습니다.' }, 500);
   }
 });
 app.get('/api/analytics/overview', async (c) => {
@@ -969,6 +993,20 @@ app.get('/api/analytics/categories', async (c) => {
   return c.json(result);
 });
 
+app.get('/api/analytics/opportunities', async (c) => {
+  const platform = (c.req.query('platform') || 'ALL') as any;
+  const dayScope = (c.req.query('day_scope') || 'ALL') as any;
+  const creatorTier = (c.req.query('creator_tier') || 'ALL') as any;
+  const categoryGroup = (c.req.query('category_group') || 'ALL') as any;
+  const result = await getAnalyticsOpportunities(c.env.DB, {
+    platform,
+    dayScope,
+    creatorTier,
+    categoryGroup,
+  } as any);
+  return c.json(result);
+});
+
 app.post('/api/analytics/opportunities', async (c) => {
   try {
     const body = await c.req.json();
@@ -976,6 +1014,16 @@ app.post('/api/analytics/opportunities', async (c) => {
     return c.json(result);
   } catch (err: any) {
     return c.json({ error: 'Invalid opportunity payload', details: err?.message }, 400);
+  }
+});
+
+// 수동 즉시 수집 트리거 (1회성 스냅샷 수집)
+app.post('/api/analytics/collect-now', async (c) => {
+  try {
+    const results = await collectBroadcastStatistics(c.env.DB, Date.now());
+    return c.json({ success: true, results, timestamp: new Date().toISOString() });
+  } catch (err: any) {
+    return c.json({ success: false, error: err?.message || 'Collection failed' }, 500);
   }
 });
 
@@ -1080,7 +1128,15 @@ app.all('*', async (c) => {
 export default {
   fetch: app.fetch,
   async scheduled(event: any, env: Bindings, ctx: any) {
+    const scheduledTime = event?.scheduledTime || Date.now();
     if (env.DB) {
+      ctx.waitUntil(
+        collectBroadcastStatistics(env.DB, scheduledTime)
+          .then((reports) => console.log('[Scheduled Cron] Broadcast statistics collected:', JSON.stringify(reports)))
+          .catch((err) => console.error('[Scheduled Cron] Broadcast statistics error:', err))
+      );
+    }
+    if (env.DB && new Date().getUTCMinutes() < 10) {
       // 1. 신청서 3단계 자동 심사 및 캘린더 자동 반영 파이프라인 (매시간 1회 자동 실행)
       ctx.waitUntil(
         runAutoReviewPipeline(env.DB)
@@ -1112,10 +1168,12 @@ export default {
         );
       }
     }
-    ctx.waitUntil(
+    if (new Date().getUTCMinutes() < 10) {
+      ctx.waitUntil(
       runDebutCrawlerProcess(env.DB || null, 'kimjichang1234@gmail.com')
         .then((res) => console.log('[Scheduled Cron] Debut search & email report success:', res.totalCrawledCount))
         .catch((err) => console.error('[Scheduled Cron] Error:', err))
     );
+    }
   }
 };

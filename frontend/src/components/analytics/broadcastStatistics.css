@@ -78,16 +78,17 @@
 .bs-small{font-size:11px;color:#64748b;line-height:1.5}
 .bs-panel-note{font-size:10px;color:#64748b;padding:12px 18px}
 .bs-category-panel{margin-bottom:18px}
-.bs-categories{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;padding:16px 18px 18px}
-.bs-category{display:block;min-width:0;text-align:left;padding:8px 11px 12px;border:1px solid var(--bs-line);border-radius:10px;background:white;color:#0f172a}
-.bs-category:hover{background:#f8fbff;border-color:#93c5fd}
-.bs-category[aria-pressed=true]{background:#eff6ff;border-color:#2563eb}
-.bs-category-meta{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#64748b;margin-bottom:5px}
-.bs-category-name{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:38px;line-height:1.5;font-size:12px;font-weight:700;overflow-wrap:anywhere}
-.bs-category>strong{display:block;font-size:19px;font-weight:750;letter-spacing:-.4px;margin-top:6px;font-variant-numeric:tabular-nums}
-.bs-category>.bs-small{display:block;font-size:10px;margin-top:3px}
-.bs-category-bar{display:block;height:3px;border-radius:3px;background:#f1f5f9;margin-top:11px;overflow:hidden}
-.bs-category-bar>span{display:block;height:100%;border-radius:3px}
+.bs-category-controls{display:flex;align-items:center;gap:8px}
+.bs-category-clear-btn{display:inline-flex;align-items:center;gap:4px;border:1px solid #cbd5e1;background:#f8fafc;color:#475569;border-radius:6px;padding:4px 8px;font-size:11px;font-weight:600}
+.bs-category-clear-btn:hover{background:#eff6ff;color:#2563eb;border-color:#93c5fd}
+.bs-category-chips{display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px 16px}
+.bs-category-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid #e2e8f0;border-radius:20px;background:white;color:#334155;font-size:12px;font-weight:600;transition:all .15s ease;cursor:pointer}
+.bs-category-chip:hover{border-color:#93c5fd;background:#f8fbff;transform:translateY(-1px)}
+.bs-category-chip.is-selected{background:#eff6ff;border-color:#2563eb;color:#1d4ed8;box-shadow:0 1px 4px #2563eb20}
+.bs-chip-name{font-weight:700;color:#0f172a;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bs-category-chip.is-selected .bs-chip-name{color:#1d4ed8}
+.bs-chip-viewers{font-size:11px;font-weight:700;color:#2563eb;background:#f1f5f9;padding:1px 6px;border-radius:10px}
+.bs-category-chip.is-selected .bs-chip-viewers{background:#dbeafe;color:#1e40af}
 .bs-lower-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:18px;align-items:start}
 .bs-filter-line{display:flex;gap:10px;align-items:center;padding:12px 18px 2px;font-size:11px;color:#64748b;min-height:30px}
 .bs-filter-line button{display:inline-flex;align-items:center;gap:4px;border:0;background:transparent;color:#2563eb;font-size:10px}
@@ -181,3 +182,175 @@
 .bs-feedback-error{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
 @keyframes bs-fade-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:760px){.bs-streamer-search{width:100%}}
+
+/* -------------------------------------------------------------
+ * 신인 버튜버 라이브 스포트라이트 및 기회 분석 패널 스타일
+ * ------------------------------------------------------------- */
+.bs-sparkle-icon{display:inline-block;vertical-align:middle;margin-right:6px;color:#f59e0b}
+.bs-opportunity-icon{display:inline-block;vertical-align:middle;margin-right:6px;color:#2563eb}
+.bs-toolbar-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+
+.bs-rookie-spotlight-panel{margin-bottom:18px;background:linear-gradient(180deg,#faf5ff 0%,#ffffff 100%);border-color:#e9d5ff}
+.bs-rookie-spotlight-panel .bs-panel-head h2{display:flex;align-items:center;color:#6b21a8}
+.bs-rookie-count-tag{display:inline-flex;align-items:center;gap:5px;background:#f3e8ff;color:#7e22ce;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.bs-rookie-count-tag strong{font-size:12px;color:#581c87}
+.bs-rookie-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;padding:16px 18px 18px}
+.bs-rookie-card{display:flex;flex-direction:column;justify-content:space-between;padding:14px;border:1px solid #e9d5ff;border-radius:12px;background:white;box-shadow:0 2px 6px #7e22ce0a;transition:all .15s ease}
+.bs-rookie-card:hover{border-color:#c084fc;box-shadow:0 6px 16px #7e22ce14;transform:translateY(-2px)}
+.bs-rookie-card-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bs-rookie-avatar{width:38px;height:38px;border-radius:50%;background:#f3e8ff;color:#7e22ce;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;overflow:hidden;flex-shrink:0}
+.bs-rookie-avatar img{width:100%;height:100%;object-fit:cover}
+.bs-rookie-info{flex:1;min-width:0}
+.bs-rookie-name-row{display:flex;align-items:center;gap:6px}
+.bs-rookie-name{border:0;background:transparent;padding:0;font-size:13px;font-weight:700;color:#0f172a;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bs-rookie-name:hover{color:#7e22ce}
+.bs-rookie-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;color:#9333ea;background:#faf5ff;padding:1px 6px;border-radius:4px;margin-top:2px}
+.bs-rookie-viewers{font-size:11px;color:#64748b;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.bs-rookie-viewers strong{font-size:13px;color:#0f172a}
+.bs-rookie-title{font-size:12px;color:#334155;line-height:1.4;margin:4px 0 10px!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:34px;cursor:pointer}
+.bs-rookie-title:hover{color:#7e22ce}
+.bs-rookie-card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:10px;border-top:1px solid #f3e8ff}
+.bs-rookie-category{font-size:11px;color:#64748b;font-weight:500;background:#f8fafc;padding:2px 8px;border-radius:4px}
+.bs-rookie-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#7e22ce;text-decoration:none}
+.bs-rookie-link:hover{text-decoration:underline}
+.bs-rookie-empty{padding:28px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.bs-rookie-empty p{font-size:12px;color:#64748b}
+
+.bs-rookie-tag{display:inline-flex;align-items:center;gap:2px;font-size:9px;font-weight:700;color:#9333ea;background:#f3e8ff;padding:1px 5px;border-radius:4px;margin-left:4px}
+
+.bs-opportunity-panel{display:flex;flex-direction:column}
+.bs-opportunity-list{padding:10px 16px 16px}
+.bs-opportunity-hint{font-size:11px;color:#64748b;font-weight:600;margin-bottom:8px!important}
+.bs-opportunity-row{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:10px;background:white;margin-bottom:8px;text-align:left;transition:all .15s ease}
+.bs-opportunity-row:hover{border-color:#93c5fd;background:#f8fbff}
+.bs-opportunity-row.is-active{border-color:#2563eb;background:#eff6ff}
+.bs-opportunity-rank{width:20px;font-size:12px;font-weight:700;color:#94a3b8}
+.bs-opportunity-name-wrap{flex:1;min-width:0}
+.bs-opportunity-name{display:flex;align-items:center;gap:6px}
+.bs-opportunity-name strong{font-size:12px;font-weight:700;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bs-opportunity-stats{text-align:right;flex-shrink:0}
+.bs-opportunity-stats strong{display:block;font-size:12px;font-weight:700;color:#2563eb}
+.bs-opportunity-stats p{font-size:10px;color:#64748b;margin:2px 0 0}
+.bs-record-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+
+/* -------------------------------------------------------------
+ * 일자별 과거 리포트 탐색 (날짜 선택 탭 바) 스타일
+ * ------------------------------------------------------------- */
+.bs-date-tabs-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:6px 10px}
+.bs-date-tabs{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:2px 0;max-width:100%;-webkit-overflow-scrolling:touch}
+.bs-date-tab{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid transparent;border-radius:8px;background:transparent;color:#475569;font-size:12px;font-weight:600;white-space:nowrap;transition:all .15s ease}
+.bs-date-tab:hover{background:#edf2f7;color:#0f172a}
+.bs-date-tab.is-active{background:white;color:#0f172a;border-color:#cbd5e1;box-shadow:0 1px 3px #0f172a10;font-weight:700}
+.bs-date-tab.is-active.is-live{color:#e11d48;border-color:#fecdd3;background:#fff1f2}
+.bs-date-tab.is-active.is-live .bs-live-dot{background:#e11d48;animation:bs-pulse 1.8s infinite}
+@keyframes bs-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.85)}}
+
+.bs-date-picker-label{position:relative;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid #cbd5e1;border-radius:8px;background:white;color:#475569;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s ease}
+.bs-date-picker-label:hover{background:#f1f5f9;color:#0f172a}
+.bs-date-picker-label.is-active{border-color:#2563eb;color:#1d4ed8;background:#eff6ff}
+.bs-date-picker-input{position:absolute;opacity:0;width:100%;height:100%;left:0;top:0;cursor:pointer}
+
+.bs-past-date-banner{display:flex;align-items:center;gap:8px;margin-left:auto}
+.bs-past-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#1e40af;background:#dbeafe;padding:3px 8px;border-radius:6px}
+.bs-return-live-btn{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#64748b;background:white;border:1px solid #cbd5e1;padding:4px 8px;border-radius:6px}
+.bs-return-live-btn:hover{color:#e11d48;border-color:#fecdd3;background:#fff1f2}
+
+/* -------------------------------------------------------------
+ * 스트리머 지난 방송 7일 타임라인 스타일
+ * ------------------------------------------------------------- */
+.bs-streamer-record-wrapper{display:flex;flex-direction:column;gap:18px}
+.bs-streamer-section{margin-top:6px}
+.bs-streamer-section-title{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:750;color:#0f172a;margin:0 0 10px 0}
+.bs-history-loading{display:flex;align-items:center;gap:8px;color:#64748b;font-size:12px;padding:16px 0}
+.bs-empty-notice{color:#64748b;background:#f8fafc;padding:12px 14px;border-radius:8px;margin:0}
+
+.bs-streamer-timeline{position:relative;border-left:2px solid #e2e8f0;margin-left:8px;padding-left:16px;display:flex;flex-direction:column;gap:12px}
+.bs-timeline-card{position:relative;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;transition:all .15s ease}
+.bs-timeline-card:hover{background:white;border-color:#cbd5e1;box-shadow:0 3px 10px #0f172a0a}
+.bs-timeline-node{position:absolute;left:-22px;top:16px;width:10px;height:10px;border-radius:50%;background:#2563eb;border:2px solid white;box-shadow:0 0 0 2px #93c5fd}
+.bs-timeline-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.bs-timeline-time{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#64748b;font-weight:500}
+.bs-timeline-peak{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#ea580c;background:#fff7ed;padding:2px 7px;border-radius:12px}
+.bs-timeline-body{margin-bottom:8px}
+.bs-timeline-title{display:block;font-size:13px;font-weight:700;color:#0f172a;line-height:1.4;margin-bottom:4px}
+.bs-timeline-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.bs-category-tag{font-size:10px;font-weight:600;color:#475569;background:#e2e8f0;padding:2px 6px;border-radius:4px}
+.bs-timeline-actions{display:flex;align-items:center;gap:6px}
+.bs-timeline-actions .bs-button{padding:4px 8px;min-height:28px;font-size:11px}
+
+/* -------------------------------------------------------------
+ * 스트리머 검색 결과 전용 리스트 뷰 및 방송 스타일 요약 카드
+ * ------------------------------------------------------------- */
+.bs-streamer-list-section{margin-top:4px}
+.bs-search-view-header{margin-bottom:14px}
+.bs-return-dashboard-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:white;border:1px solid #cbd5e1;border-radius:8px;color:#334155;font-size:12px;font-weight:600;transition:all .15s ease}
+.bs-return-dashboard-btn:hover{background:#f8fafc;color:#2563eb;border-color:#93c5fd}
+.bs-search-view-title{display:flex;align-items:center;gap:10px;margin-top:10px}
+.bs-search-view-title h2{font-size:20px;font-weight:800;color:#0f172a;margin:0}
+.bs-search-count-tag{font-size:12px;font-weight:650;color:#2563eb;background:#eff6ff;padding:3px 9px;border-radius:12px}
+
+.bs-streamer-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:8px 12px;margin-bottom:18px}
+.bs-sort-control select{border:1px solid #cbd5e1;background:white;border-radius:7px;padding:6px 8px;font-size:11px;color:#334155}
+
+.bs-streamer-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:18px}
+.bs-streamer-card{border:1px solid #e2e8f0;border-radius:14px;background:white;padding:18px;display:flex;flex-direction:column;gap:14px;box-shadow:0 2px 6px #0f172a08;transition:all .15s ease}
+.bs-streamer-card:hover{border-color:#93c5fd;box-shadow:0 6px 18px #0f172a12}
+.bs-streamer-card.is-live-card{border-color:#fca5a5;box-shadow:0 4px 16px #e11d4812}
+
+.bs-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.bs-card-avatar-wrap{display:flex;align-items:center;gap:12px;min-width:0}
+.bs-card-avatar{width:46px;height:46px;border-radius:50%;background:#eef2ff;color:#4338ca;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.bs-card-avatar img{width:100%;height:100%;object-fit:cover}
+.bs-card-title-group{display:flex;flex-direction:column;gap:3px;min-width:0}
+.bs-card-title-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.bs-card-name{font-size:15px;font-weight:800;color:#0f172a;margin:0}
+.bs-card-meta-row{font-size:11px;color:#64748b}
+
+.bs-card-live-status{flex-shrink:0}
+.bs-live-status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.bs-live-status-badge.is-live{background:#fff1f2;color:#e11d48;border:1px solid #fecdd3}
+.bs-live-status-badge.is-offline{background:#f1f5f9;color:#64748b}
+
+.bs-card-current-live{background:linear-gradient(135deg,#fff1f2 0%,#ffffff 100%);border:1px solid #fecdd3;border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.bs-current-live-body{display:flex;flex-direction:column;gap:3px;min-width:0}
+.bs-current-live-title{font-size:12px;font-weight:750;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.bs-card-style-section{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.bs-style-header{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.bs-style-title{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:750;color:#0f172a}
+.bs-flame-icon{color:#ea580c}
+.bs-style-period-toggle button{font-size:10px;padding:4px 7px;min-height:24px}
+
+.bs-style-loading{display:flex;align-items:center;gap:8px;color:#64748b;font-size:11px;padding:12px 0}
+.bs-style-headline{font-size:12px;color:#1e293b;line-height:1.5;margin:0;background:#ffffff;padding:8px 10px;border-radius:8px;border-left:3px solid #2563eb}
+.bs-style-narrative{font-size:11px;color:#475569;line-height:1.6;margin:0}
+.bs-style-tags{display:flex;flex-wrap:wrap;gap:5px}
+.bs-style-tag{font-size:10px;font-weight:700;color:#2563eb;background:#eff6ff;padding:2px 7px;border-radius:5px}
+
+.bs-style-metrics{display:flex;flex-direction:column;gap:6px;font-size:11px;padding-top:6px;border-top:1px solid #e2e8f0}
+.bs-style-metric-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.bs-metric-label{color:#64748b;font-weight:600;font-size:11px}
+.bs-category-dist-list{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.bs-dist-chip{background:white;border:1px solid #cbd5e1;padding:2px 6px;border-radius:6px;font-size:10px;color:#334155}
+.bs-dist-chip b{color:#2563eb}
+.bs-peak-chip{background:#fff7ed;color:#c2410c;font-weight:700;font-size:11px;padding:2px 7px;border-radius:6px;border:1px solid #ffedd5}
+
+.bs-card-share-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding-top:10px;border-top:1px dashed #cbd5e1}
+.bs-timeline-toggle-btn{display:inline-flex;align-items:center;gap:4px;border:0;background:transparent;color:#64748b;font-size:11px;font-weight:600;margin-left:auto;cursor:pointer;padding:4px 6px;border-radius:6px}
+.bs-timeline-toggle-btn:hover{color:#0f172a;background:#edf2f7}
+
+.bs-card-timeline-accordion{margin-top:4px;padding-top:10px;border-top:1px solid #e2e8f0}
+.bs-card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding-top:10px;border-top:1px solid #f1f5f9}
+.bs-footer-links{display:flex;align-items:center;gap:12px}
+
+.bs-list-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:48px 20px;color:#64748b;font-size:13px}
+.bs-empty-state-box{text-align:center;padding:50px 20px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;margin-top:18px}
+.bs-empty-state-box h3{font-size:16px;font-weight:750;color:#0f172a;margin-bottom:8px}
+.bs-empty-state-box p{font-size:12px;color:#64748b;line-height:1.6;margin-bottom:18px}
+.bs-success-icon{color:#10b981}
+
+@media(max-width:760px){
+  .bs-streamer-cards-grid{grid-template-columns:1fr}
+  .bs-card-header{flex-direction:column;align-items:flex-start;gap:8px}
+  .bs-timeline-toggle-btn{margin-left:0}
+}

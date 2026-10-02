@@ -17,6 +17,23 @@ export interface StatisticsStreamerSearchResponse {
   hasMore: boolean;
 }
 
+export interface StreamerBroadcastHistoryItem {
+  streamId: string;
+  title: string;
+  categoryName: string;
+  peakViewers: number;
+  startedAt: string | null;
+  lastObservedAt: string;
+  liveUrl: string | null;
+}
+
+export interface StreamerHistoryResponse {
+  channelKey: string;
+  name: string;
+  platform: 'CHZZK' | 'SOOP';
+  broadcasts: StreamerBroadcastHistoryItem[];
+}
+
 // 띄어쓰기와 영문 대소문자가 달라도 같은 이름을 찾는다.
 export function normalizeStreamerQuery(value: string): string {
   return value.normalize('NFKC').replace(/\s+/g, '').toLocaleLowerCase().slice(0, 80);

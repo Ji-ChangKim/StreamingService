@@ -16,6 +16,7 @@ interface RegisteredChannel {
   channel_name: string;
   channel_url: string;
   profile_image_url: string | null;
+  debut_date?: string | null;
 }
 
 interface SoopResponse {
@@ -27,6 +28,31 @@ interface SoopResponse {
     broad_cate_name?: string;
   } | null;
   station?: { user_nick?: string };
+}
+
+// 버튜버 판별 전용 헬퍼 (단일 책임)
+export function isVtuberContent(tags?: string[], title?: string, isRegistered?: boolean): boolean {
+  if (isRegistered) return true;
+  const keywordRegex = /버추얼|버튜버|vtuber|버츄얼/i;
+  if (Array.isArray(tags) && tags.some((tag) => keywordRegex.test(tag))) return true;
+  if (title && keywordRegex.test(title)) return true;
+  return false;
+}
+
+// 신인(데뷔 60일 이내 또는 신인 태그) 판별 전용 헬퍼 (단일 책임)
+export function isRookieStreamer(debutDate?: string | null, title?: string, tags?: string[]): boolean {
+  if (debutDate) {
+    const debutTime = Date.parse(debutDate);
+    if (Number.isFinite(debutTime)) {
+      const diffDays = (Date.now() - debutTime) / (1000 * 60 * 60 * 24);
+      // 데뷔 전이거나 데뷔한 지 60일 이내
+      if (diffDays >= -7 && diffDays <= 60) return true;
+    }
+  }
+  const rookieRegex = /신입|신인|데뷔|debut|신규/i;
+  if (title && rookieRegex.test(title)) return true;
+  if (Array.isArray(tags) && tags.some((tag) => rookieRegex.test(tag))) return true;
+  return false;
 }
 
 // 외부 플랫폼의 응답을 제한 시간 안에 읽는다.
@@ -59,8 +85,11 @@ function parseStartTime(value?: string): string | null {
 }
 
 // 치지직 원본 방송을 화면 공통 자료형으로 변환한다.
-function normalizeChzzk(item: ChzzkLiveItem): StatisticsBroadcast {
+function normalizeChzzk(item: ChzzkLiveItem, registeredInfo?: { id: number; debutDate: string | null }): StatisticsBroadcast {
   const channelId = item.channel.channelId;
+  const isRegistered = Boolean(registeredInfo);
+  const isVtuber = isVtuberContent(item.tags, item.liveTitle, isRegistered);
+  const isRookie = isRookieStreamer(registeredInfo?.debutDate, item.liveTitle, item.tags);
   return {
     id: `CHZZK:${item.liveId}`, platform: 'CHZZK', streamId: String(item.liveId),
     channelKey: `CHZZK:${channelId}`, channelName: item.channel.channelName,
@@ -70,6 +99,10 @@ function normalizeChzzk(item: ChzzkLiveItem): StatisticsBroadcast {
     title: item.liveTitle || '제목 없음', categoryId: item.liveCategory || 'unknown',
     categoryName: item.liveCategoryValue || '카테고리 미제공',
     viewers: item.concurrentUserCount, startedAt: parseStartTime(item.openDate),
+    isVtuber,
+    isRookie,
+    debutDate: registeredInfo?.debutDate || null,
+    tags: item.tags || [],
   };
 }
 
@@ -84,11 +117,29 @@ export function deduplicateLiveChannels(lives: StatisticsBroadcast[]): Statistic
   return [...channels.values()].sort((a, b) => b.viewers - a.viewers || a.id.localeCompare(b.id));
 }
 
-// 치지직 인기 방송 상위 100개 범위만 조회한다.
-export async function getChzzkStatisticsSource(): Promise<StatisticsSourceResult> {
+// 치지직 실시간 라이브를 수집하고 버튜버/신인 여부를 식별한다.
+export async function getChzzkStatisticsSource(db?: D1Database): Promise<StatisticsSourceResult> {
   const lives: StatisticsBroadcast[] = [];
   let next: unknown;
   let complete = true;
+
+  const registeredMap = new Map<string, { id: number; debutDate: string | null }>();
+  if (db) {
+    try {
+      const dbChannels = await db.prepare(`SELECT c.id, c.channel_url, info.debut_date
+        FROM streamerChannel c
+        LEFT JOIN streamerChannel_info info ON info.channel_id = c.id
+        WHERE c.platform = 'CHZZK'`).all<{ id: number; channel_url: string; debut_date: string | null }>();
+      for (const row of dbChannels.results || []) {
+        const segs = (row.channel_url || '').split('/').filter(Boolean);
+        const cid = segs[segs.length - 1];
+        if (cid) registeredMap.set(cid.toLowerCase(), { id: row.id, debutDate: row.debut_date });
+      }
+    } catch (e) {
+      console.warn('[Statistics] Failed to query CHZZK registered channels', e);
+    }
+  }
+
   try {
     for (let page = 0; page < 2; page++) {
       // 다음 페이지 객체의 값을 개별 쿼리로 전달해야 첫 페이지가 반복되지 않는다.
@@ -105,7 +156,8 @@ export async function getChzzkStatisticsSource(): Promise<StatisticsSourceResult
       if (!Array.isArray(response.content?.data)) throw new Error('Invalid CHZZK response');
       for (const item of response.content.data) {
         if (!item.channel?.channelId || !isViewerCount(item.concurrentUserCount)) { complete = false; continue; }
-        lives.push(normalizeChzzk(item));
+        const reg = registeredMap.get(item.channel.channelId.toLowerCase());
+        lives.push(normalizeChzzk(item, reg));
       }
       next = response.content.page?.next;
       if (!next || response.content.data.length < 50) break;
@@ -117,7 +169,7 @@ export async function getChzzkStatisticsSource(): Promise<StatisticsSourceResult
   return {
     source: {
       platform: 'CHZZK', state: complete ? 'available' : lives.length ? 'partial' : 'unavailable',
-      scope: '인기 방송 상위 100개', observedAt: complete || lives.length ? new Date().toISOString() : null,
+      scope: '치지직 실시간 방송', observedAt: complete || lives.length ? new Date().toISOString() : null,
       checkedChannels: null,
     },
     lives: deduplicateLiveChannels(lives),
@@ -133,6 +185,7 @@ async function getSoopChannel(row: RegisteredChannel): Promise<StatisticsBroadca
   if (!response.broad?.broad_no) return null;
   const broad = response.broad;
   if (!isViewerCount(broad.current_sum_viewer)) throw new Error('Missing SOOP viewers');
+  const isRookie = isRookieStreamer(row.debut_date, broad.broad_title || undefined, undefined);
   return {
     id: `SOOP:${broad.broad_no}`, platform: 'SOOP', streamId: String(broad.broad_no),
     channelKey: `SOOP:${userId}`, channelName: row.channel_name || response.station.user_nick || userId,
@@ -141,23 +194,37 @@ async function getSoopChannel(row: RegisteredChannel): Promise<StatisticsBroadca
     title: broad.broad_title || '제목 없음', categoryId: String(broad.broad_cate_no || 'unknown'),
     categoryName: broad.broad_cate_name || '카테고리 미제공',
     viewers: broad.current_sum_viewer, startedAt: null,
+    isVtuber: true,
+    isRookie,
+    debutDate: row.debut_date || null,
   };
 }
 
-// 등록 순서로 고정한 최대 40개 채널의 조회 성공 여부를 함께 반환한다.
+// 등록된 SOOP 버추얼 스트리머 채널들의 방송 상태를 병렬 청크 단위로 조회한다.
 export async function getSoopStatisticsSource(db: D1Database): Promise<StatisticsSourceResult> {
   const source: PlatformSource = {
-    platform: 'SOOP', state: 'unavailable', scope: 'VDébut 등록 채널 최대 40개', observedAt: null, checkedChannels: 0,
+    platform: 'SOOP', state: 'unavailable', scope: 'SOOP 버추얼 스트리머', observedAt: null, checkedChannels: 0,
   };
   try {
     const result = await db.prepare(`SELECT c.id, c.channel_name, c.channel_url,
-      (SELECT profile_image_url FROM streamerChannel_info WHERE channel_id = c.id LIMIT 1) AS profile_image_url
-      FROM streamerChannel c WHERE c.platform = 'SOOP' ORDER BY c.id LIMIT 40`).all<RegisteredChannel>();
-    const responses = await Promise.allSettled(result.results.map(getSoopChannel));
-    const successes = responses.filter((response) => response.status === 'fulfilled');
-    const lives = responses.flatMap((response) => response.status === 'fulfilled' && response.value ? [response.value] : []);
+      (SELECT profile_image_url FROM streamerChannel_info WHERE channel_id = c.id LIMIT 1) AS profile_image_url,
+      (SELECT debut_date FROM streamerChannel_info WHERE channel_id = c.id LIMIT 1) AS debut_date
+      FROM streamerChannel c WHERE c.platform = 'SOOP' ORDER BY c.id LIMIT 150`).all<RegisteredChannel>();
+    
+    // 15개 단위 청크로 분할하여 안전하게 병렬 조회 (소켓 과부하 및 타임아웃 방지)
+    const chunkSize = 15;
+    const channels = result.results;
+    const allResponses: PromiseSettledResult<StatisticsBroadcast | null>[] = [];
+    for (let i = 0; i < channels.length; i += chunkSize) {
+      const chunk = channels.slice(i, i + chunkSize);
+      const chunkResponses = await Promise.allSettled(chunk.map(getSoopChannel));
+      allResponses.push(...chunkResponses);
+    }
+
+    const successes = allResponses.filter((response) => response.status === 'fulfilled');
+    const lives = allResponses.flatMap((response) => response.status === 'fulfilled' && response.value ? [response.value] : []);
     source.checkedChannels = successes.length;
-    source.state = successes.length === responses.length && responses.length > 0 ? 'available' : successes.length ? 'partial' : 'unavailable';
+    source.state = successes.length === allResponses.length && allResponses.length > 0 ? 'available' : successes.length ? 'partial' : 'unavailable';
     source.observedAt = successes.length ? new Date().toISOString() : null;
     return { source, lives: deduplicateLiveChannels(lives) };
   } catch (error) {

@@ -9,8 +9,9 @@ import { StatisticsBrand } from './StatisticsBrand';
 
 interface SearchProps {
   data: BroadcastStatistics | null;
-  onSelectStreamer: (streamer: StatisticsStreamer) => void;
+  onSearch: (query: string) => void;
   onSelectCategory: (category: StatisticsCategory) => void;
+  initialQuery?: string;
 }
 
 export interface RegisterResult {
@@ -100,8 +101,8 @@ function useRegisteredStreamerSearch(query: string, attempt: number) {
 }
 
 // 3. 검색 폼, 드롭다운 옵션 선택 및 등록 연동 컴포넌트
-export function StatisticsStreamerSearch({ data, onSelectStreamer, onSelectCategory }: SearchProps) {
-  const [query, setQuery] = useState('');
+export function StatisticsStreamerSearch({ data, onSearch, onSelectCategory, initialQuery }: SearchProps) {
+  const [query, setQuery] = useState(initialQuery || '');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
   const [attempt, setAttempt] = useState(0);
@@ -111,6 +112,12 @@ export function StatisticsStreamerSearch({ data, onSelectStreamer, onSelectCateg
   const container = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const feedbackTimer = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (initialQuery !== undefined) {
+      setQuery(initialQuery);
+    }
+  }, [initialQuery]);
 
   const { result, loading, error } = useRegisteredStreamerSearch(query, attempt);
   const rawStreamers = useMemo(() => mergeStatisticsStreamers(query, result?.streamers || [], data), [query, result, data]);
@@ -160,9 +167,10 @@ export function StatisticsStreamerSearch({ data, onSelectStreamer, onSelectCateg
     input.current?.focus();
 
     if (option.streamer) {
+      onSearch(option.streamer.name);
       if (!option.streamer.isRegistered) {
         setRegistering(true);
-        showFeedback(`${option.streamer.name} 스트리머를 VDébut에 등록하고 있어요…`, 'info');
+        showFeedback(`${option.streamer.name} 스트리머 정보를 연동하고 있어요…`, 'info');
         try {
           const res = await registerStreamerToVDebut(option.streamer);
           if (res.success) {
@@ -172,23 +180,30 @@ export function StatisticsStreamerSearch({ data, onSelectStreamer, onSelectCateg
               [key]: { isRegistered: true, profileSlug: res.streamer.profileSlug },
             }));
             showFeedback(`🎉 ${option.streamer.name} 스트리머가 VDébut에 등록되었습니다!`, 'success');
-          } else {
-            showFeedback(res.message || '스트리머 등록을 완료하지 못했습니다.', 'error');
           }
-          onSelectStreamer(res.streamer);
         } finally {
           setRegistering(false);
         }
-      } else {
-        onSelectStreamer(option.streamer);
       }
     } else if (option.category) {
       onSelectCategory(option.category);
     }
   };
 
+  const handleFormSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (query.trim()) {
+      setOpen(false);
+      onSearch(query.trim());
+    } else {
+      setOpen(true);
+      if (error) setAttempt((value) => value + 1);
+    }
+    input.current?.focus();
+  };
+
   return <div className="bs-streamer-search" ref={container}>
-    <form className="bs-search-form" role="search" onSubmit={(event) => { event.preventDefault(); setOpen(true); if (error) setAttempt((value) => value + 1); input.current?.focus(); }}>
+    <form className="bs-search-form" role="search" onSubmit={handleFormSubmit}>
       <Search size={17} aria-hidden="true" />
       <label className="bs-sr-only" htmlFor="bs-streamer-search">스트리머·카테고리 검색</label>
       <input ref={input} id="bs-streamer-search" type="text" role="combobox" aria-autocomplete="list" aria-expanded={visible} aria-controls="bs-search-options" aria-activedescendant={visible && active >= 0 && options[active] ? `bs-search-option-${active}` : undefined} value={query} maxLength={80} placeholder="스트리머 이름으로 검색 (치지직 · SOOP)" autoComplete="off" onFocus={() => setOpen(true)} onChange={(event) => { setQuery(event.target.value); setOpen(true); }} onKeyDown={(event) => {
@@ -197,7 +212,7 @@ export function StatisticsStreamerSearch({ data, onSelectStreamer, onSelectCateg
         if (event.key === 'Enter' && visible && active >= 0) { event.preventDefault(); void select(active); }
         if (event.key === 'Escape') { event.preventDefault(); setOpen(false); setActive(-1); }
       }} />
-      {query && <button type="button" className="bs-search-clear" aria-label="검색어 지우기" onClick={() => { setQuery(''); setActive(-1); input.current?.focus(); }}><X size={14} /></button>}
+      {query && <button type="button" className="bs-search-clear" aria-label="검색어 지우기" onClick={() => { setQuery(''); setActive(-1); onSearch(''); input.current?.focus(); }}><X size={14} /></button>}
       <button type="submit" className="bs-search-submit">검색</button>
     </form>
     {feedback && (

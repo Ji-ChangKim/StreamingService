@@ -17,7 +17,7 @@ export interface StatisticsFilters {
   platform: StatisticsPlatformFilter;
   category: string | null;
   hours: number;
-  metric: 'viewers' | 'channels' | 'chats';
+  metric: 'viewers' | 'channels';
 }
 
 export const countFormat = (value: number) => value.toLocaleString('ko-KR');
@@ -32,6 +32,23 @@ export function statisticsTime(value: string | null, withDate = false): string {
     timeZone: 'Asia/Seoul', month: withDate ? '2-digit' : undefined,
     day: withDate ? '2-digit' : undefined, hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
   }).format(new Date(value));
+}
+
+// 한국 시각(KST) 기준 날짜 문자열(YYYY-MM-DD)을 계산한다.
+export function getKstDateString(offsetDays = 0): string {
+  const d = new Date(Date.now() + 9 * 3600 * 1000 + offsetDays * 86400 * 1000);
+  return d.toISOString().slice(0, 10);
+}
+
+// YYYY-MM-DD 날짜를 한국어 M월 D일 형식으로 변환한다.
+export function formatKstDateKorean(dateStr: string): string {
+  const parts = dateStr.split('-');
+  if (parts.length === 3) {
+    const month = parseInt(parts[1], 10);
+    const day = parseInt(parts[2], 10);
+    return `${month}월 ${day}일`;
+  }
+  return dateStr;
 }
 
 // 카테고리 이름이 같아도 플랫폼별 원본 ID를 유지한다.
@@ -81,7 +98,7 @@ export function readStatisticsFilters(): StatisticsFilters {
   return {
     platform: STATISTICS_PLATFORMS.some((item) => item.id === platform) ? platform as StatisticsPlatform : 'ALL',
     category: /^(CHZZK|SOOP):/.test(params.get('category') || '') ? params.get('category') : null, hours: [6, 12, 24].includes(hours) ? hours : 24,
-    metric: metric === 'channels' || metric === 'chats' ? metric : 'viewers',
+    metric: metric === 'channels' ? 'channels' : 'viewers',
   };
 }
 

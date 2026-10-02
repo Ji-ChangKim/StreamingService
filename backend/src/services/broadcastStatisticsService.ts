@@ -106,7 +106,7 @@ export function assembleBroadcastStatistics(
   historyState: BroadcastStatistics['meta']['historyState'], now = new Date(), runs: StatisticsHistoryRun[] = [],
 ): BroadcastStatistics {
   const historyFrom = new Date(now.getTime() - 24 * 3600000).toISOString();
-  const peakFrom = new Date(now.getTime() - 18 * 3600000).toISOString();
+  const peakFrom = new Date(now.getTime() - 24 * 3600000).toISOString();
   const rows = uniqueHistory(rawRows).filter((row) => Date.parse(row.collection_started_at) >= Date.parse(historyFrom) && Date.parse(row.collection_started_at) <= now.getTime());
   const peaks = buildPeaks(rows, sources, peakFrom);
   const times = [...rows.map((row) => Date.parse(row.collection_started_at)), ...runs.filter((run) => run.observed_at && ['available', 'partial'].includes(run.state)).map((run) => Date.parse(run.observed_at!))];
@@ -114,7 +114,7 @@ export function assembleBroadcastStatistics(
     meta: {
       generatedAt: now.toISOString(), timezone: 'Asia/Seoul', refreshSeconds: 60,
       historyState, lastHistoryAt: times.length ? new Date(Math.max(...times)).toISOString() : null,
-      peakFrom, historyFrom, historyScope: '치지직 인기 방송 상위 100개 · SOOP 등록 채널 최대 40개 · 10분 간격', historyIntervalMinutes: STATISTICS_COLLECTION_MINUTES,
+      peakFrom, historyFrom, historyScope: '치지직 · SOOP 실시간 방송 수집 데이터', historyIntervalMinutes: STATISTICS_COLLECTION_MINUTES,
       unlinkedPeakChannels: peaks.filter((peak) => !peak.channelKey).length,
     },
     sources: sources.map((source) => source.source),
@@ -123,15 +123,61 @@ export function assembleBroadcastStatistics(
   };
 }
 
-// 현재 방송과 완료된 10분 수집 기록을 읽는다.
-export async function getBroadcastStatistics(db: D1Database): Promise<BroadcastStatistics> {
+// 과거 특정 날짜(00:00 ~ 23:59 KST)의 수집 기록을 조회하여 대시보드 리포트로 조립한다 (단일 책임)
+export async function getBroadcastStatisticsForDate(db: D1Database, dateStr: string): Promise<BroadcastStatistics> {
+  const startKst = `${dateStr}T00:00:00+09:00`;
+  const endKst = `${dateStr}T23:59:59+09:00`;
+  const from = new Date(Date.parse(startKst)).toISOString();
+  const to = new Date(Date.parse(endKst)).toISOString();
+
+  const [rawRows, runs] = await Promise.all([
+    readStatisticsHistory(db, from, to),
+    readStatisticsRuns(db, from, to),
+  ]);
+
+  const validRuns = runs.filter((run) => run.observed_at && ['available', 'partial'].includes(run.state));
+  const historyState = validRuns.length ? 'available' : 'empty';
+
+  // 과거 일자의 소스 상태 구성
+  const platforms: ('CHZZK' | 'SOOP')[] = ['CHZZK', 'SOOP'];
+  const sources: StatisticsSourceResult[] = platforms.map((p) => {
+    const pRuns = validRuns.filter((r) => r.platform === p);
+    return {
+      source: {
+        platform: p,
+        state: pRuns.length ? 'available' : 'unavailable',
+        scope: `${p === 'CHZZK' ? '치지직' : 'SOOP'} ${dateStr} 아카이브`,
+        observedAt: to,
+        checkedChannels: null,
+      },
+      lives: [],
+    };
+  });
+
+  const response = assembleBroadcastStatistics(sources, rawRows, historyState, new Date(Date.parse(endKst)), validRuns);
+  response.meta.targetDate = dateStr;
+  response.meta.isPastDate = true;
+  response.meta.historyScope = `${dateStr} KST 방송 기록 아카이브`;
+  response.meta.peakFrom = from;
+  response.meta.historyFrom = from;
+
+  return response;
+}
+
+// 현재 방송 또는 과거 특정 날짜의 수집 기록을 읽는다.
+export async function getBroadcastStatistics(db: D1Database, targetDate?: string): Promise<BroadcastStatistics> {
+  const todayKst = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
+  if (targetDate && /^\d{4}-\d{2}-\d{2}$/.test(targetDate) && targetDate !== todayKst) {
+    return getBroadcastStatisticsForDate(db, targetDate);
+  }
+
   const startedAt = new Date();
   const from = new Date(startedAt.getTime() - 24 * 3600000).toISOString();
   const results = await Promise.allSettled([
-    getChzzkStatisticsSource(), getSoopStatisticsSource(db), readStatisticsHistory(db, from, startedAt.toISOString()), readStatisticsRuns(db, from, startedAt.toISOString()),
+    getChzzkStatisticsSource(db), getSoopStatisticsSource(db), readStatisticsHistory(db, from, startedAt.toISOString()), readStatisticsRuns(db, from, startedAt.toISOString()),
   ] as const);
-  const chzzk = results[0].status === 'fulfilled' ? results[0].value : { source: { platform: 'CHZZK' as const, state: 'unavailable' as const, scope: '인기 방송 상위 100개', observedAt: null, checkedChannels: null }, lives: [] };
-  const soop = results[1].status === 'fulfilled' ? results[1].value : { source: { platform: 'SOOP' as const, state: 'unavailable' as const, scope: 'VDébut 등록 채널 최대 40개', observedAt: null, checkedChannels: null }, lives: [] };
+  const chzzk = results[0].status === 'fulfilled' ? results[0].value : { source: { platform: 'CHZZK' as const, state: 'unavailable' as const, scope: '치지직 실시간 방송', observedAt: null, checkedChannels: null }, lives: [] };
+  const soop = results[1].status === 'fulfilled' ? results[1].value : { source: { platform: 'SOOP' as const, state: 'unavailable' as const, scope: 'SOOP 버추얼 스트리머', observedAt: null, checkedChannels: null }, lives: [] };
   const rows = results[2].status === 'fulfilled' ? results[2].value : [];
   if (results[2].status === 'rejected') console.warn('[Statistics] History unavailable', String(results[2].reason));
   const runs = results[3].status === 'fulfilled' ? results[3].value : [];
@@ -142,4 +188,62 @@ export async function getBroadcastStatistics(db: D1Database): Promise<BroadcastS
   try { response.meta.collection = await getStatisticsCollectionStatus(db, new Date(), runs); }
   catch (error) { console.warn('[Statistics] Collection status unavailable', String(error)); }
   return response;
+}
+
+// 특정 스트리머의 방송 이력 타임라인을 조회한다 (기본 7일, 최대 30일, 단일 책임)
+export async function getStreamerBroadcastHistory(db: D1Database, channelKey: string, days = 7): Promise<{
+  channelKey: string;
+  name: string;
+  platform: 'CHZZK' | 'SOOP';
+  broadcasts: Array<{
+    streamId: string;
+    title: string;
+    categoryName: string;
+    peakViewers: number;
+    startedAt: string | null;
+    lastObservedAt: string;
+    liveUrl: string | null;
+  }>;
+}> {
+  const safeDays = Math.min(Math.max(Number(days) || 7, 1), 30);
+  const fromUtc = new Date(Date.now() - safeDays * 24 * 3600000).toISOString();
+  const platform = channelKey.startsWith('SOOP:') ? 'SOOP' : 'CHZZK';
+
+  const rows = await db.prepare(`
+    SELECT s.stream_id, s.title, s.category_name, MAX(s.viewers) AS peak_viewers,
+           MIN(s.started_at) AS started_at, MAX(r.observed_at) AS last_observed_at,
+           s.live_url, s.channel_name
+    FROM analytics_broadcast_snapshots s
+    JOIN analytics_broadcast_runs r ON r.run_id = s.run_id
+    WHERE (s.channel_key = ? OR s.channel_key = ?) AND r.observed_at >= ?
+    GROUP BY s.stream_id
+    ORDER BY MAX(r.observed_at) DESC
+    LIMIT 30
+  `).bind(channelKey, channelKey.toLowerCase(), fromUtc).all<{
+    stream_id: string;
+    title: string | null;
+    category_name: string | null;
+    peak_viewers: number;
+    started_at: string | null;
+    last_observed_at: string;
+    live_url: string | null;
+    channel_name: string | null;
+  }>();
+
+  const channelName = rows.results[0]?.channel_name || channelKey;
+
+  return {
+    channelKey,
+    name: channelName,
+    platform,
+    broadcasts: rows.results.map((r) => ({
+      streamId: r.stream_id,
+      title: r.title || '제목 없음',
+      categoryName: r.category_name || '카테고리 미제공',
+      peakViewers: r.peak_viewers || 0,
+      startedAt: r.started_at || null,
+      lastObservedAt: r.last_observed_at,
+      liveUrl: r.live_url || null,
+    })),
+  };
 }

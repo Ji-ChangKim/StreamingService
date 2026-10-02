@@ -22,7 +22,7 @@ async function claimCollection(db: D1Database, platform: CollectedPlatform, sche
       state='running', completed_at=NULL, error_code=NULL
     WHERE analytics_broadcast_runs.state IN ('running', 'unavailable') AND analytics_broadcast_runs.started_at < ?`)
     .bind(claim.runId, platform, scheduledAt, startedAt, claim.attemptId,
-      platform === 'CHZZK' ? '인기 방송 상위 100개' : 'VDébut 등록 채널 최대 40개',
+      platform === 'CHZZK' ? '인기 방송 상위 100개' : 'VDébut 등록 버추얼 스트리머',
       new Date(Date.now() - 3 * 60000).toISOString()).run();
   return result.meta.changes ? claim : null;
 }
@@ -64,7 +64,7 @@ async function collectPlatform(db: D1Database, platform: CollectedPlatform, slot
   const claim = await claimCollection(db, platform, slot);
   if (!claim) return { platform, state: 'skipped', channels: 0 };
   try {
-    const result = platform === 'CHZZK' ? await getChzzkStatisticsSource() : await getSoopStatisticsSource(db);
+    const result = platform === 'CHZZK' ? await getChzzkStatisticsSource(db) : await getSoopStatisticsSource(db);
     return await saveCollection(db, claim, result);
   } catch (error) {
     await recordCollectionFailure(db, claim);

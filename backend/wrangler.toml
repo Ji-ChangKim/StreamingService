@@ -30,8 +30,8 @@ DISCORD_PUBLIC_KEY = "5f3ac194f940bbe736f80fcc269b1df45da5cc86b60fe6b85a34a67055
 bucket = "../frontend/dist"
 [[env.dev.d1_databases]]
 binding = "DB"
-database_name = "vdebut-db"
-database_id = "888a8c04-5657-4bff-9b50-5002a47ac7c7"
+database_name = "vdebut-db-dev"
+database_id = "465fff79-9542-46d6-90dd-a78367bb92a6"
 
 # Production (live) env
 [env.production]
@@ -48,4 +48,4 @@ database_name = "vdebut-db"
 database_id = "888a8c04-5657-4bff-9b50-5002a47ac7c7"
 
 [triggers]
-crons = ["0 * * * *"]
+crons = ["*/10 * * * *"]

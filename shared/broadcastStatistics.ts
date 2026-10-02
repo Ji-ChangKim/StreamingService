@@ -25,6 +25,10 @@ export interface StatisticsBroadcast {
   categoryName: string;
   viewers: number;
   startedAt: string | null;
+  isVtuber?: boolean;
+  isRookie?: boolean;
+  debutDate?: string | null;
+  tags?: string[];
 }
 
 export interface StatisticsPoint {
@@ -55,6 +59,8 @@ export interface BroadcastStatistics {
     unlinkedPeakChannels: number;
     historyIntervalMinutes?: number;
     collection?: StatisticsCollectionStatus;
+    targetDate?: string;
+    isPastDate?: boolean;
   };
   sources: PlatformSource[];
   lives: StatisticsBroadcast[];
