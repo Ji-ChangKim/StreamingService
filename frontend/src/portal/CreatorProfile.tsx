@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, ArrowUpRight, CalendarDays, CalendarPlus, Clock, Link2, Play, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, CalendarPlus, Clock, Play, ShieldCheck } from 'lucide-react';
 import { PortalChannelDetails, PortalProfile, portalChannelKey, portalDateKey, portalWebUrl } from '../../../shared/portal';
 import { PROFILE_VIDEO_LABELS, profileDebutMembers, profileDebutPhase, profileLinkKey, profileVideoId } from '../../../shared/profilePresentation';
 import { activityChannelKey } from '../../../shared/broadcastActivity';
@@ -32,17 +32,19 @@ function profileCountdown(profile: PortalProfile, now: number): string {
 function ProfileSchedule({ profile, now, preview }: { profile: PortalProfile; now: number; preview: boolean }) {
   const phase = profileDebutPhase(profile, now);
   const replay = phase === 'PAST' && profile.videoKind === 'REPLAY' && profileVideoId(profile.videoUrl || '');
+  // 일정이 없는 소개에서는 빈 일정 안내 대신 채널 방문 동작만 남긴다.
+  const channelAction = profile.channelUrl && <a className="vd-button vd-primary" href={portalWebUrl(profile.channelUrl)} target="_blank" rel="noopener noreferrer">{t('채널 바로가기')}<ArrowUpRight size={16} /></a>;
+  if (profile.dateState === 'NONE') return channelAction ? <div className="vd-profile-channel-action">{channelAction}</div> : null;
   return <div className="vd-debut-callout">
-    <div><span className="vd-eyebrow"><CalendarDays size={14} />{phase === 'UPCOMING' ? t('첫 만남의 약속') : t('데뷔 일정')}</span>
-      <h2>{profile.dateState === 'NONE' ? t('데뷔 일정 등록 없음') : portalSchedule(profile)}</h2>
-      {profile.dateState === 'FIXED' && phase !== 'UNCONFIRMED' && <p className="vd-muted">{t('한국 시간 (Asia/Seoul) 기준')} · {portalDateKey(profile.startAtUtc, 'Asia/Seoul').slice(0, 4)}</p>}
+    <div><span className="vd-profile-label">{t('데뷔 일정')}</span>
+      <div className="vd-debut-date"><h2>{portalSchedule(profile)}</h2>
+        {profile.dateState === 'FIXED' && phase !== 'UNCONFIRMED' && <span className="vd-profile-timezone">{portalDateKey(profile.startAtUtc, 'Asia/Seoul').slice(0, 4)} · KST</span>}
+      </div>
       {phase === 'UPCOMING' && <span className="vd-profile-countdown"><Clock size={13} /> {profileCountdown(profile, now)}</span>}
-      {phase === 'PAST' && <p className="vd-muted">{t('예정된 데뷔 시각이 지났어요. 채널에서 소식을 확인해 보세요.')}</p>}
-      {profile.dateState === 'DATE_TBD' && <p className="vd-muted">{t('정확한 날짜가 정해지면 다시 만나요.')}</p>}
       {profile.noticeUrl && portalWebUrl(profile.noticeUrl) && <a className="vd-text-button" href={portalWebUrl(profile.noticeUrl)} target="_blank" rel="noopener noreferrer">{t('데뷔 공지 보기')}<ArrowUpRight size={13} /></a>}
     </div>
     <div className="vd-debut-actions">
-      {profile.channelUrl && <a className="vd-button vd-primary" href={portalWebUrl(profile.channelUrl)} target="_blank" rel="noopener noreferrer">{t('방송 채널로 만나기')}<ArrowUpRight size={16} /></a>}
+      {channelAction}
       {phase === 'UPCOMING' && <button type="button" className="vd-button" disabled={preview} onClick={() => downloadPortalSchedule(profile)}><CalendarPlus size={16} />{t('내 캘린더에 저장')}</button>}
       {replay && <a className="vd-button" href={portalWebUrl(profile.videoUrl || '')} target="_blank" rel="noopener noreferrer"><Play size={15} />{t('첫 방송 다시보기')}</a>}
     </div>
@@ -56,11 +58,11 @@ function ProfileVideo({ profile }: { profile: PortalProfile }) {
   const videoId = profileVideoId(profile.videoUrl || '');
   const kind = PROFILE_VIDEO_LABELS[profile.videoKind || 'INTRO'] || PROFILE_VIDEO_LABELS.INTRO;
   // 팀 PV는 유형 배지 대신 영상 제목 뒤에 PV를 한 번만 표시한다.
-  const title = profile.videoTitle || t('영상으로 먼저 만나요');
+  const title = profile.videoTitle || (profile.videoKind === 'GROUP_PV' ? profile.debutGroupName || 'PV' : t(kind));
   const heading = profile.videoKind === 'GROUP_PV' && !/\bPV\s*$/i.test(title) ? `${title} PV` : title;
   if (!videoId) return null;
   return <section className="vd-panel">
-    <div className="vd-video-heading"><div>{profile.videoKind !== 'GROUP_PV' && <span className="vd-eyebrow">{t(kind)}</span>}<h2>{heading}</h2></div></div>
+    <div className="vd-video-heading"><h2>{heading}</h2></div>
     <div className="vd-profile-video">{playing ? <iframe src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`} title={heading} allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
       : <button type="button" onClick={() => setPlaying(true)} aria-label={t('대표 영상 재생')}>
         {!imageFailed && <img src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`} alt="" loading="lazy" onError={() => setImageFailed(true)} />}
@@ -79,14 +81,15 @@ function ProfileLinks({ profile }: { profile: PortalProfile }) {
   });
   const seenLinks = new Set(channels.map((channel) => profileLinkKey(channel.channelUrl)));
   if (profile.noticeUrl) seenLinks.add(profileLinkKey(profile.noticeUrl));
-  const links = [{ url: profile.xUrl, label: '새 소식' }, { url: profile.cafeUrl, label: '공식 카페' }, { url: profile.websiteUrl, label: '공식 홈페이지' }].filter((link) => {
+  const links = [{ url: profile.xUrl, label: 'X / SNS' }, { url: profile.cafeUrl, label: '공식 카페' }, { url: profile.websiteUrl, label: '공식 홈페이지' }].filter((link) => {
     const key = profileLinkKey(link.url || '');
     if (!key || seenLinks.has(key)) return false;
     seenLinks.add(key); return true;
   });
-  return <section className="vd-panel"><span className="vd-eyebrow">{t('방송과 소식을 만나는 곳')}</span><h2>{t('채널 모아보기')}</h2><div className="vd-profile-links">
-    {channels.map((channel) => <a href={portalWebUrl(channel.channelUrl)} key={`${channel.platform}:${channel.channelUrl}`} target="_blank" rel="noopener noreferrer"><span><PlatformBadge platform={channel.platform} /><strong>{channel.primary ? t('대표 방송 채널') : channel.platform === 'YOUTUBE' ? t('영상 채널') : t('방송 채널')}</strong></span><ArrowUpRight size={15} /></a>)}
-    {links.map((link) => <a key={link.url} href={portalWebUrl(link.url || '')} target="_blank" rel="noopener noreferrer"><Link2 size={15} /><span><strong>{t(link.label)}</strong></span><ArrowUpRight size={15} /></a>)}
+  if (!channels.length && !links.length) return null;
+  return <section className="vd-panel vd-profile-channels"><h2>{t('채널')}</h2><div className="vd-profile-links">
+    {channels.map((channel) => <a href={portalWebUrl(channel.channelUrl)} key={`${channel.platform}:${channel.channelUrl}`} target="_blank" rel="noopener noreferrer"><span><PlatformBadge platform={channel.platform} />{channels.filter((item) => item.platform === channel.platform).length > 1 && <small>{channel.primary ? t('대표 방송 채널') : t('추가 방송·영상 채널')}</small>}</span><ArrowUpRight size={15} /></a>)}
+    {links.map((link) => <a key={link.url} href={portalWebUrl(link.url || '')} target="_blank" rel="noopener noreferrer"><strong>{t(link.label)}</strong><ArrowUpRight size={15} /></a>)}
   </div></section>;
 }
 
@@ -94,9 +97,9 @@ function ProfileLinks({ profile }: { profile: PortalProfile }) {
 function ProfileDebutGroup({ profile, profiles, onNavigate }: { profile: PortalProfile; profiles: PortalProfile[]; onNavigate: (path: string) => void }) {
   const members = profileDebutMembers(profile, profiles);
   if (members.length < 2) return null;
-  return <section className="vd-panel"><span className="vd-eyebrow">{t('함께 데뷔해요')}</span><h2>{profile.debutGroupName || t('데뷔 순서')}</h2><p className="vd-muted">{t('확정된 시각은 한국 시간 (Asia/Seoul) 기준')}</p><ol className="vd-debut-members">
+  return <section className="vd-panel"><h2>{profile.debutGroupName || t('데뷔 순서')}</h2><ol className="vd-debut-members" aria-label={t('함께 데뷔해요')}>
     {members.map((member) => <li key={member.slug} aria-current={member.slug === profile.slug ? 'true' : undefined}>
-      {member.slug === profile.slug ? <div className="vd-debut-member"><PortalAvatar profile={member} /><span><strong>{member.displayName}</strong><small>{portalSchedule(member)}</small></span><em>{t('지금 보고 있어요')}</em></div>
+      {member.slug === profile.slug ? <div className="vd-debut-member"><PortalAvatar profile={member} /><span><strong>{member.displayName}</strong><small>{portalSchedule(member)}</small></span></div>
         : <PortalLink to={`/creator/${encodeURIComponent(member.slug)}`} onNavigate={onNavigate} className="vd-debut-member"><PortalAvatar profile={member} /><span><strong>{member.displayName}</strong><small>{portalSchedule(member)}</small></span><ArrowRight size={16} /></PortalLink>}
     </li>)}
   </ol></section>;
@@ -111,28 +114,32 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, details,
   const bannerUrl = portalWebUrl(profile.bannerUrl || '') || details?.bannerUrl || '';
   const banner = { bannerUrl, mobileBannerUrl: profile.bannerUrl ? '' : details?.mobileBannerUrl || '', description: '' };
   const channelKey = activityChannelKey(profile.platform, profile.channelUrl);
+  // 설명이 없을 때는 빈 소개 카드와 반복 안내를 만들지 않는다.
+  const introduction = profile.description || details?.description;
   const IdentityHeading = preview ? 'h2' : 'h1';
   const related = profiles.filter((p) => p.slug !== profile.slug && (!profile.debutGroupId || p.debutGroupId !== profile.debutGroupId) && (profile.tags.length ? p.tags.some((tag) => profile.tags.includes(tag)) : p.platform === profile.platform)).slice(0, 4);
   return <article className="vd-profile-experience">
     {!preview && <div className="vd-breadcrumb"><PortalLink to="/creators" onNavigate={onNavigate}>{t('버튜버 둘러보기')}</PortalLink><span>/</span><span>{profile.displayName}</span></div>}
     <section className="vd-profile-hero"><ProfileCover key={`${profile.slug}:${bannerUrl}`} banner={banner} />
       <div className="vd-profile-identity"><PortalAvatar key={`${profile.slug}:${profile.avatarUrl}`} large profile={profile} />
-        <div className="vd-profile-identity-copy"><PlatformBadge platform={profile.platform} /><IdentityHeading>{profile.displayName}</IdentityHeading>
+        <div className="vd-profile-identity-copy"><IdentityHeading>{profile.displayName}</IdentityHeading>
           {profile.headline && <p className="vd-profile-headline">{profile.headline}</p>}
-          <div className="vd-profile-meta">{profile.agency && <span>{profile.agency}</span>}{profile.ownerVerified && <span><ShieldCheck size={14} />{t('채널 운영자 확인')}</span>}</div>
+          <div className="vd-profile-meta">{profile.agency && <span>{profile.agency}</span>}<PlatformBadge platform={profile.platform} />{profile.ownerVerified && <span><ShieldCheck size={14} />{t('채널 운영자 확인')}</span>}</div>
           {profile.tags.length > 0 && <div className="vd-tags">{profile.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
         </div>
         {!preview && <div className="vd-profile-tools"><FavoriteButton slug={profile.slug} /><CopyButton value={`${window.location.origin}/creator/${encodeURIComponent(profile.slug)}`} /></div>}
-      </div><ProfileSchedule profile={profile} now={now} preview={preview} />
+      </div>
+      {/* 캘린더에서 들어온 방문자는 소개를 먼저 읽고 일정과 채널을 이어서 확인한다. */}
+      {(introduction || profile.languages.length > 0) && <section className="vd-profile-about" aria-label={t('소개')}>{introduction && <p className="vd-intro-text">{introduction}</p>}{profile.languages.length > 0 && <p className="vd-profile-languages"><span>{t('방송 언어')}</span>{profile.languages.join(' · ')}</p>}</section>}
+      <ProfileSchedule profile={profile} now={now} preview={preview} />
     </section>
-    <div className="vd-profile-layout"><div className="vd-profile-content">
-      <section className="vd-panel vd-profile-intro"><span className="vd-eyebrow">{t('나를 소개합니다')}</span><h2>{t('이런 방송으로 만나요')}</h2><p className="vd-intro-text">{profile.description || details?.description || t('방송 채널에서 소개를 확인해 보세요.')}</p>{profile.languages.length > 0 && <><h3>{t('방송 언어')}</h3><p>{profile.languages.join(' · ')}</p></>}</section>
+    <div className="vd-profile-destinations"><ProfileLinks profile={profile} /></div>
+    <div className="vd-profile-content vd-profile-media">
       <ProfileVideo key={profile.videoUrl} profile={profile} />
       {!preview && <ProfileDebutGroup profile={profile} profiles={profiles} onNavigate={onNavigate} />}
-    </div><aside className="vd-profile-aside"><ProfileLinks profile={profile} />
-      {!preview && channelKey && <PortalLink to={`/analytics/streamer/${encodeURIComponent(channelKey)}?returnTo=${encodeURIComponent(`/creator/${profile.slug}`)}`} className="vd-panel vd-aside-link" onNavigate={onNavigate}><span>{t('어떤 활동을 하고 있을까?')}</span><strong>{t('방송 활동 기록')}<ArrowRight size={17} /></strong></PortalLink>}
-    </aside></div>
-    {!preview && related.length > 0 && <section className="vd-section"><div className="vd-section-heading"><div><span className="vd-eyebrow">{profile.tags.length ? t('비슷한 콘텐츠의 만남') : t('같은 플랫폼의 새로운 만남')}</span><h2>{t('함께 만나보세요')}</h2></div></div><div className="vd-cards">{related.map((p) => <CreatorCard profile={p} key={p.slug} onNavigate={onNavigate} />)}</div></section>}
+    </div>
+    {!preview && channelKey && <PortalLink to={`/analytics/streamer/${encodeURIComponent(channelKey)}?returnTo=${encodeURIComponent(`/creator/${profile.slug}`)}`} className="vd-profile-activity" onNavigate={onNavigate}>{t('방송 활동 기록')}<ArrowRight size={15} /></PortalLink>}
+    {!preview && related.length > 0 && <section className="vd-section vd-profile-related"><div className="vd-section-heading"><h2>{t('다른 버튜버')}</h2></div><div className="vd-cards">{related.map((p) => <CreatorCard profile={p} key={p.slug} onNavigate={onNavigate} />)}</div></section>}
   </article>;
 }
 

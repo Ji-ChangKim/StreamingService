@@ -17,6 +17,10 @@ YouTube에서 보기|||YouTubeで見る|||Watch on YouTube
 영상이 재생되지 않으면 YouTube에서 확인해 주세요.|||再生できない場合はYouTubeでご覧ください。|||If the video does not play, watch it on YouTube.
 방송과 소식을 만나는 곳|||配信とお知らせはこちら|||Streams and updates
 채널 모아보기|||チャンネル一覧|||All channels
+채널|||チャンネル|||Channels
+채널 바로가기|||チャンネルへ|||Visit channel
+X / SNS|||X / SNS|||X / social
+다른 버튜버|||ほかのVTuber|||More VTubers
 대표 방송 채널|||メイン配信チャンネル|||Main streaming channel
 영상 채널|||動画チャンネル|||Video channel
 새 소식|||最新情報|||Latest updates
