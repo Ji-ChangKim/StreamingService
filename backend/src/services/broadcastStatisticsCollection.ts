@@ -72,11 +72,11 @@ async function collectPlatform(db: D1Database, platform: CollectedPlatform, slot
   }
 }
 
-// 기존 이력에는 손대지 않고 새 수집 자료만 7일 보관한다. 한 번에 최대 100회차를 정리한다.
+// 대시보드의 최대 조회 기간에 맞춰 수집 자료를 90일 보관한다. 한 번에 최대 100회차를 정리한다.
 export async function pruneStatisticsCollections(db: D1Database, now = Date.now()): Promise<void> {
   await db.prepare(`DELETE FROM analytics_broadcast_runs WHERE run_id IN
     (SELECT run_id FROM analytics_broadcast_runs WHERE scheduled_at < ? ORDER BY scheduled_at LIMIT 100)`)
-    .bind(new Date(now - 7 * 24 * 3600000).toISOString()).run();
+    .bind(new Date(now - 90 * 24 * 3600000).toISOString()).run();
 }
 
 // 통계 전용 스케줄은 외부 알림이나 프로필 변경 작업을 실행하지 않는다.

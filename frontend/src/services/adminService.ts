@@ -76,9 +76,35 @@ export async function fetchAdminSubmissions(status: string = 'PENDING'): Promise
 }
 
 /**
- * 3. 관리자 1-클릭 승인 (커스텀 URL 슬러그 지원)
+ * 2-2. 관리자 신청서 데이터 상세 수정 저장
  */
-export async function approveSubmission(id: number, customSlug?: string): Promise<{ success: boolean; message?: string; slug?: string; error?: string }> {
+export async function updateAdminSubmission(id: number, data: any): Promise<{ success: boolean; message?: string; error?: string }> {
+  const token = getAdminToken();
+  if (!token) return { success: false, error: '인증 토큰이 없습니다.' };
+
+  try {
+    const res = await fetch(`${getApiHost()}/api/v1/admin/submissions/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    return await res.json();
+  } catch (err: any) {
+    return { success: false, error: err?.message || '신청서 수정 오류' };
+  }
+}
+
+/**
+ * 3. 관리자 1-클릭 승인 (커스텀 URL 슬러그 및 수정 데이터 반영 지원)
+ */
+export async function approveSubmission(
+  id: number,
+  customSlug?: string,
+  customData?: any
+): Promise<{ success: boolean; message?: string; slug?: string; error?: string }> {
   const token = getAdminToken();
   if (!token) return { success: false, error: '인증 토큰이 없습니다.' };
 
@@ -89,7 +115,7 @@ export async function approveSubmission(id: number, customSlug?: string): Promis
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({ customSlug }),
+      body: JSON.stringify({ customSlug, customData }),
     });
     return await res.json();
   } catch (err: any) {

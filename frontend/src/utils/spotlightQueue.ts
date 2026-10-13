@@ -1,3 +1,4 @@
+import { dateTimeFormatter } from '../../../shared/dateTimeFormatter';
 import { DebutEvent } from '../types';
 import { getEventDateKey, getTodayDateKey } from './calendarUtils';
 import { checkIsEventLive } from './eventUtils';
@@ -53,7 +54,7 @@ export function getPlatformSpotlightSummary(
     // 시간 문자열 (예: "19:00")
     let timeStr = '00:00';
     try {
-      timeStr = new Intl.DateTimeFormat('ko-KR', {
+      timeStr = dateTimeFormatter('ko-KR', {
         timeZone: selectedTimezone,
         hour: '2-digit',
         minute: '2-digit',

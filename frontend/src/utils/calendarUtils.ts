@@ -1,3 +1,4 @@
+import { dateTimeFormatter } from '../../../shared/dateTimeFormatter';
 import { DebutEvent } from '../types';
 
 export interface CalendarCell {
@@ -63,21 +64,9 @@ export function getCalendarGridCells(year: number, month: number): CalendarCell[
   return calendarCells;
 }
 
-// Memoized Intl.DateTimeFormat Cache Pool for Calendar Keys
-const dateKeyFormatterCache = new Map<string, Intl.DateTimeFormat>();
-
+// 달력 키도 개수 제한이 있는 공통 포맷터 풀을 사용한다.
 function getDateKeyFormatter(timezone: string): Intl.DateTimeFormat {
-  let formatter = dateKeyFormatterCache.get(timezone);
-  if (!formatter) {
-    formatter = new Intl.DateTimeFormat('en-CA', {
-      timeZone: timezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-    dateKeyFormatterCache.set(timezone, formatter);
-  }
-  return formatter;
+  return dateTimeFormatter('en-CA', { timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit' });
 }
 
 /**

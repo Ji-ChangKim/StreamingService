@@ -45,21 +45,19 @@ async function main() {
   add.run(2, 'SOOP', '밤하늘', 'https://www.sooplive.com/station/night');
   add.run(3, 'TWITCH', '테스트 알파', 'https://twitch.tv/hidden');
   add.run(4, 'SOOP', '100%_이름', 'https://www.sooplive.co.kr/station/literal');
-  for (let id = 10; id < 35; id++) add.run(id, 'SOOP', `동명이름${id}`, `https://www.sooplive.co.kr/station/user${id}`);
+  for (let id = 10; id < 36; id++) add.run(id, 'SOOP', `동명이름${id}`, `https://www.sooplive.co.kr/station/user${id}`);
   let reads = 0;
   const binding = {
     prepare: (sql) => ({
       bind: (...args) => ({
         all: async () => {
           reads++;
-          const converted = sql.replace(/\?1/g, '?');
-          const count = (converted.match(/\?/g) || []).length;
-          const params = count === 1 && args.length === 1 ? args : Array(count).fill(args[0]);
-          return { results: db.prepare(converted).all(...params) };
+          const params = /\?\d/.test(sql) ? [Object.fromEntries(args.map((value, index) => [String(index + 1), value]))] : args;
+          return { results: db.prepare(sql).all(...params) };
         },
         first: async () => {
-          const converted = sql.replace(/\?1/g, '?');
-          return db.prepare(converted).get(...args) || null;
+          const params = /\?\d/.test(sql) ? [Object.fromEntries(args.map((value, index) => [String(index + 1), value]))] : args;
+          return db.prepare(sql).get(...params) || null;
         },
         run: async () => {
           const res = db.prepare(sql).run(...args);
@@ -84,8 +82,10 @@ async function main() {
   assert.equal((await searchStatisticsStreamers(binding, "' OR 1=1 --", false)).streamers.length, 0);
 
   const many = await searchStatisticsStreamers(binding, '동명이름', false);
-  assert.equal(many.streamers.length, 21); // db query limit 21
-  assert.equal(many.hasMore, false);
+  assert.equal(many.streamers.length, 25);
+  assert.equal(many.hasMore, true);
+  assert.equal((await searchStatisticsStreamers(binding, '테스트알파', false, 'SOOP')).streamers.length, 0);
+  assert.equal((await searchStatisticsStreamers(binding, '밤하늘', false, 'SOOP')).streamers[0].platform, 'SOOP');
 
   // 2. 머지 모델 검증
   const live = { id: 'CHZZK:live', platform: 'CHZZK', channelKey: `CHZZK:${key}`, channelName: '테스트알파', channelUrl: `https://chzzk.naver.com/${key}`, imageUrl: null };

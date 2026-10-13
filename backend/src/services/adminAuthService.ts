@@ -1,93 +1,33 @@
-// Single Responsibility Principle: Admin Authentication & Token Verification Service
+// 관리자 비밀번호 확인과 서버 세션 인증을 분리한다.
 
-const ADMIN_JWT_SECRET = 'vdebut_admin_secret_key_2026_secure';
-
-/**
- * 1. Web Crypto API를 활용한 SHA-256 단방향 비밀번호 해싱
- */
+// 기존 비밀번호 형식을 유지하는 SHA-256 해시를 계산한다.
 export async function hashPassword(password: string, salt: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password + salt);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  const data = new TextEncoder().encode(password + salt);
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
-/**
- * 2. 관리자 로그인 검증 및 안전한 세션 토큰 발급
- */
-export async function verifyAdminLogin(
-  db: D1Database,
-  username: string,
-  password: string
-): Promise<{ success: boolean; token?: string; error?: string }> {
-  if (!username || !password) {
-    return { success: false, error: '아이디와 비밀번호를 모두 입력해주세요.' };
-  }
-
+// 기존 관리자 계정 확인 후 추측할 수 없는 8시간 세션을 발급한다.
+export async function verifyAdminLogin(db: D1Database, username: string, password: string): Promise<{ success: boolean; token?: string; error?: string }> {
+  if (!username || !password) return { success: false, error: '아이디와 비밀번호를 모두 입력해주세요.' };
   try {
-    const user: any = await db
-      .prepare('SELECT id, username, password_hash, salt, role FROM admin_users WHERE LOWER(username) = LOWER(?) LIMIT 1')
-      .bind(username.trim())
-      .first();
-
-    if (!user) {
-      return { success: false, error: '아이디 또는 비밀번호가 일치하지 않습니다.' };
-    }
-
-    const computedHash = await hashPassword(password, user.salt);
-    if (computedHash !== user.password_hash) {
-      return { success: false, error: '아이디 또는 비밀번호가 일치하지 않습니다.' };
-    }
-
-    // 로그인 시간 업데이트
-    await db
-      .prepare('UPDATE admin_users SET last_login_at = CURRENT_TIMESTAMP WHERE id = ?')
-      .bind(user.id)
-      .run();
-
-    // 안전한 관리자 세션 토큰 생성 (Base64 + Signature)
-    const payload = JSON.stringify({
-      uid: user.id,
-      name: user.username,
-      role: user.role,
-      exp: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7일 유효
-    });
-
-    const payloadB64 = btoa(unescape(encodeURIComponent(payload)));
-    const signature = await hashPassword(payloadB64, ADMIN_JWT_SECRET);
-    const token = `${payloadB64}.${signature}`;
-
+    const user = await db.prepare('SELECT id,username,password_hash,salt,role FROM admin_users WHERE LOWER(username)=LOWER(?) LIMIT 1').bind(username.trim()).first<{ id: number; username: string; password_hash: string; salt: string; role: string }>();
+    if (!user || user.role !== 'ADMIN' || await hashPassword(password, user.salt) !== user.password_hash) return { success: false, error: '아이디 또는 비밀번호가 일치하지 않습니다.' };
+    const token = `${crypto.randomUUID()}${crypto.randomUUID()}`.replace(/-/g, '');
+    await db.batch([
+      db.prepare('INSERT INTO portal_sessions(token_hash,expires_at) VALUES(?,?)').bind(await hashPassword(token, ''), Date.now() + 8 * 3600000),
+      db.prepare('UPDATE admin_users SET last_login_at=CURRENT_TIMESTAMP WHERE id=?').bind(user.id),
+    ]);
     return { success: true, token };
-  } catch (err: any) {
-    console.error('Admin login error:', err);
+  } catch {
     return { success: false, error: '로그인 처리 중 서버 오류가 발생했습니다.' };
   }
 }
 
-/**
- * 3. 관리자 요청 토큰 유효성 검사 미들웨어 함수
- */
-export async function validateAdminToken(token?: string): Promise<boolean> {
-  if (!token) return false;
-
+// 코드에 포함된 서명 키나 오래된 토큰 대신 서버에 남은 유효한 세션만 인정한다.
+export async function validateAdminToken(token: string | undefined, db: D1Database): Promise<boolean> {
+  if (!token || token.length > 128) return false;
   try {
-    const parts = token.split('.');
-    if (parts.length !== 2) return false;
-
-    const [payloadB64, signature] = parts;
-    const expectedSignature = await hashPassword(payloadB64, ADMIN_JWT_SECRET);
-    if (signature !== expectedSignature) return false;
-
-    const payloadStr = decodeURIComponent(escape(atob(payloadB64)));
-    const payload = JSON.parse(payloadStr);
-
-    if (!payload.exp || Date.now() > payload.exp) {
-      return false; // 만료됨
-    }
-
-    return true;
-  } catch {
-    return false;
-  }
+    return Boolean(await db.prepare('SELECT token_hash FROM portal_sessions WHERE token_hash=? AND expires_at>?').bind(await hashPassword(token, ''), Date.now()).first());
+  } catch { return false; }
 }

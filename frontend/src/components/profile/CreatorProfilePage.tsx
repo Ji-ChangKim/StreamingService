@@ -3,6 +3,7 @@ import { ExternalLink, ArrowLeft, CheckCircle2, Calendar, Sparkles, Pencil, Tras
 import { fetchCreatorProfile, CreatorProfileData, deleteCreatorProfile, updateCreatorProfile } from '../../services/creatorService';
 import { getAvatarUrl } from '../../utils/avatarUtils';
 import { CreatorEditModal } from './CreatorEditModal';
+import { activityChannelKey } from '../../../../shared/broadcastActivity';
 
 interface CreatorProfilePageProps {
   slug: string;
@@ -365,6 +366,13 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
               <ExternalLink className="w-3.5 h-3.5 text-slate-300 group-hover:translate-x-0.5 transition-transform" />
             </a>
           )}
+          {/* 프로필에서 검색을 반복하지 않고 해당 채널의 방송 통계로 이동한다. */}
+          {primaryChannel && activityChannelKey(primaryChannel.platform, primaryChannel.channelUrl) && (
+            <a href={`/analytics/streamer/${encodeURIComponent(activityChannelKey(primaryChannel.platform, primaryChannel.channelUrl)!)}?back=${encodeURIComponent(`/creator/${profile.slug}`)}`}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-[10px] bg-white text-blue-700 border border-blue-200 font-bold text-xs sm:text-sm hover:bg-blue-50">
+              방송 통계
+            </a>
+          )}
         </div>
       </section>
 
@@ -434,8 +442,8 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
         </h3>
         <div className="flex flex-wrap gap-3">
           {profile.channels.map((ch) => (
+            <div key={ch.id} className="flex items-center gap-2 flex-wrap">
             <a
-              key={ch.id}
               href={ch.channelUrl}
               target="_blank"
               rel="noreferrer"
@@ -444,6 +452,11 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
               <span>[{ch.platform}] {ch.channelName || `${ch.platform} 방송국`}</span>
               <ExternalLink className="w-3.5 h-3.5 text-[#64748B]" />
             </a>
+            {activityChannelKey(ch.platform, ch.channelUrl) && <a
+              href={`/analytics/streamer/${encodeURIComponent(activityChannelKey(ch.platform, ch.channelUrl)!)}?back=${encodeURIComponent(`/creator/${profile.slug}`)}`}
+              className="px-3 py-2 text-xs font-bold text-blue-700 rounded-lg border border-blue-200 hover:bg-blue-50"
+            >방송 통계</a>}
+            </div>
           ))}
 
           {profile.xUrl && (

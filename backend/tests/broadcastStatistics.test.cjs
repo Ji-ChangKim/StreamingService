@@ -21,16 +21,19 @@ async function main() {
   const row = (id, viewers, at) => ({ platform: 'CHZZK', external_stream_id: id, viewer_count: viewers, title: `방송 ${id}`, source_category_id: 'game', source_category_name: '게임', collection_started_at: at, channel_name: '테스트', channel_url: `https://chzzk.naver.com/${channel}`, profile_image_url: null });
   const rows = [
     row('old', 9999, '2026-09-14T15:59:59Z'),
-    row('before18', 8000, '2026-09-14T21:59:59Z'),
-    row('edge18', 150, '2026-09-14T22:00:00Z'),
+    // 기존 서비스의 최근 24시간 범위 바로 밖과 시작 경계를 검증한다.
+    row('before24', 8000, '2026-09-14T15:59:59Z'),
+    row('edge24', 150, '2026-09-14T16:00:00Z'),
+    row('inside24', 140, '2026-09-14T21:59:59Z'),
     row('1', 60, '2026-09-15T15:00:00Z'), row('2', 40, '2026-09-15T15:00:00Z'),
     row('1', 30, '2026-09-15T15:30:00Z'), row('2', 80, '2026-09-15T15:30:00Z'),
     row('2', 80, '2026-09-15T15:30:00Z'),
     row('future', 10000, '2026-09-15T17:00:00Z'),
   ];
   const data = service.assembleBroadcastStatistics([source], rows, 'available', now);
-  assert.equal(data.peaks.some((peak) => peak.streamId === 'before18'), false);
-  assert.equal(data.peaks.some((peak) => peak.streamId === 'edge18'), true);
+  assert.equal(data.peaks.some((peak) => peak.streamId === 'before24'), false);
+  assert.equal(data.peaks.some((peak) => peak.streamId === 'edge24'), true);
+  assert.equal(data.peaks.some((peak) => peak.streamId === 'inside24'), true);
   assert.equal(data.peaks.some((peak) => peak.streamId === 'future'), false);
   assert.equal(data.points.find((point) => point.at === '2026-09-15T15:30:00Z').viewers, 110);
   assert.equal(data.points.find((point) => point.at === '2026-09-15T15:30:00Z').channels, 2);
@@ -65,6 +68,6 @@ async function main() {
   global.fetch = originalFetch;
   fs.mkdirSync(path.resolve(__dirname, '../../.cache/statistics-tests'), { recursive: true });
   fs.writeFileSync(path.resolve(__dirname, '../../.cache/statistics-tests/fixture.json'), JSON.stringify(data));
-  console.log('PASS: aggregation and pagination — KST midnight, 18-hour boundary, duplicate samples/channels, concurrent totals, unknown data, safe links, platform categories.');
+  console.log('PASS: aggregation and pagination — KST midnight, 24-hour boundary, duplicate samples/channels, concurrent totals, unknown data, safe links, platform categories.');
 }
 main().catch((error) => { console.error(error); process.exitCode = 1; });

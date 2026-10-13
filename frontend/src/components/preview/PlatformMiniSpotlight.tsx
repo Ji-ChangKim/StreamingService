@@ -1,3 +1,5 @@
+import { translatePortalText } from '../../../../shared/portalTranslations';
+import { dateTimeFormatter } from '../../../../shared/dateTimeFormatter';
 import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { DebutEvent } from '../../types';
@@ -10,6 +12,7 @@ import { getCountryBadge } from '../../utils/countryDetector';
 import { AvatarImage } from '../calendar/AvatarImage';
 
 interface PlatformMiniSpotlightProps {
+  currentLang?: 'ko' | 'ja' | 'en';
   allEvents: DebutEvent[];
   selectedTimezone: string;
   onDownloadICS: (event: DebutEvent) => void;
@@ -49,10 +52,11 @@ const PLATFORMS: PlatformTabConfig[] = [
  * 데뷔 날짜/시간을 사용자 요청 포맷으로 정밀 포맷팅 (단일 기능 함수 - SRP)
  * 포맷: "MM월 DD일 (요일) 오후 00:00" (예: "09월 09일 (수) 오후 12:00")
  */
-function formatDebutDateStyle(dateIso: string, timezone: string = 'Asia/Seoul'): string {
+function formatDebutDateStyle(dateIso: string, timezone: string = 'Asia/Seoul', language: 'ko' | 'ja' | 'en' = 'ko'): string {
   try {
     const d = new Date(dateIso);
-    const parts = new Intl.DateTimeFormat('ko-KR', {
+    if (language !== 'ko') return dateTimeFormatter(language, { timeZone: timezone, month: 'short', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' }).format(d);
+    const parts = dateTimeFormatter('ko-KR', {
       timeZone: timezone,
       month: '2-digit',
       day: '2-digit',
@@ -85,10 +89,12 @@ function formatDebutDateStyle(dateIso: string, timezone: string = 'Asia/Seoul'):
 }
 
 export function PlatformMiniSpotlight({
+  currentLang = 'ko',
   allEvents,
   selectedTimezone,
   onNavigate,
 }: PlatformMiniSpotlightProps) {
+  const t = (source: string, values: unknown[] = []) => translatePortalText(source, currentLang, values);
   const [selectedPlatform, setSelectedPlatform] = useState<PlatformKey>('SOOP');
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
@@ -197,15 +203,15 @@ export function PlatformMiniSpotlight({
 
       {/* 2. 5단 피라미드 커버플로우 덱 [1(소) - 2(중) - 3(대) - 4(중) - 5(소)] */}
       <div className="py-2">
+        {/* 빈 플랫폼도 카드 덱과 같은 높이를 사용해 배경과 아래 달력 위치를 유지한다. */}
+        <div className="relative flex items-center justify-center w-full max-w-7xl mx-auto min-h-[300px] sm:min-h-[330px]">
         {items.length === 0 ? (
-          <div className="py-14 text-center text-xs font-bold text-[#64748B] bg-white/75 backdrop-blur-md rounded-2xl border border-dashed border-slate-300 max-w-md mx-auto shadow-xs">
-            현재 등록된 {selectedPlatform} 데뷔 일정이 없습니다.
+          <div className="w-full py-14 text-center text-xs font-bold text-[#64748B] bg-white/75 backdrop-blur-md rounded-2xl border border-dashed border-slate-300 max-w-md mx-auto shadow-xs">
+            {t('현재 등록된 {0} 데뷔 일정이 없습니다.', [selectedPlatform])}
           </div>
         ) : (
-          <div className="relative flex items-center justify-center w-full max-w-7xl mx-auto min-h-[300px] sm:min-h-[330px]">
-            
-            {/* 5단 피라미드 카드 덱 컨테이너 (3분할 앵커: 좌측 윙 - 중앙 메인 카드 - 우측 윙) */}
             <div className="flex items-center justify-center w-full overflow-visible px-1">
+              {/* 좌측 윙·중앙 메인·우측 윙의 세 앵커로 카드 덱을 배치한다. */}
               
               {/* 좌측 윙 (Left Wing: flex-1, justify-end) - 중앙 카드의 왼쪽에 밀착 */}
               <div className="flex-1 flex items-center justify-end overflow-visible">
@@ -216,6 +222,7 @@ export function PlatformMiniSpotlight({
                     className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[20px] border border-blue-200/70 p-3 opacity-70 scale-85 cursor-pointer hover:opacity-95 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -mr-6 lg:-mr-8 overflow-hidden"
                   >
                     <SpotlightCardContent
+                      currentLang={currentLang}
                       item={farLeftItem}
                       timezone={selectedTimezone}
                       tier="small"
@@ -230,6 +237,7 @@ export function PlatformMiniSpotlight({
                     className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[22px] border border-blue-300/80 p-4 opacity-90 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -mr-7 lg:-mr-10 overflow-hidden"
                   >
                     <SpotlightCardContent
+                      currentLang={currentLang}
                       item={prevItem}
                       timezone={selectedTimezone}
                       tier="medium"
@@ -247,8 +255,8 @@ export function PlatformMiniSpotlight({
                     <button
                       onClick={handlePrev}
                       className="absolute -left-4 sm:-left-5 top-1/2 -translate-y-1/2 z-40 p-2.5 sm:p-3 rounded-full bg-white/95 backdrop-blur-md hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-slate-200 shadow-xl transition-all cursor-pointer hover:scale-108"
-                      title="이전 버튜버"
-                      aria-label="이전 버튜버"
+                      title={t("이전 버튜버")}
+                      aria-label={t("이전 버튜버")}
                     >
                       <ChevronLeft className="w-5 h-5" />
                     </button>
@@ -262,6 +270,7 @@ export function PlatformMiniSpotlight({
                     }}
                   >
                     <SpotlightCardContent
+                      currentLang={currentLang}
                       item={currentItem}
                       timezone={selectedTimezone}
                       tier="large"
@@ -274,8 +283,8 @@ export function PlatformMiniSpotlight({
                     <button
                       onClick={handleNext}
                       className="absolute -right-4 sm:-right-5 top-1/2 -translate-y-1/2 z-40 p-2.5 sm:p-3 rounded-full bg-white/95 backdrop-blur-md hover:bg-[#0F172A] hover:text-white text-[#0F172A] border border-slate-200 shadow-xl transition-all cursor-pointer hover:scale-108"
-                      title="다음 버튜버"
-                      aria-label="다음 버튜버"
+                      title={t("다음 버튜버")}
+                      aria-label={t("다음 버튜버")}
                     >
                       <ChevronRight className="w-5 h-5" />
                     </button>
@@ -292,6 +301,7 @@ export function PlatformMiniSpotlight({
                     className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[22px] border border-blue-300/80 p-4 opacity-90 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -ml-7 lg:-ml-10 overflow-hidden"
                   >
                     <SpotlightCardContent
+                      currentLang={currentLang}
                       item={nextItem}
                       timezone={selectedTimezone}
                       tier="medium"
@@ -306,6 +316,7 @@ export function PlatformMiniSpotlight({
                     className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[20px] border border-blue-200/70 p-3 opacity-70 scale-85 cursor-pointer hover:opacity-95 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -ml-6 lg:-ml-8 overflow-hidden"
                   >
                     <SpotlightCardContent
+                      currentLang={currentLang}
                       item={farRightItem}
                       timezone={selectedTimezone}
                       tier="small"
@@ -314,8 +325,8 @@ export function PlatformMiniSpotlight({
                 )}
               </div>
             </div>
-          </div>
         )}
+        </div>
       </div>
     </section>
   );
@@ -326,20 +337,23 @@ export function PlatformMiniSpotlight({
  * tier: 'small' (1번, 5번) | 'medium' (2번, 4번) | 'large' (3번 중앙)
  */
 function SpotlightCardContent({
+  currentLang,
   item,
   timezone,
   tier,
   onNavigate,
 }: {
+  currentLang: 'ko' | 'ja' | 'en';
   item: SpotlightItem;
   timezone: string;
   tier: 'small' | 'medium' | 'large';
   onNavigate?: (path: string) => void;
 }) {
+  const t = (source: string, values: unknown[] = []) => translatePortalText(source, currentLang, values);
   const { event, statusType, channelUrl } = item;
   const isLive = statusType === 'LIVE';
   const countryBadge = getCountryBadge(event.creator.countryCode);
-  const formattedDate = formatDebutDateStyle(event.startAtUtc, timezone);
+  const formattedDate = formatDebutDateStyle(event.startAtUtc, timezone, currentLang);
   const slug = (event.creator as any)?.slug || '';
 
   // 소속사가 실제 기업세일 경우에만 노출 ('개인세'는 운영자 전용이므로 사용자 화면에서 완전 제거)
@@ -446,7 +460,7 @@ function SpotlightCardContent({
               ? 'bg-red-950/80 border-red-500/60 text-red-200 hover:bg-red-900'
               : 'bg-[#0F172A] border-slate-700/80 hover:bg-[#1E293B] text-white shadow-md'
           }`}
-          title={isLive ? '생방송 바로가기' : '방송국 채널 바로가기'}
+          title={t(isLive ? '생방송 바로가기' : '방송국 채널 바로가기')}
         >
           {/* 상태 알약 뱃지: "데뷔일" (라이브 시 LIVE) */}
           <span
@@ -462,7 +476,7 @@ function SpotlightCardContent({
                 : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
             }`}
           >
-            {isLive ? 'LIVE' : '데뷔일'}
+            {isLive ? 'LIVE' : t('데뷔일')}
           </span>
 
           {/* 일시 텍스트: "MM월 DD일 (요일) 오후 00:00" */}
@@ -475,7 +489,7 @@ function SpotlightCardContent({
                 : 'text-[10px]'
             }`}
           >
-            {isLive ? '생방송 진행 중' : formattedDate}
+            {isLive ? t('생방송 진행 중') : formattedDate}
           </span>
 
           <ExternalLink

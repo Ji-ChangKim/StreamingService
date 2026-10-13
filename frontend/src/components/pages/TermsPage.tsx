@@ -4,9 +4,10 @@ import { Language } from '../../utils/i18n';
 interface TermsPageProps {
   onNavigateHome: () => void;
   currentLang?: Language;
+  secureManagement?: boolean;
 }
 
-export function TermsPage({ onNavigateHome }: TermsPageProps) {
+export function TermsPage({ onNavigateHome, secureManagement = false }: TermsPageProps) {
   return (
     <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-8 space-y-8 animate-fadeIn text-[#0F172A]">
       {/* Navigation Header */}
@@ -61,7 +62,9 @@ export function TermsPage({ onNavigateHome }: TermsPageProps) {
           </h2>
           <p>
             • 허위 사실, 타인의 명의를 도용한 장난성 등록, 부적절한 링크 제보는 관리자에 의해 통보 없이 삭제될 수 있습니다.<br />
-            • 크리에이터 본인이 정보의 수정이나 삭제를 원하는 경우 프로필 페이지의 삭제 코드(방송국 URL) 기능이나 이메일 문의를 통해 즉시 처리할 수 있습니다.
+            {secureManagement
+              ? '• 소개 정보의 수정·삭제·정정은 문의 화면에서 접수하며, 운영자가 요청과 권리를 확인한 뒤 처리합니다.'
+              : '• 크리에이터 본인이 정보의 수정이나 삭제를 원하는 경우 프로필 페이지의 삭제 코드(방송국 URL) 기능이나 이메일 문의를 통해 즉시 처리할 수 있습니다.'}
           </p>
         </section>
 

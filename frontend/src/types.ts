@@ -7,8 +7,12 @@ export interface DebutEvent {
     displayName: string;
     avatarUrl: string;
     agency: string;
+    groupName?: string;
     countryCode: string;
     languages: string[];
+    xUrl?: string;
+    videoUrl?: string;
+    websiteUrl?: string;
   };
   startAtUtc: string;
   originalTimezone: string;
@@ -16,6 +20,9 @@ export interface DebutEvent {
   verificationStatus: string;
   links: { platform: string; url: string; isPrimary: boolean }[];
   description: string;
+  groupName?: string;
+  videoUrl?: string;
+  websiteUrl?: string;
   isTbd?: boolean;
   tbdType?: 'DATE_TBD' | 'TIME_TBD';
   targetMonth?: string; // YYYY-MM

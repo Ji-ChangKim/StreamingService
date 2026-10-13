@@ -50,7 +50,8 @@ function toStreamer(row: StreamerSearchRow): StatisticsStreamer {
 export async function searchStatisticsStreamers(
   db: D1Database,
   input: string,
-  includeExternal: boolean = true
+  includeExternal: boolean = true,
+  platform: 'ALL' | 'CHZZK' | 'SOOP' = 'ALL'
 ): Promise<StatisticsStreamerSearchResponse> {
   const query = normalizeStreamerQuery(input);
   if (!query) return { query: '', streamers: [], hasMore: false };
@@ -60,12 +61,12 @@ export async function searchStatisticsStreamers(
     i.display_name, i.profile_image_url, i.slug
     FROM streamerChannel c
     LEFT JOIN streamerChannel_info i ON i.id = (SELECT MIN(id) FROM streamerChannel_info WHERE channel_id = c.id)
-    WHERE c.platform IN ('CHZZK', 'SOOP') AND (
+    WHERE c.platform IN ('CHZZK', 'SOOP') AND (?2 = 'ALL' OR c.platform = ?2) AND (
       INSTR(LOWER(REPLACE(COALESCE(c.channel_name, ''), ' ', '')), ?1) > 0 OR
       INSTR(LOWER(REPLACE(COALESCE(i.display_name, ''), ' ', '')), ?1) > 0)
     ORDER BY CASE WHEN LOWER(REPLACE(COALESCE(i.display_name, c.channel_name), ' ', '')) = ?1 THEN 0 ELSE 1 END,
       COALESCE(i.display_name, c.channel_name) COLLATE NOCASE, c.id
-    LIMIT 21`).bind(query).all<StreamerSearchRow>();
+    LIMIT 26`).bind(query, platform).all<StreamerSearchRow>();
 
   // 2. 외부 플랫폼 실시간 검색 병렬 수행
   const externalPromise = includeExternal
@@ -95,6 +96,7 @@ export async function searchStatisticsStreamers(
 
   // 외부 플랫폼 검색 결과를 결합 (이미 등록된 채널은 제외)
   for (const ext of externalItems) {
+    if (platform !== 'ALL' && ext.platform !== platform) continue;
     const key = ext.channelKey || ext.channelUrl || ext.id;
     if (!map.has(key)) {
       map.set(key, {

@@ -52,6 +52,10 @@ export function StudioSubmitModal({
   // 소속: 'INDIE' | 'AGENCY'
   const [agencyType, setAgencyType] = useState<'INDIE' | 'AGENCY'>('INDIE');
   const [agencyName, setAgencyName] = useState('');
+  const [groupName, setGroupName] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
+  const [websiteUrl, setWebsiteUrl] = useState('');
+  const [xUrl, setXUrl] = useState('');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFetchingProfile, setIsFetchingProfile] = useState(false);
@@ -84,15 +88,20 @@ export function StudioSubmitModal({
       setAvatarUrl(editEvent.creator.avatarUrl || '');
       setDescription(editEvent.description || '');
       setTimezone(editEvent.originalTimezone || 'Asia/Seoul');
+      setXUrl(editEvent.creator.xUrl || '');
+      setVideoUrl(editEvent.videoUrl || editEvent.creator.videoUrl || '');
+      setWebsiteUrl(editEvent.websiteUrl || editEvent.creator.websiteUrl || '');
       setIsFetchedSuccess(true);
       setFetchMessage(`✏️ [기존 데뷔 일정 수정 모드]`);
 
       if (editEvent.creator.agency && !editEvent.creator.agency.toLowerCase().includes('indie') && editEvent.creator.agency !== '개인세') {
         setAgencyType('AGENCY');
         setAgencyName(editEvent.creator.agency);
+        setGroupName(editEvent.creator.groupName || editEvent.groupName || '');
       } else {
         setAgencyType('INDIE');
         setAgencyName('');
+        setGroupName('');
       }
 
       const isEventTbd = Boolean(editEvent.isTbd || editEvent.description?.includes('[일정 미정]') || editEvent.description?.includes('[미정]'));
@@ -132,6 +141,10 @@ export function StudioSubmitModal({
       setDescription('');
       setAgencyType('INDIE');
       setAgencyName('');
+      setGroupName('');
+      setVideoUrl('');
+      setWebsiteUrl('');
+      setXUrl('');
       setIsFetchedSuccess(false);
       setFetchMessage('');
     }
@@ -303,7 +316,7 @@ export function StudioSubmitModal({
       const utcIso = isTbd
         ? new Date(`${tbdMonth}-01T00:00:00.000Z`).toISOString()
         : new Date(`${date}T${time}:00`).toISOString();
-      const finalAgency = agencyType === 'AGENCY' ? (agencyName || '소속사') : 'Indie';
+      const finalAgency = agencyType === 'AGENCY' ? (agencyName.trim() || '소속사') : '개인세';
       const finalAvatar = avatarUrl || getAvatarUrl(displayName);
 
       const targetEvt: DebutEvent = {
@@ -315,8 +328,12 @@ export function StudioSubmitModal({
           displayName,
           avatarUrl: finalAvatar,
           agency: finalAgency,
+          groupName: groupName.trim() || undefined,
           countryCode: editEvent?.creator.countryCode || 'KR',
           languages: editEvent?.creator.languages || ['ko'],
+          xUrl: xUrl.trim() || undefined,
+          videoUrl: videoUrl.trim() || undefined,
+          websiteUrl: websiteUrl.trim() || undefined,
         },
         startAtUtc: utcIso,
         originalTimezone: timezone,
@@ -326,6 +343,9 @@ export function StudioSubmitModal({
         description: isTbd
           ? (description ? `[일정 미정] ${description}` : `[일정 미정] ${displayName} 버튜버의 데뷔 방송입니다.`)
           : (description || `${displayName} 버튜버의 공식 데뷔 방송입니다.`),
+        groupName: groupName.trim() || undefined,
+        videoUrl: videoUrl.trim() || undefined,
+        websiteUrl: websiteUrl.trim() || undefined,
         isTbd,
         targetMonth: isTbd ? tbdMonth : undefined,
         tbdType: isTbd ? 'DATE_TBD' : undefined,
@@ -587,8 +607,8 @@ export function StudioSubmitModal({
               )}
             </div>
 
-            {/* Step 4: 소속 선택 */}
-            <div className="space-y-1">
+            {/* Step 4: 소속 선택 및 기업/그룹 정보 */}
+            <div className="space-y-2">
               <label className="block font-bold text-[#334155] text-sm">소속 구분</label>
               <div className="grid grid-cols-2 gap-2">
                 <label className={`flex items-center justify-center gap-2 p-2 rounded-[6px] border cursor-pointer transition-all ${
@@ -625,20 +645,78 @@ export function StudioSubmitModal({
               </div>
 
               {agencyType === 'AGENCY' && (
-                <div className="pt-1 animate-fadeIn">
-                  <label className="block font-bold mb-1 text-[#334155] text-sm">
-                    기업 / 에이전시명 <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required={agencyType === 'AGENCY'}
-                    placeholder="예: 스텔라이브, 이세돌, VSPO!, HOLOLIVE 등"
-                    value={agencyName}
-                    onChange={(e) => setAgencyName(e.target.value)}
-                    className="w-full bg-white border border-[#CBD5E1] rounded-[6px] px-3.5 py-2 text-sm focus:border-[#2563EB] focus:outline-none transition-all font-medium"
-                  />
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-[8px] space-y-2.5 animate-fadeIn">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label className="block font-bold mb-1 text-[#334155] text-xs">
+                        기업 / 에이전시명 <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required={agencyType === 'AGENCY'}
+                        placeholder="예: 스텔라이브, 패러블 등"
+                        value={agencyName}
+                        onChange={(e) => setAgencyName(e.target.value)}
+                        className="w-full bg-white border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs sm:text-sm focus:border-[#2563EB] focus:outline-none transition-all font-medium"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-bold mb-1 text-[#334155] text-xs">
+                        그룹 / 유닛 / 기수명 <span className="text-slate-400 font-normal">(선택)</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="예: ABYSS (4기생), 1기생 등"
+                        value={groupName}
+                        onChange={(e) => setGroupName(e.target.value)}
+                        className="w-full bg-white border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs sm:text-sm focus:border-[#2563EB] focus:outline-none transition-all font-medium"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label className="block font-bold mb-1 text-[#334155] text-xs">
+                        공식 데뷔 PV / 티저 영상 URL <span className="text-slate-400 font-normal">(선택)</span>
+                      </label>
+                      <input
+                        type="url"
+                        placeholder="https://youtu.be/..."
+                        value={videoUrl}
+                        onChange={(e) => setVideoUrl(e.target.value)}
+                        className="w-full bg-white border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs font-mono focus:border-[#2563EB] focus:outline-none transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-bold mb-1 text-[#334155] text-xs">
+                        소속사 공식 홈페이지 <span className="text-slate-400 font-normal">(선택)</span>
+                      </label>
+                      <input
+                        type="url"
+                        placeholder="https://stellive.me/..."
+                        value={websiteUrl}
+                        onChange={(e) => setWebsiteUrl(e.target.value)}
+                        className="w-full bg-white border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs font-mono focus:border-[#2563EB] focus:outline-none transition-all"
+                      />
+                    </div>
+                  </div>
                 </div>
               )}
+
+              {/* 공식 X (트위터) 프로필 주소 - 개인세 / 기업세 공통 선택 입력 */}
+              <div>
+                <label className="block font-bold mb-1 text-[#334155] text-xs flex items-center justify-between">
+                  <span>공식 X (트위터) 프로필 주소 <span className="text-slate-400 font-normal">(선택)</span></span>
+                  <span className="text-[11px] text-slate-400 font-normal">데뷔 공지 및 일정 연동</span>
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://x.com/아이디"
+                  value={xUrl}
+                  onChange={(e) => setXUrl(e.target.value)}
+                  className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 text-xs sm:text-sm font-mono focus:bg-white focus:border-[#2563EB] focus:outline-none transition-all"
+                />
+              </div>
             </div>
 
             {/* Step 5: 데뷔 인사말 & 소식 */}

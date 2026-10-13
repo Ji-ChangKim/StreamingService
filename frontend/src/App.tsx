@@ -110,7 +110,7 @@ export function App() {
 
   // 언어 및 경로 변경 시 SEO Meta 태그 및 html lang 속성 동적 업데이트
   useEffect(() => {
-    if (currentPath.startsWith('/creator/')) return; // 크리에이터 페이지의 경우 전용 SEO 유지
+    if (currentPath.startsWith('/creator/') || isAnalyticsPath) return; // 프로필·통계 화면의 전용 SEO를 유지한다.
 
     const seo = SEO_DATA[currentLang];
     let pageTitle = seo.title;
@@ -163,6 +163,11 @@ export function App() {
 
     const ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogDesc) ogDesc.setAttribute('content', pageDesc);
+    // 통계에서 일반 페이지로 돌아오면 대표 주소와 색인 상태도 복원한다.
+    if (!isDevHost && isKnownRoute && currentPath !== '/admin') {
+      document.querySelector('link[rel="canonical"]')?.setAttribute('href', `https://vdebut.live${currentPath}`);
+      document.querySelector('meta[name="robots"]')?.setAttribute('content', 'index,follow');
+    }
   }, [currentPath, currentLang, isDevHost, isKnownRoute, isAnalyticsPath]);
 
   useEffect(() => {

@@ -7,7 +7,8 @@
  * - Brand Compliance: 치지직/SOOP/유튜브 공식 브랜드 색상 및 자산 무가공 원칙 준수
  */
 
-import { fetchEventsFromD1, insertEventToD1 } from './eventDbService';
+import { insertEventToD1 } from './eventDbService';
+import { readUnifiedDebutEvents as fetchEventsFromD1 } from './unifiedEventService';
 import { fetchPlatformProfile } from './platformApiService';
 import {
   extractChannelIdentifier,
