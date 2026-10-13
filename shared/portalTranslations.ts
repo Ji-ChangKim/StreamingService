@@ -1,5 +1,10 @@
 // 서비스 문구만 번역하며 활동명·자기소개 같은 이용자 입력은 원문으로 유지한다.
 const rows = String.raw`
+문의하기|||お問い合わせ|||Contact Us
+서비스|||サービス|||Service
+서비스 소개 & 이용 가이드|||サービス紹介＆利用ガイド|||About & Guide
+아직 만나지 못한 버튜버와 팬을 연결하는 VDébut의 소개와 이용 안내입니다.|||まだ見ぬVTuberとファンをつなぐVDébutの紹介と利用案内です。|||Introduction and guide to VDébut, connecting fans with new VTubers.
+누가 데뷔하는지, 어떤 방송을 하는지.|||誰がデビューするのか、どんな配信をするのか。|||Who is debuting, and what kind of streams they do.
 첫 만남까지 {0}일 {1}시간|||初配信まで{0}日{1}時間|||{0} days {1} hours until we meet
 첫 만남까지 {0}시간 {1}분|||初配信まで{0}時間{1}分|||{0} hours {1} minutes until we meet
 첫 만남까지 {0}분|||初配信まで{0}分|||{0} minutes until we meet
@@ -21,6 +26,15 @@ YouTube에서 보기|||YouTubeで見る|||Watch on YouTube
 채널 바로가기|||チャンネルへ|||Visit channel
 X / SNS|||X / SNS|||X / social
 다른 버튜버|||ほかのVTuber|||More VTubers
+{0}의 버튜버들도 만나보세요!|||{0}のVTuberにも会ってみよう！|||Meet more VTubers on {0}!
+{0} 멤버|||{0}のメンバー|||{0} members
+멤버|||メンバー|||Members
+데뷔 방송|||デビュー配信|||Debut broadcast
+데뷔 방송 영상 주소|||デビュー配信動画のURL|||Debut broadcast video URL
+방송 후 업로드한 YouTube 영상을 PV와 별도로 추가할 수 있어요.|||配信後にアップロードしたYouTube動画をPVとは別に追加できます。|||Add your uploaded debut broadcast separately from your PV.
+데뷔 방송은 YouTube 영상 주소로 입력해 주세요.|||デビュー配信にはYouTube動画のURLを入力してください。|||Enter a YouTube video URL for the debut broadcast.
+{0} 재생|||{0}を再生|||Play {0}
+영상 재생|||動画を再生|||Play video
 대표 방송 채널|||メイン配信チャンネル|||Main streaming channel
 영상 채널|||動画チャンネル|||Video channel
 새 소식|||最新情報|||Latest updates

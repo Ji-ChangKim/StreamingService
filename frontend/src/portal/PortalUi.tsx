@@ -14,10 +14,10 @@ export function PortalLink({ to, children, className = '', onNavigate }: { to: s
 }
 
 // 화면별 핵심 제목과 설명의 위계를 통일한다.
-export function PortalHeading({ eyebrow, title, description, children }: { eyebrow?: string; title: string; description: string; children?: ReactNode }) {
+export function PortalHeading({ title, description, children }: { title: string; description: string; children?: ReactNode }) {
   usePortalLocale(); // 언어 변경은 화면 상태를 유지한 채 문구만 갱신한다.
 
-  return <header className="vd-heading"><div>{eyebrow && <span className="vd-eyebrow">{eyebrow}</span>}<h1>{title}</h1><p>{description}</p></div>{children}</header>;
+  return <header className="vd-heading"><div><h1>{title}</h1><p>{description}</p></div>{children}</header>;
 }
 
 // 로딩·오류·빈 결과를 서로 다른 안내로 표현한다.
@@ -127,5 +127,5 @@ export function PortalDialog({ title, onClose, children }: { title: string; onCl
 export function RegisterCallout({ onNavigate }: { onNavigate: (path: string) => void }) {
   usePortalLocale(); // 언어 변경은 화면 상태를 유지한 채 문구만 갱신한다.
 
-  return <section className="vd-callout"><div className="vd-callout-icon"><CalendarPlus size={28} /></div><div><span className="vd-eyebrow">{t("이제, 당신을 만날 차례")}</span><h2>{t("곧 데뷔하나요?")}</h2><p>{t("데뷔 소식과 나의 소개를 등록하고 새로운 팬을 만나보세요.")}</p></div><PortalLink to="/upload" onNavigate={onNavigate} className="vd-button vd-primary">{t("데뷔 등록하기")}<ArrowUpRight size={17} /></PortalLink></section>;
+  return <section className="vd-callout"><div className="vd-callout-icon"><CalendarPlus size={28} /></div><div><h2>{t("곧 데뷔하나요?")}</h2><p>{t("데뷔 소식과 나의 소개를 등록하고 새로운 팬을 만나보세요.")}</p></div><PortalLink to="/upload" onNavigate={onNavigate} className="vd-button vd-primary">{t("데뷔 등록하기")}<ArrowUpRight size={17} /></PortalLink></section>;
 }
