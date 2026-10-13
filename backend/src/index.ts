@@ -1,6 +1,6 @@
 import { publicResponseCache } from './services/publicResponseCache';
 import { Hono } from 'hono';
-import { portalApi, readPortalProfiles, portalAdminStreamers, deletePortalProfile } from './services/portalService';
+import { portalApi, readPortalProfiles, readPortalProfileBySlug, portalAdminStreamers, deletePortalProfile } from './services/portalService';
 import { renderPortalPage, portalSitemap } from './services/portalPageService';
 import { portalPageSeo } from '../../shared/portalSeo';
 import { readUnifiedDebutEvents, portalProfileEvent } from './services/unifiedEventService';
@@ -110,7 +110,7 @@ app.use('*', async (c, next) => {
     let profile;
     if (/^\/creator\/[^/]+$/.test(path)) {
       let slug = ''; try { slug = decodeURIComponent(path.slice('/creator/'.length)); } catch { /* 찾을 수 없는 주소로 처리한다. */ }
-      try { profile = (await readPortalProfiles(c.env.DB)).find((item) => item.slug === slug); }
+      try { profile = (await readPortalProfileBySlug(c.env.DB, slug)) || undefined; }
       catch { c.header('Cache-Control', 'no-store'); return c.text('소개를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.', 503); }
     }
     const missing = (!seo.known && !path.startsWith('/analytics')) || (path.startsWith('/creator/') && !profile);
@@ -618,7 +618,7 @@ app.get('/api/v1/creator/:slug', async (c) => {
   const slug = c.req.param('slug');
   // 새 승인 소개가 기존 개인 소개 API에서도 누락되지 않게 호환 형식을 제공한다.
   if (c.env.PORTAL_ENABLED === 'true') {
-    const profile = (await readPortalProfiles(c.env.DB)).find((item) => item.slug === slug);
+    const profile = await readPortalProfileBySlug(c.env.DB, slug);
     if (!profile) return c.json({ success: false, error: '해당 크리에이터 프로필을 찾을 수 없습니다.' }, 404);
     const event = portalProfileEvent(profile);
     c.header('Cache-Control', 'public, max-age=30');

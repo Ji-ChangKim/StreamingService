@@ -1,8 +1,8 @@
-import { readPortalProfiles } from './portalProfileRepository';
+import { readPortalProfiles, readPortalProfileBySlug } from './portalProfileRepository';
 import { cleanProfilePresentation } from '../../../shared/profilePresentation';
 import { broadcastNewDebutToDiscord } from './discordBotService';
 import { portalProfileEvent } from './unifiedEventService';
-export { readPortalProfiles } from './portalProfileRepository';
+export { readPortalProfiles, readPortalProfileBySlug } from './portalProfileRepository';
 import { publicResponseCache } from './publicResponseCache';
 import { fetchSoopChannelBanner } from './soopChannelBanner';
 import { Hono } from 'hono';
@@ -156,7 +156,7 @@ portalApi.get('/profiles/:slug/banner', async (c) => {
   const key = new URL(`/api/v1/portal/profiles/${encodeURIComponent(slug)}/banner?cache=v2`, c.req.url);
   try {
     return await publicResponseCache(c.req.raw, key, 600, async () => {
-      const profile = (await readPortalProfiles(c.env.DB)).find((item) => item.slug === slug);
+      const profile = await readPortalProfileBySlug(c.env.DB, slug);
       if (!profile) { c.header('Cache-Control', 'no-store'); return c.json({ error: '소개를 찾을 수 없습니다.' }, 404); }
       return c.json(profile.platform === 'SOOP' ? await fetchSoopChannelBanner(profile.channelUrl) : { bannerUrl: '', mobileBannerUrl: '', description: '' });
     }, (promise) => c.executionCtx.waitUntil(promise));
@@ -208,7 +208,7 @@ portalApi.post('/requests', async (c) => {
   const requester = await portalTokenHash(c.req.header('CF-Connecting-IP') || 'local');
   const count = await c.env.DB.prepare("SELECT COUNT(*) AS count FROM portal_requests WHERE requester_hash=? AND created_at>datetime('now','-1 hour')").bind(requester).first<{ count: number }>();
   if ((count?.count || 0) >= 10) return c.json({ error: '접수가 많습니다. 잠시 후 다시 시도해 주세요.' }, 429);
-  if (kind === 'CLAIM' && !(await readPortalProfiles(c.env.DB)).some((p) => p.slug === slug)) return c.json({ error: '버튜버 소개를 찾을 수 없습니다.' }, 404);
+  if (kind === 'CLAIM' && !(await readPortalProfileBySlug(c.env.DB, slug))) return c.json({ error: '버튜버 소개를 찾을 수 없습니다.' }, 404);
   const id = crypto.randomUUID();
   const token = newPortalToken();
   const insert = c.env.DB.prepare('INSERT INTO portal_requests(id,kind,slug,payload,token_hash,requester_hash) VALUES(?,?,?,?,?,?)').bind(id, kind, slug, JSON.stringify(payload), await portalTokenHash(token), requester);
@@ -235,7 +235,7 @@ portalApi.put('/profiles/:slug', async (c) => {
   if (!await portalOwner(c.env.DB, slug, c.req.header('X-Request-Key') || '')) return c.json({ error: '승인된 소유권 확인 키가 필요합니다.' }, 403);
   let profile: PortalProfile;
   try { profile = cleanPortalProfile(await c.req.json()); } catch (error) { return c.json({ error: (error as Error).message }, 400); }
-  const original = (await readPortalProfiles(c.env.DB)).find((p) => p.slug === slug);
+  const original = await readPortalProfileBySlug(c.env.DB, slug);
   if (!original) return c.json({ error: '소개를 찾을 수 없습니다.' }, 404);
   if (profile.channelUrl !== original.channelUrl || profile.platform !== original.platform) return c.json({ error: '방송 채널 변경은 문의를 통해 신청해 주세요.' }, 400);
   // 소유자 수정은 관리자만 지정할 수 있는 데뷔 그룹과 등록 출처를 보존한다.
@@ -286,7 +286,7 @@ portalApi.put('/admin/profiles/:slug', async (c) => {
   if (!await portalAdmin(c.env.DB, adminKey)) return c.json({ error: '관리자 로그인이 필요합니다.' }, 401);
   const slug = c.req.param('slug');
   const body = await c.req.json<Record<string, unknown>>();
-  const original = (await readPortalProfiles(c.env.DB)).find((p) => p.slug === slug);
+  const original = await readPortalProfileBySlug(c.env.DB, slug);
   if (!original) return c.json({ error: '소개를 찾을 수 없습니다.' }, 404);
   if (field(body, 'revision', 100) !== await portalTokenHash(JSON.stringify(original))) return c.json({ error: '다른 운영자가 수정했습니다. 목록을 새로고침해 주세요.' }, 409);
   const reason = field(body, 'reason', 1000);

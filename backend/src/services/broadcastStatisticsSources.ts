@@ -206,10 +206,10 @@ export async function getSoopStatisticsSource(db: D1Database): Promise<Statistic
     platform: 'SOOP', state: 'unavailable', scope: 'SOOP 버추얼 스트리머', observedAt: null, checkedChannels: 0,
   };
   try {
-    const result = await db.prepare(`SELECT c.id, c.channel_name, c.channel_url,
-      (SELECT profile_image_url FROM streamerChannel_info WHERE channel_id = c.id LIMIT 1) AS profile_image_url,
-      (SELECT debut_date FROM streamerChannel_info WHERE channel_id = c.id LIMIT 1) AS debut_date
-      FROM streamerChannel c WHERE c.platform = 'SOOP' ORDER BY c.id LIMIT 150`).all<RegisteredChannel>();
+    const result = await db.prepare(`SELECT c.id, c.channel_name, c.channel_url, i.profile_image_url, i.debut_date
+      FROM streamerChannel c
+      LEFT JOIN streamerChannel_info i ON i.channel_id = c.id
+      WHERE c.platform = 'SOOP' ORDER BY c.id LIMIT 150`).all<RegisteredChannel>();
     
     // 15개 단위 청크로 분할하여 안전하게 병렬 조회 (소켓 과부하 및 타임아웃 방지)
     const chunkSize = 15;

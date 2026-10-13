@@ -23,3 +23,22 @@ export async function readPortalProfiles(db: D1Database): Promise<PortalProfile[
   return [...profiles.values()];
 }
 
+// 단건 프로필 조회 시 전체 풀스캔을 방지하고 기본키(PK) 및 인덱스로 직접 조회한다 (단일 책임).
+export async function readPortalProfileBySlug(db: D1Database, slug: string): Promise<PortalProfile | null> {
+  if (!slug) return null;
+  const addition = await db.prepare('SELECT data FROM portal_profiles WHERE slug = ?').bind(slug).first<{ data: string }>();
+  if (addition?.data) {
+    try {
+      return JSON.parse(addition.data) as PortalProfile;
+    } catch {
+      // JSON 파싱 실패 시 레거시 조회를 진행한다.
+    }
+  }
+  const legacy = await db.prepare(
+    `SELECT i.slug,i.display_name,i.description,i.profile_image_url,i.agency_name,i.country_code,i.x_url,i.debut_date,i.debut_time,i.timezone,i.start_at_utc,c.platform,c.channel_url
+     FROM streamerChannel_info i
+     JOIN streamerChannel c ON c.id=i.channel_id
+     WHERE i.slug = ? LIMIT 1`
+  ).bind(slug).first<LegacyRow>();
+  return legacy ? legacyProfile(legacy) : null;
+}
