@@ -46,14 +46,16 @@ function presentationChannels(body: Record<string, unknown>): NonNullable<Portal
 // 접수·관리자 수정·본인 수정에서 같은 홍보 자료 검증을 사용한다.
 export function cleanProfilePresentation(body: Record<string, unknown>) {
   const videoUrl = presentationUrl(body, 'videoUrl');
+  const debutVideoUrl = presentationUrl(body, 'debutVideoUrl');
   const videoKind = presentationText(body, 'videoKind', 20) || 'INTRO';
   if (videoUrl && !profileVideoId(videoUrl)) throw new Error('대표 영상은 YouTube 영상 주소로 입력해 주세요.');
+  if (debutVideoUrl && !profileVideoId(debutVideoUrl)) throw new Error('데뷔 방송은 YouTube 영상 주소로 입력해 주세요.');
   if (!PROFILE_VIDEO_KINDS.includes(videoKind as NonNullable<PortalProfile['videoKind']>)) throw new Error('대표 영상의 종류를 선택해 주세요.');
   return { headline: presentationText(body, 'headline', 100), bannerUrl: presentationUrl(body, 'bannerUrl'),
     websiteUrl: presentationUrl(body, 'websiteUrl'), noticeUrl: presentationUrl(body, 'noticeUrl'), xUrl: presentationUrl(body, 'xUrl'),
     // 공식 카페는 SNS와 별도로 저장하며 다른 선택 링크와 같은 주소 검증을 적용한다.
     cafeUrl: presentationUrl(body, 'cafeUrl'),
-    additionalChannels: presentationChannels(body), videoUrl, videoTitle: presentationText(body, 'videoTitle', 100),
+    additionalChannels: presentationChannels(body), videoUrl, debutVideoUrl, videoTitle: presentationText(body, 'videoTitle', 100),
     videoKind: videoKind as NonNullable<PortalProfile['videoKind']> };
 }
 

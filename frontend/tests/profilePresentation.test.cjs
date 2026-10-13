@@ -16,6 +16,10 @@ test('유튜브 영상만 재생하고 추가 채널의 영상 주소·위장 �
   for (const url of ['https://youtu.be/tlCeLkw8Upc', 'https://www.youtube.com/watch?v=tlCeLkw8Upc', 'https://youtube.com/shorts/tlCeLkw8Upc']) assert.equal(profileVideoId(url), 'tlCeLkw8Upc');
   for (const url of ['https://youtube.com/@ShizukiToa', 'https://youtube.com.attacker.example/watch?v=tlCeLkw8Upc', 'javascript:alert(1)', 'https://youtu.be/not-an-id']) assert.equal(profileVideoId(url), '');
   assert.throws(() => cleanProfilePresentation({ ...profile, videoUrl: 'https://example.com/video' }));
+  for (const debutVideoUrl of ['https://youtube.com/@ShizukiToa', 'https://youtube.com.attacker.example/watch?v=tlCeLkw8Upc', 'javascript:alert(1)']) assert.throws(() => cleanProfilePresentation({ ...profile, debutVideoUrl }));
+  const videos = cleanProfilePresentation({ ...profile, videoUrl: 'https://youtu.be/tlCeLkw8Upc', debutVideoUrl: 'https://www.youtube.com/watch?v=abcdefghijk' });
+  assert.equal(profileVideoId(videos.videoUrl), 'tlCeLkw8Upc');
+  assert.equal(profileVideoId(videos.debutVideoUrl), 'abcdefghijk');
   assert.throws(() => cleanProfilePresentation({ ...profile, additionalChannels: [{ platform: 'YOUTUBE', channelUrl: 'https://www.youtube.com/watch?v=tlCeLkw8Upc' }] }));
   assert.throws(() => cleanProfilePresentation({ ...profile, bannerUrl: 'javascript:alert(1)' }));
   const cleaned = cleanProfilePresentation({ ...profile, additionalChannels: [{ platform: 'CHZZK', channelUrl: profile.channelUrl }, { platform: 'YOUTUBE', channelUrl: 'https://www.youtube.com/@ShizukiToa' }, { platform: 'YOUTUBE', channelUrl: 'https://youtube.com/@shizukitoa?utm_source=x' }] });

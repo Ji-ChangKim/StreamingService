@@ -86,3 +86,8 @@
 
 3. **마이그레이션 적용 전 영향도 사전 점검**
    - `DROP TABLE`이나 `DELETE FROM`이 포함된 마이그레이션을 구동하기 전에는 반드시 Live 데이터베이스 백업 여부 및 대상 데이터 손실 가능성을 철저히 확인합니다.
+
+## 4. 2026-10-13 주간 데뷔 정보 최신화
+
+- `0040_sync_october_12_18_debuts.sql`: 사용자 제공 2026-10-12~18 KST 일정 38건을 운영 `vdebut-db`에 해당 파일만 명시 실행했다. 신규 32명·기존 6명 확인/갱신, 공개 프로필 및 캘린더 각각 346→378명. ABYSS 4명 공식 PV·SNS·추가 채널 및 기수 연결, IZIGENIA 2명 그룹 연결 포함. 기존 식별자·소개·사진과 대상 외 340명 정보 보존, 스키마 변경 없음. 과거 마이그레이션과 0039를 일괄 재실행하지 않았다. 로컬 재실행 및 운영 API·개인 페이지 38개를 검증했다. 상세: [주간 데이터 최신화 보고](../../1.%20기획문서/19_OCTOBER_WEEK_DATA_SYNC.md).
+- `0041_update_stellive_banner_and_links.sql`: 2026-10-13 운영 명시 실행. ABYSS 4명의 `bannerUrl`, `websiteUrl`, `cafeUrl`과 기존 CMS 홈페이지 주소만 갱신(2개 쿼리, 8행 기록). 사용자 첨부 1080×288 JPEG 원본을 `frontend/public/images/stellive-common-banner.jpg`로 보존하고 기존 운영 Workers Sites KV에 같은 원본을 업로드했다. 기존 일정·개인 사진·PV·SNS·멤버 연결 보존, Worker/프런트엔드 코드 배포 없음.

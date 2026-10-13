@@ -34,6 +34,7 @@ export function ProfilePresentationFields({ profile, onChange, allowGroups = fal
       <label>{t('영상 종류')}<select value={profile.videoKind || 'INTRO'} onChange={(e) => onChange({ videoKind: e.target.value as PortalProfile['videoKind'] })}>{PROFILE_VIDEO_KINDS.map((kind) => <option key={kind} value={kind}>{t(PROFILE_VIDEO_LABELS[kind])}</option>)}</select></label>
     </div>
     <label>{t('영상 제목')}<input maxLength={100} value={profile.videoTitle || ''} onChange={(e) => onChange({ videoTitle: e.target.value })} placeholder={t('팬들에게 보여줄 영상 제목')} /></label>
+    <label>{t('데뷔 방송 영상 주소')}<input type="url" maxLength={1000} value={profile.debutVideoUrl || ''} onChange={(e) => onChange({ debutVideoUrl: e.target.value })} placeholder="https://youtu.be/…" /><small>{t('방송 후 업로드한 YouTube 영상을 PV와 별도로 추가할 수 있어요.')}</small></label>
     {allowGroups && <div className="vd-presentation-group"><h3>{t('함께 데뷔하는 팀·기수')}</h3><p className="vd-muted">{t('공식 공지로 확인한 멤버에게만 같은 그룹 식별자를 지정해 주세요.')}</p><div className="vd-presentation-grid">
       <label>{t('데뷔 그룹 이름')}<input maxLength={100} value={profile.debutGroupName || ''} onChange={(e) => onChange({ debutGroupName: e.target.value })} placeholder="STELLIVE 4th Generation ABYSS" /></label>
       <label>{t('데뷔 그룹 식별자')}<input maxLength={80} pattern="[a-z0-9_-]+" value={profile.debutGroupId || ''} onChange={(e) => onChange({ debutGroupId: e.target.value })} placeholder="stellive-abyss-2026" /></label>

@@ -22,6 +22,7 @@ export interface PortalProfile {
   headline?: string; bannerUrl?: string; websiteUrl?: string; noticeUrl?: string; cafeUrl?: string;
   additionalChannels?: { platform: PortalPlatform; channelUrl: string }[];
   videoUrl?: string; videoTitle?: string; videoKind?: 'INTRO' | 'TEASER' | 'GROUP_PV' | 'REPLAY' | 'COVER' | 'HIGHLIGHT';
+  debutVideoUrl?: string;
   // 같은 팀·기수의 데뷔 연결은 관리자만 설정한다.
   debutGroupId?: string; debutGroupName?: string;
 }

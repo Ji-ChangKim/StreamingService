@@ -33,6 +33,7 @@ test('대표 영상·채널·공지의 저장 흐름과 관리자 전용 데뷔 
   const db = database(), env = { DB: db, PORTAL_ENABLED: 'true' };
   const call = (route, method = 'GET', body, headers = {}) => portalApi.request(`https://dev.vdebut.live${route}`, { method, headers: { 'Content-Type': 'application/json', ...headers }, body: body ? JSON.stringify(body) : undefined }, env);
   const details = { ...profile, headline: '노래와 게임으로 만나요', bannerUrl: 'https://example.com/banner.jpg', websiteUrl: 'https://example.com/', cafeUrl: 'https://cafe.naver.com/example', noticeUrl: 'https://example.com/news?id=1', xUrl: 'https://x.com/example', videoUrl: 'https://youtu.be/tlCeLkw8Upc', videoTitle: '팀 소개', videoKind: 'GROUP_PV', additionalChannels: [{ platform: 'YOUTUBE', channelUrl: 'https://youtube.com/@example' }], debutGroupId: 'forged-group', debutGroupName: '임의 그룹' };
+  details.debutVideoUrl = 'https://www.youtube.com/watch?v=abcdefghijk';
   const submission = await (await call('/requests', 'POST', { ...details, kind: 'DEBUT' })).json();
   const payload = JSON.parse(db.sqlite.prepare('SELECT payload FROM portal_requests WHERE id=?').get(submission.id).payload);
   assert.equal(payload.debutGroupId, undefined); assert.equal(payload.noticeUrl, details.noticeUrl);
@@ -42,6 +43,7 @@ test('대표 영상·채널·공지의 저장 흐름과 관리자 전용 데뷔 
   const registered = (await readPortalProfiles(db))[0];
   for (const field of ['headline', 'bannerUrl', 'websiteUrl', 'cafeUrl', 'noticeUrl', 'xUrl', 'videoUrl', 'videoTitle', 'videoKind']) assert.equal(registered[field], details[field]);
   assert.deepEqual(registered.additionalChannels, details.additionalChannels);
+  assert.equal(registered.debutVideoUrl, details.debutVideoUrl);
   const listing = await (await call('/admin/profiles', 'GET', undefined, admin)).json();
   const managed = listing.profiles[0];
   assert.equal((await call(`/admin/profiles/${approved.slug}`, 'PUT', { profile: { ...registered, debutGroupId: 'abyss-2026', debutGroupName: 'ABYSS' }, revision: managed.revision, reason: '공식 공지로 팀 확인' }, admin)).status, 200);
@@ -49,6 +51,8 @@ test('대표 영상·채널·공지의 저장 흐름과 관리자 전용 데뷔 
   assert.equal((await call(`/admin/requests/${claim.id}/decision`, 'POST', { status: 'APPROVED', proofChecked: true }, admin)).status, 200);
   assert.equal((await call(`/profiles/${approved.slug}`, 'PUT', { ...details, headline: '수정한 한 줄 소개', debutGroupId: 'spoofed', debutGroupName: '가짜' }, { 'X-Request-Key': claim.token })).status, 200);
   const saved = (await readPortalProfiles(db))[0];
+  assert.equal(saved.debutVideoUrl, details.debutVideoUrl);
+  assert.equal((await call(`/profiles/${approved.slug}`, 'PUT', { ...details, debutVideoUrl: 'https://youtube.com.attacker.example/watch?v=abcdefghijk' }, { 'X-Request-Key': claim.token })).status, 400);
   assert.equal(saved.headline, '수정한 한 줄 소개'); assert.equal(saved.debutGroupId, 'abyss-2026'); assert.equal(saved.debutGroupName, 'ABYSS');
   assert.equal(saved.cafeUrl, details.cafeUrl); assert.equal(saved.noticeUrl, details.noticeUrl); assert.equal(saved.videoUrl, details.videoUrl); assert.equal(saved.ownerVerified, true);
   assert.equal((await call(`/profiles/${approved.slug}`, 'PUT', { ...details, videoUrl: 'https://youtube.com.attacker.example/watch?v=tlCeLkw8Upc' }, { 'X-Request-Key': claim.token })).status, 400);
