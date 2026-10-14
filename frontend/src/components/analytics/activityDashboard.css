@@ -205,3 +205,13 @@
 @media(max-width:390px){.ad-dashboard{padding:20px 12px 28px}.ad-date-form{gap:7px}.ad-date-form input{width:118px}.ad-summary-card{padding:14px}.ad-summary-card>strong{font-size:19px}.ad-summary-card>div{font-size:11px}.ad-search-card .bs-button{padding:7px 8px;font-size:11px}.ad-platforms .bs-button{padding:2px 6px}.ad-profile-content{gap:12px}.ad-avatar-large{width:48px;height:48px}.ad-calendar-day{min-height:58px}.ad-calendar-day strong{font-size:12px}}
 /* 작은 화면에서도 외곽 박스를 다시 만들지 않고 지표와 항목 사이의 선을 유지한다. */
 @media(max-width:760px){.ad-summary{gap:0}.ad-summary-card:nth-child(2){border-right:0}.ad-summary-card:nth-child(-n+2){border-bottom:1px solid #dce4ee}.ad-filters,.ad-profile,.ad-search-card{padding-left:0;padding-right:0}}
+
+/* 구글 Ads 심사 및 SEO를 위한 자연어 요약 리포트 카드 */
+.ad-narrative-box{margin:18px 0 24px;padding:18px 22px;background:#f8fafc;border:1px solid #e2e8f0;border-left:4px solid #2563eb;border-radius:4px;color:#334155;font-size:13.5px;line-height:1.75}
+.ad-narrative-box strong{color:#0f172a;font-weight:700}
+.ad-narrative-box.ad-narrative-empty{border-left-color:#0ea5e9;background:#f0f9ff}
+.ad-new-streamer-banner{display:flex;align-items:flex-start;gap:16px;padding:20px 22px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;margin-bottom:24px;color:#166534}
+.ad-new-streamer-badge{flex-shrink:0;padding:4px 9px;background:#15803d;color:#fff;border-radius:4px;font-size:11px;font-weight:800;letter-spacing:-.2px}
+.ad-new-streamer-banner strong{display:block;font-size:14px;color:#14532d;margin-bottom:4px}
+.ad-new-streamer-banner p{font-size:12.5px;color:#166534;margin:0;line-height:1.6}
+

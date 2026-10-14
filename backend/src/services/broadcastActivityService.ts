@@ -1,6 +1,7 @@
 import type { ActivityFilters, BroadcastActivity, ActivitySelection, ActivityBroadcastPage, ActivityBroadcast } from '../../../shared/broadcastActivity';
 import type { StatisticsStreamer } from '../../../shared/statisticsStreamerSearch';
 import { STATISTICS_COLLECTION_MINUTES } from '../../../shared/statisticsCollection';
+import { ensureStreamerRegistered } from './onDemandStreamerService';
 
 // 같은 오름차순 창을 공유하고 이미지·URL을 중간 집계에서 제외해 정렬과 메모리를 줄인다.
 // 연속으로 확인한 구간만 방송 시간에 포함하며 수집 중단 구간을 이어 붙이지 않는다.
@@ -39,7 +40,7 @@ export const ACTIVITY_CTE = `WITH runs AS (
   FROM entries WHERE minutes > 0 AND date(observed_at, '+9 hours') != date(next_at, '+9 hours')
 )`;
 
-// 직접 접속한 상세 주소에서도 최근 공개 기록으로 채널 프로필을 확인한다.
+// 직접 접속한 상세 주소에서도 최근 공개 기록 또는 온디맨드 자동 등록으로 채널 프로필을 확인한다.
 async function readActivityStreamer(db: D1Database, channel: string): Promise<StatisticsStreamer | null> {
   if (!channel) return null;
   const latest = await db.prepare(`SELECT s.channel_name AS name, s.channel_url AS channelUrl, s.image_url AS imageUrl
@@ -54,9 +55,40 @@ async function readActivityStreamer(db: D1Database, channel: string): Promise<St
     WHERE c.platform = ? AND (c.channel_url = ? OR c.channel_url = ? OR c.channel_url = ?) LIMIT 1`)
     .bind(platform, channelUrl, `https://ch.sooplive.co.kr/${id}`, `https://bj.afreecatv.com/${id}`)
     .first<{ name: string; channelUrl: string | null; imageUrl: string | null; profileSlug: string | null }>();
-  return { id: channel, channelKey: channel, platform, isRegistered: Boolean(registered), name: registered?.name || latest?.name || id,
-    channelUrl: registered?.channelUrl || latest?.channelUrl || channelUrl,
-    imageUrl: registered?.imageUrl || latest?.imageUrl || null, profileSlug: registered?.profileSlug || null };
+
+  if (registered) {
+    return {
+      id: channel,
+      channelKey: channel,
+      platform,
+      isRegistered: true,
+      name: registered.name || latest?.name || id,
+      channelUrl: registered.channelUrl || latest?.channelUrl || channelUrl,
+      imageUrl: registered.imageUrl || latest?.imageUrl || null,
+      profileSlug: registered.profileSlug || null,
+    };
+  }
+
+  // 등록되지 않은 채널인 경우 온디맨드 자동 등록(Smart Fallback) 수행
+  try {
+    const fallbackResult = await ensureStreamerRegistered(db, channel);
+    if (fallbackResult.streamer) {
+      return fallbackResult.streamer;
+    }
+  } catch (err) {
+    console.warn(`[readActivityStreamer] Fallback registration failed for ${channel}:`, err);
+  }
+
+  return {
+    id: channel,
+    channelKey: channel,
+    platform,
+    isRegistered: false,
+    name: latest?.name || id,
+    channelUrl: latest?.channelUrl || channelUrl,
+    imageUrl: latest?.imageUrl || null,
+    profileSlug: null,
+  };
 }
 
 // 집계 결과와 최근 200개 방송 이력을 함께 반환한다.

@@ -54,6 +54,7 @@ import { activityPeriod, validActivityRange } from '../../shared/broadcastActivi
 import { collectBroadcastStatistics } from './services/broadcastStatisticsCollection';
 import { searchStatisticsStreamers } from './services/statisticsStreamerSearchService';
 import { registerExternalStreamerToD1 } from './services/externalPlatformSearchService';
+import { ensureStreamerRegistered } from './services/onDemandStreamerService';
 import { activitySitemapEntries, renderActivityPage } from './services/activityPageService';
 import { activityNoindex } from '../../shared/activitySeo';
 import { cheerApi, resetWeeklyCheers, WEEKLY_RESET_CRON } from './services/cheerService';
@@ -1013,6 +1014,30 @@ app.post('/api/analytics/streamers/register', async (c) => {
   } catch (error: any) {
     console.error('[Statistics] Streamer auto-register failed', error);
     return c.json({ success: false, message: error?.message || '스트리머 등록에 실패했습니다.' }, 500);
+  }
+});
+
+// 미등록 스트리머 온디맨드 자동 등록 및 실시간 프로필 조회 엔드포인트 (Smart Fallback)
+app.all('/api/analytics/streamers/resolve', async (c) => {
+  if (!c.env.DB) {
+    return c.json({ success: false, message: 'D1 데이터베이스가 구성되지 않았습니다.' }, 503);
+  }
+  let channelKey = c.req.query('channelKey');
+  if (!channelKey && c.req.method === 'POST') {
+    try {
+      const body = await c.req.json();
+      channelKey = body?.channelKey;
+    } catch { /* 무시 */ }
+  }
+  if (!channelKey) {
+    return c.json({ success: false, message: 'channelKey 파라미터가 필요합니다.' }, 400);
+  }
+  try {
+    const result = await ensureStreamerRegistered(c.env.DB, channelKey);
+    return c.json(result);
+  } catch (error: any) {
+    console.error('[Statistics] Streamer resolve failed', error);
+    return c.json({ success: false, message: error?.message || '스트리머 조회/등록에 실패했습니다.' }, 500);
   }
 });
 app.get('/api/analytics/broadcast-statistics', async (c) => {
