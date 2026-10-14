@@ -1,4 +1,4 @@
-# 🗄️ Cloudflare D1 Database & Migration Management Guide
+﻿# 🗄️ Cloudflare D1 Database & Migration Management Guide
 
 본 문서는 StreamingService 프로젝트의 Cloudflare D1 데이터베이스 스키마 이력 및 마이그레이션 운영 규칙을 정리한 문서입니다.
 
@@ -91,3 +91,4 @@
 
 - `0040_sync_october_12_18_debuts.sql`: 사용자 제공 2026-10-12~18 KST 일정 38건을 운영 `vdebut-db`에 해당 파일만 명시 실행했다. 신규 32명·기존 6명 확인/갱신, 공개 프로필 및 캘린더 각각 346→378명. ABYSS 4명 공식 PV·SNS·추가 채널 및 기수 연결, IZIGENIA 2명 그룹 연결 포함. 기존 식별자·소개·사진과 대상 외 340명 정보 보존, 스키마 변경 없음. 과거 마이그레이션과 0039를 일괄 재실행하지 않았다. 로컬 재실행 및 운영 API·개인 페이지 38개를 검증했다. 상세: [주간 데이터 최신화 보고](../../1.%20기획문서/19_OCTOBER_WEEK_DATA_SYNC.md).
 - `0041_update_stellive_banner_and_links.sql`: 2026-10-13 운영 명시 실행. ABYSS 4명의 `bannerUrl`, `websiteUrl`, `cafeUrl`과 기존 CMS 홈페이지 주소만 갱신(2개 쿼리, 8행 기록). 사용자 첨부 1080×288 JPEG 원본을 `frontend/public/images/stellive-common-banner.jpg`로 보존하고 기존 운영 Workers Sites KV에 같은 원본을 업로드했다. 기존 일정·개인 사진·PV·SNS·멤버 연결 보존, Worker/프런트엔드 코드 배포 없음.
+- `0042_cheer_ranking.sql`: 루키 응원 랭킹용 변경. `streamerChannel_info`에 `event_type`(기본 `DEBUT`), `total_cheers`, `weekly_cheers`, `is_verified` 컬럼과 `idx_info_weekly_cheers` 인덱스를 추가하고, 중복 응원 방지용 `cheer_logs`(`UNIQUE(vtuber_id, client_hash, voted_date)`)를 신설한다. ALTER TABLE은 재실행할 수 없으므로 이 파일만 명시 실행한다(개발 `vdebut-db-dev` 우선, 운영 미적용). `weekly_cheers`는 개발 환경 크론 `0 15 * * SUN`(월요일 00:00 KST)에서 0으로 초기화한다.

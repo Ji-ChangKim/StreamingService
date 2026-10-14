@@ -19,7 +19,7 @@ type CalendarState = { month: string; platform: string; country: string; query: 
 function initialCalendar(): CalendarState {
   const timezone = 'Asia/Seoul';
   const day = portalDateKey(new Date(), timezone);
-  const fallback: CalendarState = { month: day.slice(0, 7), platform: 'ALL', country: 'ALL', query: '', timezone, view: window.innerWidth < 640 ? 'week' : 'month', day };
+  const fallback: CalendarState = { month: day.slice(0, 7), platform: 'ALL', country: 'KR', query: '', timezone, view: window.innerWidth < 640 ? 'week' : 'month', day };
   try {
     const saved = { ...fallback, ...JSON.parse(sessionStorage.getItem('vd-calendar') || '{}') };
     // 이전에 저장된 제외 국가·시간대가 선택지 없는 상태로 남지 않도록 복원한다.

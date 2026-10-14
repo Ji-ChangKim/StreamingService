@@ -10,7 +10,7 @@ function initialLanguage(): PortalLanguage {
     if (fromUrl === 'ko' || fromUrl === 'ja' || fromUrl === 'en') return fromUrl;
     const saved = localStorage.getItem('vd-language');
     if (saved === 'ko' || saved === 'ja' || saved === 'en') return saved;
-    return navigator.language.startsWith('ja') ? 'ja' : navigator.language.startsWith('en') ? 'en' : 'ko';
+    return 'ko';
   } catch { return 'ko'; }
 }
 

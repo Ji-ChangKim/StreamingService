@@ -56,6 +56,7 @@ import { searchStatisticsStreamers } from './services/statisticsStreamerSearchSe
 import { registerExternalStreamerToD1 } from './services/externalPlatformSearchService';
 import { activitySitemapEntries, renderActivityPage } from './services/activityPageService';
 import { activityNoindex } from '../../shared/activitySeo';
+import { cheerApi, resetWeeklyCheers, WEEKLY_RESET_CRON } from './services/cheerService';
 
 type Bindings = {
   PORTAL_ENABLED?: string;
@@ -140,6 +141,9 @@ app.use('*', async (c, next) => {
   // 개발 사이트의 검색 제외는 자바스크립트 실행 여부와 관계없이 적용한다.
   if (new URL(c.req.url).hostname === 'dev.vdebut.live') c.header('X-Robots-Tag', 'noindex, nofollow');
 });
+
+// 루키 응원 랭킹·응원·무로그인 제보 API (개발 환경 전용)
+app.route('/', cheerApi);
 
 // 1. Health & System Version Check
 app.get('/api/v1/system/version', (c) => {
@@ -1318,6 +1322,11 @@ export default {
   fetch: app.fetch,
   async scheduled(event: any, env: Bindings, ctx: any) {
     const scheduledTime = event?.scheduledTime || Date.now();
+    // 매주 월요일 00:00(KST) 주간 응원 수 초기화 전용 크론은 다른 수집 작업과 분리한다.
+    if (event?.cron === WEEKLY_RESET_CRON) {
+      if (env.DB) ctx.waitUntil(resetWeeklyCheers(env.DB).then(() => console.log('[Scheduled Cron] Weekly cheers reset')).catch((err) => console.error('[Scheduled Cron] Weekly cheers reset error:', err)));
+      return;
+    }
     if (env.DB) {
       ctx.waitUntil(
         collectBroadcastStatistics(env.DB, scheduledTime)
