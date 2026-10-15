@@ -22,9 +22,15 @@ export function reviewSnapshot(profile: PortalProfile): string {
   return JSON.stringify(Object.fromEntries(Object.entries(profile).filter(([key]) => !['contentReview', 'ownerVerified', 'requesterRole', 'source'].includes(key)).sort(([a], [b]) => a.localeCompare(b))));
 }
 
-// 검토 후 내용이 바뀌었거나 검토되지 않은 소개는 공개 경로에서 제외한다.
+// 검토 후 내용이 바뀌었거나 보류된 소개는 공개 경로에서 제외한다.
+// 기존 라이브 등록 데이터(source === 'EXISTING')는 기본 공개하되 부적절 표현은 차단한다.
 export function isPublicProfile(profile: PortalProfile): boolean {
-  return profile.contentReview?.state === 'APPROVED' && profile.contentReview.snapshot === reviewSnapshot(profile) && !looksLikeVideoTitle(profile.displayName) && !needsContentReview([profile.displayName, profile.description, profile.headline, profile.videoTitle, profile.debutGroupName, profile.agency, ...profile.tags].join(' '));
+  if (looksLikeVideoTitle(profile.displayName)) return false;
+  if (needsContentReview([profile.displayName, profile.description, profile.headline, profile.videoTitle, profile.debutGroupName, profile.agency, ...profile.tags].join(' '))) return false;
+  if (profile.contentReview) {
+    return profile.contentReview.state === 'APPROVED' && profile.contentReview.snapshot === reviewSnapshot(profile);
+  }
+  return profile.source === 'EXISTING';
 }
 
 // 운영자 승인 시점의 내용을 저장하며 이용자가 보낸 검토 필드는 사용하지 않는다.

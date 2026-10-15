@@ -1,3 +1,4 @@
+import { profileExcerpt } from '../../../shared/portalEditorial';
 import { t, usePortalLocale, getPortalLanguage, portalLanguagePath } from './portalLocale';
 import { portalCalendarFile } from '../../../shared/portalCalendarFile';
 import { dateTimeFormatter } from '../../../shared/dateTimeFormatter';
@@ -21,10 +22,11 @@ export function PortalHeading({ title, description, children }: { title: string;
 }
 
 // 로딩·오류·빈 결과를 서로 다른 안내로 표현한다.
-export function PortalState({ title, description, action, loading = false }: { title: string; description?: string; action?: ReactNode; loading?: boolean }) {
+export function PortalState({ title, description, action, loading = false, error = false, pageHeading = false }: { title: string; description?: string; action?: ReactNode; loading?: boolean; error?: boolean; pageHeading?: boolean }) {
   usePortalLocale(); // 언어 변경은 화면 상태를 유지한 채 문구만 갱신한다.
 
-  return <div className={`vd-state ${loading ? 'is-loading' : ''}`} role={loading ? 'status' : undefined}>{loading ? <span className="vd-spinner" /> : <Search size={28} />}<h2>{title}</h2>{description && <p>{description}</p>}{action}</div>;
+  const Heading = pageHeading ? 'h1' : 'h2';
+  return <div className={`vd-state ${loading ? 'is-loading' : ''}`} role={loading ? 'status' : error ? 'alert' : undefined}>{loading ? <span className="vd-spinner" /> : <Search size={28} />}<Heading>{title}</Heading>{description && <p>{description}</p>}{action && <div className="vd-state-actions">{action}</div>}</div>;
 }
 
 // 플랫폼 로고는 원본 비율과 색상으로 표시한다.
@@ -84,7 +86,7 @@ export function CreatorCard({ profile, onNavigate, timezone, preview = false }: 
       {preview ? <h3 title={profile.displayName}>{profile.displayName}</h3> : <PortalLink to={`/creator/${encodeURIComponent(profile.slug)}`} onNavigate={onNavigate}><h3 title={profile.displayName}>{profile.displayName}</h3></PortalLink>}
       <PlatformBadge platform={profile.platform} />
     </div>
-    <p className="vd-card-description">{profile.headline || profile.description || t("방송 채널에서 소개를 확인해 보세요.")}</p>
+    <p className="vd-card-description">{profileExcerpt(profile) || t("방송 채널에서 소개를 확인해 보세요.")}</p>
     {profile.tags.length > 0 && <div className="vd-tags">{profile.tags.slice(0, 3).map((tag) => <span key={tag}>{tag}</span>)}</div>}
     <p className="vd-card-schedule">{portalSchedule(profile, timezone)}</p>
     {!preview && <PortalLink to={`/creator/${encodeURIComponent(profile.slug)}`} onNavigate={onNavigate} className="vd-card-link">{t("소개 보기")}<ArrowUpRight size={16} /></PortalLink>}

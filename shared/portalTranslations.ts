@@ -1,5 +1,82 @@
 // 서비스 문구만 번역하며 활동명·자기소개 같은 이용자 입력은 원문으로 유지한다.
 const rows = String.raw`
+방송 통계를 불러오지 못했어요|||配信統計を読み込めませんでした|||Unable to load streaming statistics
+주요 콘텐츠와 방송 언어, 데뷔 일정을 살펴보세요. 관심 있는 버튜버는 하트로 저장할 수 있어요.|||主なコンテンツ、配信言語、デビュー日程を確認しましょう。気になるVTuberはハートで保存できます。|||Explore content, streaming languages and debut schedules. Save creators you like with the heart button.
+방송 채널과 데뷔 일정을 등록하세요. 날짜와 시간이 미정인 일정도 신청할 수 있으며, 운영자 검토 후 공개됩니다.|||配信チャンネルとデビュー日程を登録してください。日時が未定でも申請でき、運営の審査後に公開されます。|||Submit your channel and debut schedule, even if the date or time is undecided. Submissions are published after review.
+활동명, 방송 채널과 나의 소개를 등록하세요. 데뷔 일정 없이도 소개를 신청할 수 있습니다.|||活動名、配信チャンネル、自己紹介を登録してください。デビュー日程がなくても紹介を申請できます。|||Submit your name, channel and profile. You can register a profile without a debut schedule.
+일정 변경, 소개 수정·삭제, 권리 침해와 부적절한 콘텐츠를 관련 페이지 주소와 함께 알려주세요.|||日程変更、紹介の修正・削除、権利侵害、不適切なコンテンツを対象ページのURLとともにお知らせください。|||Send us schedule changes, profile corrections or removal requests, rights issues and content reports with the page URL.
+VDébut의 등록·문의 정보, 브라우저 저장과 Google Analytics 이용에 관한 개인정보 안내입니다.|||VDébutの登録・お問い合わせ情報、ブラウザー保存、Google Analytics利用に関する個人情報の案内です。|||Privacy information about VDébut submissions, inquiries, browser storage and Google Analytics.
+VDébut의 서비스 이용, 소개 등록과 공개 기준, 정보 정정에 관한 안내입니다.|||VDébutの利用、紹介の登録・公開基準、情報訂正に関する案内です。|||Guidance on using VDébut, registering and publishing profiles, and correcting information.
+이 브라우저에 저장한 관심 버튜버의 소개를 다시 살펴보세요.|||このブラウザーに保存したお気に入りのVTuber紹介を再び見てみましょう。|||Revisit the VTuber profiles saved in this browser.
+다른 버튜버의 소개와 데뷔 일정을 살펴보세요.|||他のVTuberの紹介とデビュー日程をご覧ください。|||Explore other VTuber profiles and debut schedules.
+접수 번호와 비공개 확인 키로 문의 처리 상태를 확인하세요.|||受付番号と非公開確認キーでお問い合わせの対応状況を確認してください。|||Check your inquiry status with the receipt number and private access key.
+등록 신청과 문의 내용을 확인하고 검토합니다.|||登録申請とお問い合わせ内容を確認・審査します。|||Review registration requests and inquiries.
+잠시 후 다시 시도해 주세요. 문제가 계속되면 문의 화면으로 알려주세요.|||しばらくしてから再試行してください。解決しない場合はお問い合わせからお知らせください。|||Try again shortly. If the issue continues, let us know through the contact page.
+소개 카드의 하트를 눌러 관심 목록을 만들어 보세요. 공개 중인 소개만 이곳에서 볼 수 있어요.|||紹介カードのハートを押してお気に入りを作りましょう。ここには公開中の紹介のみ表示されます。|||Build your favorites by tapping the heart on a profile card. Only currently public profiles appear here.
+공개된 버튜버 소개가 아직 없어요|||公開されているVTuber紹介はまだありません|||No VTuber profiles are public yet
+데뷔 캘린더나 이용 가이드를 먼저 살펴보세요.|||まずデビューカレンダーや利用ガイドをご覧ください。|||Explore the debut calendar or user guide first.
+주소를 확인하거나 공개된 다른 소개를 살펴보세요.|||URLを確認するか、公開中の他の紹介をご覧ください。|||Check the address or explore other public profiles.
+치지직·SOOP·YouTube·Twitch의 데뷔 일정과 소개를 살펴보세요. 관심 있는 버튜버를 저장하고, 첫 방송 일정을 내 캘린더에 담을 수 있어요.|||CHZZK・SOOP・YouTube・Twitchのデビュー日程と紹介をチェック。気になるVTuberを保存し、初配信を自分のカレンダーに追加できます。|||Explore debut schedules and profiles on CHZZK, SOOP, YouTube and Twitch. Save creators you like and add their first streams to your calendar.
+첫 방송을 찾고 저장하는 방법부터 나의 소개와 데뷔 공지를 준비하는 방법까지 안내합니다.|||初配信を探して保存する方法から、自己紹介とデビュー告知の準備までご案内します。|||Learn how to find and save first streams, write your profile and prepare a debut announcement.
+월 등록 일정|||月の登録日程||| month: listed schedules
+이번 주 등록 일정|||今週の登録日程|||Listed this week
+건|||件||| schedules
+등록 일정|||登録日程|||listed schedules
+이번 주 등록된 데뷔 소식|||今週登録されているデビュー情報|||This week's listed debuts
+이번 주 등록 일정 {0}건을 날짜순으로 살펴보세요.|||今週の登録日程{0}件を日付順にチェックしましょう。|||Explore {0} listed schedules this week in date order.
+{0}건|||{0}件|||{0} schedules
+공지가 바뀔 수 있으니 소개의 데뷔 공지도 함께 확인해 주세요.|||告知は変更される場合があります。紹介ページのデビュー告知も確認してください。|||Announcements may change. Check the debut announcement linked from the profile too.
+이번 주에 등록된 데뷔 일정이 없어요. 달력에서 다른 주를 살펴보세요.|||今週の登録日程はありません。カレンダーで別の週を見てみましょう。|||No debut schedules are listed for this week. Explore another week in the calendar.
+첫 방송을 만나고 준비하는 방법|||初配信を見つけ、準備する方法|||Find and prepare for a first stream
+자세히 읽기|||詳しく読む|||Read more
+VDébut 이용 가이드|||VDébut利用ガイド|||VDébut user guide
+가이드 목차|||ガイド目次|||Guide contents
+잘못된 소개나 변경된 일정을 발견하면 관련 페이지와 공식 출처를 알려주세요.|||紹介の誤りや日程変更に気づいたら、対象ページと公式の出典をお知らせください。|||If you find incorrect profile details or a changed schedule, send us the page and an official source.
+서비스 소개|||サービス紹介|||About the service
+데뷔 일정과 방송 소개로 버튜버와 팬의 첫 만남을 연결합니다.|||デビュー日程と配信紹介で、VTuberとファンの最初の出会いをつなぎます。|||Connecting VTubers and fans through debut schedules and stream profiles.
+일정 저장, 시간대 확인, 소개 작성과 변경 안내를 살펴보세요.|||日程の保存、タイムゾーンの確認、紹介文の作成と変更方法をご覧ください。|||Learn how to save schedules, check time zones, write profiles and request changes.
+어떤 방송을 하나요?|||どんな配信をするの？|||What do they stream?
+주요 콘텐츠|||主なコンテンツ|||Main content
+소개와 일정 확인하기|||紹介と日程を確認する|||Check profile and schedule details
+소개 검토일|||紹介の審査日|||Profile review date
+데뷔 공지 원문 보기|||デビュー告知の原文を見る|||Read the debut announcement
+공지가 바뀌면 저장한 캘린더 일정도 직접 수정해 주세요.|||告知が変更されたら、保存したカレンダーの日程も手動で修正してください。|||If the announcement changes, manually update the event saved in your calendar.
+일정 저장 방법|||日程の保存方法|||How to save a schedule
+치지직·SOOP에서 기록된 콘텐츠별 방송 시간과 활동 시간대를 살펴보세요.|||CHZZK・SOOPで記録されたコンテンツ別の配信時間と活動時間帯をご覧ください。|||Explore recorded streaming time by content and activity hours on CHZZK and SOOP.
+선택한 기간과 조건에 맞는 방송 기록이 없어요.|||選択した期間と条件に一致する配信記録はありません。|||No broadcast records match the selected dates and filters.
+다른 기간을 선택하거나 카테고리 조건을 넓혀 보세요.|||別の期間を選ぶか、カテゴリーの条件を広げてみてください。|||Try another date range or a broader category filter.
+이 기간에 방송 {0}회, 방송일 {1}일이 기록되어 있어요.|||この期間には配信{0}回、配信日数{1}日が記録されています。|||This period has {0} recorded broadcasts across {1} days.
+이어진 기록으로 합산한 방송 시간은 {0}입니다.|||連続する記録を合算した配信時間は{0}です。|||Streaming time summed from consecutive records is {0}.
+방송 통계 읽는 법|||配信統計の読み方|||How to read streaming statistics
+관심 저장과 일정 저장 활용하기|||お気に入りと日程保存を使う|||Save favorites and schedules
+마음에 드는 소개 카드의 하트를 누르면 관심 목록에서 다시 찾을 수 있어요. 관심 목록은 사용한 브라우저에 저장되므로 다른 기기나 브라우저에서는 별도로 저장해 주세요.|||気になる紹介カードのハートを押すと、お気に入りから再び見つけられます。お気に入りは使用中のブラウザーに保存されるため、別の端末やブラウザーでは改めて保存してください。|||Tap the heart on a profile card to find it again in favorites. Favorites are saved in your current browser, so save them separately on other devices or browsers.
+날짜와 시간이 정해진 일정은 내 캘린더에 저장할 수 있어요. 내려받은 일정 파일을 사용하는 캘린더에서 열고, 알림은 해당 캘린더의 설정에서 확인해 주세요.|||日時が確定した日程は自分のカレンダーに保存できます。ダウンロードした日程ファイルをお使いのカレンダーで開き、通知はそのカレンダーの設定で確認してください。|||You can save schedules with confirmed dates and times to your calendar. Open the downloaded event file in your calendar and check its notification settings.
+저장한 일정은 자동 구독이 아닙니다. 데뷔 공지가 바뀌면 개인 캘린더의 날짜와 시간도 직접 수정해 주세요.|||保存した日程は自動更新されません。デビュー告知が変更されたら、自分のカレンダーの日時も手動で修正してください。|||Saved events do not update automatically. If the debut announcement changes, manually update the date and time in your calendar.
+해외 데뷔 일정의 시간 확인하기|||海外デビュー日程の時刻を確認する|||Check international debut times
+달력의 일정 표시 시간대를 선택하면 확정된 일정이 해당 지역 시각으로 표시됩니다. 자정 전후의 방송은 지역에 따라 날짜가 달라질 수 있어요.|||カレンダーの表示タイムゾーンを選ぶと、確定した日程がその地域の時刻で表示されます。深夜前後の配信は地域によって日付が変わる場合があります。|||Choose a display time zone in the calendar to see confirmed schedules in local time. Streams near midnight may fall on different dates across regions.
+시간 미정 일정은 공지된 날짜와 원래 시간대를 함께 확인해 주세요. 날짜 미정 일정은 예정 월로 안내하며 임의의 날짜나 시간을 정하지 않습니다.|||時刻未定の日程は、告知された日付と元のタイムゾーンを併せて確認してください。日付未定の場合は予定月を表示し、仮の日付や時刻は設定しません。|||For time-undecided schedules, check the announced date and original time zone together. Date-undecided schedules show the planned month without assigning a placeholder date or time.
+날짜와 시간이 확정된 소개 상세의 일정은 한국 시간(KST) 기준입니다. 방송 직전에는 연결된 데뷔 공지에서 날짜와 시간을 다시 확인해 주세요.|||紹介詳細の日時が確定した日程は韓国時間（KST）基準です。配信直前にはリンク先のデビュー告知で日時を再確認してください。|||Confirmed schedules on profile detail pages use Korean Standard Time (KST). Before the stream, double-check the date and time in the linked announcement.
+팬에게 전달할 방송 소개 작성하기|||ファンに伝わる配信紹介を書く|||Write a stream profile for fans
+활동명과 방송 채널을 먼저 확인하고, 주로 할 콘텐츠와 방송 언어를 적어 보세요. 처음 찾아온 팬이 어떤 방송인지 이해할 수 있는 정보가 좋습니다.|||活動名と配信チャンネルをまず確認し、主なコンテンツと配信言語を書いてみましょう。初めて訪れたファンがどんな配信か理解できる情報が役立ちます。|||Check your name and channel first, then describe your main content and streaming languages. Help first-time visitors understand what your streams offer.
+게임 이름이나 노래 장르처럼 실제 계획을 구체적으로 적고, 첫 방송에서 무엇을 소개할 예정인지 덧붙여 주세요. 아직 정해지지 않은 계획은 확정된 것처럼 쓰지 않아도 됩니다.|||ゲーム名や歌のジャンルなど実際の予定を具体的に書き、初配信で何を紹介する予定かを添えてください。未定の計画を確定したように書く必要はありません。|||Describe actual plans, such as game titles or music genres, and what you plan to introduce in your first stream. You do not need to present undecided plans as confirmed.
+한 줄 소개에는 가장 전하고 싶은 특징을, 소개글에는 콘텐츠와 첫 방송 계획을 담아 주세요. 프로필과 영상은 사용 권한이 있는 자료로 준비합니다.|||一言紹介には最も伝えたい特徴を、紹介文にはコンテンツと初配信の予定を書いてください。プロフィールや動画には利用権限のある素材を用意しましょう。|||Use the headline for your key feature and the full introduction for your content and first-stream plans. Prepare profile images and videos you have permission to use.
+데뷔 공지에 담을 정보와 변경 안내|||デビュー告知に必要な情報と変更案内|||Prepare and update a debut announcement
+데뷔 공지에는 활동명, 날짜, 시간, 기준 시간대와 방송 채널 주소를 함께 적어 주세요. 팬 제보라면 날짜와 시간을 확인할 수 있는 공식 공지 주소를 남겨 주세요.|||デビュー告知には活動名、日付、時刻、基準タイムゾーン、配信チャンネルURLを併記してください。ファンからの情報提供では日時を確認できる公式告知のURLを添えてください。|||Include your name, date, time, time zone and channel URL in the debut announcement. Fan submissions should link to an official announcement that confirms the date and time.
+날짜나 시간이 미정이면 등록 화면에서 미정 상태를 선택하세요. 확정되지 않은 시간을 임시로 넣으면 팬이 잘못된 일정을 저장할 수 있어요.|||日時が未定なら登録画面で未定を選んでください。未確定の時刻を仮入力すると、ファンが誤った日程を保存するおそれがあります。|||Select the undecided option when a date or time is unknown. Entering a placeholder time could cause fans to save an incorrect event.
+일정이 바뀌면 공식 공지를 수정하고 VDébut 문의 화면에 소개 주소, 변경 내용과 공지 출처를 남겨 주세요. 개인 캘린더에 저장한 팬도 수정할 수 있도록 변경된 날짜와 시간을 분명하게 알립니다.|||日程が変わったら公式告知を更新し、VDébutのお問い合わせに紹介ページURL、変更内容、告知の出典を送ってください。自分のカレンダーに保存したファンも修正できるよう、新しい日時を明確に伝えましょう。|||When a schedule changes, update the official announcement and send VDébut the profile URL, changes and announcement source through the contact page. Clearly share the new date and time so fans can update saved events.
+방송 통계로 나의 계획 검토하기|||配信統計で自分の計画を見直す|||Review your plans with streaming statistics
+조회 기간과 플랫폼을 먼저 선택하고, 관심 있는 콘텐츠의 방송 횟수와 방송 시간을 함께 살펴보세요. 같은 기간과 조건으로 비교하면 차이를 읽기 쉽습니다.|||まず期間とプラットフォームを選び、気になるコンテンツの配信回数と配信時間を併せて確認してください。同じ期間と条件で比較すると違いが読み取りやすくなります。|||Choose the date range and platform first, then compare broadcast counts and streaming time for content you are interested in. Use the same dates and filters for clearer comparisons.
+방송 활동은 해당 시간에 방송한 채널을, 방송 시작은 방송이 시작된 시각을 살펴보는 항목입니다. 시간대 칸을 선택하면 연결된 방송 이력을 확인할 수 있어요.|||配信活動ではその時間に配信したチャンネルを、配信開始では開始時刻を確認します。時間帯のセルを選ぶと関連する配信履歴が見られます。|||Broadcast activity shows channels streaming at that time, while broadcast starts looks at start times. Select a time slot to see related broadcast history.
+채널이 적었던 시간만 고르기보다 내가 꾸준히 방송할 수 있는 시간과 콘텐츠 준비 계획을 함께 검토해 보세요.|||チャンネルが少なかった時間だけで選ばず、自分が継続して配信できる時間とコンテンツの準備計画も併せて考えてみましょう。|||Consider when you can stream consistently and prepare your content, alongside the number of channels active at different times.
+방송 통계 살펴보기|||配信統計を見る|||Explore streaming statistics
+기간과 플랫폼부터 확인하세요|||まず期間とプラットフォームを確認|||Check dates and platform first
+방송 통계는 치지직·SOOP에서 수집된 기록을 조회 조건에 맞춰 보여줍니다. 날짜와 시간대는 한국 시간(KST) 기준이며, 버튜버 소개 목록과 집계 대상이 다를 수 있어요.|||配信統計はCHZZK・SOOPで収集した記録を検索条件に合わせて表示します。日時は韓国時間（KST）基準で、VTuber紹介一覧とは集計対象が異なる場合があります。|||Statistics show records collected from CHZZK and SOOP for your filters. Dates and times use KST, and the channels counted may differ from the VTuber directory.
+방송 활동과 방송 시작을 비교하세요|||配信活動と配信開始を比較|||Compare activity and starts
+전체 통계의 방송 활동은 시간대별 평균 방송 채널 수, 개인 통계는 기록된 시점의 방송 활동 비율입니다. 방송 시작은 시작 시각이 확인된 방송의 횟수예요. 칸을 선택해 관련 이력을 살펴보세요.|||全体統計の配信活動は時間帯別の平均配信チャンネル数、個人統計は記録時点の配信活動率です。配信開始は開始時刻を確認できた配信の回数です。セルを選んで関連履歴を確認してください。|||Overall activity is the average number of broadcasting channels by time slot; individual activity is the proportion of recorded moments spent streaming. Starts counts broadcasts with known start times. Select a cell to view related history.
+방송 시간과 기록 범위를 함께 읽으세요|||配信時間と記録範囲を併せて読む|||Read streaming time with record coverage
+방송 시간은 이어서 확인된 활동 구간을 합산합니다. 한 방송이 여러 콘텐츠를 진행하면 카테고리별 방송 횟수를 더한 값이 전체 방송 횟수와 다를 수 있어요.|||配信時間は連続して確認できた活動区間を合算します。一つの配信で複数のコンテンツを扱うと、カテゴリー別の配信回数の合計が全体の配信回数と異なる場合があります。|||Streaming time sums consecutive recorded activity intervals. If one broadcast covers multiple categories, category broadcast counts may add up to more than the overall broadcast count.
+기록 없음과 0은 다릅니다|||記録なしと0は異なります|||No record and zero differ
+방송 활동의 0은 확인한 구간에 방송 중인 채널이 없었다는 뜻입니다. 방송 시작의 0은 확인된 시작 기록이 없다는 뜻이에요. 기록 없음은 비교할 기록이 없는 칸입니다. 오늘 남은 시간과 기록 누락 여부도 함께 확인해 주세요.|||配信活動の0は確認した区間に配信中のチャンネルがなかったことを示します。配信開始の0は確認できた開始記録がないことを示します。記録なしは比較する記録がないセルです。今日の残り時間や記録の欠落も併せて確認してください。|||Zero activity means no channels were streaming within the recorded coverage. Zero starts means no confirmed start records. No record means the cell has no records to compare. Consider the remaining hours today and any missing records too.
 정보 수정·콘텐츠 신고|||情報修正・コンテンツ報告|||Corrections & content reports
 해당 페이지 주소와 확인이 필요한 내용을 남겨 주세요. 일정 변경, 소개 수정·삭제, 권리 침해와 부적절한 콘텐츠 신고를 접수할 수 있습니다.|||対象ページのURLと確認が必要な内容をお知らせください。日程変更、紹介の修正・削除、権利侵害、不適切なコンテンツの報告を受け付けます。|||Include the page URL and what needs checking. You can request schedule or profile changes and report rights violations or inappropriate content.
 부적절한 콘텐츠 신고|||不適切なコンテンツの報告|||Report inappropriate content

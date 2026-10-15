@@ -3,7 +3,8 @@ import { memo } from 'react';
 import { PortalProfile, PORTAL_PLATFORMS, portalDateKey, portalDay, portalMonth } from '../../../shared/portal';
 import { DebutEvent } from '../types';
 import { PlatformMiniSpotlight } from '../components/preview/PlatformMiniSpotlight';
-import { downloadPortalSchedule, PortalState } from './PortalUi';
+import { HOME_INTRO } from '../../../shared/portalEditorial';
+import { downloadPortalSchedule, PortalLink, PortalState } from './PortalUi';
 
 // 기존 쇼케이스가 사용하는 자료 형식으로 확정 일정만 연결한다.
 function spotlightEvent(profile: PortalProfile): DebutEvent {
@@ -26,9 +27,9 @@ export const PortalStage = memo(function PortalStage({ profiles, timezone, loadi
   const events = profiles.filter((profile) => profile.dateState === 'FIXED').map(spotlightEvent);
   const download = (event: DebutEvent) => { const profile = profiles.find((value) => value.slug === event.id); if (profile) downloadPortalSchedule(profile); };
   return <section className="vd-home-stage" aria-label={t("신규 버튜버 데뷔 캘린더")}>
-    <div className="vd-home-intro"><h1>{t("신규 버튜버 데뷔 캘린더")}</h1><p>{t("치지직 · SOOP · 유튜브 · 트위치의 데뷔 날짜와 소개를 한눈에 확인하세요.")}</p></div>
-    {loading ? <PortalState loading title={t("데뷔 일정을 불러오는 중이에요")} /> : error ? <PortalState title={t("일정을 불러오지 못했어요")} action={<button type="button" className="vd-button" onClick={refresh}>{t("다시 시도")}</button>} /> : <>
-      <div className="vd-home-counts"><div><span>{Number(month.slice(5))}{t("월 데뷔")}</span><strong>{monthProfiles.length}<small>{t("명")}</small></strong></div><div><span>{t("이번 주 데뷔")}</span><strong>{weekProfiles.length}<small>{t("명")}</small></strong></div>{PORTAL_PLATFORMS.map((platform) => { const count = monthProfiles.filter((profile) => profile.platform === platform.id).length; return count ? <div key={platform.id}><span>{t("금월")}{platform.label} {t("데뷔")}</span><strong>{count}<small>{t("명")}</small></strong></div> : null; })}</div>
+    <div className="vd-home-intro"><h1>{t("신규 버튜버 데뷔 캘린더")}</h1><p>{t(HOME_INTRO)}</p><div className="vd-home-actions"><a href="#debut-calendar" className="vd-button vd-primary">{t("데뷔 일정 보기")}</a><PortalLink to="/upload" onNavigate={onNavigate} className="vd-button">{t("데뷔 일정 등록")}</PortalLink></div></div>
+    {loading ? <PortalState loading title={t("데뷔 일정을 불러오는 중이에요")} /> : error ? <PortalState error title={t("일정을 불러오지 못했어요")} description={t("잠시 후 다시 시도해 주세요. 문제가 계속되면 문의 화면으로 알려주세요.")} action={<button type="button" className="vd-button" onClick={refresh}>{t("다시 시도")}</button>} /> : <>
+      <div className="vd-home-counts"><div><span>{Number(month.slice(5))}{t("월 등록 일정")}</span><strong>{monthProfiles.length}<small>{t("건")}</small></strong></div><div><span>{t("이번 주 등록 일정")}</span><strong>{weekProfiles.length}<small>{t("건")}</small></strong></div>{PORTAL_PLATFORMS.map((platform) => { const count = monthProfiles.filter((profile) => profile.platform === platform.id).length; return count ? <div key={platform.id}><span>{t("금월")}{platform.label} {t("등록 일정")}</span><strong>{count}<small>{t("건")}</small></strong></div> : null; })}</div>
       <PlatformMiniSpotlight currentLang={language} allEvents={events} selectedTimezone={timezone} onNavigate={onNavigate} onDownloadICS={download} />
     </>}
   </section>;

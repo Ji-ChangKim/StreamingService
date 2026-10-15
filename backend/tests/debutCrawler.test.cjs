@@ -2,6 +2,22 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const esbuild = require('../node_modules/esbuild');
 
+// 일정 필터 테스트가 실제 시트를 조회하거나 이메일을 발송하지 않도록 로컬 자료만 제공한다.
+const originalFetch = global.fetch;
+const fixtureCsv = [
+  'test header 1', 'test header 2', 'test header 3', 'test header 4', 'test header 5',
+  `0,2026.10.08,20,00,검증용 치지직,https://chzzk.naver.com/${'a'.repeat(32)},`,
+  '0,2026.10.14,21,00,검증용 SOOP,https://www.sooplive.co.kr/station/test_channel,',
+  '0,2026.10.08,20,00,제외할 유튜브,https://www.youtube.com/@test_channel,',
+  '0,2026.07.01,20,00,제외할 오래된 일정,https://www.sooplive.co.kr/station/old_channel,',
+].join('\n');
+global.fetch = async (input) => {
+  const url = new URL(typeof input === 'string' ? input : input.url);
+  if (url.hostname === 'docs.google.com') return new Response(fixtureCsv, { status: 200 });
+  if (url.hostname === 'api.resend.com') return new Response(JSON.stringify({ message: '테스트에서는 외부 이메일 발송을 차단합니다.' }), { status: 503 });
+  throw new Error(`테스트의 외부 요청을 차단합니다: ${url.hostname}`);
+};
+
 async function loadModule(entry, name) {
   const outfile = path.resolve(__dirname, '../../.cache/statistics-tests', `${name}.cjs`);
   await esbuild.build({ entryPoints: [path.resolve(__dirname, entry)], outfile, bundle: true, platform: 'node', format: 'cjs', logLevel: 'silent' });
@@ -24,6 +40,8 @@ async function main() {
   assert.equal(result.auditRange.dayOfWeek, 3);
   assert.equal(result.auditRange.startDate, '2026-10-07');
   assert.equal(result.auditRange.endDate, '2026-10-11');
+  assert.deepEqual(result.creators.map((creator) => creator.displayName).sort(), ['검증용 SOOP', '검증용 치지직'].sort());
+  assert.equal(result.emailSent, false);
 
   // 필터링 결과의 모든 스트리머는 CHZZK 또는 SOOP 이어야 하고, YYYY-MM-DD 형식의 유효한 날짜여야 함
   for (const c of result.creators) {
@@ -43,6 +61,9 @@ async function main() {
   assert.equal(sunResult.auditRange.dayOfWeek, 0);
   assert.equal(sunResult.auditRange.startDate, '2026-10-12');
   assert.equal(sunResult.auditRange.endDate, '2026-10-18');
+  // 최근 45일 보완 규칙에 따라 직전 주의 치지직 일정도 유지한다.
+  assert.deepEqual(sunResult.creators.map((creator) => creator.displayName).sort(), ['검증용 SOOP', '검증용 치지직'].sort());
+  assert.equal(sunResult.emailSent, false);
 
   for (const c of sunResult.creators) {
     assert.ok(c.platform === 'CHZZK' || c.platform === 'SOOP');
@@ -53,7 +74,7 @@ async function main() {
   console.log('✅ Debut crawler filtering tests passed successfully!');
 }
 
-main().catch((err) => {
+main().finally(() => { global.fetch = originalFetch; }).catch((err) => {
   console.error('❌ Test failed:', err);
   process.exit(1);
 });

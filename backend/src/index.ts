@@ -1,3 +1,6 @@
+import { isActivityPath } from '../../shared/activitySeo';
+import { publicErrorPage } from './services/publicErrorPage';
+import { sitePath, siteRobots } from '../../shared/siteSeo';
 import { publicResponseCache } from './services/publicResponseCache';
 import { Hono } from 'hono';
 import { portalApi, readPublicPortalProfiles, readPublicPortalProfileBySlug, portalAdminStreamers, deletePortalProfile } from './services/portalService';
@@ -117,15 +120,18 @@ app.use('*', async (c, next) => {
   if (['/updatepage', '/upadepage'].includes(path)) return c.redirect('/', 301);
   if (seo.development) c.header('X-Robots-Tag', 'noindex, nofollow');
   if (['PUT', 'DELETE'].includes(c.req.method) && path.startsWith('/api/v1/creator/')) return c.json({ error: '정보 수정·삭제는 문의 화면으로 요청해 주세요.' }, 403);
-  if (c.req.method === 'GET' && path === '/robots.txt') return c.text(seo.development ? 'User-agent: *\nDisallow: /\n' : 'User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /me/\nDisallow: /submissions/\nDisallow: /api/\nSitemap: https://vdebut.live/sitemap.xml\n');
-  if (c.req.method === 'GET' && !path.startsWith('/api/') && (!path.startsWith('/analytics') || seo.development) && !/\.[a-z0-9]+$/i.test(path)) {
+  if (c.req.method === 'GET' && path === '/robots.txt') return c.text(siteRobots(url.hostname));
+  // 공개 HTML의 말미 슬래시를 정리하되 조회 조건과 언어는 유지한다.
+  if (c.req.method === 'GET' && path !== '/' && path.endsWith('/') && !path.startsWith('/api/') && !path.startsWith('/assets/')) return c.redirect(`${sitePath(path)}${url.search}`, 308);
+  // 개발 통계도 전용 렌더러로 보내 실제 초기 본문과 올바른 제목을 제공한다.
+  if (c.req.method === 'GET' && !path.startsWith('/api/') && !path.startsWith('/analytics') && !/\.[a-z0-9]+$/i.test(path)) {
     let profile;
     if (/^\/creator\/[^/]+$/.test(path)) {
       let slug = ''; try { slug = decodeURIComponent(path.slice('/creator/'.length)); } catch { /* 찾을 수 없는 주소로 처리한다. */ }
       try { profile = (await readPublicPortalProfileBySlug(c.env.DB, slug)) || undefined; }
-      catch { c.header('Cache-Control', 'no-store'); return c.text('소개를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.', 503); }
+      catch { c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex, nofollow'); return c.html(publicErrorPage(url, '소개를 불러오지 못했어요', 503), 503); }
     }
-    const missing = (!seo.known && !path.startsWith('/analytics')) || (path.startsWith('/creator/') && !profile);
+    const missing = (!seo.known && !isActivityPath(path)) || (path.startsWith('/creator/') && !profile);
     const response = await getAssetFromKV({ request: new Request(new URL(seo.development ? '/dev.html' : '/portal.html', c.req.url), c.req.raw), waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, { ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}') });
     if (seo.privatePage || missing) c.header('X-Robots-Tag', 'noindex, nofollow');
     c.header('Cache-Control', seo.privatePage || missing ? 'no-store' : 'public, max-age=0, must-revalidate');
@@ -180,9 +186,8 @@ const sitemapXmlHandler = async (c: any) => {
   // 새 플랫폼에서는 기존 소개와 승인된 신규 소개를 모두 검색 목록에 포함한다.
   if (c.env.PORTAL_ENABLED === 'true') {
     const profiles = await readPublicPortalProfiles(c.env.DB);
-    return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${portalSitemap(profiles)}${await activitySitemapEntries(c.env.DB)}</urlset>`, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
+    return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${portalSitemap(profiles)}${await activitySitemapEntries(c.env.DB)}</urlset>`, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
   }
-  const todayStr = new Date().toISOString().split('T')[0];
   const creators = await fetchAllCreatorSlugs(c.env.DB || null);
 
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
@@ -196,7 +201,6 @@ const sitemapXmlHandler = async (c: any) => {
   xml += `    <xhtml:link rel="alternate" hreflang="ja" href="${baseUrl}/?lang=ja" />\n`;
   xml += `    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/?lang=en" />\n`;
   xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/" />\n`;
-  xml += `    <lastmod>${todayStr}</lastmod>\n`;
   xml += `    <changefreq>daily</changefreq>\n`;
   xml += `    <priority>1.0</priority>\n`;
   xml += `  </url>\n`;
@@ -208,8 +212,7 @@ const sitemapXmlHandler = async (c: any) => {
     xml += `    <xhtml:link rel="alternate" hreflang="ko" href="${baseUrl}/?lang=ko" />\n`;
     xml += `    <xhtml:link rel="alternate" hreflang="ja" href="${baseUrl}/?lang=ja" />\n`;
     xml += `    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/?lang=en" />\n`;
-    xml += `    <lastmod>${todayStr}</lastmod>\n`;
-    xml += `    <changefreq>daily</changefreq>\n`;
+      xml += `    <changefreq>daily</changefreq>\n`;
     xml += `    <priority>0.9</priority>\n`;
     xml += `  </url>\n`;
   });
@@ -217,17 +220,16 @@ const sitemapXmlHandler = async (c: any) => {
   // 3. Upload Page (/upload)
   xml += `  <url>\n`;
   xml += `    <loc>${baseUrl}/upload</loc>\n`;
-  xml += `    <lastmod>${todayStr}</lastmod>\n`;
   xml += `    <changefreq>weekly</changefreq>\n`;
   xml += `    <priority>0.8</priority>\n`;
   xml += `  </url>\n`;
 
   // 4. Dynamic Creator Profiles (/creator/:slug)
   creators.forEach((item) => {
-    const modDate = item.updatedAt || todayStr;
+    const modDate = item.updatedAt;
     xml += `  <url>\n`;
     xml += `    <loc>${baseUrl}/creator/${encodeURIComponent(item.slug)}</loc>\n`;
-    xml += `    <lastmod>${modDate}</lastmod>\n`;
+    if (modDate && Number.isFinite(Date.parse(modDate))) xml += `    <lastmod>${modDate}</lastmod>\n`;
     xml += `    <changefreq>daily</changefreq>\n`;
     xml += `    <priority>0.8</priority>\n`;
     xml += `  </url>\n`;
@@ -1294,12 +1296,12 @@ const activityPageHandler = async (c: any) => {
   const url = new URL(c.req.url);
   let channel = '';
   if (url.pathname.startsWith('/analytics/streamer/')) {
-    try { channel = decodeURIComponent(url.pathname.slice('/analytics/streamer/'.length)); } catch { return c.text('페이지를 찾을 수 없습니다.', 404); }
-    if (!/^(CHZZK:[a-f0-9]{32}|SOOP:[a-z0-9_]{1,50})$/i.test(channel)) return c.text('페이지를 찾을 수 없습니다.', 404);
+    try { channel = decodeURIComponent(url.pathname.slice('/analytics/streamer/'.length)); } catch { return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404); }
+    if (!/^(CHZZK:[a-f0-9]{32}|SOOP:[a-z0-9_]{1,50})$/i.test(channel)) return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404);
     channel = `${channel.split(':')[0].toUpperCase()}:${channel.split(':')[1].toLowerCase()}`;
   } else if (!['/analytics', '/analytics/chzzk', '/analytics/soop'].includes(url.pathname)) {
     c.header('X-Robots-Tag', 'noindex');
-    return c.text('페이지를 찾을 수 없습니다.', 404);
+    return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404);
   }
   const defaults = activityPeriod(7);
   const from = url.searchParams.get('from') || url.searchParams.get('date') || defaults.from;
@@ -1311,7 +1313,7 @@ const activityPageHandler = async (c: any) => {
     const data = await getBroadcastActivity(c.env.DB, filters);
     if (channel && !data.streamer?.isRegistered && !url.searchParams.has('name')) {
       const exists = await c.env.DB.prepare('SELECT 1 FROM analytics_broadcast_snapshots WHERE channel_key=? COLLATE NOCASE LIMIT 1').bind(channel).first();
-      if (!exists) { c.header('X-Robots-Tag', 'noindex'); return c.text('페이지를 찾을 수 없습니다.', 404); }
+      if (!exists) { c.header('X-Robots-Tag', 'noindex'); return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404); }
     }
     // 통계의 초기 본문과 조회 자료를 새 셸에서도 그대로 유지한다.
     const shellRequest = c.env.PORTAL_ENABLED === 'true' ? new Request(new URL(new URL(c.req.url).hostname === 'vdebut.live' ? '/portal.html' : '/dev.html', c.req.url), c.req.raw) : c.req.raw;
@@ -1326,7 +1328,7 @@ const activityPageHandler = async (c: any) => {
   } catch (error) {
     console.error('[Statistics] Initial page failed', String(error));
     c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex');
-    return c.text('방송 통계를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.', 503);
+    return c.html(publicErrorPage(url, '방송 통계를 불러오지 못했어요', 503), 503);
   }
 };
 app.get('/analytics', activityPageHandler);

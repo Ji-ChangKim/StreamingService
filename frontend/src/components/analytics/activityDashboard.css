@@ -215,3 +215,6 @@
 .ad-new-streamer-banner strong{display:block;font-size:14px;color:#14532d;margin-bottom:4px}
 .ad-new-streamer-banner p{font-size:12.5px;color:#166534;margin:0;line-height:1.6}
 
+
+/* 통계 해설은 차트를 읽는 데 필요한 경우 펼쳐 본다. */
+.ad-reading-guide{margin-bottom:20px;padding:20px}.ad-reading-guide summary{font-weight:700;cursor:pointer}.ad-reading-guide section{margin-top:20px}.ad-reading-guide h3{font-size:15px;margin:0 0 8px}.ad-reading-guide p{color:#52647c;line-height:1.8;margin:0;overflow-wrap:anywhere}

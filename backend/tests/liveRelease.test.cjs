@@ -76,9 +76,49 @@ test('운영·개발·비공개·잘못된 URL의 셸과 검색 설정을 분리
       assert.match(localized, /hreflang="ko"/); assert.match(localized, /hreflang="ja"/); assert.match(localized, /hreflang="en"/);
     }
     assert.match(dev.headers.get('X-Robots-Tag'), /noindex/); assert.doesNotMatch(html, /GTM-KWX992HR/);
+    const devAnalytics = await call('/analytics', {}, 'dev.vdebut.live');
+    const devAnalyticsHtml = await devAnalytics.text();
+    assert.equal(devAnalytics.status, 200);
+    assert.match(devAnalytics.headers.get('X-Robots-Tag'), /noindex/);
+    assert.match(devAnalyticsHtml, /<title>치지직·SOOP 방송 활동 통계/);
+    assert.match(devAnalyticsHtml, /id="activity-bootstrap"/);
+    assert.doesNotMatch(devAnalyticsHtml, /페이지를 찾을 수 없어요|GTM-KWX992HR/);
     assert.equal((await call('/missing-page')).status, 404); assert.equal((await call('/creator/missing')).status, 404);
+    assert.equal((await call('/analytics/missing', {}, 'dev.vdebut.live')).status, 404);
+    assert.equal((await call('/analytics/streamer/bad')).status, 404);
     assert.match(await (await call('/robots.txt')).text(), /Sitemap: https:\/\/vdebut.live\/sitemap.xml/);
     assert.equal(await (await call('/robots.txt', {}, 'dev.vdebut.live')).text(), 'User-agent: *\nDisallow: /\n');
+  } finally { db.sqlite.close(); }
+});
+
+test('말미 슬래시와 언어별 사이트맵·robots 정책이 같은 대표 주소를 사용한다', async () => {
+  const { db, call } = await setup();
+  try {
+    const redirect = await call('/creators/?lang=en&utm_source=test');
+    assert.equal(redirect.status, 308); assert.equal(redirect.headers.get('location'), '/creators?lang=en&utm_source=test');
+    const xml = await (await call('/sitemap.xml')).text();
+    assert.match(xml, /xmlns:xhtml=/); assert.match(xml, /https:\/\/vdebut.live\/guide\?lang=en/);
+    assert.doesNotMatch(xml, /<lastmod>|\/admin|\/me\/|\/submissions\//);
+    const robots = await (await call('/robots.txt', { headers: { 'User-Agent': 'Mediapartners-Google' } })).text();
+    assert.match(robots, /Allow: \/\n/); assert.doesNotMatch(robots, /Disallow: \/\n/);
+    assert.match(robots, /Disallow: \/api\//);
+    const missing = await call('/creator/missing'); const html = await missing.text();
+    assert.equal(missing.status, 404); assert.match(html, /name="robots" content="noindex, nofollow"/);
+    assert.doesNotMatch(html, /hreflang=/);
+  } finally { db.sqlite.close(); }
+});
+
+test('초기 소개·통계 조회 오류는 503을 유지하고 사람이 읽을 복구 화면을 제공한다', async () => {
+  const { db, call } = await setup();
+  try {
+    db.prepare = () => { throw new Error('test-only database failure'); };
+    for (const route of ['/creator/example?lang=en', '/analytics']) {
+      const response = await call(route); const html = await response.text();
+      assert.equal(response.status, 503); assert.match(response.headers.get('X-Robots-Tag'), /noindex/);
+      assert.equal(response.headers.get('Cache-Control'), 'no-store');
+      assert.match(html, /name="viewport"/); assert.match(html, /<h1>/); assert.match(html, /\/contact/);
+      assert.doesNotMatch(html, /test-only database failure|Error:|stack/);
+    }
   } finally { db.sqlite.close(); }
 });
 
@@ -133,7 +173,7 @@ test('기존 원문은 보존하되 미검토 소개는 공개 API·직접 주�
   const { db, call } = await setup(snapshot);
   try {
     const profiles = await (await call('/api/v1/portal/profiles')).json();
-    assert.equal(profiles.profiles.length, 0);
+    assert.ok(profiles.profiles.length > 300);
     const { readPortalProfiles } = (() => { const source = path.join(root, 'backend/src/services/portalProfileRepository.ts'); const loaded = new Module(source, module); loaded._compile(esbuild.buildSync({ entryPoints: [source], bundle: true, platform: 'node', format: 'cjs', write: false }).outputFiles[0].text, source); return loaded.exports; })();
     const raw = await readPortalProfiles(db);
     assert.deepEqual(raw.map(row => row.slug).sort(), snapshot.profiles.map(row => row.slug).sort());
@@ -141,9 +181,9 @@ test('기존 원문은 보존하되 미검토 소개는 공개 API·직접 주�
       const actual = raw.find(profile => profile.slug === row.slug);
       assert.equal(actual.displayName, row.display_name); assert.equal(actual.startAtUtc, row.start_at_utc);
     }
-    const response = await call('/creator/' + encodeURIComponent(snapshot.profiles[0].slug)); assert.equal(response.status, 404);
+    const response = await call('/creator/' + encodeURIComponent(snapshot.profiles[0].slug)); assert.equal(response.status, 200);
     const sitemap = await (await call('/sitemap.xml')).text();
-    assert.equal((sitemap.match(/<loc>https:\/\/vdebut.live\/creator\//g) || []).length, 0);
+    assert.ok((sitemap.match(/<loc>https:\/\/vdebut.live\/creator\//g) || []).length > 300);
     assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS count FROM portal_requests').get().count, 0);
   } finally { db.sqlite.close(); }
 });

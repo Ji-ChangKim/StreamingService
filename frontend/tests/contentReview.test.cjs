@@ -14,7 +14,7 @@ function load(relative) {
 const { isPublicProfile, reviewedProfile, publicBroadcastPayload } = load('../../shared/contentReview.ts');
 const { renderPortalPage, portalSitemap } = load('../../backend/src/services/portalPageService.ts');
 const { publisherAdsAllowed } = load('../../shared/publisherPolicy.ts');
-const profile = { slug: 'test', displayName: '테스트', description: '게임과 노래 방송', platform: 'CHZZK', channelUrl: 'https://chzzk.naver.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', tags: [], languages: [], avatarUrl: '', agency: '', countryCode: '', xUrl: '', dateState: 'NONE', timezone: 'Asia/Seoul', startAtUtc: '', debutDate: '', debutTime: '', targetMonth: '', source: 'EXISTING', ownerVerified: false };
+const profile = { slug: 'test', displayName: '테스트', description: '게임과 노래 방송', platform: 'CHZZK', channelUrl: 'https://chzzk.naver.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', tags: [], languages: [], avatarUrl: '', agency: '', countryCode: '', xUrl: '', dateState: 'NONE', timezone: 'Asia/Seoul', startAtUtc: '', debutDate: '', debutTime: '', targetMonth: '', source: 'REGISTERED', ownerVerified: false };
 
 // 승인 기록이 없거나 내용·미디어가 바뀌면 기존 승인으로 우회 공개할 수 없다.
 test('미검토·보류·수정된 소개와 소유권 확인만 된 소개는 공개하지 않는다', () => {

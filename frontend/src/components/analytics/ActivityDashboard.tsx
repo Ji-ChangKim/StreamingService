@@ -1,3 +1,6 @@
+import { applyPageSeo } from '../../utils/applyPageSeo';
+import { ActivityReadingGuide } from './ActivityReadingGuide';
+import { t, usePortalLocale } from '../../portal/portalLocale';
 // 외부 제목의 의심 표현을 공개 화면에서 제외한다.
 import { publicBroadcastTitle } from '../../../../shared/contentReview';
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
@@ -70,54 +73,11 @@ function ActivitySummary({ data, personal }: { data: BroadcastActivity; personal
   return <div className="ad-summary">{cards.map((card) => <div key={card.label} className={`ad-summary-card ad-tone-${card.tone}`}><div><span>{card.label}</span>{card.icon}</div><strong>{card.value}</strong></div>)}</div>;
 }
 
-// 구글 Ads 심사 통과 및 검색엔진 색인을 위한 스트리머 활동 자연어 요약 리포트 (단일 책임)
-function ActivityNarrativeReport({ streamer, data }: { streamer?: StatisticsStreamer | null; data?: BroadcastActivity | null }) {
-  if (!streamer || !data) return null;
-  const platformName = streamer.platform === 'CHZZK' ? '치지직' : streamer.platform === 'SOOP' ? 'SOOP' : '플랫폼';
-  const name = streamer.name || '스트리머';
-  const hasBroadcasts = data.summary.broadcasts > 0;
-
-  if (!hasBroadcasts) {
-    return (
-      <div className="ad-narrative-box ad-narrative-empty">
-        <p>
-          <strong>{name}</strong> 님은 {platformName}에서 활동하는 크리에이터입니다.
-          현재 VDébut 실시간 모니터링 대상으로 편입되어 10분 단위로 방송 활동 이력이 자동 집계되고 있습니다.
-          라이브 방송이 진행되면 상세 활동 시간, 주 활동 시간대, 카테고리 구성이 본 화면에 자동으로 기록됩니다.
-        </p>
-      </div>
-    );
-  }
-
-  const topCategory = data.categories[0]?.name;
-  let peakWeekday = -1;
-  let peakHour = -1;
-  let maxChannels = 0;
-  for (const cell of data.heatmap) {
-    if (cell.channels > maxChannels) {
-      maxChannels = cell.channels;
-      peakWeekday = cell.weekday;
-      peakHour = cell.hour;
-    }
-  }
-  const peakTimeText = peakWeekday >= 0 && peakHour >= 0
-    ? `주로 ${WEEKDAYS[peakWeekday]}요일 ${peakHour}시 전후`
-    : '';
-
-  const days = data.summary.broadcastDays;
-  const hours = Math.floor(Math.round(data.summary.minutes) / 60);
-  const minutes = Math.round(data.summary.minutes) % 60;
-  const timeText = hours > 0 ? `${hours}시간 ${minutes}분` : `${minutes}분`;
-
-  return (
-    <div className="ad-narrative-box">
-      <p>
-        <strong>{name}</strong> 님은 {platformName}에서 활동 중인 크리에이터로, 최근 조회 기간 동안 총 <strong>{days}일</strong>에 걸쳐 <strong>{data.summary.broadcasts}회</strong>({timeText})의 라이브 방송을 진행했습니다.
-        {peakTimeText ? ` ${peakTimeText}에 활발한 방송 활동을 보였으며, ` : ' '}
-        {topCategory ? <>가장 많이 진행한 콘텐츠 카테고리는 <strong>‘{topCategory}’</strong>입니다.</> : ''}
-      </p>
-    </div>
-  );
+// 조회한 기간에 실제 남아 있는 기록만 소개한다.
+export function ActivityNarrativeReport({ streamer, data }: { streamer?: StatisticsStreamer | null; data?: BroadcastActivity | null }) {
+  usePortalLocale();
+  if (!streamer || !data || !data.summary.broadcasts) return null;
+  return <div className="ad-narrative-box"><p><strong>{streamer.name}</strong> · {data.meta.from} — {data.meta.to} · KST</p><p>{t('이 기간에 방송 {0}회, 방송일 {1}일이 기록되어 있어요.', [data.summary.broadcasts, data.summary.broadcastDays])} {data.summary.minutes > 0 && t('이어진 기록으로 합산한 방송 시간은 {0}입니다.', [activityMinutes(data.summary.minutes)])}</p></div>;
 }
 
 // 제목과 필요한 설명만 남긴 통계 영역을 구성한다.
@@ -343,15 +303,9 @@ export function ActivityDashboard({ currentSubPath, onNavigate }: { currentSubPa
   const image = safeStatisticsUrl(streamer?.imageUrl || null);
   // 브라우저 기록과 공유된 주소에서도 조회 대상의 이름을 식별한다.
   useEffect(() => {
-    const previous = document.title;
-    const seo = activitySeo(filters, streamer && data ? { ...data, streamer } : data, search);
-    document.title = seo.title;
-    const fields: Array<[string, string]> = [['meta[name="description"]', seo.description], ['meta[property="og:title"]', seo.title], ['meta[property="og:description"]', seo.description], ['meta[property="og:url"]', seo.canonical]];
-    fields.forEach(([selector, value]) => document.querySelector(selector)?.setAttribute('content', value));
-    document.querySelector('link[rel="canonical"]')?.setAttribute('href', seo.canonical);
-    document.querySelector('meta[name="robots"]')?.setAttribute('content', activityNoindex(new URL(window.location.href), data) ? 'noindex,follow' : 'index,follow');
-    return () => { document.title = previous; };
-  }, [filters, data, streamer?.name, search]);
+    const seo = activitySeo(filters, data, search);
+    applyPageSeo({ ...seo, robots: loading || error || activityNoindex(new URL(window.location.href), data) ? 'noindex,follow' : 'index,follow' });
+  }, [filters, data, streamer?.name, search, loading, error, selection]);
   return <div className="bs-dashboard ad-dashboard">
     <header className="ad-heading"><div><span className="ad-eyebrow">VDébut STATISTICS</span><h1>방송 통계</h1></div>
       <ActivityStreamerSearch initialQuery={search} onSearch={(query) => navigate({ ...filters, channel: '', category: '' }, query)} onOpen={openStreamer} />
@@ -386,15 +340,8 @@ export function ActivityDashboard({ currentSubPath, onNavigate }: { currentSubPa
         : data && <>
           {personal && <ActivityNarrativeReport streamer={streamer} data={data} />}
           <div className="ad-data-meta"><span>{data.meta.from} — {data.meta.to}{data.meta.partialRuns > 0 && <span className="ad-partial-badge">일부 기록 누락</span>}</span><span>{data.meta.lastRecordedAt ? `${statisticsTime(data.meta.lastRecordedAt, true)} 기준` : '방송 기록 없음'}</span></div>
-          {!data.summary.broadcasts && (
-            <div className="ad-new-streamer-banner">
-              <span className="ad-new-streamer-badge">실시간 모니터링 활성화</span>
-              <div>
-                <strong>{streamer?.name || '스트리머'} 님의 방송 통계 수집이 시작되었습니다.</strong>
-                <p>최근 등록된 채널로, 방송이 시작되면 10분 단위로 시청 지표와 활동 이력이 본 화면에 자동 누적됩니다.</p>
-              </div>
-            </div>
-          )}
+          {!data.summary.broadcasts && <div className="ad-new-streamer-banner"><div><strong>{t('선택한 기간과 조건에 맞는 방송 기록이 없어요.')}</strong><p>{t('다른 기간을 선택하거나 카테고리 조건을 넓혀 보세요.')}</p></div></div>}
+          <ActivityReadingGuide />
           <ActivitySummary data={data} personal={personal} />
           <div className="ad-main-grid"><ActivityHeatmap key={filters.channel} data={data} personal={personal} selection={selection} onSelect={selectHistory} /><ActivityCategories data={data} selected={filters.category} onSelect={(category) => navigate({ ...filters, category })} /></div>
           <ActivityDaily data={data} personal={personal} selection={selection} onSelect={selectHistory} />

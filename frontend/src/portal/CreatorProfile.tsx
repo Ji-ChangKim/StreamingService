@@ -7,7 +7,9 @@ import { dateTimeFormatter } from '../../../shared/dateTimeFormatter';
 import { CreatorCard, CopyButton, FavoriteButton, PlatformBadge, PortalAvatar, PortalLink, downloadPortalSchedule, portalSchedule } from './PortalUi';
 import { ProfileCover } from './ProfileCover';
 import { getPortalLanguage, t, usePortalLocale } from './portalLocale';
+import { isPublicProfile } from '../../../shared/contentReview';
 import './profilePresentation.css';
+import './portalLearning.css';
 
 // 확정 일정만 갱신하며 미리보기에서는 조회·저장 같은 부수 효과를 실행하지 않는다.
 function useProfileClock(profile: PortalProfile, preview: boolean): number {
@@ -143,14 +145,15 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
         <div className="vd-profile-identity-copy"><IdentityHeading>{profile.displayName}</IdentityHeading>
           {profile.headline && <p className="vd-profile-headline">{profile.headline}</p>}
           <div className="vd-profile-meta">{profile.agency && <span className="vd-profile-agency">{profile.agency}</span>}<PlatformBadge platform={profile.platform} />{profile.ownerVerified && <span><ShieldCheck size={14} />{t('채널 운영자 확인')}</span>}</div>
-          {profile.tags.length > 0 && <div className="vd-tags">{profile.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
+
         </div>
         {!preview && <div className="vd-profile-tools"><FavoriteButton slug={profile.slug} /><CopyButton value={`${window.location.origin}/creator/${encodeURIComponent(profile.slug)}`} /></div>}
       </div>
       {/* 캘린더에서 들어온 방문자는 소개를 먼저 읽고 일정과 채널을 이어서 확인한다. */}
-      {(introduction || profile.languages.length > 0) && <section className="vd-profile-about" aria-label={t('소개')}>{introduction && <p className="vd-intro-text">{introduction}</p>}{profile.languages.length > 0 && <p className="vd-profile-languages"><span>{t('방송 언어')}</span>{profile.languages.join(' · ')}</p>}</section>}
+      {(introduction || profile.languages.length > 0 || profile.tags.length > 0) && <section className="vd-profile-about"><h2>{t('어떤 방송을 하나요?')}</h2>{introduction && <p className="vd-intro-text">{introduction}</p>}<dl className="vd-profile-facts">{profile.tags.length > 0 && <div><dt>{t('주요 콘텐츠')}</dt><dd>{profile.tags.join(' · ')}</dd></div>}{profile.languages.length > 0 && <div><dt>{t('방송 언어')}</dt><dd>{profile.languages.join(' · ')}</dd></div>}</dl></section>}
       <ProfileSchedule profile={profile} now={now} preview={preview} />
     </section>
+    {!preview && <section className="vd-panel vd-profile-evidence"><h2>{t('소개와 일정 확인하기')}</h2>{isPublicProfile(profile) && Number.isFinite(Date.parse(profile.contentReview!.reviewedAt)) && <p>{t('소개 검토일')} · <time dateTime={profile.contentReview!.reviewedAt}>{dateTimeFormatter(getPortalLanguage(), { timeZone: 'Asia/Seoul', year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(profile.contentReview!.reviewedAt))}</time> · KST</p>}{portalWebUrl(profile.noticeUrl || '') && <a className="vd-text-button" href={portalWebUrl(profile.noticeUrl || '')} target="_blank" rel="noopener noreferrer">{t('데뷔 공지 원문 보기')}<ArrowUpRight size={14} /></a>}<p>{t('공지가 바뀌면 저장한 캘린더 일정도 직접 수정해 주세요.')}</p><PortalLink to="/guide#save" onNavigate={onNavigate} className="vd-text-button">{t('일정 저장 방법')}</PortalLink></section>}
     {/* 소개와 일정에 이어 PV, 관련 채널, 같은 팀 멤버 순서로 살펴본다. */}
     <div className="vd-profile-content vd-profile-media">
       <ProfileVideo key={profile.videoUrl} profile={profile} />

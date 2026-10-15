@@ -1,27 +1,18 @@
 import { t, usePortalLocale } from './portalLocale';
 import { FormEvent, useState } from 'react';
-import { ArrowRight, CalendarDays, Heart, Megaphone, Search, Send } from 'lucide-react';
+import { ArrowRight, CalendarDays, Megaphone, Search, Send } from 'lucide-react';
 import { PortalHeading, PortalLink } from './PortalUi';
 import { ReceiptSuccess, SavedReceipt, submitPortalRequest } from './RequestPages';
 
-// 서비스 소개와 이용 가이드를 하나로 통합해 팬과 버튜버가 얻는 가치와 이용 방법을 원스톱으로 제공한다.
+// 서비스가 제공하는 기능을 소개하고 자세한 절차는 이용 가이드로 연결한다.
 export function PortalAbout({ onNavigate }: { onNavigate: (path: string) => void }) {
   usePortalLocale(); // 언어 변경은 화면 상태를 유지한 채 문구만 갱신한다.
-
-  const faqs = [
-    ['데뷔 날짜가 아직 정해지지 않았어요.', '예정 월만 정해졌다면 날짜 미정으로, 날짜만 정해졌다면 시간 미정으로 등록할 수 있어요.'],
-    ['이미 데뷔한 버튜버도 등록할 수 있나요?', '버튜버 소개 등록에서 데뷔 일정 없이 활동명과 방송 채널, 소개를 등록할 수 있어요.'],
-    ['등록하면 바로 공개되나요?', '운영자가 등록 정보와 방송 채널을 검토한 뒤 공개합니다.'],
-    ['등록한 정보를 수정하고 싶어요.', '문의 화면에서 관련 페이지 주소와 수정 내용을 알려주세요. 확인 후 신속히 처리합니다.'],
-    ['관심 목록은 다른 기기에서도 보이나요?', '현재 관심 목록은 사용 중인 브라우저에 저장됩니다. 브라우저 데이터를 삭제하거나 다른 기기를 사용하면 같은 목록이 나타나지 않아요.'],
-    ['통계는 어떤 방송을 보여주나요?', '현재 통계는 치지직과 SOOP에서 수집된 방송 활동 기록을 제공합니다. 전체 방송 통계와 버튜버 소개 목록의 대상은 다를 수 있어요.'],
-  ];
 
   return (
     <>
       <PortalHeading
-        title={t("서비스 소개 & 이용 가이드")}
-        description={t("아직 만나지 못한 버튜버와 팬을 연결하는 VDébut의 소개와 이용 안내입니다.")}
+        title={t("서비스 소개")}
+        description={t("데뷔 일정과 방송 소개로 버튜버와 팬의 첫 만남을 연결합니다.")}
       />
 
       <section className="vd-about-intro vd-panel">
@@ -44,45 +35,9 @@ export function PortalAbout({ onNavigate }: { onNavigate: (path: string) => void
         ))}
       </div>
 
-      <div className="vd-info-cards" style={{ marginTop: '28px' }}>
-        <section className="vd-panel">
-          <Heart />
-          <h2>{t("팬이라면")}</h2>
-          <ol className="vd-instructions">
-            <li>{t("달력에서 관심 있는 날짜를 선택하세요.")}</li>
-            <li>{t("버튜버의 소개와 방송 콘텐츠를 확인하세요.")}</li>
-            <li>{t("관심 목록이나 캘린더에 저장하고 방송 채널에서 만나요.")}</li>
-          </ol>
-          <PortalLink to="/" onNavigate={onNavigate} className="vd-text-button">{t("데뷔 일정 둘러보기")}<ArrowRight size={15} /></PortalLink>
-        </section>
-        <section className="vd-panel">
-          <Megaphone />
-          <h2>{t("버튜버라면")}</h2>
-          <ol className="vd-instructions">
-            <li>{t("방송 채널과 나의 소개, 데뷔 일정을 등록하세요.")}</li>
-            <li>{t("운영자가 등록 정보와 방송 채널을 확인한 뒤 공개합니다.")}</li>
-            <li>{t("공개된 소개 주소를 홍보에 활용하세요.")}</li>
-          </ol>
-          <PortalLink to="/upload" onNavigate={onNavigate} className="vd-text-button">{t("나의 데뷔 등록하기")}<ArrowRight size={15} /></PortalLink>
-        </section>
-      </div>
-
-      <section className="vd-section vd-faq">
-        <h2>{t("자주 묻는 질문")}</h2>
-        {faqs.map(([question, answer]) => (
-          <details className="vd-panel" key={question}>
-            <summary>{t(question)}</summary>
-            <p>{t(answer)}</p>
-          </details>
-        ))}
-      </section>
+      <section className="vd-panel vd-section"><h2>{t("VDébut 이용 가이드")}</h2><p>{t("일정 저장, 시간대 확인, 소개 작성과 변경 안내를 살펴보세요.")}</p><PortalLink to="/guide" onNavigate={onNavigate} className="vd-button">{t("이용 가이드")}</PortalLink></section>
     </>
   );
-}
-
-// 가이드는 통합된 서비스 소개 & 이용 가이드 화면을 공유한다.
-export function PortalGuide({ onNavigate }: { onNavigate: (path: string) => void }) {
-  return <PortalAbout onNavigate={onNavigate} />;
 }
 
 // 문의하기는 접수 번호로 답변까지 확인한다.
