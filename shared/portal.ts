@@ -12,6 +12,8 @@ export const REGISTRATION_REGIONS = [
 // 상세 화면에서 외부 채널의 배너와 실제 소개를 함께 사용한다.
 export interface PortalChannelDetails { bannerUrl: string; mobileBannerUrl: string; description: string }
 export interface PortalProfile {
+  // 소유권 확인과 별개로 운영자가 검토한 내용에만 공개 권한을 부여한다.
+  contentReview?: { state: 'APPROVED' | 'HOLD'; snapshot: string; reviewedAt: string };
   slug: string; displayName: string; description: string; avatarUrl: string;
   platform: PortalPlatform; channelUrl: string; countryCode: string; languages: string[];
   tags: string[]; agency: string; xUrl: string; dateState: DateState;

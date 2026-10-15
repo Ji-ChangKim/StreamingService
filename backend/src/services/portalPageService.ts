@@ -3,9 +3,11 @@ import { portalPageSeo } from '../../../shared/portalSeo';
 import { translatePortalText } from '../../../shared/portalTranslations';
 import { escapeActivityHtml, activityJson } from './activityPageService';
 import { INITIAL_PAGE_LOADING_HEAD, initialPageRoot } from './initialPageLoading';
+import { isPublicProfile } from '../../../shared/contentReview';
 
 // 운영 셸의 메타데이터와 최초 본문을 공개 주소에 맞추고 외부 문자열을 이스케이프한다.
 export function renderPortalPage(html: string, url: URL, profile?: PortalProfile): string {
+  profile = profile && isPublicProfile(profile) ? profile : undefined;
   const seo = portalPageSeo(url, profile);
   const esc = escapeActivityHtml;
   const text = (source: string) => esc(translatePortalText(source, seo.language));
@@ -24,6 +26,6 @@ export function renderPortalPage(html: string, url: URL, profile?: PortalProfile
 // 운영 공개 목록에 승인된 신규 소개도 포함하고 비공개 주소는 제외한다.
 export function portalSitemap(profiles: PortalProfile[]): string {
   const paths = ['/', '/upload', '/creators', '/creators/register', '/about', '/guide', '/contact', '/privacy', '/terms'];
-  return [...paths, ...profiles.map((profile) => `/creator/${encodeURIComponent(profile.slug)}`)]
+  return [...paths, ...profiles.filter(isPublicProfile).map((profile) => `/creator/${encodeURIComponent(profile.slug)}`)]
     .map((path) => `<url><loc>https://vdebut.live${path}</loc></url>`).join('');
 }

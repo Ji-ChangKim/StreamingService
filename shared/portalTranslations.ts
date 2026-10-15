@@ -1,5 +1,51 @@
 // 서비스 문구만 번역하며 활동명·자기소개 같은 이용자 입력은 원문으로 유지한다.
 const rows = String.raw`
+정보 수정·콘텐츠 신고|||情報修正・コンテンツ報告|||Corrections & content reports
+해당 페이지 주소와 확인이 필요한 내용을 남겨 주세요. 일정 변경, 소개 수정·삭제, 권리 침해와 부적절한 콘텐츠 신고를 접수할 수 있습니다.|||対象ページのURLと確認が必要な内容をお知らせください。日程変更、紹介の修正・削除、権利侵害、不適切なコンテンツの報告を受け付けます。|||Include the page URL and what needs checking. You can request schedule or profile changes and report rights violations or inappropriate content.
+부적절한 콘텐츠 신고|||不適切なコンテンツの報告|||Report inappropriate content
+이미지·소개글 권리 침해|||画像・紹介文の権利侵害|||Image or profile rights violation
+사칭·채널 정보 오류|||なりすまし・チャンネル情報の誤り|||Impersonation or incorrect channel details
+문제가 있는 부분과 확인 가능한 출처를 적어 주세요. 신고에 필요하지 않은 개인정보는 입력하지 마세요.|||問題の箇所と確認できる出典を記入してください。報告に不要な個人情報は入力しないでください。|||Describe the issue and provide a verifiable source. Do not include personal information unrelated to the report.
+콘텐츠 검토·공개 관리|||コンテンツ審査・公開管理|||Content review & publication
+활동명·소속·일정의 출처와 소개·이미지·영상의 내용 및 사용 권한을 직접 확인했습니다.|||活動名・所属・日程の出典と、紹介・画像・動画の内容および利用権限を直接確認しました。|||I checked sources for the name, affiliation and schedule, and reviewed the profile, images, videos and usage permissions.
+콘텐츠 검토·문의 접수|||コンテンツ審査・お問い合わせ|||Content review & inquiries
+활동명·소속·일정의 공식 출처와 소개·이미지·영상의 내용 및 사용 권한을 확인한 뒤 공개하세요. 미검토 자료는 공개되지 않습니다.|||公式情報と紹介・画像・動画の内容および利用権限を確認してから公開してください。未審査の資料は公開されません。|||Check official sources, profile text, images, videos and usage permissions before publishing. Unreviewed profiles are not public.
+공개 중|||公開中|||Published
+검토·보류|||審査・保留|||Review or hold
+공개 상태|||公開状態|||Publication status
+공개 보류|||公開保留|||Hold publication
+검토 후 공개|||審査後に公開|||Publish after review
+활동명 또는 소개에 재검토가 필요한 표현이 있습니다. 공식 출처와 내용을 확인해 주세요.|||活動名または紹介に再確認が必要な表現があります。公式情報と内容を確認してください。|||The name or introduction needs further review. Check official sources and the content.
+영상 제목이나 홍보 문구 대신 실제 활동명을 입력해 주세요.|||動画タイトルや宣伝文ではなく、実際の活動名を入力してください。|||Enter the actual creator name, rather than a video title or promotional text.
+주로 하는 콘텐츠, 방송 언어, 팬에게 소개하고 싶은 특징을 적어 주세요.|||主なコンテンツ、配信言語、ファンに伝えたい特徴を記入してください。|||Describe your main content, streaming language and what fans should know about your streams.
+등록 전에 확인해 주세요|||登録前にご確認ください|||Before submitting
+허위 정보, 사칭, 권리 침해 자료, 성적으로 노골적이거나 자극적인 자료, 타인을 비하하거나 괴롭히는 내용은 공개하지 않습니다.|||虚偽情報、なりすまし、権利侵害、性的に露骨・刺激的な資料、差別や嫌がらせの内容は公開しません。|||We do not publish false information, impersonation, rights violations, sexually explicit or suggestive material, or degrading or harassing content.
+팬 제보에는 확인 가능한 공식 출처를 함께 남겨 주세요.|||ファンからの情報提供には確認できる公式の出典を添えてください。|||Fan submissions should include a verifiable official source.
+메인 캘린더로 돌아가기|||メインカレンダーに戻る|||Back to the debut calendar
+VDébut은 데뷔 일정과 소개 공개, 문의 처리 및 서비스 이용 현황 분석에 필요한 정보를 사용합니다.|||VDébutは日程・紹介の公開、お問い合わせ対応、利用状況分析に必要な情報を使用します。|||VDébut uses information needed to publish schedules and profiles, handle inquiries and understand site usage.
+등록·문의 정보|||登録・お問い合わせ情報|||Submission and inquiry information
+활동명, 소개, 방송 채널, 일정과 등록한 이미지는 소개 공개에 사용됩니다. 문의에 입력한 이메일과 내용은 문의 처리에 사용되며 공개 소개에 표시하지 않습니다.|||活動名、紹介、配信チャンネル、日程、登録画像は紹介の公開に使用します。お問い合わせのメールと内容は対応に使用し、公開紹介には表示しません。|||Creator names, introductions, channels, schedules and submitted images are used in public profiles. Inquiry emails and messages are used to handle inquiries and are not shown in public profiles.
+브라우저 저장 정보|||ブラウザ保存情報|||Information stored in your browser
+언어와 일정 표시 설정, 관심 목록, 문의 답변 조회용 확인 키는 사용한 브라우저에 저장됩니다. 브라우저 설정에서 저장 정보를 삭제할 수 있습니다.|||言語・日程表示設定、お気に入り、回答確認キーは使用したブラウザに保存します。ブラウザ設定で削除できます。|||Language and calendar settings, favorites and inquiry access keys are stored in your browser. You can remove them in your browser settings.
+접속 정보|||接続情報|||Connection information
+서비스 요청 처리와 과도한 접수 제한을 위해 접속 정보를 처리합니다. 문의 확인 키와 접수 제한에 사용하는 접속 주소는 해시로 저장합니다.|||リクエスト処理と過剰な送信の制限のため接続情報を処理します。確認キーと送信制限に使う接続アドレスはハッシュで保存します。|||Connection information is processed to handle requests and limit excessive submissions. Inquiry access keys and connection addresses used for submission limits are stored as hashes.
+Google Analytics|||Google Analytics|||Google Analytics
+운영 사이트에는 Google Analytics 방문 분석 태그가 포함되어 있습니다. Google은 이용 현황 분석을 위해 쿠키, IP 주소, 기기 및 브라우저 정보 등을 처리할 수 있습니다.|||運用サイトにはGoogle Analyticsタグが含まれています。Googleは利用状況分析のためCookie、IPアドレス、端末・ブラウザ情報などを処理する場合があります。|||The production site includes Google Analytics tags. Google may process cookies, IP addresses and device or browser information to analyze usage.
+Google의 파트너 사이트 데이터 사용 안내|||Googleのパートナーサイトにおけるデータ利用|||How Google uses data from partner sites
+광고 서비스|||広告サービス|||Advertising services
+Google 광고 서비스를 도입할 경우 광고 제공에 필요한 데이터 사용과 이용자의 선택 방법을 안내합니다.|||Google広告サービスを導入する場合は、広告に必要なデータ利用と利用者の選択方法を案内します。|||If Google advertising services are introduced, we will explain related data use and your choices.
+정보 열람·정정·삭제 문의|||情報の閲覧・訂正・削除|||Access, correction and deletion requests
+정보의 열람·정정·삭제 요청은 문의 화면 또는 아래 이메일로 접수할 수 있습니다.|||情報の閲覧・訂正・削除はお問い合わせ画面または下記メールでご連絡ください。|||Request access, corrections or deletion through Contact or the email below.
+서비스 이용 목적|||サービスの目的|||Purpose of the service
+VDébut은 버튜버의 데뷔 일정, 소개와 방송 활동 정보를 제공하는 독립 서비스입니다. 서비스 운영을 위해 광고가 표시될 수 있습니다.|||VDébutはVTuberのデビュー日程、紹介、配信活動情報を提供する独立サービスです。運営のため広告を表示する場合があります。|||VDébut is an independent service offering VTuber debut schedules, profiles and streaming activity information. Ads may be displayed to support the service.
+등록 콘텐츠의 공개 기준|||登録コンテンツの公開基準|||Publication standards
+등록 신청은 운영자 검토 후 공개됩니다. 허위 정보, 사칭, 권리 침해 또는 공개 기준에 맞지 않는 콘텐츠는 보완 요청, 공개 보류 또는 삭제할 수 있습니다.|||登録申請は運営の審査後に公開します。虚偽、なりすまし、権利侵害や基準に適合しない内容は修正依頼、公開保留、削除の対象です。|||Submissions are published after review. False information, impersonation, rights violations or content outside our standards may require revision, be held or removed.
+소개·이미지·영상과 외부 링크도 검토 대상입니다. 팬 제보에는 확인 가능한 공식 출처를 함께 남겨 주세요.|||紹介、画像、動画、外部リンクも審査します。ファンからの情報には公式の出典を添えてください。|||Introductions, images, videos and external links are reviewed. Fan submissions should include a verifiable official source.
+이미지·소개글과 브랜드|||画像・紹介文・ブランド|||Images, profile text and brands
+등록하는 이미지·소개글·영상에는 필요한 사용 권한이 있어야 합니다. 크리에이터의 저작물과 각 플랫폼의 상표는 해당 권리자에게 귀속됩니다.|||登録する画像・紹介文・動画には必要な利用権限が必要です。著作物と商標は各権利者に帰属します。|||You must have the necessary permissions for submitted images, text and videos. Creator works and platform trademarks belong to their respective rights holders.
+정보나 이미지의 정정·삭제, 사칭과 부적절한 콘텐츠 신고는 문의 화면 또는 ru_0120@naver.com으로 접수합니다. 운영자가 요청 내용과 권리를 확인한 뒤 처리합니다.|||情報・画像の訂正や削除、なりすまし、不適切な内容はお問い合わせ画面またはru_0120@naver.comで受け付け、内容と権利を確認して対応します。|||Request corrections or deletion, or report impersonation and inappropriate content through Contact or ru_0120@naver.com. The team checks the request and relevant rights before acting.
+방송 일정 변경|||配信日程の変更|||Schedule changes
+방송 일정은 변경·연기·취소될 수 있습니다. 최신 일정은 크리에이터의 공지를 함께 확인해 주세요. 저장한 일정은 변경된 공지와 대조해 수정해 주세요.|||配信日程は変更・延期・中止になる場合があります。最新の告知を確認し、保存した予定も更新してください。|||Schedules may change, be postponed or canceled. Check the creator's latest announcement and update any saved calendar events accordingly.
 문의하기|||お問い合わせ|||Contact Us
 서비스|||サービス|||Service
 서비스 소개 & 이용 가이드|||サービス紹介＆利用ガイド|||About & Guide

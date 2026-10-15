@@ -1,6 +1,7 @@
 import type { ActivityFilters, BroadcastActivity } from '../../../shared/broadcastActivity';
 import { activitySeo, activityStreamerPath, activityNoindex } from '../../../shared/activitySeo';
 import { INITIAL_PAGE_LOADING_HEAD, initialPageRoot } from './initialPageLoading';
+import { publicBroadcastPayload, publicBroadcastTitle } from '../../../shared/contentReview';
 
 // 외부 채널명·제목을 HTML 텍스트와 속성에 안전하게 표시한다.
 export function escapeActivityHtml(value: unknown): string {
@@ -14,6 +15,7 @@ export function activityJson(value: unknown): string {
 
 // 자바스크립트 실행 전에도 실제 요약·카테고리·방송 이력을 읽을 수 있게 한다.
 export function activityInitialBody(data: BroadcastActivity): string {
+  data = publicBroadcastPayload(data);
   const esc = escapeActivityHtml;
   const heading = data.streamer ? `${data.streamer.name} 방송 통계` : '방송 통계';
   const rows = data.broadcasts.slice(0, 25).map(row => `<tr><td><a href="${activityStreamerPath(row.channelKey)}">${esc(row.channelName)}</a></td><td>${esc(row.title)}</td><td>${esc(row.categories)}</td><td>${Math.round(row.minutes)}분</td></tr>`).join('');
@@ -22,6 +24,7 @@ export function activityInitialBody(data: BroadcastActivity): string {
 
 // 기존 앱의 초기 본문과 메타데이터를 통계 주소에 맞춰 교체한다.
 export function renderActivityPage(html: string, url: URL, filters: ActivityFilters, data: BroadcastActivity): string {
+  data = publicBroadcastPayload(data);
   const seo = activitySeo(filters, data, url.searchParams.get('search') || '');
   const esc = escapeActivityHtml;
   const noindex = activityNoindex(url, data);

@@ -1,10 +1,9 @@
-import { readPortalProfiles, readPortalProfileBySlug } from './portalProfileRepository';
+import { readPortalProfiles, readPortalProfileBySlug, readPublicPortalProfiles, readPublicPortalProfileBySlug } from './portalProfileRepository';
+import { isPublicProfile, reviewedProfile } from '../../../shared/contentReview';
 import { cleanProfilePresentation } from '../../../shared/profilePresentation';
 import { broadcastNewDebutToDiscord } from './discordBotService';
 import { portalProfileEvent } from './unifiedEventService';
-export { readPortalProfiles, readPortalProfileBySlug } from './portalProfileRepository';
-import { publicResponseCache } from './publicResponseCache';
-import { fetchSoopChannelBanner } from './soopChannelBanner';
+export { readPortalProfiles, readPortalProfileBySlug, readPublicPortalProfiles, readPublicPortalProfileBySlug } from './portalProfileRepository';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { verifyAdminLogin, validateAdminToken } from './adminAuthService';
@@ -139,27 +138,24 @@ portalApi.use('*', bodyLimit({ maxSize: 20000, onError: (c) => c.json({ error: '
 // 공개 프로필은 실제 DB 결과만 반환한다.
 portalApi.get('/profiles', async (c) => {
   // 개인 신청과 분리한 공개 소개만 짧게 재사용한다.
-  c.header('Cache-Control', 'public, max-age=30');
-  const key = new URL('/api/v1/portal/profiles?cache=v2', c.req.url);
+  c.header('Cache-Control', 'no-store');
   try {
-    return await publicResponseCache(c.req.raw, key, 30, async () => c.json({ profiles: await readPortalProfiles(c.env.DB) }), (promise) => c.executionCtx.waitUntil(promise));
+    return c.json({ profiles: await readPublicPortalProfiles(c.env.DB) });
   } catch {
     c.header('Cache-Control', 'no-store');
     return c.json({ error: '소개를 불러오지 못했습니다. 다시 시도해 주세요.' }, 503);
   }
 });
 
-// 소개 상세에서만 SOOP 배너와 실제 소개를 한 번에 조회하고 목록 로딩과 분리한다.
+// 소개 상세에는 검토한 저장 배너만 제공하고 외부 원문은 가져오지 않는다.
 portalApi.get('/profiles/:slug/banner', async (c) => {
-  c.header('Cache-Control', 'public, max-age=600');
+  c.header('Cache-Control', 'no-store');
   const slug = c.req.param('slug');
-  const key = new URL(`/api/v1/portal/profiles/${encodeURIComponent(slug)}/banner?cache=v2`, c.req.url);
   try {
-    return await publicResponseCache(c.req.raw, key, 600, async () => {
-      const profile = await readPortalProfileBySlug(c.env.DB, slug);
+      const profile = await readPublicPortalProfileBySlug(c.env.DB, slug);
       if (!profile) { c.header('Cache-Control', 'no-store'); return c.json({ error: '소개를 찾을 수 없습니다.' }, 404); }
-      return c.json(profile.platform === 'SOOP' ? await fetchSoopChannelBanner(profile.channelUrl) : { bannerUrl: '', mobileBannerUrl: '', description: '' });
-    }, (promise) => c.executionCtx.waitUntil(promise));
+      // 외부 채널의 변경된 배너·소개를 검토 없이 다시 끌어오지 않는다.
+      return c.json({ bannerUrl: profile.bannerUrl || '', mobileBannerUrl: '', description: '' });
   } catch (error) {
     // 외부 응답 본문 대신 오류 종류만 기록해 배너 장애 원인을 추적한다.
     console.warn(JSON.stringify({ event: 'soop_banner_unavailable', reason: error instanceof Error ? error.message : 'unknown' }));
@@ -301,6 +297,10 @@ portalApi.put('/admin/profiles/:slug', async (c) => {
   const debutGroupName = field(group, 'debutGroupName', 100);
   if (Boolean(debutGroupId) !== Boolean(debutGroupName) || (debutGroupId && !/^[a-z0-9_-]+$/.test(debutGroupId))) return c.json({ error: '데뷔 그룹 이름과 영문·숫자 식별자를 함께 입력해 주세요.' }, 400);
   profile = { ...profile, debutGroupId, debutGroupName };
+  // 공개 결정은 인증된 운영자의 명시적인 콘텐츠 확인을 요구한다.
+  if (body.publicationState === 'APPROVED' && body.contentChecked !== true) return c.json({ error: '활동명·소개·이미지·영상과 사용 권한을 확인해 주세요.' }, 400);
+  profile = reviewedProfile(profile, body.publicationState === 'APPROVED' ? 'APPROVED' : 'HOLD', new Date().toISOString());
+  if (profile.contentReview?.state === 'APPROVED' && !isPublicProfile(profile)) return c.json({ error: '영상 제목 형태의 활동명이나 재검토가 필요한 소개를 먼저 정정해 주세요.' }, 400);
   const existing = await c.env.DB.prepare('SELECT data FROM portal_profiles WHERE slug=?').bind(slug).first<{ data: string }>();
   // 화면에서 확인한 버전과 저장 직전 버전이 다르면 이전 정보로 덮어쓰지 않는다.
   if (existing && await portalTokenHash(existing.data) !== field(body, 'revision', 100)) return c.json({ error: '다른 운영자가 수정했습니다. 목록을 새로고침해 주세요.' }, 409);
@@ -341,6 +341,7 @@ portalApi.post('/admin/requests/:id/decision', async (c) => {
       if (!original || body.proofChecked !== true) return c.json({ error: '공식 채널 증빙을 확인하고 확인란을 선택해 주세요.' }, 400);
       profile = { ...original, ownerVerified: true };
     } else {
+      if (body.contentChecked !== true) return c.json({ error: '활동명·소개·이미지·영상과 사용 권한을 확인해 주세요.' }, 400);
       profile = cleanPortalProfile(JSON.parse(row.payload));
       const duplicate = profiles.find((p) => portalChannelKey(p.channelUrl, p.platform) === portalChannelKey(profile.channelUrl, profile.platform));
       if (duplicate) return c.json({ error: '이미 등록된 채널입니다. 기존 소개의 정보 정정 문의를 안내해 주세요.' }, 409);
@@ -348,6 +349,8 @@ portalApi.post('/admin/requests/:id/decision', async (c) => {
       slug = profiles.some((p) => p.slug === base) ? `${base}-${crypto.randomUUID().slice(0, 8)}` : base;
       const role = JSON.parse(row.payload).requesterRole;
       profile = { ...profile, slug, ...(['SELF', 'AGENCY', 'FAN'].includes(role) ? { requesterRole: role } : {}) };
+      profile = reviewedProfile(profile, 'APPROVED', new Date().toISOString());
+      if (!isPublicProfile(profile)) return c.json({ error: '영상 제목 형태의 활동명이나 재검토가 필요한 소개를 먼저 정정해 주세요.' }, 400);
       statements.push(c.env.DB.prepare("INSERT INTO portal_profile_channels(channel_key,slug) SELECT ?,? WHERE EXISTS(SELECT 1 FROM portal_requests WHERE id=? AND status='PENDING')").bind(portalChannelKey(profile.channelUrl, profile.platform), slug, row.id));
     }
     statements.push(c.env.DB.prepare('INSERT INTO portal_profiles(slug,channel_url,data) SELECT ?,?,? WHERE EXISTS(SELECT 1 FROM portal_requests WHERE id=? AND status=\'PENDING\') ON CONFLICT(slug) DO UPDATE SET data=excluded.data,updated_at=CURRENT_TIMESTAMP').bind(slug, profile.channelUrl, JSON.stringify(profile), row.id));

@@ -1,8 +1,9 @@
 import { publicResponseCache } from './services/publicResponseCache';
 import { Hono } from 'hono';
-import { portalApi, readPortalProfiles, readPortalProfileBySlug, portalAdminStreamers, deletePortalProfile } from './services/portalService';
+import { portalApi, readPublicPortalProfiles, readPublicPortalProfileBySlug, portalAdminStreamers, deletePortalProfile } from './services/portalService';
 import { renderPortalPage, portalSitemap } from './services/portalPageService';
 import { portalPageSeo } from '../../shared/portalSeo';
+import { publicBroadcastPayload } from '../../shared/contentReview';
 import { readUnifiedDebutEvents, portalProfileEvent } from './services/unifiedEventService';
 import { cors } from 'hono/cors';
 import { getAssetFromKV, serveSinglePageApp } from '@cloudflare/kv-asset-handler';
@@ -84,6 +85,15 @@ export class ChzzkSessionDO {
 
 const app = new Hono<{ Bindings: Bindings }>();
 
+// 외부 방송 제목의 재검토 신호는 API와 초기 HTML에서 동일하게 제외한다.
+app.use('/api/analytics/*', async (c, next) => {
+  await next();
+  if (c.res.ok && c.res.headers.get('Content-Type')?.includes('application/json')) {
+    const data = publicBroadcastPayload(await c.res.json());
+    c.res = new Response(JSON.stringify(data), { status: c.res.status, headers: c.res.headers });
+  }
+});
+
 // 기존 관리 API도 서버 세션을 요구하고 비공개 응답을 캐시하지 않는다.
 app.use('/api/v1/admin/*', async (c, next) => {
   c.header('Cache-Control', 'no-store');
@@ -112,7 +122,7 @@ app.use('*', async (c, next) => {
     let profile;
     if (/^\/creator\/[^/]+$/.test(path)) {
       let slug = ''; try { slug = decodeURIComponent(path.slice('/creator/'.length)); } catch { /* 찾을 수 없는 주소로 처리한다. */ }
-      try { profile = (await readPortalProfileBySlug(c.env.DB, slug)) || undefined; }
+      try { profile = (await readPublicPortalProfileBySlug(c.env.DB, slug)) || undefined; }
       catch { c.header('Cache-Control', 'no-store'); return c.text('소개를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.', 503); }
     }
     const missing = (!seo.known && !path.startsWith('/analytics')) || (path.startsWith('/creator/') && !profile);
@@ -169,7 +179,7 @@ const sitemapXmlHandler = async (c: any) => {
   const baseUrl = 'https://vdebut.live';
   // 새 플랫폼에서는 기존 소개와 승인된 신규 소개를 모두 검색 목록에 포함한다.
   if (c.env.PORTAL_ENABLED === 'true') {
-    const profiles = await readPortalProfiles(c.env.DB);
+    const profiles = await readPublicPortalProfiles(c.env.DB);
     return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${portalSitemap(profiles)}${await activitySitemapEntries(c.env.DB)}</urlset>`, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
   }
   const todayStr = new Date().toISOString().split('T')[0];
@@ -244,7 +254,7 @@ app.get('/api/v1/events', async (c) => {
   if (c.env.PORTAL_ENABLED === 'true') {
     try {
       const events = await readUnifiedDebutEvents(c.env.DB);
-      c.header('Cache-Control', 'public, max-age=30');
+      c.header('Cache-Control', 'no-store');
       return c.json({ success: true, events, total: events.length, source: 'd1_database' });
     } catch {
       c.header('Cache-Control', 'no-store');
@@ -623,10 +633,10 @@ app.get('/api/v1/creator/:slug', async (c) => {
   const slug = c.req.param('slug');
   // 새 승인 소개가 기존 개인 소개 API에서도 누락되지 않게 호환 형식을 제공한다.
   if (c.env.PORTAL_ENABLED === 'true') {
-    const profile = await readPortalProfileBySlug(c.env.DB, slug);
+    const profile = await readPublicPortalProfileBySlug(c.env.DB, slug);
     if (!profile) return c.json({ success: false, error: '해당 크리에이터 프로필을 찾을 수 없습니다.' }, 404);
     const event = portalProfileEvent(profile);
-    c.header('Cache-Control', 'public, max-age=30');
+    c.header('Cache-Control', 'no-store');
     return c.json({ success: true, creator: { id: profile.slug, slug: profile.slug, displayName: profile.displayName,
       description: profile.description, profileImageUrl: profile.avatarUrl, agencyName: profile.agency,
       creatorType: profile.agency && profile.agency !== '개인세' ? 'AGENCY' : 'INDIE', language: profile.languages.join(', '), countryCode: profile.countryCode, xUrl: profile.xUrl,

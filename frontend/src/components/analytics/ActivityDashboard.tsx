@@ -1,3 +1,5 @@
+// 외부 제목의 의심 표현을 공개 화면에서 제외한다.
+import { publicBroadcastTitle } from '../../../../shared/contentReview';
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { ArrowLeft, ArrowUpRight, CalendarDays, Clock, Copy, Check, RefreshCw, Radio, Users, BarChart3, Search } from 'lucide-react';
 import type { ActivityFilters, BroadcastActivity, ActivityBroadcast, ActivitySelection } from '../../../../shared/broadcastActivity';
@@ -201,7 +203,7 @@ function ActivityBroadcastRow({ row, personal, onOpen }: { row: ActivityBroadcas
   return <><tr>
     <td>{statisticsTime(row.startedAt, true)}</td>
     {!personal && <td><a href={activityStreamerPath(row.channelKey)} className="ad-channel-link" onClick={(event) => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); onOpen(row); }}>{row.channelName || row.channelKey.split(':')[1]}</a><StatisticsBrand platform={row.platform} label={false} /></td>}
-    <td className="ad-broadcast-title"><strong>{row.title}</strong><span>{row.categories}</span></td>
+    <td className="ad-broadcast-title"><strong>{publicBroadcastTitle(row.title)}</strong><span>{row.categories}</span></td>
     <td>{activityMinutes(row.minutes)}</td><td><button className="bs-button" type="button" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? '닫기' : '상세 기록'}</button></td>
   </tr>{expanded && <tr><td colSpan={personal ? 4 : 5}><dl className="ad-record-detail"><div><dt>최초 기록</dt><dd>{statisticsTime(row.firstObservedAt, true)}</dd></div><div><dt>최근 기록</dt><dd>{statisticsTime(row.lastObservedAt, true)}</dd></div><div><dt>최고 시청자 수</dt><dd>{countFormat(row.peakViewers)}명</dd></div><div><dt>방송 시간</dt><dd>{activityMinutes(row.minutes)}</dd></div></dl></td></tr>}</>;
 }
@@ -217,7 +219,7 @@ function ActivityBroadcasts({ data, filters, selection, personal, onOpen, onClea
       <tbody>{page?.items.map((row) => <ActivityBroadcastRow key={`${row.platform}:${row.channelKey}:${row.streamId}`} row={row} personal={personal} onOpen={open} />)}</tbody></table></div>
     <div className="ad-broadcast-cards">{page?.items.map((row) => <article className="ad-broadcast-card" key={`${row.platform}:${row.channelKey}:${row.streamId}`}>
       {!personal && <div className="ad-card-channel"><a href={activityStreamerPath(row.channelKey)} className="ad-channel-link" onClick={(event) => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); open(row); }}>{row.channelName}</a><StatisticsBrand platform={row.platform} /></div>}
-      <h3>{row.title}</h3><p>{row.categories}</p><dl><div><dt>방송 시작</dt><dd>{statisticsTime(row.startedAt, true)}</dd></div><div><dt>방송 시간</dt><dd>{activityMinutes(row.minutes)}</dd></div></dl>
+      <h3>{publicBroadcastTitle(row.title)}</h3><p>{row.categories}</p><dl><div><dt>방송 시작</dt><dd>{statisticsTime(row.startedAt, true)}</dd></div><div><dt>방송 시간</dt><dd>{activityMinutes(row.minutes)}</dd></div></dl>
       <details><summary>상세 기록</summary><dl><div><dt>최초 기록</dt><dd>{statisticsTime(row.firstObservedAt, true)}</dd></div><div><dt>최근 기록</dt><dd>{statisticsTime(row.lastObservedAt, true)}</dd></div><div><dt>최고 시청자 수</dt><dd>{countFormat(row.peakViewers)}명</dd></div></dl></details>
     </article>)}</div>
     {loading && <p className="ad-empty" role="status">방송 이력을 불러오는 중…</p>}

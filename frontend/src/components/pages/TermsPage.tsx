@@ -1,83 +1,24 @@
-import { ArrowLeft, Scale, FileText, CheckCircle2 } from 'lucide-react';
 import { Language } from '../../utils/i18n';
+import { translatePortalText } from '../../../../shared/portalTranslations';
 
-interface TermsPageProps {
-  onNavigateHome: () => void;
-  currentLang?: Language;
-  secureManagement?: boolean;
-}
+interface TermsPageProps { onNavigateHome: () => void; currentLang?: Language; secureManagement?: boolean }
 
-export function TermsPage({ onNavigateHome, secureManagement = false }: TermsPageProps) {
-  return (
-    <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-8 space-y-8 animate-fadeIn text-[#0F172A]">
-      {/* Navigation Header */}
-      <div className="flex items-center justify-between">
-        <button
-          onClick={onNavigateHome}
-          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#64748B] hover:text-[#0F172A] transition-colors py-1.5 px-3 rounded-[6px] hover:bg-slate-100 cursor-pointer"
-        >
-          <ArrowLeft className="w-4 h-4" /> 메인 캘린더로 돌아가기
-        </button>
-      </div>
-
-      {/* Hero Header */}
-      <section className="bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white rounded-[16px] p-6 sm:p-8 shadow-md relative overflow-hidden">
-        <div className="space-y-2">
-          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight font-['Outfit']">
-            서비스 이용약관 (Terms of Service)
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-300">
-            최종 업데이트: 2026년 8월 17일
-          </p>
-        </div>
-      </section>
-
-      {/* Content */}
-      <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 sm:p-8 shadow-sm space-y-8 text-xs sm:text-sm text-[#334155] leading-relaxed">
-        <section className="space-y-2">
-          <h2 className="text-base font-extrabold text-[#0F172A] flex items-center gap-2 border-b border-[#E2E8F0] pb-2">
-            <FileText className="w-4 h-4 text-[#2563EB]" />
-            1. 서비스 이용 목적
-          </h2>
-          <p>
-            VDébut은 신입 버츄얼 스트리머(VTuber)의 첫 방송 일정을 수집·정리하여 시청자와 팬들에게 편의를 제공하는 비영리 독립 캘린더 서비스입니다.
-          </p>
-        </section>
-
-        <section className="space-y-2">
-          <h2 className="text-base font-extrabold text-[#0F172A] flex items-center gap-2 border-b border-[#E2E8F0] pb-2">
-            <CheckCircle2 className="w-4 h-4 text-[#2563EB]" />
-            2. 지적재산권 및 브랜드 정책 준수
-          </h2>
-          <p>
-            • 스트리머의 캐릭터 이미지, 아바타, 프로필 텍스트, 방송 링크에 대한 모든 저작권은 해당 크리에이터 및 원저작권자에게 있습니다.<br />
-            • 치지직, SOOP, YouTube, Twitch 등 각 플랫폼 공식 로고와 상표는 해당 기업의 고유 자산이며, 본 서비스는 출처 식별 목적으로만 사용합니다.
-          </p>
-        </section>
-
-        <section className="space-y-2">
-          <h2 className="text-base font-extrabold text-[#0F172A] flex items-center gap-2 border-b border-[#E2E8F0] pb-2">
-            <FileText className="w-4 h-4 text-[#2563EB]" />
-            3. 일정 제보 시 주의사항
-          </h2>
-          <p>
-            • 허위 사실, 타인의 명의를 도용한 장난성 등록, 부적절한 링크 제보는 관리자에 의해 통보 없이 삭제될 수 있습니다.<br />
-            {secureManagement
-              ? '• 소개 정보의 수정·삭제·정정은 문의 화면에서 접수하며, 운영자가 요청과 권리를 확인한 뒤 처리합니다.'
-              : '• 크리에이터 본인이 정보의 수정이나 삭제를 원하는 경우 프로필 페이지의 삭제 코드(방송국 URL) 기능이나 이메일 문의를 통해 즉시 처리할 수 있습니다.'}
-          </p>
-        </section>
-
-        <section className="space-y-2">
-          <h2 className="text-base font-extrabold text-[#0F172A] flex items-center gap-2 border-b border-[#E2E8F0] pb-2">
-            <Scale className="w-4 h-4 text-[#2563EB]" />
-            4. 면책 조항
-          </h2>
-          <p>
-            스트리머 개인 사정으로 인한 방송 일정 변경, 연기, 취소로 인한 정보 불일치에 대해서는 책임을 지지 않으며, 외부 방송국 링크 내의 콘텐츠는 각 플랫폼의 이용 규칙을 따릅니다.
-          </p>
-        </section>
-      </div>
-    </div>
-  );
+// 광고 도입 가능성과 등록 콘텐츠의 공개 기준을 실제 서비스 범위에 맞춰 안내한다.
+export function TermsPage({ onNavigateHome, currentLang = 'ko' }: TermsPageProps) {
+  const t = (text: string) => translatePortalText(text, currentLang);
+  return <article className="vd-panel vd-form">
+    <button type="button" className="vd-button" onClick={onNavigateHome}>{t('메인 캘린더로 돌아가기')}</button>
+    <h1>{t('이용약관')}</h1>
+    <h2>{t('서비스 이용 목적')}</h2>
+    <p>{t('VDébut은 버튜버의 데뷔 일정, 소개와 방송 활동 정보를 제공하는 독립 서비스입니다. 서비스 운영을 위해 광고가 표시될 수 있습니다.')}</p>
+    <h2>{t('등록 콘텐츠의 공개 기준')}</h2>
+    <p>{t('등록 신청은 운영자 검토 후 공개됩니다. 허위 정보, 사칭, 권리 침해 또는 공개 기준에 맞지 않는 콘텐츠는 보완 요청, 공개 보류 또는 삭제할 수 있습니다.')}</p>
+    <p>{t('소개·이미지·영상과 외부 링크도 검토 대상입니다. 팬 제보에는 확인 가능한 공식 출처를 함께 남겨 주세요.')}</p>
+    <h2>{t('이미지·소개글과 브랜드')}</h2>
+    <p>{t('등록하는 이미지·소개글·영상에는 필요한 사용 권한이 있어야 합니다. 크리에이터의 저작물과 각 플랫폼의 상표는 해당 권리자에게 귀속됩니다.')}</p>
+    <h2>{t('정보 수정·콘텐츠 신고')}</h2>
+    <p>{t('정보나 이미지의 정정·삭제, 사칭과 부적절한 콘텐츠 신고는 문의 화면 또는 ru_0120@naver.com으로 접수합니다. 운영자가 요청 내용과 권리를 확인한 뒤 처리합니다.')}</p>
+    <h2>{t('방송 일정 변경')}</h2>
+    <p>{t('방송 일정은 변경·연기·취소될 수 있습니다. 최신 일정은 크리에이터의 공지를 함께 확인해 주세요. 저장한 일정은 변경된 공지와 대조해 수정해 주세요.')}</p>
+  </article>;
 }

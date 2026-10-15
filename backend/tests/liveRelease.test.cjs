@@ -60,7 +60,7 @@ test('운영·개발·비공개·잘못된 URL의 셸과 검색 설정을 분리
     for (const route of ['/', '/upload', '/creators', '/creators/register', '/about', '/guide', '/contact', '/privacy', '/terms', '/analytics', '/analytics/chzzk', '/analytics/soop']) {
       const response = await call(route); const html = await response.text();
       assert.equal(response.status, 200, route); if (!route.startsWith('/analytics')) assert.match(html, /content="index, follow"/);
-      assert.match(html, /GTM-KWX992HR/); assert.doesNotMatch(html, /dev\.vdebut\.live/);
+      assert.doesNotMatch(html, /gtm\.js|GTM-KWX992HR/); assert.match(html, /G-LS6E68YC5K/); assert.doesNotMatch(html, /dev\.vdebut\.live/);
       assert.match(html, /portal-main-/, route);
       if (!route.startsWith('/analytics')) assert.equal(response.headers.get('X-Robots-Tag'), null);
     }
@@ -113,7 +113,7 @@ test('새 등록은 기존 CMS 목록·삭제·소개 URL·사이트맵까지 �
     db.sqlite.prepare('INSERT INTO portal_sessions VALUES(?,?)').run(hash, Date.now() + 60000);
     const body = { countryCode: 'KR', requesterRole: 'SELF', kind: 'DEBUT', displayName: '테스트 <script>홍보</script>', description: '게임 & 노래 "소개"', platform: 'CHZZK', channelUrl: 'https://chzzk.naver.com/' + 'a'.repeat(32), dateState: 'FIXED', debutDate: '2026-10-20', debutTime: '20:00', timezone: 'Asia/Seoul', contactEmail: 'private@example.com' };
     const registered = await (await call('/api/v1/portal/requests', { method: 'POST', body: JSON.stringify(body) })).json();
-    const result = await (await call(`/api/v1/portal/admin/requests/${registered.id}/decision`, { method: 'POST', headers: { 'X-Admin-Key': token }, body: JSON.stringify({ status: 'APPROVED' }) })).json();
+    const result = await (await call(`/api/v1/portal/admin/requests/${registered.id}/decision`, { method: 'POST', headers: { 'X-Admin-Key': token }, body: JSON.stringify({ status: 'APPROVED', contentChecked: true }) })).json();
     assert.ok(result.slug);
     const events = await (await call('/api/v1/events')).json(); assert.equal(events.total, 1); assert.equal(events.events[0].creator.slug, result.slug);
     const creator = await (await call(`/api/v1/creator/${result.slug}`)).json(); assert.equal(creator.creator.displayName, body.displayName);
@@ -128,20 +128,22 @@ test('새 등록은 기존 CMS 목록·삭제·소개 URL·사이트맵까지 �
 });
 
 const snapshotPath = path.join(root, '.cache/live-release/live-public.json');
-test('운영 공개 데이터 346건은 추가 마이그레이션 후 전부 동일한 소개로 조회한다', { skip: !fs.existsSync(snapshotPath) }, async () => {
+test('기존 원문은 보존하되 미검토 소개는 공개 API·직접 주소·사이트맵에서 제외한다', { skip: !fs.existsSync(snapshotPath) }, async () => {
   const snapshot = JSON.parse(fs.readFileSync(snapshotPath, 'utf8'));
   const { db, call } = await setup(snapshot);
   try {
     const profiles = await (await call('/api/v1/portal/profiles')).json();
-    assert.equal(profiles.profiles.length, snapshot.profiles.length);
-    assert.deepEqual(profiles.profiles.map(row => row.slug).sort(), snapshot.profiles.map(row => row.slug).sort());
+    assert.equal(profiles.profiles.length, 0);
+    const { readPortalProfiles } = (() => { const source = path.join(root, 'backend/src/services/portalProfileRepository.ts'); const loaded = new Module(source, module); loaded._compile(esbuild.buildSync({ entryPoints: [source], bundle: true, platform: 'node', format: 'cjs', write: false }).outputFiles[0].text, source); return loaded.exports; })();
+    const raw = await readPortalProfiles(db);
+    assert.deepEqual(raw.map(row => row.slug).sort(), snapshot.profiles.map(row => row.slug).sort());
     for (const row of snapshot.profiles) {
-      const actual = profiles.profiles.find(profile => profile.slug === row.slug);
+      const actual = raw.find(profile => profile.slug === row.slug);
       assert.equal(actual.displayName, row.display_name); assert.equal(actual.startAtUtc, row.start_at_utc);
     }
-    const response = await call('/creator/' + encodeURIComponent(snapshot.profiles[0].slug)); assert.equal(response.status, 200);
+    const response = await call('/creator/' + encodeURIComponent(snapshot.profiles[0].slug)); assert.equal(response.status, 404);
     const sitemap = await (await call('/sitemap.xml')).text();
-    assert.equal((sitemap.match(/<loc>https:\/\/vdebut.live\/creator\//g) || []).length, snapshot.profiles.length);
+    assert.equal((sitemap.match(/<loc>https:\/\/vdebut.live\/creator\//g) || []).length, 0);
     assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS count FROM portal_requests').get().count, 0);
   } finally { db.sqlite.close(); }
 });

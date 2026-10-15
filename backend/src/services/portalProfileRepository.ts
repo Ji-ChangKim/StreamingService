@@ -1,4 +1,5 @@
 import { PortalProfile, portalWebUrl, portalChannelUrl } from '../../../shared/portal';
+import { isPublicProfile } from '../../../shared/contentReview';
 
 type LegacyRow = { slug: string; display_name: string; description: string; profile_image_url: string; agency_name: string; platform: PortalProfile['platform']; channel_url: string; country_code: string; x_url: string; debut_date: string; debut_time: string; timezone: string; start_at_utc: string };
 
@@ -41,4 +42,14 @@ export async function readPortalProfileBySlug(db: D1Database, slug: string): Pro
      WHERE i.slug = ? LIMIT 1`
   ).bind(slug).first<LegacyRow>();
   return legacy ? legacyProfile(legacy) : null;
+}
+
+// 관리자 원문 조회와 공개 목록을 분리해 검토 보류 자료의 우회 노출을 막는다.
+export async function readPublicPortalProfiles(db: D1Database): Promise<PortalProfile[]> {
+  return (await readPortalProfiles(db)).filter(isPublicProfile);
+}
+
+// 직접 URL·검색 메타데이터·구형 API에도 같은 공개 기준을 적용한다.
+export async function readPublicPortalProfileBySlug(db: D1Database, slug: string): Promise<PortalProfile | null> {
+  return Promise.resolve(await readPortalProfileBySlug(db, slug)).then((profile) => profile && isPublicProfile(profile) ? profile : null);
 }

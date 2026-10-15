@@ -1,6 +1,6 @@
 import { PortalProfile } from '../../../shared/portal';
 import { fetchEventsFromD1 } from './eventDbService';
-import { readPortalProfiles } from './portalProfileRepository';
+import { readPublicPortalProfiles } from './portalProfileRepository';
 
 // 기존 공개 API와 알림에서도 승인된 새 소개의 실제 일정 상태를 유지한다.
 export function portalProfileEvent(profile: PortalProfile) {
@@ -16,7 +16,7 @@ export function portalProfileEvent(profile: PortalProfile) {
 
 // 공개 소개와 데뷔 목록이 서로 다른 명단을 반환하지 않도록 같은 자료에서 병합한다.
 export async function readUnifiedDebutEvents(db: D1Database) {
-  const [legacy, profiles] = await Promise.all([fetchEventsFromD1(db), readPortalProfiles(db)]);
+  const [legacy, profiles] = await Promise.all([fetchEventsFromD1(db), readPublicPortalProfiles(db)]);
   const identifiers = new Map((legacy || []).map((event) => [event.creator.slug, event.id]));
   return profiles.flatMap((profile) => {
     const event = portalProfileEvent(profile);

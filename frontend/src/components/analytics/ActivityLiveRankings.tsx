@@ -1,3 +1,5 @@
+// 외부 제목의 의심 표현을 공개 화면에서 제외한다.
+import { publicBroadcastTitle } from '../../../../shared/contentReview';
 import { useEffect, useState, type CSSProperties } from 'react';
 import { ArrowUpRight, RefreshCw, Users } from 'lucide-react';
 import type { StatisticsBroadcast } from '../../../../shared/broadcastStatistics';
@@ -31,7 +33,7 @@ function LiveBroadcastRow({ row, rank, onOpen }: { row: StatisticsBroadcast; ran
   return <li className="ad-live-row"><span className={`ad-rank ${rank <= 3 ? 'ad-rank-top' : ''}`}>{rank}</span>
     <span className="ad-live-avatar">{image ? <img src={image} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} /> : <Users size={18} />}</span>
     <div className="ad-live-identity">{streamer ? <a href={`${activityStreamerPath(streamer.channelKey!)}?name=${encodeURIComponent(streamer.name)}`} className="ad-channel-link" onClick={(event) => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); onOpen(streamer); }}>{streamer.name}</a> : <strong>{row.channelName || '채널 정보 없음'}</strong>}
-      <p title={row.title}>{row.title}</p><div className="ad-live-tags"><StatisticsBrand platform={row.platform} label={false} /><span>{row.categoryName}</span></div></div>
+      <p title={publicBroadcastTitle(row.title)}>{publicBroadcastTitle(row.title)}</p><div className="ad-live-tags"><StatisticsBrand platform={row.platform} label={false} /><span>{row.categoryName}</span></div></div>
     <div className="ad-live-count"><strong>{countFormat(row.viewers)}<small>명</small></strong>{liveUrl && <a href={liveUrl} target="_blank" rel="noopener noreferrer" aria-label={`${row.channelName || '방송'} 방송 보기 (새 창)`}>방송 보기 <ArrowUpRight size={11} /></a>}</div>
   </li>;
 }

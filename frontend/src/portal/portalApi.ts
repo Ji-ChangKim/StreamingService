@@ -26,13 +26,12 @@ export function usePortalProfiles(enabled = true) {
   const snapshot = useRef<{ at: number; revision: number } | null>(null);
   const refresh = useCallback(() => setAttempt((value) => value + 1), []);
   useEffect(() => {
-    // 한 목록만 보관하고 30초 이내 화면 왕복에는 같은 참조를 재사용한다.
-    if (!enabled || (snapshot.current?.revision === attempt && Date.now() - snapshot.current.at < 30000)) { setLoading(false); return; }
+    // 공개 보류가 반영되도록 화면 진입 시 서버의 최신 공개 목록을 읽는다.
+    if (!enabled) { setLoading(false); return; }
     const abort = new AbortController();
-    const force = attempt > 0 && snapshot.current?.revision !== attempt;
     setLoading(!snapshot.current); setError('');
     // 새 캐시 정책의 주소를 구분해 이전 브라우저 캐시의 긴 유효 시간을 승계하지 않는다.
-    portalApi<{ profiles?: PortalProfile[] }>('/profiles?version=2', { signal: abort.signal, cache: force ? 'reload' : 'default' }).then((data) => { if (!abort.signal.aborted) { snapshot.current = { at: Date.now(), revision: attempt }; setProfiles(Array.isArray(data.profiles) ? data.profiles : []); } }).catch((e: Error) => { if (!abort.signal.aborted) setError(e.message); }).finally(() => { if (!abort.signal.aborted) setLoading(false); });
+    portalApi<{ profiles?: PortalProfile[] }>('/profiles?version=3', { signal: abort.signal, cache: 'no-store' }).then((data) => { if (!abort.signal.aborted) { snapshot.current = { at: Date.now(), revision: attempt }; setProfiles(Array.isArray(data.profiles) ? data.profiles : []); } }).catch((e: Error) => { if (!abort.signal.aborted) { setProfiles([]); setError(e.message); } }).finally(() => { if (!abort.signal.aborted) setLoading(false); });
     return () => abort.abort();
   }, [attempt, enabled]);
   return { profiles, loading, error, refresh };

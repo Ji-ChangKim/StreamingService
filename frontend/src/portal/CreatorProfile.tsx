@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { ArrowRight, ArrowUpRight, CalendarPlus, Clock, Play, ShieldCheck } from 'lucide-react';
-import { PortalChannelDetails, PortalProfile, PORTAL_PLATFORMS, portalChannelKey, portalDateKey, portalWebUrl } from '../../../shared/portal';
+import { PortalProfile, PORTAL_PLATFORMS, portalChannelKey, portalDateKey, portalWebUrl } from '../../../shared/portal';
 import { PROFILE_VIDEO_LABELS, profileDebutMembers, profileDebutPhase, profileLinkKey, profileVideoId } from '../../../shared/profilePresentation';
 import { activityChannelKey } from '../../../shared/broadcastActivity';
 import { dateTimeFormatter } from '../../../shared/dateTimeFormatter';
 import { CreatorCard, CopyButton, FavoriteButton, PlatformBadge, PortalAvatar, PortalLink, downloadPortalSchedule, portalSchedule } from './PortalUi';
 import { ProfileCover } from './ProfileCover';
-import { useChannelDetails } from './useChannelDetails';
 import { getPortalLanguage, t, usePortalLocale } from './portalLocale';
 import './profilePresentation.css';
 
@@ -123,16 +122,16 @@ function ProfileDebutGroup({ profile, profiles, onNavigate }: { profile: PortalP
 }
 
 // 공개 화면과 미리보기에서 동일한 소개·일정·미디어 배치를 사용한다.
-export function ProfileExperience({ profile, profiles = [], onNavigate, details, preview = false }: {
-  profile: PortalProfile; profiles?: PortalProfile[]; onNavigate: (path: string) => void; details?: PortalChannelDetails; preview?: boolean;
+export function ProfileExperience({ profile, profiles = [], onNavigate, preview = false }: {
+  profile: PortalProfile; profiles?: PortalProfile[]; onNavigate: (path: string) => void; preview?: boolean;
 }) {
   usePortalLocale();
   const now = useProfileClock(profile, preview);
-  const bannerUrl = portalWebUrl(profile.bannerUrl || '') || details?.bannerUrl || '';
-  const banner = { bannerUrl, mobileBannerUrl: profile.bannerUrl ? '' : details?.mobileBannerUrl || '', description: '' };
+  const bannerUrl = portalWebUrl(profile.bannerUrl || '');
+  const banner = { bannerUrl, mobileBannerUrl: '', description: '' };
   const channelKey = activityChannelKey(profile.platform, profile.channelUrl);
   // 설명이 없을 때는 빈 소개 카드와 반복 안내를 만들지 않는다.
-  const introduction = profile.description || details?.description;
+  const introduction = profile.description;
   const IdentityHeading = preview ? 'h2' : 'h1';
   const platformName = PORTAL_PLATFORMS.find((platform) => platform.id === profile.platform)?.label || profile.platform;
   // 추천 제목과 실제 목록의 플랫폼을 맞추고 같은 팀 멤버는 별도 영역에 남긴다.
@@ -163,12 +162,12 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, details,
       {!preview && <ProfileDebutGroup profile={profile} profiles={profiles} onNavigate={onNavigate} />}
     </div>
     {!preview && channelKey && <PortalLink to={`/analytics/streamer/${encodeURIComponent(channelKey)}?returnTo=${encodeURIComponent(`/creator/${profile.slug}`)}`} className="vd-profile-activity" onNavigate={onNavigate}>{t('방송 활동 기록')}<ArrowRight size={15} /></PortalLink>}
+    {!preview && <PortalLink to={`/contact?pageUrl=${encodeURIComponent(`https://vdebut.live/creator/${profile.slug}`)}`} onNavigate={onNavigate} className="vd-text-button">{t('정보 수정·콘텐츠 신고')}</PortalLink>}
     {!preview && related.length > 0 && <section className="vd-section vd-profile-related"><div className="vd-section-heading"><h2>{t('{0}의 버튜버들도 만나보세요!', [platformName])}</h2></div><div className="vd-cards">{related.map((p) => <CreatorCard profile={p} key={p.slug} onNavigate={onNavigate} />)}</div></section>}
   </article>;
 }
 
-// 외부 배너 조회는 공개 상세에서만 실행해 등록 미리보기에 영향을 주지 않는다.
+// 공개 상세도 운영자가 검토한 저장 자료만 표시한다.
 export function ProfilePage({ profile, profiles, onNavigate }: { profile: PortalProfile; profiles: PortalProfile[]; onNavigate: (path: string) => void }) {
-  const details = useChannelDetails(profile);
-  return <ProfileExperience profile={profile} profiles={profiles} onNavigate={onNavigate} details={details} />;
+  return <ProfileExperience profile={profile} profiles={profiles} onNavigate={onNavigate} />;
 }

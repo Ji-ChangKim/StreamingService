@@ -10,7 +10,10 @@
 .vd-profile-meta .vd-platform { font-size: 12px; }
 .vd-profile-meta .vd-profile-agency { color: #334155; font-size: 14px; font-weight: 650; }
 /* 저장·공유는 배너 쪽에 두어 이름 다음에 소개가 바로 이어지게 한다. */
-.vd-profile-tools { position: absolute; top: 0; right: 32px; display: flex; align-items: center; gap: 6px; }
+.vd-profile-tools { position: absolute; top: -14px; right: 32px; display: flex; align-items: center; gap: 10px; }
+.vd-profile-tools .vd-icon-button { width: 40px; height: 40px; background: rgba(255, 255, 255, 0.95); border: 1px solid #dce3ee; border-radius: 9px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+.vd-profile-tools .vd-icon-button:hover { background: #f6f9fd; border-color: #b7c8e1; }
+.vd-profile-tools .vd-button { min-height: 40px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
 .vd-profile-identity .vd-tags { margin: 12px 0 0; }
 /* 일정은 이미 본 캘린더의 보조 정보로 낮추고 소개 다음에 채널 방문을 연결한다. */
 .vd-debut-callout { margin: 0 32px 28px; padding: 18px 0 0; border-top: 1px solid #e4eaf2; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
@@ -108,8 +111,9 @@
   .vd-profile-identity-copy h1,.vd-profile-identity-copy h2 { font-size: 28px; margin: 0 0 7px; }
   .vd-profile-headline { font-size: 14px; }
   .vd-profile-experience .vd-profile-meta { font-size: 12px; gap: 8px; }
-  .vd-profile-tools { top: -16px; right: 16px; }
+  .vd-profile-tools { top: -16px; right: 16px; gap: 8px; }
   .vd-profile-tools .vd-button { font-size: 11px; min-height: 34px; }
+  .vd-profile-tools .vd-icon-button { width: 34px; height: 34px; }
   .vd-profile-about { padding: 0 16px 20px; }
   .vd-profile-about .vd-intro-text { font-size: 15px; }
   .vd-debut-callout { margin: 0 16px 20px; padding: 16px 0 0; gap: 14px; }

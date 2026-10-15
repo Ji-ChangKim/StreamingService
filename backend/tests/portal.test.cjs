@@ -39,7 +39,7 @@ test('대표 영상·채널·공지의 저장 흐름과 관리자 전용 데뷔 
   assert.equal(payload.debutGroupId, undefined); assert.equal(payload.noticeUrl, details.noticeUrl);
   const adminToken = 'c'.repeat(64), admin = { 'X-Admin-Key': adminToken };
   db.sqlite.prepare('INSERT INTO portal_sessions VALUES(?,?)').run(await portalTokenHash(adminToken), Date.now() + 60000);
-  const approved = await (await call(`/admin/requests/${submission.id}/decision`, 'POST', { status: 'APPROVED' }, admin)).json();
+  const approved = await (await call(`/admin/requests/${submission.id}/decision`, 'POST', { status: 'APPROVED', contentChecked: true }, admin)).json();
   const registered = (await readPortalProfiles(db))[0];
   for (const field of ['headline', 'bannerUrl', 'websiteUrl', 'cafeUrl', 'noticeUrl', 'xUrl', 'videoUrl', 'videoTitle', 'videoKind']) assert.equal(registered[field], details[field]);
   assert.deepEqual(registered.additionalChannels, details.additionalChannels);
@@ -88,7 +88,7 @@ test('같은 제출 재시도는 하나의 접수이며 SOOP 주소 별칭의 �
   assert.equal((await submit({ ...body, displayName: '다른 내용' })).status, 409);
   assert.equal((await submit({ ...body, channelUrl: 'https://ch.sooplive.co.kr/test_vt?from=share' }, crypto.randomUUID())).status, 409);
   const adminToken = 'b'.repeat(64); db.sqlite.prepare('INSERT INTO portal_sessions VALUES(?,?)').run(await portalTokenHash(adminToken), Date.now() + 60000);
-  assert.equal((await portalApi.request(`/admin/requests/${first.id}/decision`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminToken }, body: JSON.stringify({ status: 'APPROVED' }) }, env)).status, 200);
+  assert.equal((await portalApi.request(`/admin/requests/${first.id}/decision`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminToken }, body: JSON.stringify({ status: 'APPROVED', contentChecked: true }) }, env)).status, 200);
   assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS n FROM portal_pending_channels').get().n, 0);
   assert.equal((await submit({ ...body, channelUrl: 'https://bj.afreecatv.com/test_vt' }, crypto.randomUUID())).status, 409);
   assert.equal((await submit()).status, 200);
@@ -121,66 +121,58 @@ test('관리자 정정·이전 내용 복구·동시 수정 차단과 비공개 
   db.sqlite.close();
 });
 
-test('공개 소개만 짧게 캐시하고 관리자·조회 실패 응답은 저장하지 않는다', async () => {
+// 보류 직후에도 캐시된 공개 원문을 반환하지 않는다.
+test('공개 목록·관리자·조회 실패는 저장하지 않는다', async () => {
   const db = database();
-  const original = global.caches;
-  const stored = new Map(), pending = [];
-  global.caches = { default: { async match(key) { return stored.get(key.url)?.clone(); }, async put(key, response) { stored.set(key.url, response.clone()); } } };
-  const env = { DB: db, PORTAL_ENABLED: 'true' };
-  const ctx = { waitUntil(promise) { pending.push(promise); }, passThroughOnException() {} };
-  const call = (route, headers = {}, bindings = env) => portalApi.request(`https://dev.vdebut.live${route}`, { headers }, bindings, ctx);
-  try {
-    const first = await call('/profiles');
-    assert.equal(first.headers.get('X-VD-Cache'), 'MISS');
-    await Promise.all(pending);
-    const hit = await call('/profiles');
-    assert.equal(hit.headers.get('X-VD-Cache'), 'HIT');
-    assert.match(hit.headers.get('Cache-Control'), /^public, max-age=(29|30)$/);
-    assert.deepEqual(await hit.json(), { profiles: [] });
-    const admin = await call('/admin/requests');
-    assert.equal(admin.status, 401); assert.equal(admin.headers.get('Cache-Control'), 'no-store');
-    assert.equal(stored.size, 1);
-    const unavailable = { ...env, DB: { prepare() { throw new Error('unavailable'); } } };
-    const error = await call('/profiles', { 'Cache-Control': 'no-cache' }, unavailable);
-    assert.equal(error.status, 503); assert.equal(error.headers.get('Cache-Control'), 'no-store');
-    assert.equal(stored.size, 1);
-  } finally { global.caches = original; db.sqlite.close(); }
+  const response = await portalApi.request('/profiles', {}, { DB: db, PORTAL_ENABLED: 'true' });
+  assert.equal(response.headers.get('Cache-Control'), 'no-store');
+  assert.deepEqual(await response.json(), { profiles: [] });
+  const admin = await portalApi.request('/admin/requests', {}, { DB: db, PORTAL_ENABLED: 'true' });
+  assert.equal(admin.status, 401); assert.equal(admin.headers.get('Cache-Control'), 'no-store');
+  const error = await portalApi.request('/profiles', {}, { DB: { prepare() { throw new Error('unavailable'); } }, PORTAL_ENABLED: 'true' });
+  assert.equal(error.status, 503); assert.equal(error.headers.get('Cache-Control'), 'no-store');
+  db.sqlite.close();
 });
 
-test('배너는 등록된 SOOP 채널에서만 조회하고 캐시 적중 시 외부 요청을 반복하지 않는다', async () => {
-  const db = database();
-  db.sqlite.exec("INSERT INTO streamerChannel VALUES(1,'SOOP','https://www.sooplive.com/station/doosiki0505'); INSERT INTO streamerChannel_info(slug,display_name,channel_id) VALUES('gangdoosik','강두식',1)");
-  const originalFetch = global.fetch, originalCaches = global.caches;
-  const stored = new Map(), pending = [];
-  let calls = 0;
-  global.caches = { default: { async match(key) { return stored.get(key.url)?.clone(); }, async put(key, response) { stored.set(key.url, response.clone()); } } };
-  global.fetch = async () => { calls++; return Response.json({ station: {userId: 'doosiki0505'}, channelArt: {pcFilename: 'SKIN/32674319/53531790001551903.jpg'}, display: {profileText: '실제 방송국 소개'}, userAuth: {isOwner: false} }); };
-  const ctx = {waitUntil(promise) {pending.push(promise);}, passThroughOnException() {}};
-  const call = route => portalApi.request(`https://dev.vdebut.live${route}`, {}, {DB: db, PORTAL_ENABLED: 'true'}, ctx);
-  try {
-    const first = await call('/profiles/gangdoosik/banner');
-    assert.equal(first.status, 200);
-    assert.equal(first.headers.get('Cache-Control'), 'public, max-age=600');
-    assert.deepEqual(await first.json(), {bannerUrl: 'https://stimg.sooplive.com/SKIN/32674319/53531790001551903.jpg', mobileBannerUrl: '', description: '실제 방송국 소개'});
-    await Promise.all(pending);
-    assert.equal((await call('/profiles/gangdoosik/banner')).headers.get('X-VD-Cache'), 'HIT');
-    assert.equal(calls, 1);
-    assert.equal((await call('/profiles/unknown/banner')).status, 404);
-    assert.equal(calls, 1);
-  } finally { global.fetch = originalFetch; global.caches = originalCaches; db.sqlite.close(); }
-});
-
-test('배너 API 실패는 재시도 가능하게 저장하지 않고 다른 플랫폼에는 외부 요청하지 않는다', async () => {
-  const db = database();
-  db.sqlite.exec("INSERT INTO streamerChannel VALUES(1,'SOOP','https://www.sooplive.com/station/doosiki0505'),(2,'CHZZK','https://chzzk.naver.com/abc'); INSERT INTO streamerChannel_info(slug,display_name,channel_id) VALUES('soop','숲',1),('chzzk','치지직',2)");
+// 공개 배너는 검토된 저장 자료만 사용하고 외부 채널을 재조회하지 않는다.
+test('미검토 배너는 404이며 승인된 저장 배너만 반환한다', async () => {
+  const db = database(), env = { DB: db, PORTAL_ENABLED: 'true' };
+  const { reviewedProfile } = load('../../shared/contentReview.ts');
+  const stored = reviewedProfile({ ...cleanPortalProfile(profile), slug: 'reviewed', bannerUrl: 'https://example.com/reviewed.jpg' }, 'APPROVED', '2026-10-15');
+  db.sqlite.prepare('INSERT INTO portal_profiles(slug,channel_url,data) VALUES(?,?,?)').run(stored.slug, stored.channelUrl, JSON.stringify(stored));
   const original = global.fetch;
-  global.fetch = async () => { throw new Error('upstream timeout'); };
+  global.fetch = async () => { throw new Error('공개 배너가 외부 정보를 조회하면 안 됩니다.'); };
   try {
-    const error = await portalApi.request('/profiles/soop/banner', {}, {DB: db, PORTAL_ENABLED: 'true'});
-    assert.equal(error.status, 503); assert.equal(error.headers.get('Cache-Control'), 'no-store');
-    const other = await portalApi.request('/profiles/chzzk/banner', {}, {DB: db, PORTAL_ENABLED: 'true'});
-    assert.equal(other.status, 200); assert.deepEqual(await other.json(), {bannerUrl: '', mobileBannerUrl: '', description: ''});
+    const response = await portalApi.request('/profiles/reviewed/banner', {}, env);
+    assert.equal(response.status, 200); assert.equal(response.headers.get('Cache-Control'), 'no-store');
+    assert.deepEqual(await response.json(), { bannerUrl: stored.bannerUrl, mobileBannerUrl: '', description: '' });
+    assert.equal((await portalApi.request('/profiles/unknown/banner', {}, env)).status, 404);
+    db.sqlite.prepare('UPDATE portal_profiles SET data=? WHERE slug=?').run(JSON.stringify({ ...stored, description: '수정 후 미검토' }), stored.slug);
+    assert.equal((await portalApi.request('/profiles/reviewed/banner', {}, env)).status, 404);
   } finally { global.fetch = original; db.sqlite.close(); }
+});
+
+// 기존 자료 검토·신청 승인·보류·재검토는 관리자에게만 허용한다.
+test('미검토 원문은 관리자에게만 보이며 공개는 확인란과 일치하는 검토 내용을 요구한다', async () => {
+  const db = database(), env = { DB: db, PORTAL_ENABLED: 'true' };
+  const token = 'd'.repeat(64), admin = { 'X-Admin-Key': token };
+  db.sqlite.prepare('INSERT INTO portal_sessions VALUES(?,?)').run(await portalTokenHash(token), Date.now() + 60000);
+  const call = (route, method = 'GET', body, headers = {}) => portalApi.request(route, { method, headers: { 'Content-Type': 'application/json', ...headers }, body: body ? JSON.stringify(body) : undefined }, env);
+  const submission = await (await call('/requests', 'POST', { ...profile, kind: 'DEBUT', contentReview: { state: 'APPROVED' } })).json();
+  assert.equal((await call(`/admin/requests/${submission.id}/decision`, 'POST', { status: 'APPROVED' }, admin)).status, 400);
+  assert.equal((await call(`/admin/requests/${submission.id}/decision`, 'POST', { status: 'APPROVED', contentChecked: true }, admin)).status, 200);
+  const listing = await (await call('/admin/profiles', 'GET', undefined, admin)).json();
+  const item = listing.profiles[0];
+  assert.equal((await (await call('/profiles')).json()).profiles.length, 1);
+  const edit = { profile: item.profile, revision: item.revision, reason: '콘텐츠 재검토', publicationState: 'APPROVED' };
+  assert.equal((await call(`/admin/profiles/${item.profile.slug}`, 'PUT', edit, admin)).status, 400);
+  assert.equal((await call(`/admin/profiles/${item.profile.slug}`, 'PUT', { ...edit, publicationState: 'HOLD' }, {})).status, 401);
+  assert.equal((await call(`/admin/profiles/${item.profile.slug}`, 'PUT', { ...edit, publicationState: 'HOLD' }, admin)).status, 200);
+  assert.equal((await (await call('/profiles')).json()).profiles.length, 0);
+  assert.equal((await readPortalProfiles(db)).length, 1);
+  const current = (await (await call('/admin/profiles', 'GET', undefined, admin)).json()).profiles[0];
+  assert.equal((await call(`/admin/profiles/${current.profile.slug}`, 'PUT', { ...edit, profile: { ...current.profile, displayName: '【初配信】新人VTuber' }, revision: current.revision, contentChecked: true }, admin)).status, 400);
+  db.sqlite.close();
 });
 
 // 시간대 변환과 미정 상태는 실제 달력의 날짜를 훼손하지 않는다.
@@ -233,19 +225,19 @@ test('접수 키·관리자 승인·소유권 키로 등록과 수정 권한을 
   assert.equal(pending.payload.displayName, profile.displayName);
   assert.equal(pending.payload.channelUrl, profile.channelUrl);
   assert.equal(pending.payload.debutDate, profile.debutDate);
-  assert.equal((await call(`/admin/requests/${submission.id}/decision`, 'POST', { status: 'APPROVED' }, admin)).status, 200);
+  assert.equal((await call(`/admin/requests/${submission.id}/decision`, 'POST', { status: 'APPROVED', contentChecked: true }, admin)).status, 200);
   const after = await (await call('/profiles')).json(); const registered = after.profiles[0];
   assert.equal(registered.displayName, profile.displayName); assert.equal(registered.ownerVerified, false);
-  assert.equal((await call(`/admin/requests/${submission.id}/decision`, 'POST', { status: 'APPROVED' }, admin)).status, 409);
+  assert.equal((await call(`/admin/requests/${submission.id}/decision`, 'POST', { status: 'APPROVED', contentChecked: true }, admin)).status, 409);
   assert.equal((await call(`/profiles/${registered.slug}`, 'PUT', profile)).status, 403);
   assert.equal((await call(`/profiles/${registered.slug}`, 'PUT', profile, { 'X-Request-Key': submission.token })).status, 403);
   const claim = await (await call('/requests', 'POST', { kind: 'CLAIM', slug: registered.slug, evidenceUrl: profile.channelUrl, message: '공식 채널에 확인 문구를 게시했습니다.' })).json();
-  assert.equal((await call(`/admin/requests/${claim.id}/decision`, 'POST', { status: 'APPROVED' }, admin)).status, 400);
+  assert.equal((await call(`/admin/requests/${claim.id}/decision`, 'POST', { status: 'APPROVED', contentChecked: true }, admin)).status, 400);
   assert.equal((await call(`/admin/requests/${claim.id}/decision`, 'POST', { status: 'APPROVED', proofChecked: true }, admin)).status, 200);
   const owner = { 'X-Request-Key': claim.token };
   assert.equal((await call(`/profiles/${registered.slug}`, 'PUT', { ...profile, channelUrl: 'https://chzzk.naver.com/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' }, owner)).status, 400);
   assert.equal((await call(`/profiles/${registered.slug}`, 'PUT', { ...profile, description: '소개 수정 완료' }, owner)).status, 200);
-  const updated = await (await call('/profiles')).json(); assert.equal(updated.profiles[0].description, '소개 수정 완료');
+  const updated = await (await call('/profiles')).json(); assert.equal(updated.profiles.length, 0); assert.equal((await readPortalProfiles(db))[0].description, '소개 수정 완료');
   await call('/admin/logout', 'POST', {}, admin); assert.equal((await call('/admin/requests', 'GET', undefined, admin)).status, 401);
   db.sqlite.close();
 });
