@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { generateSuggestedSlug } from '../../utils/slugUtils';
 import { AvatarImage } from '../calendar/AvatarImage';
+import { profileAgencyName } from '../../../../shared/profilePresentation';
 
 interface SubmissionEditModalProps {
   isOpen: boolean;
@@ -72,14 +73,10 @@ export function SubmissionEditModal({
     setDebutTime(submission.debutTime || '20:00');
     setTimezone(submission.timezone || 'Asia/Seoul');
 
-    const isAgency = Boolean(
-      submission.agencyName &&
-      submission.agencyName.trim() &&
-      submission.agencyName !== '개인세' &&
-      !submission.agencyName.toLowerCase().includes('indie')
-    );
+    // 개인 활동 구분값은 소속 입력란에 넣지 않는다.
+    const isAgency = Boolean(profileAgencyName(submission.agencyName));
     setAgencyType(isAgency ? 'AGENCY' : 'INDIE');
-    setAgencyName(isAgency ? submission.agencyName : '');
+    setAgencyName(profileAgencyName(submission.agencyName));
     setGroupName(submission.groupName || '');
     setVideoUrl(submission.videoUrl || '');
     setWebsiteUrl(submission.websiteUrl || '');
@@ -442,7 +439,7 @@ export function SubmissionEditModal({
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  개인세
+                  개인 활동
                 </button>
                 <button
                   type="button"

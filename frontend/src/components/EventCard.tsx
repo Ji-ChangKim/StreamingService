@@ -2,6 +2,7 @@ import { Clock, Download, Tv } from 'lucide-react';
 import { DebutEvent } from '../types';
 import { formatLocalTime } from '../utils/dateUtils';
 import { checkIsEventLive } from '../utils/eventUtils';
+import { profileAgencyName } from '../../../shared/profilePresentation';
 
 interface EventCardProps {
   event: DebutEvent;
@@ -16,6 +17,8 @@ export function EventCard({
 }: EventCardProps) {
   const formattedLocalTime = formatLocalTime(event.startAtUtc, selectedTimezone);
   const isLive = checkIsEventLive(event.startAtUtc);
+  // 일정 카드도 실제 그룹·소속사 이름이 있을 때만 소속을 표시한다.
+  const agency = profileAgencyName(event.creator.agency);
 
   const primaryLink = event.links[0]?.url || '#';
   const primaryPlatform = event.links[0]?.platform || 'YOUTUBE';
@@ -86,9 +89,9 @@ export function EventCard({
             <h3 className="text-base font-semibold text-[#080808] leading-snug line-clamp-1 tracking-[-0.16px]">
               {event.creator.displayName}
             </h3>
-            <p className="text-xs font-normal text-[#5A5A5A] mt-0.5">
-              소속: <span className="text-[#080808] font-medium">{event.creator.agency || 'Indie'}</span>
-            </p>
+            {agency && <p className="text-xs font-normal text-[#5A5A5A] mt-0.5">
+              소속: <span className="text-[#080808] font-medium">{agency}</span>
+            </p>}
             <div className="flex items-center gap-1 mt-1">
               {event.creator.languages.map((lang) => (
                 <span

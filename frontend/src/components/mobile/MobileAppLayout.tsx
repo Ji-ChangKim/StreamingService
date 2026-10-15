@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { profileAgencyName } from '../../../../shared/profilePresentation';
 import { DebutEvent } from '../../types';
 import { Language } from '../../utils/i18n';
 import { MobileAppHeader } from './MobileAppHeader';
@@ -54,7 +55,8 @@ export function MobileAppLayout({
         map.set(evt.creator.displayName, {
           name: evt.creator.displayName,
           profile_image_url: evt.creator.avatarUrl,
-          agency: evt.creator.agency,
+          // 목록과 검색에 공개 가능한 실제 소속명만 사용한다.
+          agency: profileAgencyName(evt.creator.agency),
           channel_url: evt.links.find(l => l.isPrimary)?.url || evt.links[0]?.url,
         });
       }
@@ -185,7 +187,7 @@ export function MobileAppLayout({
                 />
                 <div className="min-w-0 w-full">
                   <h4 className="text-xs font-black text-slate-900 truncate font-['Outfit']">{creator.name}</h4>
-                  <p className="text-[10px] text-slate-500 font-medium truncate">{creator.agency || 'Indie'}</p>
+                  {creator.agency && <p className="text-[10px] text-slate-500 font-medium truncate">{creator.agency}</p>}
                 </div>
                 {creator.chzzk_channel_id && (
                   <a

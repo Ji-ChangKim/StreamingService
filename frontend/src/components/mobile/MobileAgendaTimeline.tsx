@@ -2,6 +2,7 @@ import { ExternalLink, CalendarX, Sparkles, Clock } from 'lucide-react';
 import { DebutEvent } from '../../types';
 import { getAvatarUrl } from '../../utils/avatarUtils';
 import { formatTimeInTimezone } from '../../utils/dateUtils';
+import { profileAgencyName } from '../../../../shared/profilePresentation';
 
 interface MobileAgendaTimelineProps {
   selectedDateStr: string;
@@ -66,6 +67,8 @@ export function MobileAgendaTimeline({
         events.map((evt) => {
           const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
           const startTime = formatTimeInTimezone(evt.startAtUtc, selectedTimezone);
+          // 모바일 일정도 개인 활동 구분값 대신 실제 소속명만 표시한다.
+          const agency = profileAgencyName(evt.creator.agency);
 
           // 이벤트 유형 뱃지 감지 (DEBUT / STREAM / COLLAB)
           const isCollab = evt.title?.includes('콜라보') || evt.title?.includes('합방') || evt.creator.displayName?.includes('&');
@@ -127,9 +130,9 @@ export function MobileAgendaTimeline({
 
                 {/* 하단: 소속 agency 및 바로가기 */}
                 <div className="flex items-center justify-between gap-1 pt-1 border-t border-slate-200">
-                  <span className="text-[11px] text-slate-700 font-bold truncate">
-                    {evt.creator.agency || 'Indie'}
-                  </span>
+                  {agency && <span className="text-[11px] text-slate-700 font-bold truncate">
+                    {agency}
+                  </span>}
                   {primaryLink?.url && (
                     <a
                       href={primaryLink.url}

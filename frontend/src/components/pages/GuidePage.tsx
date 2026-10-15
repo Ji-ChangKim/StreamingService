@@ -74,7 +74,7 @@ export function GuidePage({ onNavigateHome, onOpenSubmitModal }: GuidePageProps)
               <strong>등록 정보 작성:</strong> 플랫폼을 [SOOP]으로 선택하고 방송국 URL, 활동명(닉네임), 첫 방송 날짜 및 시작 시간을 설정합니다.
             </li>
             <li>
-              <strong>소속 구분:</strong> 개인세인 경우 [개인세]를 선택하거나, 버튜버 크루/소속사가 있다면 소속사명을 입력하시면 프로필에 뱃지로 함께 표시됩니다.
+              <strong>소속 구분:</strong> 개인 활동이면 소속 구분에서 [개인 활동]을 선택하세요. 그룹·소속사가 있다면 이름을 입력하세요. 입력한 실제 그룹·소속명만 프로필에 표시됩니다.
             </li>
           </ol>
         </div>

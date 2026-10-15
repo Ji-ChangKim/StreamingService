@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Save, Calendar, Clock, Link, Sparkles, User, FileText, RefreshCw, CheckCircle2, AlertCircle, Image as ImageIcon } from 'lucide-react';
 import { CreatorProfileData, updateCreatorProfile } from '../../services/creatorService';
+import { profileAgencyName } from '../../../../shared/profilePresentation';
 
 interface CreatorEditModalProps {
   profile: CreatorProfileData;
@@ -29,7 +30,8 @@ export function CreatorEditModal({ profile, isOpen, onClose, onSuccess }: Creato
   }
 
   const [displayName, setDisplayName] = useState(profile.displayName || '');
-  const [agencyName, setAgencyName] = useState(profile.agencyName || '개인세');
+  // 개인 활동이면 소속 입력란을 비워 두어 구분값이 공개 소속으로 재입력되지 않게 한다.
+  const [agencyName, setAgencyName] = useState(profileAgencyName(profile.agencyName));
   const [debutDate, setDebutDate] = useState(initialDate);
   const [debutTime, setDebutTime] = useState(initialTime);
   const channelUrl = primaryChannel?.channelUrl || '';
@@ -191,7 +193,7 @@ export function CreatorEditModal({ profile, isOpen, onClose, onSuccess }: Creato
                 type="text"
                 value={agencyName}
                 onChange={(e) => setAgencyName(e.target.value)}
-                placeholder="예: 개인세, 이세돌, V-LUP 등"
+                placeholder="그룹·소속사가 없으면 비워 두세요."
                 className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-[8px] focus:outline-hidden focus:border-[#2563EB] font-bold text-slate-900"
               />
             </div>

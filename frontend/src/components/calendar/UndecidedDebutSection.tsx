@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Calendar, HelpCircle, ExternalLink, PlusCircle, Edit3 } from 'lucide-react';
 import { DebutEvent } from '../../types';
 import { AvatarImage } from './AvatarImage';
+import { profileAgencyName } from '../../../../shared/profilePresentation';
 import { getCountryBadge } from '../../utils/countryDetector';
 import { filterEventsByPlatform, filterEventsByQuery, filterEventsByCountry } from '../../utils/eventUtils';
 
@@ -150,8 +151,8 @@ export function UndecidedDebutSection({
             const platform = primaryLink?.platform || 'CHZZK';
             const channelUrl = primaryLink?.url || 'https://vdebut.live';
             const countryBadge = getCountryBadge(evt.creator.countryCode);
-            const agency = evt.creator.agency?.trim();
-            const hasRealAgency = agency && agency !== '개인세' && agency !== 'None';
+            // 미정 일정도 다른 공개 카드와 같은 소속 표시 기준을 따른다.
+            const agency = profileAgencyName(evt.creator.agency);
             const isTimeTbd = evt.tbdType === 'TIME_TBD' || evt.description?.includes('시간 미정');
             let tbdLabel = `✨ ${monthNumber}월 중 데뷔 예정 (일자 미정)`;
             if (isTimeTbd) {
@@ -208,13 +209,9 @@ export function UndecidedDebutSection({
                       >
                         {evt.creator.displayName}
                       </h3>
-                      <p className="text-[11px] text-slate-500 truncate mt-0.5">
-                        {hasRealAgency ? (
-                          <span className="font-semibold text-slate-700">{agency}</span>
-                        ) : (
-                          <span className="text-slate-400">신입 버츄얼 크리에이터</span>
-                        )}
-                      </p>
+                      {agency && <p className="text-[11px] text-slate-500 truncate mt-0.5">
+                        <span className="font-semibold text-slate-700">{agency}</span>
+                      </p>}
                     </div>
                   </div>
 

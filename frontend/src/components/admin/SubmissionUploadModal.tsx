@@ -21,6 +21,7 @@ import {
   downloadCsvTemplate,
 } from '../../utils/submissionTemplateGenerator';
 import { uploadBatchSubmissions } from '../../services/adminService';
+import { profileAgencyName } from '../../../../shared/profilePresentation';
 
 interface SubmissionUploadModalProps {
   isOpen: boolean;
@@ -360,7 +361,7 @@ export const SubmissionUploadModal: React.FC<SubmissionUploadModalProps> = ({
                               {item.debutDate} {item.debutTime}
                             </td>
                             <td className="px-3 py-2 text-slate-600 font-medium">
-                              {item.agencyName}
+                              {profileAgencyName(item.agencyName)}
                             </td>
                             <td className="px-3 py-2">
                               <a

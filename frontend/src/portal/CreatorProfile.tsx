@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowRight, ArrowUpRight, CalendarPlus, Clock, Play, ShieldCheck } from 'lucide-react';
 import { PortalProfile, PORTAL_PLATFORMS, portalChannelKey, portalDateKey, portalWebUrl } from '../../../shared/portal';
-import { profileDebutMembers, profileDebutPhase, profileLinkKey } from '../../../shared/profilePresentation';
+import { profileAgencyName, profileDebutMembers, profileDebutPhase, profileLinkKey } from '../../../shared/profilePresentation';
 import { profileFirstReplay, profileMediaItems } from '../../../shared/profileMedia';
 import { activityChannelKey } from '../../../shared/broadcastActivity';
 import { dateTimeFormatter } from '../../../shared/dateTimeFormatter';
@@ -93,9 +93,10 @@ function ProfileMemberSchedule({ profile }: { profile: PortalProfile }) {
 // 팀·기수는 명시적으로 연결한 멤버만 사진과 활동명 중심으로 안내한다.
 function ProfileDebutGroup({ profile, profiles, onNavigate }: { profile: PortalProfile; profiles: PortalProfile[]; onNavigate: (path: string) => void }) {
   const members = profileDebutMembers(profile, profiles);
+  const agency = profileAgencyName(profile.agency);
   if (members.length < 2) return null;
   return <section className="vd-panel vd-debut-group"><header className="vd-debut-group-heading"><div>
-    {profile.agency && <p className="vd-debut-group-agency">{profile.agency}</p>}
+    {agency && <p className="vd-debut-group-agency">{agency}</p>}
     <h2>{profile.debutGroupName || t('함께 데뷔해요')}{profile.debutGroupName && <span>{t('멤버')}</span>}</h2>
   </div><span className="vd-debut-group-timezone">KST</span></header><ol className="vd-debut-members" aria-label={t('함께 데뷔해요')}>
     {members.map((member) => <li key={member.slug} aria-current={member.slug === profile.slug ? 'true' : undefined}>
@@ -124,6 +125,8 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
   const channelKey = activityChannelKey(profile.platform, profile.channelUrl);
   // 설명이 없을 때는 빈 소개 카드와 반복 안내를 만들지 않는다.
   const introduction = profile.description;
+  // 저장된 개인 활동 구분값을 소속명처럼 표시하지 않는다.
+  const agency = profileAgencyName(profile.agency);
   // 기존 소개에 검토 기록이 없으면 검토일을 만들거나 접근하지 않는다.
   const reviewedAt = isPublicProfile(profile) ? profile.contentReview?.reviewedAt : undefined;
   const IdentityHeading = preview ? 'h2' : 'h1';
@@ -136,7 +139,7 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
       <div className="vd-profile-identity"><PortalAvatar key={`${profile.slug}:${profile.avatarUrl}`} large profile={profile} />
         <div className="vd-profile-identity-copy"><IdentityHeading>{profile.displayName}</IdentityHeading>
           {profile.headline && <p className="vd-profile-headline">{profile.headline}</p>}
-          <div className="vd-profile-meta">{profile.agency && <span className="vd-profile-agency">{profile.agency}</span>}<PlatformBadge platform={profile.platform} />{profile.ownerVerified && <span><ShieldCheck size={14} />{t('채널 운영자 확인')}</span>}</div>
+          <div className="vd-profile-meta">{agency && <span className="vd-profile-agency">{agency}</span>}<PlatformBadge platform={profile.platform} />{profile.ownerVerified && <span><ShieldCheck size={14} />{t('채널 운영자 확인')}</span>}</div>
 
         </div>
         {!preview && <div className="vd-profile-tools"><FavoriteButton slug={profile.slug} /><CopyButton value={`${window.location.origin}/creator/${encodeURIComponent(profile.slug)}`} /></div>}
@@ -154,7 +157,7 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
     </nav>
     <div id="profile-intro"><ProfileMediaGallery title={t('처음 만나는 영상')} items={personal} active={activeMedia} onPlay={setActiveMedia} featured /></div>
     <div id="profile-moments"><ProfileMediaGallery title={t('짧게 먼저 만나보기')} items={moments} active={activeMedia} onPlay={setActiveMedia} /></div>
-    {(introduction || profile.languages.length > 0 || profile.tags.length > 0 || profile.regularSchedule) && <section className="vd-profile-editorial"><h2>{t('어떤 방송을 하나요?')}</h2>
+    {(introduction || profile.languages.length > 0 || profile.tags.length > 0 || profile.regularSchedule) && <section className="vd-profile-editorial">
       {introduction && <p>{introduction}</p>}
       <dl className="vd-profile-facts">{profile.tags.length > 0 && <div><dt>{t('주요 콘텐츠')}</dt><dd>{profile.tags.join(' · ')}</dd></div>}{profile.languages.length > 0 && <div><dt>{t('방송 언어')}</dt><dd>{profile.languages.join(' · ')}</dd></div>}</dl>
       {profile.regularSchedule && <p>{profile.regularSchedule}</p>}

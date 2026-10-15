@@ -10,6 +10,7 @@ import {
 } from '../../utils/spotlightQueue';
 import { getCountryBadge } from '../../utils/countryDetector';
 import { AvatarImage } from '../calendar/AvatarImage';
+import { profileAgencyName } from '../../../../shared/profilePresentation';
 
 interface PlatformMiniSpotlightProps {
   currentLang?: 'ko' | 'ja' | 'en';
@@ -356,9 +357,8 @@ function SpotlightCardContent({
   const formattedDate = formatDebutDateStyle(event.startAtUtc, timezone, currentLang);
   const slug = (event.creator as any)?.slug || '';
 
-  // 소속사가 실제 기업세일 경우에만 노출 ('개인세'는 운영자 전용이므로 사용자 화면에서 완전 제거)
-  const agency = event.creator.agency?.trim();
-  const hasRealAgency = agency && agency !== '개인세' && agency !== 'None';
+  // 플랫폼 추천도 실제 그룹·소속명만 공개한다.
+  const agency = profileAgencyName(event.creator.agency);
 
   const isCenter = tier === 'large';
   const isSmall = tier === 'small';
@@ -436,7 +436,7 @@ function SpotlightCardContent({
         </h3>
 
         {/* 실제 기업세 소속사가 있을 때만 표시 (중앙 카드에 한함) */}
-        {isCenter && hasRealAgency && (
+        {isCenter && agency && (
           <p className="vd-showcase-agency text-[11px] text-slate-700 font-bold truncate mt-0.5">
             {agency}
           </p>

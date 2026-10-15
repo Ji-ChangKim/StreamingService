@@ -2,6 +2,7 @@ import { PlusCircle, Clock, ExternalLink, Download, X } from 'lucide-react';
 import { DebutEvent } from '../../types';
 import { formatLocalTime } from '../../utils/dateUtils';
 import { AvatarImage } from './AvatarImage';
+import { profileAgencyName } from '../../../../shared/profilePresentation';
 
 interface ScheduleInspectorPanelProps {
   selectedDateStr: string;
@@ -75,7 +76,8 @@ export function ScheduleInspectorPanel({
           {events.map((evt) => {
             const primaryLink = evt.links.find((l) => l.isPrimary) || evt.links[0];
             const formattedTime = formatLocalTime(evt.startAtUtc, selectedTimezone);
-            const isIndie = evt.creator.agency.toLowerCase().includes('indie') || evt.creator.agency === '개인세';
+            // 실제 그룹·소속명만 공개 카드에 표시한다.
+            const agency = profileAgencyName(evt.creator.agency);
             const slug = (evt.creator as any).slug || (evt.creator.displayName === '아롱띠' ? 'arongtti' : 'arongtti');
 
             const handleProfileClick = (e: React.MouseEvent) => {
@@ -134,9 +136,9 @@ export function ScheduleInspectorPanel({
                         </span>
                       )}
                       {/* 개인세 표시는 제외하고 기업/에이전시일 때만 노출 */}
-                      {!isIndie && evt.creator.agency && (
+                      {agency && (
                         <span className="text-[10px] font-semibold px-2 py-0.5 rounded-[4px] bg-[#F1F5F9] text-[#475569] border border-[#CBD5E1]">
-                          🏢 {evt.creator.agency}
+                          🏢 {agency}
                         </span>
                       )}
                     </div>

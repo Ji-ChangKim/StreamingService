@@ -4,6 +4,7 @@ import { fetchCreatorProfile, CreatorProfileData, deleteCreatorProfile, updateCr
 import { getAvatarUrl } from '../../utils/avatarUtils';
 import { CreatorEditModal } from './CreatorEditModal';
 import { activityChannelKey } from '../../../../shared/broadcastActivity';
+import { profileAgencyName } from '../../../../shared/profilePresentation';
 
 interface CreatorProfilePageProps {
   slug: string;
@@ -61,7 +62,9 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
   useEffect(() => {
     if (profile?.displayName) {
       const prevTitle = document.title;
-      const agencyText = profile.agencyName ? ` (${profile.agencyName})` : '';
+      // 브라우저 제목에도 개인 활동 구분값을 넣지 않는다.
+      const agency = profileAgencyName(profile.agencyName);
+      const agencyText = agency ? ` (${agency})` : '';
       document.title = `${profile.displayName}${agencyText} 버튜버 데뷔 일정 & 프로필 | VDébut`;
 
       return () => {
@@ -199,8 +202,8 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
 
   const platformLabel = primaryPlatform === 'CHZZK' ? '치지직' : primaryPlatform === 'SOOP' ? 'SOOP' : primaryPlatform === 'YOUTUBE' ? '유튜브' : '트위치';
   
-  // 💡 3. 개인세 / 인디 여부 확인 (개인세는 완전히 숨김!)
-  const isIndie = !profile.agencyName || profile.creatorType === 'INDIE' || profile.agencyName.toLowerCase().includes('indie') || profile.agencyName === '개인세';
+  // 소속 유형의 오래된 구분값보다 실제 입력된 그룹·소속명을 기준으로 표시한다.
+  const agency = profileAgencyName(profile.agencyName);
 
   const debutEvent = profile.events[0];
   const formattedDebutDate = debutEvent ? (() => {
@@ -306,10 +309,10 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
                   )}
                   <span>{platformLabel}</span>
                 </span>
-                {!isIndie && (
+                {agency && (
                   <>
                     <span>•</span>
-                    <span className="bg-white/80 text-slate-800 px-2.5 py-0.5 rounded-full text-xs font-bold border border-slate-200/80 shadow-2xs">{profile.agencyName}</span>
+                    <span className="bg-white/80 text-slate-800 px-2.5 py-0.5 rounded-full text-xs font-bold border border-slate-200/80 shadow-2xs">{agency}</span>
                   </>
                 )}
               </p>

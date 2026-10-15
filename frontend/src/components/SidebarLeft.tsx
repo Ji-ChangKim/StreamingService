@@ -1,15 +1,18 @@
 import { Tv, Tag, Bell } from 'lucide-react';
+import { profileAgencyName } from '../../../shared/profilePresentation';
 
 interface SidebarLeftProps {
   selectedPlatform: string;
   setSelectedPlatform: (platform: string) => void;
   savedNotificationCount: number;
+  agencyNames?: string[];
 }
 
 export function SidebarLeft({
   selectedPlatform,
   setSelectedPlatform,
   savedNotificationCount,
+  agencyNames = [],
 }: SidebarLeftProps) {
   const platforms = [
     { id: 'ALL', label: '전체 플랫폼', count: 'All' },
@@ -19,7 +22,8 @@ export function SidebarLeft({
     { id: 'TWITCH', label: '트위치 (Twitch)', color: 'text-[#7A3DFF]' },
   ];
 
-  const agencies = ['Indie (개인)', 'V-PRO', 'SOOP Stars', 'Hololive'];
+  // 임의 소속 목록을 만들지 않고 전달된 실제 소속명만 중복 없이 표시한다.
+  const agencies = [...new Set(agencyNames.map(profileAgencyName).filter(Boolean))];
 
   return (
     <aside className="w-full lg:w-60 flex-shrink-0 space-y-6">
@@ -74,7 +78,7 @@ export function SidebarLeft({
       </div>
 
       {/* Agency Quick Filter Section */}
-      <div className="bg-white rounded-[8px] p-4 border border-[#D8D8D8] shadow-layered-level2">
+      {agencies.length > 0 && <div className="bg-white rounded-[8px] p-4 border border-[#D8D8D8] shadow-layered-level2">
         <div className="eyebrow-uppercase text-[11px] text-[#080808] mb-3 flex items-center gap-1.5 font-semibold">
           <Tag className="w-3.5 h-3.5 text-[#080808]" />
           AGENCIES & TAGS
@@ -89,8 +93,7 @@ export function SidebarLeft({
             </span>
           ))}
         </div>
-      </div>
-
+      </div>}
       {/* Saved Notification Status */}
       <div className="bg-[#F8FAFC] rounded-[8px] p-4 border border-[#D8D8D8] flex items-center justify-between">
         <div className="flex items-center gap-2">

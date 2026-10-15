@@ -46,6 +46,7 @@ import { SubmissionUploadModal } from '../admin/SubmissionUploadModal';
 import { SubmissionEditModal } from '../admin/SubmissionEditModal';
 import { downloadExcelTemplate, downloadCsvTemplate } from '../../utils/submissionTemplateGenerator';
 import { getCountryBadge } from '../../utils/countryDetector';
+import { profileAgencyName } from '../../../../shared/profilePresentation';
 
 interface AdminCmsPageProps {
   onNavigateHome: () => void;
@@ -719,9 +720,9 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
                             );
                           })()}
 
-                          {sub.agencyName && (
+                          {profileAgencyName(sub.agencyName) && (
                             <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 rounded border border-slate-200">
-                              {sub.agencyName}
+                              {profileAgencyName(sub.agencyName)}
                             </span>
                           )}
 
@@ -988,9 +989,9 @@ export function AdminCmsPage({ onNavigateHome }: AdminCmsPageProps) {
                             </span>
                           );
                         })()}
-                        {st.agency_name && (
+                        {profileAgencyName(st.agency_name) && (
                           <span className="text-[10px] text-slate-500 font-medium truncate">
-                            • {st.agency_name}
+                            • {profileAgencyName(st.agency_name)}
                           </span>
                         )}
                       </div>

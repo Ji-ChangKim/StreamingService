@@ -4,6 +4,7 @@ import { DebutEvent } from '../types';
 import { getAvatarUrl } from '../utils/avatarUtils';
 import { createDebutEvent, updateDebutEvent } from '../services/eventService';
 import { Language, UI_TRANSLATIONS } from '../utils/i18n';
+import { profileAgencyName } from '../../../shared/profilePresentation';
 
 interface StudioSubmitModalProps {
   isOpen: boolean;
@@ -94,9 +95,9 @@ export function StudioSubmitModal({
       setIsFetchedSuccess(true);
       setFetchMessage(`✏️ [기존 데뷔 일정 수정 모드]`);
 
-      if (editEvent.creator.agency && !editEvent.creator.agency.toLowerCase().includes('indie') && editEvent.creator.agency !== '개인세') {
+      if (profileAgencyName(editEvent.creator.agency)) {
         setAgencyType('AGENCY');
-        setAgencyName(editEvent.creator.agency);
+        setAgencyName(profileAgencyName(editEvent.creator.agency));
         setGroupName(editEvent.creator.groupName || editEvent.groupName || '');
       } else {
         setAgencyType('INDIE');
@@ -624,7 +625,7 @@ export function StudioSubmitModal({
                     className="sr-only"
                   />
                   <User className="w-4 h-4" />
-                  <span className="text-xs sm:text-sm">개인세 / 인디 (Indie)</span>
+                  <span className="text-xs sm:text-sm">개인 활동</span>
                 </label>
 
                 <label className={`flex items-center justify-center gap-2 p-2 rounded-[6px] border cursor-pointer transition-all ${

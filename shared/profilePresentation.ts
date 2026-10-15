@@ -5,6 +5,11 @@ export { profileVideoId } from './profileMedia';
 export const PROFILE_VIDEO_KINDS = ['INTRO', 'TEASER', 'GROUP_PV', 'REPLAY', 'COVER', 'HIGHLIGHT'] as const;
 export const PROFILE_VIDEO_LABELS = { INTRO: '자기소개', TEASER: '데뷔 티저', GROUP_PV: '팀 공통 PV', REPLAY: '첫 방송 다시보기', COVER: '커버곡', HIGHLIGHT: '방송 하이라이트' };
 
+// 개인 활동 구분값은 숨기고 입력된 그룹·소속사 이름만 공개한다.
+export function profileAgencyName(agency: string | undefined): string {
+  return /^(?:(?:개인세|개인|인디|무소속|個人勢|個人|無所属|indie|independent|none|n\/a)|[\s/|·,()[\]_-])+$/i.test((agency || '').normalize('NFKC').trim()) ? '' : (agency || '').trim();
+}
+
 // 영상별 주소 처리는 플랫폼 공통 모듈에서 검증한다.
 
 // 공개 선택 항목의 문자열 길이를 제한한다.
