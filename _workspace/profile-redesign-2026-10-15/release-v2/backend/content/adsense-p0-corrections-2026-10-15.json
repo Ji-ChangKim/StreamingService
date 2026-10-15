@@ -1,0 +1,57 @@
+[
+  {
+    "slug": "eguchi-maho",
+    "fields": { "displayName": "江口真好（えぐちまこの）", "agency": "くえにこ!", "headline": "활동 자제·조정 중 · 공식 채널 안내" },
+    "hold": true,
+    "sources": ["https://www.youtube.com/channel/UCCeSWM5OAb-ybWicrzHYJVQ"],
+    "pending": ["실제 영상·이미지·연결 자료 검토", "현재 활동 상태와 데뷔 공지", "게시 권한"]
+  },
+  {
+    "slug": "hoshiari-nanoka",
+    "fields": { "displayName": "星存なのか", "channelUrl": "https://www.youtube.com/@seizon_nanoka", "xUrl": "https://x.com/seizon_nanoka", "description": "星存なのか는 종말 관측을 콘셉트로 YouTube에서 활동하는 버튜버입니다. 공식 소개에는 인간 세상에서 살아가는 여우 캐릭터의 세계관이 담겨 있습니다.", "debutDate": "2026-08-08", "dateState": "TIME_TBD", "startAtUtc": "", "debutVideoUrl": "https://www.youtube.com/watch?v=wq59xENoh6o" },
+    "sources": ["https://www.youtube.com/watch?v=wq59xENoh6o", "https://www.youtube.com/@seizon_nanoka"],
+    "pending": ["첫 방송 시각·시간대: 기존 debutTime은 원자료로 보존하되 확정 일정으로 표시하지 않음", "소속·이미지와 게시 권한", "기존 음주 기획 자료 재검토"]
+  },
+  {
+    "slug": "kinamochi-kina",
+    "fields": { "displayName": "粉餅きな", "channelUrl": "https://www.youtube.com/@kina_komochi_R", "description": "TRPG 영상 제작과 일러스트·영상 편집 등 창작 활동을 해 온 粉餅きな（こもちきな）입니다. 첫 방송 안내에는 게임 실황, 일러스트, 음악 제작과 작업 방송 계획을 소개했습니다.", "debutVideoUrl": "https://www.youtube.com/watch?v=Pzs0BU3RWh0" },
+    "sources": ["https://www.youtube.com/watch?v=Pzs0BU3RWh0"],
+    "pending": ["현재 방송 콘텐츠", "소속·시간대·이미지와 게시 권한"]
+  },
+  {
+    "slug": "daramkong",
+    "fields": { "description": "배틀그라운드와 시청자 소통을 중심으로 방송하는 다람콩입니다. SOOP에서 새롭게 활동을 시작하며, 공식 공지에서 10월 16일 오후 8시 첫 방송을 예고했습니다." },
+    "sources": ["https://www.sooplive.com/station/daram0111/post/209128453", "https://www.sooplive.com/station/daram0111/post/209593505"],
+    "pending": ["전체 최초 데뷔와 SOOP 이전 후 첫 방송 구분", "최신 일정·소속·게시 권한"]
+  },
+  {
+    "slug": "ebi",
+    "fields": { "description": "SOOP에서 활동을 준비하는 이비◇입니다. 공식 방송국에서 10월 17일 오후 1시 데뷔 방송을 예고했습니다." },
+    "sources": ["https://www.sooplive.com/station/ebequal2b/post/209133125"],
+    "pending": ["주력 콘텐츠·첫 방송 구성·특징 추가 확인", "소속·언어·이미지와 게시 권한"]
+  },
+  {
+    "slug": "irere",
+    "fields": { "description": "게임과 시청자 소통을 중심으로 방송하는 이레레입니다. 공식 공지에서 10월 17일 오후 3시 데뷔를 예고했습니다. 방송국에는 오후 3시 방송과 화요일 휴방을 안내하고 있습니다." },
+    "sources": ["https://www.sooplive.com/station/dlfpfp/post/208489347", "https://www.sooplive.com/station/dlfpfp/post/209136543"],
+    "pending": ["주력 게임·첫 방송 구성", "최신 일정·소속·게시 권한"]
+  },
+  {
+    "slug": "ako",
+    "fields": { "description": "SOOP에서 노래 커버 영상을 공개하고 있는 아코입니다. 공식 프로필에서 RPG 게임을 취미로 소개하며, 10월 18일 오후 5시 데뷔 방송을 예고했습니다." },
+    "sources": ["https://www.sooplive.com/station/ahcoco/post/208644695", "https://www.sooplive.com/station/ahcoco/post/209567641"],
+    "pending": ["노래·게임의 실제 주력 여부와 첫 방송 구성", "활동명 장식 문자 з·³ 중 최종 표기", "소속·이미지·커버 게시 권한"]
+  },
+  {
+    "slug": "hiti",
+    "fields": { "description": "SOOP에서 시청자와 소통하는 히티입니다. 공식 프로필에는 2026년 10월 12일 첫 방송과 오후 5시 방송을 안내하고 있습니다. 휴방일은 주 1~2회 유동적이므로 방송국 공지를 확인해 주세요." },
+    "sources": ["https://www.sooplive.com/station/346719/post/209150649"],
+    "pending": ["주력 콘텐츠", "현재 방송 시간·휴방·소속·게시 권한"]
+  },
+  {
+    "slug": "hamusta",
+    "fields": { "description": "햄스터 캐릭터로 게임과 소통 방송을 하는 하무스타☆입니다. 공식 프로필은 낮 12시 방송과 월요일 휴방을 안내합니다. 저녁 방송과 추가 휴방은 방송국의 최신 공지를 확인해 주세요." },
+    "sources": ["https://www.sooplive.com/station/hamuuu/post/207944621"],
+    "pending": ["저녁 7시 고정 여부", "2026-10-13 14:00 데뷔 일정의 원본 공지", "소속·이미지와 게시 권한"]
+  }
+]

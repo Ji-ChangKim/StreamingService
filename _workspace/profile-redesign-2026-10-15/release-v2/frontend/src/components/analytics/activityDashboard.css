@@ -1,0 +1,220 @@
+/* 방송 통계는 검색 진입과 기록 조회를 중심으로 밝고 간결하게 구성한다. */
+.ad-dashboard{max-width:1440px;margin:0 auto;padding:36px 32px 40px;color:#17243b}
+.ad-heading{display:flex;justify-content:space-between;align-items:center;gap:32px;margin-bottom:26px}
+.ad-eyebrow{color:#2563eb;font-size:11px;font-weight:800;letter-spacing:1.8px}
+.ad-heading h1{font-size:32px!important;font-weight:800;letter-spacing:-1px;margin:7px 0!important}
+.ad-heading p,.ad-profile p{font-size:13px;color:#64748b;line-height:1.7}
+.ad-search{position:relative;width:min(420px,42%);flex-shrink:0;z-index:20}
+.ad-search-form{position:relative;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #d9e2ef;border-radius:0;padding:7px 8px 7px 15px}
+.ad-search-form>.bs-button{flex-shrink:0;white-space:nowrap}
+.ad-search-form>svg{color:#64748b;flex-shrink:0}
+.ad-search-form input{width:100%;min-width:0;border:0;background:transparent;color:#17243b;font-size:14px;outline:none;min-height:36px}
+.ad-search-form:focus-within{border-color:#2563eb}
+.ad-suggestions{position:absolute;top:calc(100% + 8px);left:0;right:0;background:#fff;border:1px solid #d9e2ef;border-radius:0;overflow:hidden}
+.ad-suggestions a{display:flex;align-items:center;gap:8px;width:100%;padding:11px 14px;border:0;border-bottom:1px solid #f1f5f9;background:#fff;text-align:left;font-size:13px;color:inherit;text-decoration:none}
+.ad-suggestions a>span:first-child{flex:1;overflow-wrap:anywhere;font-weight:700}
+.ad-suggestions a:hover,.ad-suggestions a[aria-selected=true]{background:#eff6ff}
+.ad-suggestions p{padding:12px 14px;font-size:11px;color:#64748b}
+.ad-view-nav{display:flex;align-items:center;gap:20px;border-bottom:1px solid #dce4ee;margin-bottom:22px;min-height:46px;flex-wrap:wrap}
+.ad-view-nav button{display:flex;align-items:center;gap:8px;padding:12px 0;border:0;background:transparent;color:#64748b;font-size:13px;font-weight:700;border-bottom:2px solid transparent}
+.ad-view-nav button[aria-current=page]{border-bottom-color:#2563eb;color:#2563eb}
+.ad-view-nav>span{font-size:12px;color:#7c8aa0}
+.ad-view-nav>span[aria-current=page]{color:#17243b;font-weight:700}
+.ad-filters{background:transparent;border:0;border-top:1px solid #dce4ee;border-bottom:1px solid #dce4ee;border-radius:0;padding:17px 0;margin-bottom:14px}
+.ad-filter-top{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:center}
+.ad-periods,.ad-platforms{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.ad-periods .bs-button[aria-pressed=true],.ad-platforms .bs-button[aria-pressed=true]{background:#eff6ff;border-color:#9cbdf8;color:#1d4ed8}
+.ad-platforms .bs-button{padding:2px 8px}
+.ad-date-form{display:flex;align-items:center;gap:9px;margin-top:14px;flex-wrap:wrap}
+.ad-date-form>label{display:flex;align-items:center;gap:8px;font-size:11px;color:#64748b}
+.ad-date-form input{border:1px solid #dce4ee;border-radius:0;background:#fff;color:#334155;min-height:36px;padding:6px 8px;font-size:12px;min-width:0}
+.ad-date-form>span{color:#94a3b8;font-size:11px}
+.ad-refresh{display:flex;align-items:center;gap:6px;margin-left:auto;border:0;background:transparent;color:#64748b;font-size:11px;min-height:38px}
+.ad-refresh:disabled{opacity:.5}
+.ad-filter-chip{border:1px solid #bfdbfe;background:#eff6ff;color:#1d4ed8;border-radius:0;padding:7px 12px;font-size:12px}
+.ad-form-error{color:#b91c1c;font-size:12px;margin-top:12px!important}
+.ad-data-meta{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#718198;margin:16px 1px;flex-wrap:wrap}
+.ad-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-bottom:28px}
+.ad-summary-card{background:transparent;border:0;border-right:1px solid #dce4ee;border-radius:0;padding:19px 20px}
+.ad-summary-card:last-child{border-right:0}
+.ad-summary-card>div{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#64748b}
+.ad-summary-card svg{color:#5c80bd}
+/* 지표는 작은 강조색과 아이콘으로 구분하고 본문 수치는 같은 명도로 유지한다. */
+.ad-tone-blue{--ad-accent:#2563eb;--ad-soft:#eff6ff}
+.ad-tone-violet{--ad-accent:#7c3aed;--ad-soft:#f5f3ff}
+.ad-tone-teal{--ad-accent:#0f766e;--ad-soft:#f0fdfa}
+.ad-tone-amber{--ad-accent:#b45309;--ad-soft:#fffbeb}
+.ad-summary-card svg{color:var(--ad-accent)}
+.ad-summary-card>strong{display:block;margin-top:14px;font-size:25px;letter-spacing:-.6px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.4}
+.ad-main-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:20px;align-items:stretch;margin-bottom:20px}
+.ad-panel{margin-bottom:20px;padding-bottom:4px}
+/* 통계 영역은 둥근 외곽 박스 대신 얇은 구분선으로 나눈다. */
+.ad-dashboard .bs-panel{border:0;border-top:1px solid #cbd5e1;border-radius:0;background:transparent;box-shadow:none}
+.ad-dashboard .bs-button,.ad-dashboard .bs-segment,.ad-dashboard .bs-segment button{border-radius:0;box-shadow:none}
+.ad-main-grid>.ad-panel{margin-bottom:0}
+.ad-panel-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:21px 22px 15px;flex-wrap:wrap}
+.ad-panel-heading h2{font-size:15px!important;font-weight:750;letter-spacing:-.3px}
+.ad-panel-heading p{font-size:11px;color:#718198;margin-top:5px!important;line-height:1.6}
+.ad-heat-scroll{padding:13px 22px 16px;overflow:auto}
+.ad-heatmap{min-width:500px}
+.ad-heat-row{display:grid;grid-template-columns:26px repeat(24,minmax(0,1fr));gap:4px;margin-bottom:5px;align-items:center}
+.ad-heat-row>span[role=columnheader]{font-size:9px;white-space:nowrap;color:#94a3b8;height:19px}
+.ad-heat-row>b{font-size:11px;font-weight:600;color:#64748b}
+.ad-heat-cell{height:29px;border-radius:4px;display:block}
+.ad-heat-cell:focus-visible{outline:2px solid #17243b;outline-offset:2px}
+.ad-heat-cell.is-missing,.ad-heat-legend i.is-missing{background:repeating-linear-gradient(135deg,#fff,#fff 3px,#e9edf3 3px,#e9edf3 4px);border:1px solid #e9edf3}
+.ad-chart-caption{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 22px 14px;color:#718198;font-size:10px;line-height:1.7}
+.ad-heat-legend{display:flex;align-items:center;gap:5px}
+.ad-heat-legend i{width:11px;height:11px;border-radius:2px;background:#dbeafe}
+.ad-heat-legend i:nth-last-child(2){background:#93b8f7}.ad-heat-legend i:last-child{background:#2563eb}
+.ad-category-list{padding:0 22px 12px;display:flex;flex-direction:column;gap:16px}
+.ad-category{display:block;width:100%;border:0;background:transparent;padding:0;text-align:left}
+.ad-category>div:first-child{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:6px;font-size:11px}
+.ad-category strong{font-size:12px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ad-category span{white-space:nowrap;color:#475569;font-variant-numeric:tabular-nums}
+.ad-category small{color:#94a3b8;margin-left:5px;font-size:10px}
+.ad-category:hover strong,.ad-category[aria-pressed=true] strong{color:#2563eb}
+.ad-track{height:6px;background:#eef2f7;border-radius:8px;overflow:hidden}
+.ad-track>span{display:block;height:100%;background:#5488e8;border-radius:8px}
+.ad-category:nth-child(2) .ad-track>span{background:#7ca4eb}.ad-category:nth-child(n+3) .ad-track>span{background:#a0bdf0}
+/* 같은 항목의 점·막대에는 같은 색을 적용하며 선택 표시는 공통 파란색을 사용한다. */
+.ad-category strong:before{content:'';display:inline-block;width:8px;height:8px;background:var(--ad-category-color);border-radius:50%;margin-right:7px}
+.ad-category .ad-track>span,.ad-category:nth-child(n) .ad-track>span{background:var(--ad-category-color)}
+.ad-category[aria-pressed=true]{outline:2px solid #93b4ed;outline-offset:7px;border-radius:3px}
+.ad-clear-filter{margin:0 22px 14px;padding:0;border:0;background:transparent;color:#2563eb;font-size:12px}
+.ad-daily-scroll{overflow:auto;padding:12px 22px 4px}
+.ad-daily-bars{height:190px;display:flex;align-items:flex-end;gap:8px}
+.ad-day-column{flex:1;min-width:6px;text-align:center;height:100%;display:flex;flex-direction:column;gap:9px;justify-content:flex-end}
+.ad-day-track{height:160px;display:flex;align-items:flex-end;background:linear-gradient(to top,#e8eef6 1px,transparent 1px);background-size:100% 40px}
+.ad-day-track>span{width:100%;background:#648fec;border-radius:4px 4px 0 0;min-width:4px;max-width:60px;margin:0 auto}
+.ad-day-column>span{height:17px;color:#718198;font-size:10px;white-space:nowrap}
+.ad-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;padding:4px 22px 12px}
+.ad-calendar-weekday{font-size:11px;color:#64748b;text-align:center;padding:7px;font-weight:650}
+.ad-calendar-day{min-height:90px;border-radius:0;background:#f7f9fc;border:1px solid #edf1f6;padding:10px;display:flex;flex-direction:column;gap:5px;color:#94a3b8}
+.ad-calendar-day>span{font-size:11px}.ad-calendar-day>strong{font-size:14px;font-weight:750}.ad-calendar-day>small{font-size:10px}
+.ad-calendar-day.has-activity{background:#eff6ff;border-color:#d4e4fc;color:#2563eb}
+.ad-calendar-day.has-activity small{color:#5c7fae}
+.ad-table-scroll{position:relative;overflow-x:auto}
+.ad-table{width:100%;border-collapse:collapse;text-align:left;font-size:12px;min-width:650px}
+.ad-table th{font-size:11px;font-weight:600;color:#7b8ba2;padding:12px 22px;background:#f8fafc;border-top:1px solid #edf1f6;border-bottom:1px solid #edf1f6;white-space:nowrap}
+.ad-table td{padding:16px 22px;border-bottom:1px solid #edf1f6;vertical-align:middle;color:#475569}
+.ad-table td:first-child,.ad-table td:nth-last-child(2){white-space:nowrap;font-variant-numeric:tabular-nums}
+.ad-table td:last-child{width:110px;white-space:nowrap}
+.ad-table .bs-brand{display:block;margin-top:4px}
+.ad-table .bs-brand-clearspace{padding:0}
+.ad-table .bs-brand img{height:16px}
+.ad-broadcast-title strong{display:block;font-size:12px;font-weight:650;color:#17243b;line-height:1.6;overflow-wrap:anywhere;min-width:150px}
+.ad-broadcast-title>span{display:block;font-size:10px;color:#7b8ba2;margin-top:4px}
+.ad-channel-link{border:0;background:transparent;padding:0;color:#2563eb;font-weight:650;font-size:12px;white-space:nowrap}
+.ad-record-detail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:0;background:#f8fafc;border-radius:0;padding:16px}
+.ad-record-detail dt{color:#94a3b8;font-size:10px;margin-bottom:6px}.ad-record-detail dd{margin:0;color:#334155;font-size:12px}
+.ad-more{display:block;width:100%;border:0;background:#fff;color:#64748b;min-height:46px;font-size:12px}
+.ad-more:hover{background:#f8fafc;color:#2563eb}
+.ad-data-guide{font-size:11px;color:#7c8ca3;border-top:1px solid #e0e7f0;padding:17px 0;line-height:1.9}
+.ad-data-guide summary{cursor:pointer;color:#536780;width:max-content}.ad-data-guide p{margin-top:9px!important;max-width:920px}
+.ad-footer{color:#94a3b8;font-size:10px;margin-top:14px;letter-spacing:.3px}
+.ad-profile{background:transparent;border:0;border-bottom:1px solid #dce4ee;border-radius:0;padding:20px 0;margin-bottom:20px}
+.ad-back{display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;color:#64748b;font-size:12px;padding:0;min-height:32px}
+.ad-back:hover{color:#2563eb}
+.ad-profile-content{display:flex;align-items:center;gap:17px;margin-top:10px;flex-wrap:wrap}
+.ad-profile h2{font-size:22px;font-weight:750;letter-spacing:-.5px;overflow-wrap:anywhere}
+.ad-avatar{width:48px;height:48px;border-radius:50%;background:#edf3fd;color:#4472bc;display:flex;align-items:center;justify-content:center;font-size:19px;overflow:hidden;flex-shrink:0}
+.ad-avatar img{width:100%;height:100%;object-fit:cover}.ad-avatar-large{width:65px;height:65px}
+.ad-profile-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-left:auto}
+.ad-share{position:relative}.ad-share>span{position:absolute;top:calc(100% + 5px);right:0;white-space:nowrap;background:#17243b;border-radius:6px;padding:7px 10px;color:#fff;font-size:11px;z-index:5}
+.ad-results-heading{display:flex;align-items:center;gap:12px;margin:20px 0;flex-wrap:wrap}
+.ad-results-heading h2{font-size:20px;font-weight:750;overflow-wrap:anywhere}.ad-results-heading>span{font-size:12px;color:#64748b}
+.ad-results-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ad-search-card{display:flex;align-items:center;gap:14px;background:transparent;border:0;border-bottom:1px solid #dce4ee;border-radius:0;padding:20px 0}
+.ad-search-identity{flex:1;min-width:0}.ad-search-identity h3{font-size:15px;font-weight:750;overflow-wrap:anywhere}.ad-search-identity .bs-brand{font-size:10px}
+.ad-live{font-size:10px;color:#dc3655;margin-left:5px;white-space:nowrap}
+.ad-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:transparent;border:0;border-top:1px solid #dce4ee;border-radius:0;min-height:280px;text-align:center;padding:32px;margin-bottom:20px}
+.ad-state svg{color:#8ea4c6}.ad-state h2,.ad-state h3{font-size:17px;font-weight:700}.ad-state p{font-size:12px;color:#64748b;line-height:1.8}
+.ad-empty{padding:30px 22px;color:#7c8aa0;text-align:center;font-size:12px}
+.ad-empty-banner{display:flex;align-items:center;gap:12px;padding:16px 0;background:transparent;border:0;border-bottom:1px solid #dce4ee;border-radius:0;color:#64748b;margin-bottom:18px;font-size:12px}
+.ad-empty-banner strong{font-weight:650}.ad-empty-banner p{font-size:11px;margin-top:4px!important}
+.ad-dashboard button:focus-visible,.ad-dashboard a:focus-visible,.ad-dashboard input:focus-visible,.ad-calendar-day:focus-visible,.ad-day-column:focus-visible{outline:2px solid #2563eb;outline-offset:3px}
+/* 차트 선택과 목록 조회를 연결하고 모바일 이력은 카드로 읽게 한다. */
+.ad-heat-cell{width:100%;border:0;cursor:pointer;padding:0}
+.ad-heat-cell[aria-pressed=true]{outline:2px solid #17243b;outline-offset:2px}
+.ad-day-column{border:0;padding:0;background:transparent;cursor:pointer}
+.ad-day-column[aria-pressed=true] .ad-day-track>span{background:#1d4ed8;outline:2px solid #17243b}
+.ad-calendar-day{text-align:left;cursor:pointer}
+.ad-calendar-day[aria-pressed=true]{outline:2px solid #2563eb;outline-offset:1px}
+.ad-calendar-month{font-size:13px;font-weight:700;padding:8px 22px}
+.ad-calendars{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}
+.ad-date-form select{max-width:220px;min-width:0;min-height:36px;border:1px solid #dce4ee;border-radius:0;background:#fff;padding:6px 8px;color:#334155;font-size:12px}
+.ad-reset{margin:0;min-height:36px}
+#ad-broadcast-history{scroll-margin-top:85px;outline:none}
+.ad-broadcast-cards{display:none}
+.ad-broadcast-card{padding:16px;border-top:1px solid #edf1f6}
+.ad-broadcast-card h3{font-size:14px;line-height:1.6;font-weight:700;overflow-wrap:anywhere;margin:8px 0}
+.ad-broadcast-card p{font-size:11px;color:#718198;overflow-wrap:anywhere}
+.ad-card-channel{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ad-broadcast-card dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0;font-size:11px}
+.ad-broadcast-card dt{color:#718198;margin-bottom:5px}.ad-broadcast-card dd{margin:0;overflow-wrap:anywhere;color:#334155}
+.ad-broadcast-card summary{font-size:12px;color:#2563eb;cursor:pointer;padding:6px 0}
+.ad-more:disabled{opacity:.5}
+/* 활동과 기록 상태는 설명 문장을 늘리지 않고 색 농도·패턴·선택 테두리로 구분한다. */
+.ad-heat-legend-activity i:not(.is-missing){background:#ccfbf1}
+.ad-heat-legend-activity i:nth-last-child(2){background:#5eead4}.ad-heat-legend-activity i:last-child{background:#0d9488}
+.ad-heat-legend-starts i:not(.is-missing){background:#ede9fe}
+.ad-heat-legend-starts i:nth-last-child(2){background:#c4b5fd}.ad-heat-legend-starts i:last-child{background:#7c3aed}
+.ad-heat-cell[aria-pressed=true]{outline-color:#2563eb;box-shadow:inset 0 0 0 2px #fff}
+.ad-day-track>span{background:#0d9488}
+.ad-day-column.is-missing .ad-day-track{background:repeating-linear-gradient(135deg,transparent,transparent 7px,#e8edf4 7px,#e8edf4 8px)}
+.ad-calendar-day.has-activity{background:#f0fdfa;border-color:#99e1d4;color:#0f766e}
+.ad-calendar-day.has-activity small{color:#377f78}
+.ad-calendar-day.is-missing{background:repeating-linear-gradient(135deg,#f8fafc,#f8fafc 7px,#edf1f6 7px,#edf1f6 8px)}
+.ad-calendar-day[aria-pressed=true]{background:#eff6ff;color:#1d4ed8;outline-color:#2563eb}
+.ad-dashboard [role=alert]{color:#b42318}
+.ad-partial-badge{display:inline-block;margin-left:8px;padding:2px 7px;background:#fff7ed;border:1px solid #fed7aa;border-radius:5px;color:#9a3412;font-size:10px;font-weight:600}
+/* 실시간 순위는 기간별 통계 앞에 배치하고 현재 시청자 수를 우측에 모은다. */
+.ad-realtime{margin-bottom:26px}
+.ad-live-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.ad-live-update{display:flex;align-items:center;gap:12px;color:#718198;font-size:11px}
+.ad-live-update .ad-refresh{margin-left:0;min-height:30px}
+.ad-live-status{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px}
+.ad-live-status:empty{display:none}.ad-live-status .ad-partial-badge{margin-left:0}
+.ad-live-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px;align-items:start}
+.ad-live-panel{overflow:hidden}
+.ad-live-list,.ad-live-categories{list-style:none;padding:0 22px;margin:0}
+.ad-live-row{display:flex;align-items:center;gap:11px;padding:13px 0;border-top:1px solid #edf1f6}
+.ad-rank{flex-shrink:0;width:20px;text-align:center;font-size:13px;font-weight:750;color:#7b8ba2;font-variant-numeric:tabular-nums}
+.ad-rank-top{color:#6d28d9}
+.ad-live-avatar{width:38px;height:38px;flex-shrink:0;border-radius:50%;overflow:hidden;background:#f5f3ff;display:flex;align-items:center;justify-content:center;color:#8b5cf6}
+.ad-live-avatar img{width:100%;height:100%;object-fit:cover}
+.ad-live-identity{min-width:0;flex:1}.ad-live-identity .ad-channel-link{max-width:100%;overflow:hidden;text-overflow:ellipsis;display:block;text-align:left}
+.ad-live-identity>strong{font-size:12px}.ad-live-identity>p{font-size:11px;color:#64748b;margin-top:4px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ad-live-tags{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:10px;color:#94a3b8;min-width:0}.ad-live-tags>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ad-live-tags .bs-brand-clearspace{padding:0}.ad-live-tags .bs-brand img{height:14px}
+.ad-live-count{flex-shrink:0;text-align:right}.ad-live-count>strong{display:block;font-size:15px;font-weight:750;color:#17243b;font-variant-numeric:tabular-nums}.ad-live-count small{font-size:10px;font-weight:500;color:#718198;margin-left:3px}
+.ad-live-count>a{display:inline-flex;align-items:center;gap:2px;font-size:10px;color:#2563eb;margin-top:6px}
+.ad-live-category{display:flex;width:100%;align-items:center;gap:11px;padding:16px 0;border:0;border-top:1px solid #edf1f6;background:transparent;text-align:left}
+.ad-live-category[aria-pressed=true]{background:#eff6ff;box-shadow:inset 3px 0 #2563eb}
+.ad-live-category-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}.ad-live-category-info>strong{font-size:12px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ad-live-category-info>strong>i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ad-category-color);margin-right:7px}
+.ad-live-category-info>span:not(.ad-track){font-size:10px;color:#718198}.ad-live-category-info .ad-track{max-width:100%;margin-top:2px}
+.ad-live-state{padding:24px;border:0;border-top:1px solid #dce4ee;border-radius:0;background:transparent;text-align:center;font-size:12px;color:#64748b}.ad-live-state .bs-button{margin-top:12px}
+@media(max-width:1000px){.ad-live-grid{grid-template-columns:1fr}}
+@media(max-width:390px){.ad-live-list,.ad-live-categories{padding:0 12px}.ad-live-row,.ad-live-category{gap:7px}.ad-live-avatar{width:28px;height:28px}.ad-rank{width:15px}.ad-live-count>strong{font-size:13px}.ad-live-toolbar{gap:4px}.ad-live-update{width:100%;justify-content:space-between}}
+@media(max-width:760px){.ad-table-scroll{display:none}.ad-broadcast-cards{display:block}.ad-calendar-month{padding-left:16px}.ad-date-form select{max-width:190px}}
+/* 작은 화면에서는 검색·필터를 먼저 보여주고 각 차트를 한 열로 배치한다. */
+@media(max-width:1100px){.ad-main-grid{grid-template-columns:1fr}.ad-heading{align-items:flex-start}.ad-summary-card{padding:17px}.ad-summary-card>strong{font-size:22px}.ad-results-grid{grid-template-columns:1fr}}
+@media(max-width:760px){.ad-dashboard{padding:24px 16px 30px}.ad-heading{flex-direction:column;gap:18px}.ad-search{width:100%}.ad-heading h1{font-size:28px!important}.ad-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.ad-summary-card>strong{font-size:22px}.ad-profile-actions{margin-left:0;width:100%}.ad-view-nav{gap:12px}.ad-filters{padding:15px}.ad-date-form>label{flex-direction:column;align-items:flex-start;gap:5px}.ad-date-form input{width:140px}.ad-date-form>span{align-self:flex-end;margin-bottom:12px}.ad-refresh{margin-left:0}.ad-calendar{gap:4px;padding:4px 12px 10px}.ad-calendar-day{padding:6px;min-height:72px}.ad-calendar-day small{display:none}.ad-panel-heading{padding:18px 16px 14px}.ad-heat-scroll{padding-left:16px;padding-right:16px}.ad-chart-caption{padding-left:16px;padding-right:16px}.ad-category-list{padding-left:16px;padding-right:16px}.ad-table th,.ad-table td{padding:12px 16px}.ad-profile{padding:16px}.ad-profile h2{font-size:19px}.ad-search-card{padding:15px;gap:10px}}
+@media(max-width:390px){.ad-dashboard{padding:20px 12px 28px}.ad-date-form{gap:7px}.ad-date-form input{width:118px}.ad-summary-card{padding:14px}.ad-summary-card>strong{font-size:19px}.ad-summary-card>div{font-size:11px}.ad-search-card .bs-button{padding:7px 8px;font-size:11px}.ad-platforms .bs-button{padding:2px 6px}.ad-profile-content{gap:12px}.ad-avatar-large{width:48px;height:48px}.ad-calendar-day{min-height:58px}.ad-calendar-day strong{font-size:12px}}
+/* 작은 화면에서도 외곽 박스를 다시 만들지 않고 지표와 항목 사이의 선을 유지한다. */
+@media(max-width:760px){.ad-summary{gap:0}.ad-summary-card:nth-child(2){border-right:0}.ad-summary-card:nth-child(-n+2){border-bottom:1px solid #dce4ee}.ad-filters,.ad-profile,.ad-search-card{padding-left:0;padding-right:0}}
+
+/* 구글 Ads 심사 및 SEO를 위한 자연어 요약 리포트 카드 */
+.ad-narrative-box{margin:18px 0 24px;padding:18px 22px;background:#f8fafc;border:1px solid #e2e8f0;border-left:4px solid #2563eb;border-radius:4px;color:#334155;font-size:13.5px;line-height:1.75}
+.ad-narrative-box strong{color:#0f172a;font-weight:700}
+.ad-narrative-box.ad-narrative-empty{border-left-color:#0ea5e9;background:#f0f9ff}
+.ad-new-streamer-banner{display:flex;align-items:flex-start;gap:16px;padding:20px 22px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;margin-bottom:24px;color:#166534}
+.ad-new-streamer-badge{flex-shrink:0;padding:4px 9px;background:#15803d;color:#fff;border-radius:4px;font-size:11px;font-weight:800;letter-spacing:-.2px}
+.ad-new-streamer-banner strong{display:block;font-size:14px;color:#14532d;margin-bottom:4px}
+.ad-new-streamer-banner p{font-size:12.5px;color:#166534;margin:0;line-height:1.6}
+
+
+/* 통계 해설은 차트를 읽는 데 필요한 경우 펼쳐 본다. */
+.ad-reading-guide{margin-bottom:20px;padding:20px}.ad-reading-guide summary{font-weight:700;cursor:pointer}.ad-reading-guide section{margin-top:20px}.ad-reading-guide h3{font-size:15px;margin:0 0 8px}.ad-reading-guide p{color:#52647c;line-height:1.8;margin:0;overflow-wrap:anywhere}

@@ -1,19 +1,11 @@
 import { PortalProfile, PORTAL_PLATFORMS, portalChannelKey, portalChannelUrl, portalUtc, portalWebUrl } from './portal';
+import { cleanProfileMedia, profileMediaSource, profileVideoId } from './profileMedia';
+export { profileVideoId } from './profileMedia';
 
 export const PROFILE_VIDEO_KINDS = ['INTRO', 'TEASER', 'GROUP_PV', 'REPLAY', 'COVER', 'HIGHLIGHT'] as const;
 export const PROFILE_VIDEO_LABELS = { INTRO: '자기소개', TEASER: '데뷔 티저', GROUP_PV: '팀 공통 PV', REPLAY: '첫 방송 다시보기', COVER: '커버곡', HIGHLIGHT: '방송 하이라이트' };
 
-// 유튜브 영상 주소에서만 식별자를 추출하며 채널·위장 도메인은 허용하지 않는다.
-export function profileVideoId(value: string): string {
-  try {
-    const url = new URL(portalWebUrl(value));
-    const parts = url.pathname.split('/').filter(Boolean);
-    const id = url.hostname === 'youtu.be' ? parts.length === 1 ? parts[0] : ''
-      : ['youtube.com', 'www.youtube.com', 'm.youtube.com'].includes(url.hostname)
-        ? url.pathname === '/watch' ? url.searchParams.get('v') || '' : ['shorts', 'embed', 'live'].includes(parts[0]) && parts.length === 2 ? parts[1] : '' : '';
-    return /^[a-zA-Z0-9_-]{11}$/.test(id) ? id : '';
-  } catch { return ''; }
-}
+// 영상별 주소 처리는 플랫폼 공통 모듈에서 검증한다.
 
 // 공개 선택 항목의 문자열 길이를 제한한다.
 function presentationText(body: Record<string, unknown>, key: string, max: number): string {
@@ -49,14 +41,30 @@ export function cleanProfilePresentation(body: Record<string, unknown>) {
   const debutVideoUrl = presentationUrl(body, 'debutVideoUrl');
   const videoKind = presentationText(body, 'videoKind', 20) || 'INTRO';
   if (videoUrl && !profileVideoId(videoUrl)) throw new Error('대표 영상은 YouTube 영상 주소로 입력해 주세요.');
-  if (debutVideoUrl && !profileVideoId(debutVideoUrl)) throw new Error('데뷔 방송은 YouTube 영상 주소로 입력해 주세요.');
+  if (debutVideoUrl && !profileMediaSource(debutVideoUrl)) throw new Error('데뷔 방송은 YouTube·치지직·SOOP 영상 주소로 입력해 주세요.');
   if (!PROFILE_VIDEO_KINDS.includes(videoKind as NonNullable<PortalProfile['videoKind']>)) throw new Error('대표 영상의 종류를 선택해 주세요.');
   return { headline: presentationText(body, 'headline', 100), bannerUrl: presentationUrl(body, 'bannerUrl'),
     websiteUrl: presentationUrl(body, 'websiteUrl'), noticeUrl: presentationUrl(body, 'noticeUrl'), xUrl: presentationUrl(body, 'xUrl'),
     // 공식 카페는 SNS와 별도로 저장하며 다른 선택 링크와 같은 주소 검증을 적용한다.
     cafeUrl: presentationUrl(body, 'cafeUrl'),
     additionalChannels: presentationChannels(body), videoUrl, debutVideoUrl, videoTitle: presentationText(body, 'videoTitle', 100),
+    ...(body.media === undefined ? {} : { media: cleanProfileMedia(body.media) }),
+    regularSchedule: presentationText(body, 'regularSchedule', 160), fanGuide: presentationText(body, 'fanGuide', 1500),
+    notices: presentationNotices(body.notices),
     videoKind: videoKind as NonNullable<PortalProfile['videoKind']> };
+}
+
+// 소식은 짧은 제목과 HTTPS 원문 주소만 받아 공개한다.
+function presentationNotices(value: unknown): NonNullable<PortalProfile['notices']> {
+  if (value === undefined) return [];
+  if (!Array.isArray(value) || value.length > 3) throw new Error('주요 소식은 최대 3개까지 등록할 수 있어요.');
+  return value.map((entry) => {
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new Error('소식 제목과 원문 주소를 입력해 주세요.');
+    const title = presentationText(entry, 'title', 100);
+    const url = presentationUrl(entry, 'url');
+    if (!title || !url) throw new Error('소식 제목과 원문 주소를 입력해 주세요.');
+    return { title, url };
+  });
 }
 
 // 시간 경과는 예정 시각의 경과만 뜻하며 실제 방송 여부를 추측하지 않는다.

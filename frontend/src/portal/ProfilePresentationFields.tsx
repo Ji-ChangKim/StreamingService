@@ -1,8 +1,8 @@
 import { PortalProfile, PORTAL_PLATFORMS } from '../../../shared/portal';
-import { PROFILE_VIDEO_KINDS, PROFILE_VIDEO_LABELS } from '../../../shared/profilePresentation';
 import { Plus, X } from 'lucide-react';
 import { t, usePortalLocale } from './portalLocale';
 import './profilePresentation.css';
+import { ProfileMediaFields, ProfileNoticeFields } from './ProfileMediaFields';
 
 // 등록·본인 수정·운영 정정에서 같은 선택 입력과 길이 제한을 제공한다.
 export function ProfilePresentationFields({ profile, onChange, allowGroups = false }: {
@@ -29,12 +29,10 @@ export function ProfilePresentationFields({ profile, onChange, allowGroups = fal
       </div>)}
       {channels.length < 4 && <button type="button" className="vd-button vd-small" onClick={() => onChange({ additionalChannels: [...channels, { platform: 'YOUTUBE', channelUrl: '' }] })}><Plus size={15} />{t('채널 추가')}</button>}
     </fieldset>
-    <div className="vd-presentation-grid">
-      <label>{t('대표 영상 주소')}<input type="url" maxLength={1000} value={profile.videoUrl || ''} onChange={(e) => onChange({ videoUrl: e.target.value })} placeholder="https://youtu.be/…" /><small>{t('자기소개·티저·다시보기 등 YouTube 영상 한 개')}</small></label>
-      <label>{t('영상 종류')}<select value={profile.videoKind || 'INTRO'} onChange={(e) => onChange({ videoKind: e.target.value as PortalProfile['videoKind'] })}>{PROFILE_VIDEO_KINDS.map((kind) => <option key={kind} value={kind}>{t(PROFILE_VIDEO_LABELS[kind])}</option>)}</select></label>
-    </div>
-    <label>{t('영상 제목')}<input maxLength={100} value={profile.videoTitle || ''} onChange={(e) => onChange({ videoTitle: e.target.value })} placeholder={t('팬들에게 보여줄 영상 제목')} /></label>
-    <label>{t('데뷔 방송 영상 주소')}<input type="url" maxLength={1000} value={profile.debutVideoUrl || ''} onChange={(e) => onChange({ debutVideoUrl: e.target.value })} placeholder="https://youtu.be/…" /><small>{t('방송 후 업로드한 YouTube 영상을 PV와 별도로 추가할 수 있어요.')}</small></label>
+    <ProfileMediaFields profile={profile} onChange={onChange} />
+    <label>{t('정기 방송 안내 (선택)')}<input maxLength={160} value={profile.regularSchedule || ''} onChange={(event) => onChange({ regularSchedule: event.target.value })} /></label>
+    <label>{t('팬 가이드 (선택)')}<textarea rows={5} maxLength={1500} value={profile.fanGuide || ''} onChange={(event) => onChange({ fanGuide: event.target.value })} placeholder={t('공식 팬명·해시태그·방송 규칙을 안내해 주세요.')} /></label>
+    <ProfileNoticeFields profile={profile} onChange={onChange} />
     {allowGroups && <div className="vd-presentation-group"><h3>{t('함께 데뷔하는 팀·기수')}</h3><p className="vd-muted">{t('공식 공지로 확인한 멤버에게만 같은 그룹 식별자를 지정해 주세요.')}</p><div className="vd-presentation-grid">
       <label>{t('데뷔 그룹 이름')}<input maxLength={100} value={profile.debutGroupName || ''} onChange={(e) => onChange({ debutGroupName: e.target.value })} placeholder="STELLIVE 4th Generation ABYSS" /></label>
       <label>{t('데뷔 그룹 식별자')}<input maxLength={80} pattern="[a-z0-9_-]+" value={profile.debutGroupId || ''} onChange={(e) => onChange({ debutGroupId: e.target.value })} placeholder="stellive-abyss-2026" /></label>

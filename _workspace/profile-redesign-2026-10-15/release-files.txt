@@ -1,0 +1,15 @@
+shared/portal.ts
+shared/profileMedia.ts
+shared/profilePresentation.ts
+shared/contentReview.ts
+shared/profileContentTranslations.ts
+frontend/src/portal/CreatorProfile.tsx
+frontend/src/portal/ProfileMediaGallery.tsx
+frontend/src/portal/ProfileMediaFields.tsx
+frontend/src/portal/profileMedia.css
+frontend/src/portal/ProfilePresentationFields.tsx
+frontend/src/portal/profileRequestSummary.ts
+frontend/src/portal/PortalAdmin.tsx
+backend/src/services/portalService.ts
+backend/src/services/portalEditorialBody.ts
+shared/portalTranslations.ts

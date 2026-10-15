@@ -1,0 +1,157 @@
+import { Search, Calendar, List } from 'lucide-react';
+
+interface FilterBarProps {
+  selectedPlatform: string;
+  setSelectedPlatform: (platform: string) => void;
+  selectedCountry?: string;
+  setSelectedCountry?: (country: string) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  totalCount: number;
+  viewMode: 'GRID' | 'LIST';
+  setViewMode: (mode: 'GRID' | 'LIST') => void;
+}
+
+export function FilterBar({
+  selectedPlatform,
+  setSelectedPlatform,
+  selectedCountry = 'ALL',
+  setSelectedCountry,
+  searchQuery,
+  setSearchQuery,
+  totalCount,
+  viewMode,
+  setViewMode,
+}: FilterBarProps) {
+  const platforms = [
+    { id: 'ALL', label: '전체 플랫폼' },
+    { id: 'CHZZK', label: '치지직 (CHZZK)' },
+    { id: 'YOUTUBE', label: '유튜브 (YouTube)' },
+    { id: 'SOOP', label: '숲 (SOOP)' },
+    { id: 'TWITCH', label: '트위치 (Twitch)' },
+  ];
+
+  const countries = [
+    { id: 'ALL', label: '전체', flag: '🌐' },
+    { id: 'KR', label: 'KR', flag: '🇰🇷' },
+    { id: 'JP', label: 'JP', flag: '🇯🇵' },
+    { id: 'EN', label: 'EN', flag: '🇺🇸' },
+  ];
+
+  return (
+    <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6 bg-white p-3 sm:p-3.5 rounded-[12px] sm:rounded-[8px] border border-[#D8D8D8] shadow-sm">
+      {/* 플랫폼 필터 */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 lg:pb-0 scrollbar-none shrink-0 touch-pan-x">
+        {platforms.map((p) => {
+          const isActive = selectedPlatform === p.id;
+          return (
+            <button
+              key={p.id}
+              onClick={() => setSelectedPlatform(p.id)}
+              className={`px-2.5 sm:px-3 py-1.5 rounded-[6px] sm:rounded-[4px] text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 ${
+                isActive
+                  ? 'bg-[#080808] text-white font-semibold shadow-xs'
+                  : 'bg-[#F8FAFC] text-[#5A5A5A] hover:bg-slate-200/80 hover:text-[#080808] border border-[#D8D8D8]'
+              }`}
+            >
+              {p.id === 'SOOP' && (
+                <img
+                  src={isActive ? "/icons/soop/soop_symbol_white.svg" : "/icons/soop/soop_symbol_blue.svg"}
+                  alt="SOOP"
+                  className="w-4 h-4 object-contain shrink-0"
+                />
+              )}
+              {p.id === 'CHZZK' && (
+                <img
+                  src="/icons/chzzk_icon.png"
+                  alt="CHZZK"
+                  className="w-4 h-4 object-contain shrink-0"
+                />
+              )}
+              {p.id === 'YOUTUBE' && (
+                <img
+                  src="/icons/youtube_icon.png"
+                  alt="YouTube"
+                  className="w-4 h-4 object-contain shrink-0"
+                />
+              )}
+              <span>{p.label}</span>
+            </button>
+          );
+        })}
+
+        {/* 국가 필터 (KR / JP / EN / ALL) */}
+        {setSelectedCountry && (
+          <div className="flex items-center gap-1 pl-1.5 border-l border-slate-200 shrink-0">
+            {countries.map((c) => {
+              const isSelected = selectedCountry === c.id;
+              return (
+                <button
+                  key={c.id}
+                  onClick={() => setSelectedCountry(c.id)}
+                  className={`px-2 py-1.5 rounded-[6px] sm:rounded-[4px] text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1 cursor-pointer shrink-0 ${
+                    isSelected
+                      ? 'bg-[#2563EB] text-white shadow-xs'
+                      : 'bg-[#F8FAFC] text-[#5A5A5A] hover:bg-slate-200/80 hover:text-[#080808] border border-[#D8D8D8]'
+                  }`}
+                  title={`${c.label} 버튜버만 보기`}
+                >
+                  <span>{c.flag}</span>
+                  <span>{c.id === 'ALL' ? '전체' : c.id}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* 우측 뷰 모드 토글 + 검색창 */}
+      <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full lg:w-auto">
+        {/* 뷰 모드 선택 버튼 (월간 달력 GRID vs 리스트 LIST) */}
+        <div className="flex items-center bg-[#F8FAFC] p-1 rounded-[6px] border border-[#D8D8D8] shrink-0">
+          <button
+            onClick={() => setViewMode('GRID')}
+            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 rounded-[4px] text-[11px] sm:text-xs font-semibold transition-all ${
+              viewMode === 'GRID'
+                ? 'bg-[#080808] text-white shadow-xs'
+                : 'text-[#5A5A5A] hover:text-[#080808]'
+            }`}
+            title="월간 격자 달력 뷰"
+          >
+            <Calendar className="w-3.5 h-3.5" />
+            <span>월간 달력</span>
+          </button>
+          <button
+            onClick={() => setViewMode('LIST')}
+            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 rounded-[4px] text-[11px] sm:text-xs font-semibold transition-all ${
+              viewMode === 'LIST'
+                ? 'bg-[#080808] text-white shadow-xs'
+                : 'text-[#5A5A5A] hover:text-[#080808]'
+            }`}
+            title="일자별 리스트 뷰"
+          >
+            <List className="w-3.5 h-3.5" />
+            <span>리스트</span>
+          </button>
+        </div>
+
+        {/* 검색창 */}
+        <div className="relative flex-1 sm:w-56 min-w-0">
+          <Search className="w-4 h-4 text-[#898989] absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="버튜버/소속 검색..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-[#F8FAFC] focus:bg-white text-xs font-medium text-[#080808] placeholder-[#ABABAB] pl-8 sm:pl-9 pr-2.5 sm:pr-3 py-1.5 rounded-[4px] border border-[#D8D8D8] focus:border-[#080808] focus:outline-none transition-all"
+          />
+        </div>
+
+        {/* 총 일정 개수 */}
+        <div className="bg-[#F8FAFC] px-3 py-1.5 rounded-[4px] border border-[#D8D8D8] text-xs font-medium text-[#5A5A5A] whitespace-nowrap hidden md:block">
+          총 <span className="text-[#080808] font-semibold">{totalCount}</span>개
+        </div>
+      </div>
+    </div>
+  );
+}

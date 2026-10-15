@@ -1,0 +1,1415 @@
+import { isActivityPath } from '../../shared/activitySeo';
+import { publicErrorPage } from './services/publicErrorPage';
+import { sitePath, siteRobots } from '../../shared/siteSeo';
+import { publicResponseCache } from './services/publicResponseCache';
+import { Hono } from 'hono';
+import { portalApi, readPublicPortalProfiles, readPublicPortalProfileBySlug, portalAdminStreamers, deletePortalProfile } from './services/portalService';
+import { renderPortalPage, portalSitemap } from './services/portalPageService';
+import { portalPageSeo } from '../../shared/portalSeo';
+import { publicBroadcastPayload } from '../../shared/contentReview';
+import { readUnifiedDebutEvents, portalProfileEvent } from './services/unifiedEventService';
+import { cors } from 'hono/cors';
+import { getAssetFromKV, serveSinglePageApp } from '@cloudflare/kv-asset-handler';
+// @ts-ignore
+import manifestJSON from '__STATIC_CONTENT_MANIFEST';
+import { fetchEventsFromD1, insertEventToD1, updateEventInD1, MOCK_EVENTS } from './services/eventDbService';
+import { fetchPlatformProfile } from './services/platformApiService';
+import { fetchCreatorProfileBySlug, fetchAllCreatorSlugs, updateCreatorProfileInD1, deleteCreatorProfileFromD1 } from './services/creatorDbService';
+import { runDebutCrawlerProcess } from './services/debutCrawlerService';
+import { validateDebutEventPayload } from './services/eventValidationService';
+import { validateAdminToken } from './services/adminAuthService';
+import {
+  createSubmissionToD1,
+  createSubmissionsBatchToD1,
+  fetchSubmissionsFromD1,
+  updateSubmissionInD1,
+  approveSubmissionInD1,
+  approveSubmissionsBatchInD1,
+  rejectSubmissionInD1,
+  deleteSubmissionFromD1,
+  fetchAllActiveStreamersForAdmin,
+} from './services/submissionDbService';
+import { syncMissingProfilesInD1 } from './services/profileSyncService';
+import { runAutoReviewPipeline } from './services/autoReviewService';
+import {
+  verifyDiscordSignature,
+  handleDiscordInteraction,
+  broadcastNewDebutToDiscord,
+  broadcastMorningBriefingToDiscord,
+  broadcastDebutDateChangeToDiscord,
+  DebutDateChangePayload,
+} from './services/discordBotService';
+import {
+  getAnalyticsOverview,
+  getAnalyticsTimeseries,
+  getAnalyticsHeatmap,
+  getAnalyticsCategories,
+  getAnalyticsOpportunities,
+  getAnalyticsLiveSamples,
+  getAnalyticsMethodology,
+  getCurrentContentDrilldown,
+} from './services/analyticsService';
+import { collectChzzkLiveSnapshot } from './services/chzzkCollector';
+import { getLiveDiscovery } from './services/liveDiscoveryService';
+import { getLiveHistory, getCreatorHistory } from './services/liveHistoryService';
+import { getBroadcastStatistics, getStreamerBroadcastHistory } from './services/broadcastStatisticsService';
+import { getBroadcastActivity, getActivityBroadcastPage, readActivityCursor } from './services/broadcastActivityService';
+import { activityPeriod, validActivityRange } from '../../shared/broadcastActivity';
+import { collectBroadcastStatistics } from './services/broadcastStatisticsCollection';
+import { searchStatisticsStreamers } from './services/statisticsStreamerSearchService';
+import { registerExternalStreamerToD1 } from './services/externalPlatformSearchService';
+import { ensureStreamerRegistered } from './services/onDemandStreamerService';
+import { activitySitemapEntries, renderActivityPage } from './services/activityPageService';
+import { activityNoindex } from '../../shared/activitySeo';
+import { cheerApi, resetWeeklyCheers, WEEKLY_RESET_CRON } from './services/cheerService';
+
+type Bindings = {
+  PORTAL_ENABLED?: string;
+  DB: D1Database;
+  __STATIC_CONTENT: any;
+  CRAWLER_SECRET?: string;
+  DISCORD_APPLICATION_ID?: string;
+  DISCORD_PUBLIC_KEY?: string;
+  DISCORD_BOT_TOKEN?: string;
+};
+
+// Cloudflare Durable Object Class Preservation
+export class ChzzkSessionDO {
+  state: any;
+  env: any;
+  constructor(state: any, env: any) {
+    this.state = state;
+    this.env = env;
+  }
+  async fetch(request: Request) {
+    return new Response('ChzzkSessionDO Active', { status: 200 });
+  }
+}
+
+const app = new Hono<{ Bindings: Bindings }>();
+
+// 외부 방송 제목의 재검토 신호는 API와 초기 HTML에서 동일하게 제외한다.
+app.use('/api/analytics/*', async (c, next) => {
+  await next();
+  if (c.res.ok && c.res.headers.get('Content-Type')?.includes('application/json')) {
+    const data = publicBroadcastPayload(await c.res.json());
+    c.res = new Response(JSON.stringify(data), { status: c.res.status, headers: c.res.headers });
+  }
+});
+
+// 기존 관리 API도 서버 세션을 요구하고 비공개 응답을 캐시하지 않는다.
+app.use('/api/v1/admin/*', async (c, next) => {
+  c.header('Cache-Control', 'no-store');
+  if (new URL(c.req.url).pathname !== '/api/v1/admin/login') {
+    const token = (c.req.header('Authorization') || c.req.header('X-Admin-Token') || '').replace(/^Bearer\s+/i, '').trim();
+    const path = new URL(c.req.url).pathname;
+    const secretAllowed = ['/api/v1/admin/crawler/run', '/api/v1/admin/sync-profiles'].includes(path);
+    const secretValid = secretAllowed && Boolean(c.env.CRAWLER_SECRET) && c.req.header('X-Crawler-Secret') === c.env.CRAWLER_SECRET;
+    if (!secretValid && !await validateAdminToken(token, c.env.DB)) return c.json({ error: '관리자 로그인이 필요합니다.' }, 401);
+  }
+  await next();
+});
+
+// 활성화된 플랫폼은 도메인에 맞는 셸과 검색 정책을 사용한다.
+app.use('*', async (c, next) => {
+  if (c.env.PORTAL_ENABLED !== 'true') return next();
+  const url = new URL(c.req.url);
+  const path = url.pathname;
+  const seo = portalPageSeo(url);
+  // 이전 화면 검토용 주소를 새 메인으로 연결한다.
+  if (['/updatepage', '/upadepage'].includes(path)) return c.redirect('/', 301);
+  if (seo.development) c.header('X-Robots-Tag', 'noindex, nofollow');
+  if (['PUT', 'DELETE'].includes(c.req.method) && path.startsWith('/api/v1/creator/')) return c.json({ error: '정보 수정·삭제는 문의 화면으로 요청해 주세요.' }, 403);
+  if (c.req.method === 'GET' && path === '/robots.txt') return c.text(siteRobots(url.hostname));
+  // 공개 HTML의 말미 슬래시를 정리하되 조회 조건과 언어는 유지한다.
+  if (c.req.method === 'GET' && path !== '/' && path.endsWith('/') && !path.startsWith('/api/') && !path.startsWith('/assets/')) return c.redirect(`${sitePath(path)}${url.search}`, 308);
+  // 개발 통계도 전용 렌더러로 보내 실제 초기 본문과 올바른 제목을 제공한다.
+  if (c.req.method === 'GET' && !path.startsWith('/api/') && !path.startsWith('/analytics') && !/\.[a-z0-9]+$/i.test(path)) {
+    let profile;
+    if (/^\/creator\/[^/]+$/.test(path)) {
+      let slug = ''; try { slug = decodeURIComponent(path.slice('/creator/'.length)); } catch { /* 찾을 수 없는 주소로 처리한다. */ }
+      try { profile = (await readPublicPortalProfileBySlug(c.env.DB, slug)) || undefined; }
+      catch { c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex, nofollow'); return c.html(publicErrorPage(url, '소개를 불러오지 못했어요', 503), 503); }
+    }
+    const missing = (!seo.known && !isActivityPath(path)) || (path.startsWith('/creator/') && !profile);
+    const response = await getAssetFromKV({ request: new Request(new URL(seo.development ? '/dev.html' : '/portal.html', c.req.url), c.req.raw), waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, { ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}') });
+    if (seo.privatePage || missing) c.header('X-Robots-Tag', 'noindex, nofollow');
+    c.header('Cache-Control', seo.privatePage || missing ? 'no-store' : 'public, max-age=0, must-revalidate');
+    const html = renderPortalPage(await response.text(), url, profile);
+    return c.html(missing ? html.replace(/content="index, follow"/g, 'content="noindex, nofollow"') : html, missing ? 404 : 200);
+  }
+  await next();
+  if (c.req.method === 'GET' && c.res.status === 200 && !path.startsWith('/api/')) {
+    if (/^\/assets\/.+-[\w-]+\.(js|css)$/.test(path)) c.header('Cache-Control', 'public, max-age=31536000, immutable');
+    else if (/\.(png|jpg|jpeg|webp|svg|ico|woff2)$/i.test(path)) c.header('Cache-Control', 'public, max-age=86400');
+  }
+});
+app.route('/api/v1/portal', portalApi);
+
+// Enable CORS
+app.use('*', cors());
+
+// Client Version Check Middleware
+app.use('*', async (c, next) => {
+  const clientVersion = c.req.header('X-Client-Version') || 'v0.1.0';
+  c.header('X-Server-Version', 'v0.1.0-latest');
+  c.header('X-Client-Version-Received', clientVersion);
+  await next();
+  // 개발 사이트의 검색 제외는 자바스크립트 실행 여부와 관계없이 적용한다.
+  if (new URL(c.req.url).hostname === 'dev.vdebut.live') c.header('X-Robots-Tag', 'noindex, nofollow');
+});
+
+// 루키 응원 랭킹·응원·무로그인 제보 API (개발 환경 전용)
+app.route('/', cheerApi);
+
+// 1. Health & System Version Check
+app.get('/api/v1/system/version', (c) => {
+  const clientVersion = c.req.header('X-Client-Version') || 'v0.1.0';
+  return c.json({
+    status: 'healthy',
+    service: 'V-DEBUT HUB Backend',
+    serverVersion: 'v0.1.0-latest',
+    minSupportedClientVersion: 'v0.1.0',
+    clientVersionReceived: clientVersion,
+    isClientSupported: true,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Dynamic Sitemap XML Generator Handler
+const sitemapXmlHandler = async (c: any) => {
+  if (new URL(c.req.url).hostname !== 'vdebut.live') {
+    c.header('X-Robots-Tag', 'noindex');
+    return c.text('개발 사이트는 검색 대상에서 제외합니다.', 404);
+  }
+  const baseUrl = 'https://vdebut.live';
+  // 새 플랫폼에서는 기존 소개와 승인된 신규 소개를 모두 검색 목록에 포함한다.
+  if (c.env.PORTAL_ENABLED === 'true') {
+    const profiles = await readPublicPortalProfiles(c.env.DB);
+    return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${portalSitemap(profiles)}${await activitySitemapEntries(c.env.DB)}</urlset>`, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
+  }
+  const creators = await fetchAllCreatorSlugs(c.env.DB || null);
+
+  let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+  xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
+  xml += `        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n`;
+
+  // 1. Home / Landing Page
+  xml += `  <url>\n`;
+  xml += `    <loc>${baseUrl}/</loc>\n`;
+  xml += `    <xhtml:link rel="alternate" hreflang="ko" href="${baseUrl}/?lang=ko" />\n`;
+  xml += `    <xhtml:link rel="alternate" hreflang="ja" href="${baseUrl}/?lang=ja" />\n`;
+  xml += `    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/?lang=en" />\n`;
+  xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/" />\n`;
+  xml += `    <changefreq>daily</changefreq>\n`;
+  xml += `    <priority>1.0</priority>\n`;
+  xml += `  </url>\n`;
+
+  // 2. Language variations
+  ['ko', 'ja', 'en'].forEach((lang) => {
+    xml += `  <url>\n`;
+    xml += `    <loc>${baseUrl}/?lang=${lang}</loc>\n`;
+    xml += `    <xhtml:link rel="alternate" hreflang="ko" href="${baseUrl}/?lang=ko" />\n`;
+    xml += `    <xhtml:link rel="alternate" hreflang="ja" href="${baseUrl}/?lang=ja" />\n`;
+    xml += `    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/?lang=en" />\n`;
+      xml += `    <changefreq>daily</changefreq>\n`;
+    xml += `    <priority>0.9</priority>\n`;
+    xml += `  </url>\n`;
+  });
+
+  // 3. Upload Page (/upload)
+  xml += `  <url>\n`;
+  xml += `    <loc>${baseUrl}/upload</loc>\n`;
+  xml += `    <changefreq>weekly</changefreq>\n`;
+  xml += `    <priority>0.8</priority>\n`;
+  xml += `  </url>\n`;
+
+  // 4. Dynamic Creator Profiles (/creator/:slug)
+  creators.forEach((item) => {
+    const modDate = item.updatedAt;
+    xml += `  <url>\n`;
+    xml += `    <loc>${baseUrl}/creator/${encodeURIComponent(item.slug)}</loc>\n`;
+    if (modDate && Number.isFinite(Date.parse(modDate))) xml += `    <lastmod>${modDate}</lastmod>\n`;
+    xml += `    <changefreq>daily</changefreq>\n`;
+    xml += `    <priority>0.8</priority>\n`;
+    xml += `  </url>\n`;
+  });
+
+  xml += await activitySitemapEntries(c.env.DB);
+  xml += `</urlset>`;
+
+  return new Response(xml, {
+    headers: {
+      'Content-Type': 'application/xml; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+    },
+  });
+};
+
+app.get('/sitemap.xml', sitemapXmlHandler);
+app.get('/api/v1/sitemap.xml', sitemapXmlHandler);
+
+
+// 2. Get Debut Events (Real D1 Database Query with Fallback & Merge)
+app.get('/api/v1/events', async (c) => {
+  // 새 화면에서 승인된 소개도 이전 공개 데뷔 API에 같은 내용으로 제공한다.
+  if (c.env.PORTAL_ENABLED === 'true') {
+    try {
+      const events = await readUnifiedDebutEvents(c.env.DB);
+      c.header('Cache-Control', 'no-store');
+      return c.json({ success: true, events, total: events.length, source: 'd1_database' });
+    } catch {
+      c.header('Cache-Control', 'no-store');
+      return c.json({ success: false, error: '데뷔 일정을 불러오지 못했습니다.' }, 503);
+    }
+  }
+  let dbEvents: any[] = [];
+  if (c.env.DB) {
+    const res = await fetchEventsFromD1(c.env.DB);
+    if (res && res.length > 0) {
+      dbEvents = res;
+    }
+  }
+
+  // D1 데이터베이스 저장 이벤트와 MOCK 이벤트를 병합하여 반환
+  const combinedMap = new Map();
+  MOCK_EVENTS.forEach((e) => combinedMap.set(e.id, e));
+  dbEvents.forEach((e) => combinedMap.set(e.id, e));
+
+  const allEvents = Array.from(combinedMap.values());
+
+  c.header('Cache-Control', 'public, max-age=30, s-maxage=120, stale-while-revalidate=300');
+
+  return c.json({
+    success: true,
+    events: allEvents,
+    total: allEvents.length,
+    source: dbEvents.length > 0 ? 'd1_database_merged' : 'mock_fallback'
+  });
+});
+
+// 3. Create Debut Submission (Pending Queue - 100% Protected from direct calendar spam)
+app.post('/api/v1/submissions', async (c) => {
+  if (!c.env.DB) {
+    return c.json({
+      success: false,
+      message: 'D1 database binding is not configured.',
+    }, 503);
+  }
+
+  try {
+    const body = await c.req.json();
+
+    // 엄격한 입력값 유효성 검증
+    const validation = validateDebutEventPayload(body);
+    if (!validation.isValid) {
+      return c.json({
+        success: false,
+        message: validation.errorMessage || '입력값이 올바르지 않습니다.',
+      }, 400);
+    }
+
+    const submissionId = await createSubmissionToD1(c.env.DB, body);
+
+    return c.json({
+      success: true,
+      message: '데뷔 일정 신청서가 정상 접수되었습니다. 운영자 검토 후 캘린더에 정식 반영됩니다.',
+      submissionId,
+    });
+  } catch (err: any) {
+    console.error('Create submission failed:', err);
+    return c.json({
+      success: false,
+      message: '데뷔 일정 신청서 저장에 실패했습니다.',
+      error: err?.message || 'unknown_error',
+    }, 500);
+  }
+});
+
+// Legacy POST /api/v1/events (신청서 대기열로 안전하게 통합 처리)
+app.post('/api/v1/events', async (c) => {
+  if (!c.env.DB) {
+    return c.json({ success: false, message: 'D1 database binding is not configured.' }, 503);
+  }
+  try {
+    const body = await c.req.json();
+    const validation = validateDebutEventPayload(body);
+    if (!validation.isValid) {
+      return c.json({ success: false, message: validation.errorMessage || '입력값이 올바르지 않습니다.' }, 400);
+    }
+    const submissionId = await createSubmissionToD1(c.env.DB, body);
+    return c.json({
+      success: true,
+      message: '데뷔 일정 신청서가 정상 접수되었습니다. 운영자 검토 후 캘린더에 정식 반영됩니다.',
+      submissionId,
+      eventId: `sub_${submissionId}`
+    });
+  } catch (err: any) {
+    return c.json({ success: false, message: '신청서 접수에 실패했습니다.', error: err?.message }, 500);
+  }
+});
+
+// ==========================================
+// 🛡️ ADMIN CMS ENDPOINTS (보안 인증 & 승인 관리)
+// ==========================================
+
+// 기존 CMS도 새 관리자와 같은 서버 세션으로 로그인한다.
+app.post('/api/v1/admin/login', async (c) => {
+  if (!c.env.DB) {
+    return c.json({ success: false, error: 'Database binding unavailable' }, 500);
+  }
+  try {
+    // 두 로그인 경로에 동일한 접속 횟수 제한과 세션 발급 절차를 적용한다.
+    const loginResponse = await portalApi.request(new URL('/admin/login', c.req.url).href, { method: 'POST', headers: c.req.raw.headers, body: await c.req.text() }, { ...c.env, PORTAL_ENABLED: 'true' }, c.executionCtx);
+    const login = await loginResponse.json() as { token?: string; error?: string };
+    return c.json({ success: loginResponse.ok, ...login }, loginResponse.status as 200 | 401 | 429 | 400 | 500);
+  } catch (err: any) {
+    return c.json({ success: false, error: err?.message || '로그인 오류' }, 500);
+  }
+});
+
+// 2. 관리자 신청서 목록 조회 (PENDING / APPROVED / REJECTED / ALL)
+app.get('/api/v1/admin/submissions', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token, c.env.DB);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const status = c.req.query('status') || 'PENDING';
+  const list = await fetchSubmissionsFromD1(c.env.DB, status);
+  return c.json({ success: true, submissions: list, total: list.length });
+});
+
+// 2-2. 관리자 엑셀/CSV 신청서 일괄 등록 (Batch Submissions)
+app.post('/api/v1/admin/submissions/batch', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token, c.env.DB);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const body = await c.req.json().catch(() => ({}));
+  const items = Array.isArray(body.items) ? body.items : [];
+
+  if (items.length === 0) {
+    return c.json({ success: false, error: '등록할 신청서 데이터가 없습니다.' }, 400);
+  }
+
+  const result = await createSubmissionsBatchToD1(c.env.DB, items);
+  return c.json({
+    success: result.success,
+    insertedCount: result.insertedCount,
+    message: result.success
+      ? `총 ${result.insertedCount}건의 신청서가 심사 대기열에 성공적으로 등록되었습니다.`
+      : result.error || '일괄 등록에 실패했습니다.',
+  }, result.success ? 200 : 500);
+});
+
+// 2-3. 관리자 신청서 데이터 상세 수정 (데이터 수정 및 추가 정보 보강)
+app.put('/api/v1/admin/submissions/:id', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token, c.env.DB);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const subId = parseInt(c.req.param('id'), 10);
+  if (isNaN(subId)) return c.json({ success: false, error: '올바른 ID가 아닙니다.' }, 400);
+
+  const body = await c.req.json().catch(() => ({}));
+  const result = await updateSubmissionInD1(c.env.DB, subId, body);
+
+  return c.json({
+    success: result.success,
+    message: result.success ? '신청서 데이터가 성공적으로 수정되었습니다.' : (result.error || '수정 실패'),
+    error: result.error
+  }, result.success ? 200 : 500);
+});
+
+// 3. 관리자 1-클릭 승인 (debut_submissions ➔ streamerChannel & streamerChannel_info)
+app.post('/api/v1/admin/submissions/:id/approve', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token, c.env.DB);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const subId = parseInt(c.req.param('id'), 10);
+  if (isNaN(subId)) return c.json({ success: false, error: '올바른 ID가 아닙니다.' }, 400);
+
+  const body = await c.req.json().catch(() => ({}));
+  const customSlug = body.customSlug;
+  const customData = body.customData;
+
+  const result = await approveSubmissionInD1(c.env.DB, subId, customSlug, customData);
+
+  // 디스코드 구독 채널 자동 브로드캐스트 (비동기 안전 백그라운드 발송)
+  if (result.success && c.env.DISCORD_BOT_TOKEN && c.env.DB) {
+    c.executionCtx.waitUntil(
+      c.env.DB.prepare(`
+        SELECT i.display_name, i.profile_image_url, i.description, i.agency_name, i.start_at_utc, c.platform, c.channel_url
+        FROM streamerChannel_info i
+        INNER JOIN streamerChannel c ON i.channel_id = c.id
+        WHERE i.slug = ?
+      `).bind(result.slug).first().then((row: any) => {
+        if (row) {
+          const eventPayload = {
+            id: result.eventId,
+            startAtUtc: row.start_at_utc,
+            creator: {
+              displayName: row.display_name,
+              avatarUrl: row.profile_image_url,
+              agency: row.agency_name,
+              description: row.description,
+            },
+            links: [{ platform: row.platform, url: row.channel_url, isPrimary: true }],
+          };
+          return broadcastNewDebutToDiscord(c.env.DB, c.env.DISCORD_BOT_TOKEN!, eventPayload);
+        }
+      }).catch((e) => console.error('[Discord Broadcast on Approve Error]:', e))
+    );
+  }
+
+  return c.json({
+    success: result.success,
+    message: result.success ? `신청서가 승인되어 /creator/${result.slug} 주소로 캘린더에 즉시 발행되었습니다!` : '승인 처리에 실패했습니다.',
+    error: result.error,
+    eventId: result.eventId,
+    slug: result.slug
+  });
+});
+
+// 3-2. 관리자 체크박스 기반 신청서 일괄 승인 (Batch Approve)
+app.post('/api/v1/admin/submissions/batch-approve', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token, c.env.DB);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const body = await c.req.json().catch(() => ({}));
+  const ids = Array.isArray(body.ids)
+    ? body.ids.map((id: any) => parseInt(id, 10)).filter((id: number) => !isNaN(id))
+    : [];
+
+  if (ids.length === 0) {
+    return c.json({ success: false, error: '승인할 신청서 ID가 없습니다.' }, 400);
+  }
+
+  const result = await approveSubmissionsBatchInD1(c.env.DB, ids);
+  return c.json({
+    success: result.success,
+    approvedCount: result.approvedCount,
+    failedCount: result.failedCount,
+    errors: result.errors,
+    message: result.approvedCount > 0
+      ? `총 ${result.approvedCount}건의 신청서가 캘린더에 성공적으로 일괄 승인되었습니다.`
+      : '일괄 승인에 실패했습니다.',
+  }, result.success ? 200 : 500);
+});
+
+// 4. 관리자 반려 처리
+app.post('/api/v1/admin/submissions/:id/reject', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token, c.env.DB);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const subId = parseInt(c.req.param('id'), 10);
+  const body = await c.req.json().catch(() => ({}));
+  const ok = await rejectSubmissionInD1(c.env.DB, subId, body.adminNote);
+  return c.json({ success: ok, message: ok ? '신청서가 반려 처리되었습니다.' : '반려 처리에 실패했습니다.' });
+});
+
+// 5. 관리자 신청서 삭제
+app.delete('/api/v1/admin/submissions/:id', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token, c.env.DB);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const subId = parseInt(c.req.param('id'), 10);
+  const ok = await deleteSubmissionFromD1(c.env.DB, subId);
+  return c.json({ success: ok, message: ok ? '신청서가 삭제되었습니다.' : '삭제에 실패했습니다.' });
+});
+
+// 6. 관리자 CMS 전체 등록 버튜버 목록 조회
+app.get('/api/v1/admin/streamers', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token, c.env.DB);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const streamers = c.env.PORTAL_ENABLED === 'true' ? await portalAdminStreamers(c.env.DB) : await fetchAllActiveStreamersForAdmin(c.env.DB);
+  return c.json({ success: true, streamers, total: streamers.length });
+});
+
+// 7. 관리자 CMS 버튜버 1-클릭 캘린더 삭제
+app.delete('/api/v1/admin/streamers/:slug', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token, c.env.DB);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const slug = c.req.param('slug');
+  const ok = c.env.PORTAL_ENABLED === 'true' ? await deletePortalProfile(c.env.DB, slug) : await deleteCreatorProfileFromD1(c.env.DB, slug);
+  return c.json({
+    success: ok,
+    message: ok ? '스트리머가 캘린더에서 완전히 삭제되었습니다.' : '스트리머 삭제에 실패했습니다.'
+  });
+});
+
+// 8. 관리자 CMS 프로필 일괄 자동 동기화 (Auto-Enrichment)
+app.post('/api/v1/admin/sync-profiles', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token, c.env.DB);
+  const crawlerSecret = c.env.CRAWLER_SECRET;
+  const requestSecret = c.req.header('X-Crawler-Secret') || c.req.header('x-crawler-secret');
+  const isSecretValid = crawlerSecret && requestSecret === crawlerSecret;
+
+  if (!isAuthed && !isSecretValid) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const result = await syncMissingProfilesInD1(c.env.DB);
+  return c.json({
+    success: true,
+    message: `프로필 자동 동기화 완료: ${result.updatedCount}건 갱신 (확인: ${result.totalChecked}건)`,
+    result
+  });
+});
+
+// 4. Fetch Real External Platform Profile (CHZZK, SOOP, etc.)
+app.get('/api/v1/platform/profile', async (c) => {
+  const platform = c.req.query('platform') || 'CHZZK';
+  const url = c.req.query('url') || c.req.query('channelUrl') || '';
+
+  if (!url) {
+    return c.json({
+      success: false,
+      error: '채널 URL 또는 아이디를 입력해주세요.'
+    }, 400);
+  }
+
+  const result = await fetchPlatformProfile(platform, url);
+  return c.json(result);
+});
+
+// 5. Creator Profile API Endpoint
+app.get('/api/v1/creator/:slug', async (c) => {
+  const slug = c.req.param('slug');
+  // 새 승인 소개가 기존 개인 소개 API에서도 누락되지 않게 호환 형식을 제공한다.
+  if (c.env.PORTAL_ENABLED === 'true') {
+    const profile = await readPublicPortalProfileBySlug(c.env.DB, slug);
+    if (!profile) return c.json({ success: false, error: '해당 크리에이터 프로필을 찾을 수 없습니다.' }, 404);
+    const event = portalProfileEvent(profile);
+    c.header('Cache-Control', 'no-store');
+    return c.json({ success: true, creator: { id: profile.slug, slug: profile.slug, displayName: profile.displayName,
+      description: profile.description, profileImageUrl: profile.avatarUrl, agencyName: profile.agency,
+      creatorType: profile.agency && profile.agency !== '개인세' ? 'AGENCY' : 'INDIE', language: profile.languages.join(', '), countryCode: profile.countryCode, xUrl: profile.xUrl,
+      isPublic: true, channels: [{ id: profile.slug, platform: profile.platform, channelName: profile.displayName, channelUrl: profile.channelUrl, isPrimary: true }], events: event ? [event] : [],
+    } });
+  }
+  const creator = await fetchCreatorProfileBySlug(c.env.DB || null, slug);
+
+  if (!creator) {
+    return c.json({
+      success: false,
+      error: '해당 크리에이터 프로필을 찾을 수 없습니다.'
+    }, 404);
+  }
+
+  return c.json({
+    success: true,
+    creator
+  });
+});
+
+// Update Creator Profile API Endpoint
+app.put('/api/v1/creator/:slug', async (c) => {
+  const slug = c.req.param('slug');
+  const body = await c.req.json();
+  const res = await updateCreatorProfileInD1(c.env.DB || null, slug, body);
+
+  // 데뷔 일정이 변경되었을 경우 디스코드 해당 플랫폼 채널로 맞춤 Notice 자동 발송
+  if (res.success && res.dateChanged && res.changeDetails && c.env.DISCORD_BOT_TOKEN && c.env.DB) {
+    c.executionCtx.waitUntil(
+      broadcastDebutDateChangeToDiscord(c.env.DB, c.env.DISCORD_BOT_TOKEN, res.changeDetails)
+        .then((count) => console.log(`[Discord Debut Notice] Notified ${count} channels of debut date change for ${slug}`))
+        .catch((err) => console.error('[Discord Debut Notice Error]:', err))
+    );
+  }
+
+  return c.json({
+    success: res.success,
+    dateChanged: res.dateChanged,
+    message: res.success ? '크리에이터 프로필이 성공적으로 수정되었습니다.' : '프로필 수정에 실패했습니다.'
+  });
+});
+
+// Delete Creator Profile API Endpoint
+app.delete('/api/v1/creator/:slug', async (c) => {
+  const slug = c.req.param('slug');
+  const ok = await deleteCreatorProfileFromD1(c.env.DB || null, slug);
+
+  return c.json({
+    success: ok,
+    message: ok ? '크리에이터 프로필이 성공적으로 삭제되었습니다.' : '프로필 삭제에 실패했습니다.'
+  });
+});
+
+// 7. Dynamic SEO Meta Injection for /creator/:slug
+app.get('/creator/:slug', async (c) => {
+  const slug = c.req.param('slug');
+  const creator = await fetchCreatorProfileBySlug(c.env.DB || null, slug);
+
+  const title = creator
+    ? `${creator.displayName} 버튜버 프로필·데뷔 일정 | VDébut`
+    : `버튜버 프로필 | VDébut`;
+
+  const description = creator
+    ? (creator.description || `${creator.displayName} 버튜버의 프로필과 데뷔 방송 일정 및 활동 채널 정보입니다.`)
+    : `버튜버 프로필 및 데뷔 방송 일정을 확인하세요.`;
+
+  const imageUrl = creator?.profileImageUrl || 'https://vdebut.live/og-image.png';
+  const canonicalUrl = `https://vdebut.live/creator/${slug}`;
+
+  // Schema.org JSON-LD (ProfilePage & Person)
+  const jsonLd = creator
+    ? JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ProfilePage',
+        'mainEntity': {
+          '@type': 'Person',
+          'name': creator.displayName,
+          'alternateName': creator.displayName,
+          'description': description,
+          'image': imageUrl,
+          'url': canonicalUrl,
+          'sameAs': creator.channels.map((ch) => ch.channelUrl),
+        },
+      })
+    : '';
+
+  // SPA HTML 가져오기 후 Dynamic Meta/OG/JSON-LD 주입
+  const assetManifest = JSON.parse(manifestJSON || '{}');
+  try {
+    const res = await getAssetFromKV(
+      {
+        request: c.req.raw,
+        waitUntil: (promise) => c.executionCtx.waitUntil(promise),
+      },
+      {
+        ASSET_NAMESPACE: c.env.__STATIC_CONTENT,
+        ASSET_MANIFEST: assetManifest,
+        mapRequestToAsset: serveSinglePageApp,
+      }
+    );
+
+    let html = await res.text();
+
+    // Dynamically replace SEO elements in HTML head
+    html = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
+    html = html.replace(/<meta name="title" content=".*?" \/>/, `<meta name="title" content="${title}" />`);
+    html = html.replace(/<meta name="description" content=".*?" \/>/, `<meta name="description" content="${description}" />`);
+    html = html.replace(/<link rel="canonical" href=".*?" \/>/, `<link rel="canonical" href="${canonicalUrl}" />`);
+    html = html.replace(/<meta property="og:title" content=".*?" \/>/, `<meta property="og:title" content="${title}" />`);
+    html = html.replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${description}" />`);
+    html = html.replace(/<meta property="og:url" content=".*?" \/>/, `<meta property="og:url" content="${canonicalUrl}" />`);
+    html = html.replace(/<meta property="og:image" content=".*?" \/>/, `<meta property="og:image" content="${imageUrl}" />`);
+
+    if (jsonLd) {
+      html = html.replace('</head>', `<script type="application/ld+json">${jsonLd}</script></head>`);
+    }
+
+    return c.html(html);
+  } catch (e: any) {
+    return c.text(`SPA Asset Error: ${e?.message || 'Asset NotFound'}`, 404);
+  }
+});
+
+// 7.5 Dynamic SEO Meta Injection for /upload
+app.get('/upload', async (c) => {
+  const title = `데뷔 일정 등록 | VDébut - 버튜버 데뷔 일정 신청`;
+  const description = `신입 버튜버 데뷔 일정을 VDébut 캘린더에 자유롭게 등록하고 공식 소식을 전하세요.`;
+  const canonicalUrl = `https://vdebut.live/upload`;
+
+  const assetManifest = JSON.parse(manifestJSON || '{}');
+  try {
+    const res = await getAssetFromKV(
+      {
+        request: c.req.raw,
+        waitUntil: (promise) => c.executionCtx.waitUntil(promise),
+      },
+      {
+        ASSET_NAMESPACE: c.env.__STATIC_CONTENT,
+        ASSET_MANIFEST: assetManifest,
+        mapRequestToAsset: serveSinglePageApp,
+      }
+    );
+
+    let html = await res.text();
+
+    html = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
+    html = html.replace(/<meta name="title" content=".*?" \/>/, `<meta name="title" content="${title}" />`);
+    html = html.replace(/<meta name="description" content=".*?" \/>/, `<meta name="description" content="${description}" />`);
+    html = html.replace(/<link rel="canonical" href=".*?" \/>/, `<link rel="canonical" href="${canonicalUrl}" />`);
+    html = html.replace(/<meta property="og:title" content=".*?" \/>/, `<meta property="og:title" content="${title}" />`);
+    html = html.replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${description}" />`);
+    html = html.replace(/<meta property="og:url" content=".*?" \/>/, `<meta property="og:url" content="${canonicalUrl}" />`);
+
+    return c.html(html);
+  } catch (e: any) {
+    return c.text(`SPA Asset Error: ${e?.message || 'Asset NotFound'}`, 404);
+  }
+});
+
+// 7.8 Dynamic SEO Meta Injection & Strict Noindex for /admin (CMS Console)
+app.get('/admin', async (c) => {
+  const assetManifest = JSON.parse(manifestJSON || '{}');
+  try {
+    const res = await getAssetFromKV(
+      {
+        request: c.req.raw,
+        waitUntil: (promise) => c.executionCtx.waitUntil(promise),
+      },
+      {
+        ASSET_NAMESPACE: c.env.__STATIC_CONTENT,
+        ASSET_MANIFEST: assetManifest,
+        mapRequestToAsset: serveSinglePageApp,
+      }
+    );
+
+    let html = await res.text();
+    html = html.replace(/<title>.*?<\/title>/, `<title>V-DEBUT HUB CMS Console</title>`);
+    html = html.replace('</head>', `<meta name="robots" content="noindex, nofollow, noarchive" /></head>`);
+
+    c.header('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    return c.html(html);
+  } catch (e: any) {
+    return c.text(`SPA Asset Error: ${e?.message || 'Asset NotFound'}`, 404);
+  }
+});
+
+// 9. Admin Crawler Web Search & Email Report Manual Trigger
+app.post('/api/v1/admin/crawler/run', async (c) => {
+  try {
+    const crawlerSecret = c.env.CRAWLER_SECRET;
+    const requestSecret = c.req.header('X-Crawler-Secret') || c.req.header('x-crawler-secret');
+    
+    // CRAWLER_SECRET이 설정되어 있는 경우, 헤더 비밀키와 일치 여부 검증
+    if (crawlerSecret && requestSecret !== crawlerSecret) {
+      return c.json({ success: false, error: 'Unauthorized: Invalid crawler secret key' }, 401);
+    }
+
+    const body = await c.req.json().catch(() => ({}));
+    const recipient = body.recipientEmail || 'kimjichang1234@gmail.com';
+    const result = await runDebutCrawlerProcess(c.env.DB || null, recipient);
+    return c.json({
+      success: true,
+      message: '자동 웹서치 수집 및 이메일 리포트 발송 프로세스가 성공적으로 수행되었습니다.',
+      result
+    });
+  } catch (err: any) {
+    return c.json({ success: false, error: err.message || '크롤러 실행 중 오류 발생' }, 500);
+  }
+});
+
+// 10. Admin Crawler Logs History Fetch API
+app.get('/api/v1/admin/crawler/logs', async (c) => {
+  if (!c.env.DB) {
+    return c.json({ success: false, error: 'Database binding unavailable' }, 500);
+  }
+  try {
+    const { results } = await c.env.DB.prepare(`SELECT * FROM crawler_update_logs ORDER BY run_at DESC LIMIT 50`).all();
+    return c.json({
+      success: true,
+      logs: results || []
+    });
+  } catch (err: any) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+
+// 11. Discord Interactions Webhook (서버리스 0원 Ed25519 인증 봇 엔드포인트)
+app.post('/api/v1/discord/interactions', async (c) => {
+  const signature = c.req.header('X-Signature-Ed25519') || '';
+  const timestamp = c.req.header('X-Signature-Timestamp') || '';
+  const rawBody = await c.req.text();
+
+  // 1. Ed25519 서명 유효성 검증 (DISCORD_PUBLIC_KEY 환경변수가 있는 경우 보안 강제)
+  if (c.env.DISCORD_PUBLIC_KEY) {
+    const isValid = await verifyDiscordSignature(
+      rawBody,
+      signature,
+      timestamp,
+      c.env.DISCORD_PUBLIC_KEY
+    );
+    if (!isValid) {
+      return c.text('Invalid request signature', 401);
+    }
+  }
+
+  // 2. 상호작용(Interaction) 디스패칭
+  try {
+    const body = JSON.parse(rawBody);
+    const responsePayload = await handleDiscordInteraction(body, c.env);
+    return c.json(responsePayload);
+  } catch (err: any) {
+    console.error('[Discord Interaction Handler Error]:', err);
+    return c.json(
+      { type: 4, data: { content: '⚠️ 디스코드 요청 처리 중 서버 내부 오류가 발생했습니다.' } },
+      500
+    );
+  }
+});
+
+// 12. 관리자 디스코드 브로드캐스트 즉시 테스트 API
+app.post('/api/v1/admin/discord/test-broadcast', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token, c.env.DB);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  if (!c.env.DISCORD_BOT_TOKEN) {
+    return c.json({ success: false, error: 'DISCORD_BOT_TOKEN 환경변수가 설정되지 않았습니다.' }, 400);
+  }
+
+  const testPayload = {
+    id: 'test_evt',
+    startAtUtc: new Date(Date.now() + 3600000).toISOString(),
+    creator: {
+      displayName: '테스트 버튜버',
+      avatarUrl: 'https://vdebut.live/logo.png',
+      agency: 'V-DEBUT HUB 테스트세',
+      description: '디스코드 봇 브로드캐스트 연동 테스트 메시지입니다.',
+    },
+    links: [{ platform: 'CHZZK', url: 'https://vdebut.live', isPrimary: true }],
+  };
+
+  const sentCount = await broadcastNewDebutToDiscord(c.env.DB, c.env.DISCORD_BOT_TOKEN, testPayload);
+  return c.json({
+    success: true,
+    message: `테스트 브로드캐스트 발송 완료: 총 ${sentCount}개 채널로 전송되었습니다.`,
+    sentCount,
+  });
+});
+
+// 12-2. 관리자 플랫폼별 데뷔 일자 변경 Notice 테스트 발송 API
+app.post('/api/v1/admin/discord/test-date-change-notice', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token, c.env.DB);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  if (!c.env.DISCORD_BOT_TOKEN) {
+    return c.json({ success: false, error: 'DISCORD_BOT_TOKEN 환경변수가 설정되지 않았습니다.' }, 400);
+  }
+
+  const body = await c.req.json().catch(() => ({}));
+  const platform = (body.platform || 'CHZZK').toUpperCase();
+  const isSoop = platform === 'SOOP';
+
+  const testPayload: DebutDateChangePayload = {
+    displayName: body.displayName || (isSoop ? '테스트 SOOP 버튜버' : '테스트 치지직 버튜버'),
+    avatarUrl: body.avatarUrl || 'https://vdebut.live/logo.png',
+    platform: platform,
+    channelUrl: body.channelUrl || (isSoop ? 'https://bj.afreecatv.com/sample' : 'https://chzzk.naver.com/sample'),
+    agency: body.agency || (body.includeAgency ? '스타버스 엔터테인먼트' : undefined),
+    oldDebutDateStr: body.oldDate || '2026-09-20 20:00 (KST)',
+    newDebutDateStr: body.newDate || '2026-09-25 19:00 (KST)',
+    reason: body.reason || '방송 장비 세팅 및 3D 모델링 리깅 보완 작업으로 인해 일정이 5일 연기되었습니다.',
+  };
+
+  const sentCount = await broadcastDebutDateChangeToDiscord(c.env.DB, c.env.DISCORD_BOT_TOKEN, testPayload);
+  return c.json({
+    success: true,
+    platform,
+    message: `${platform} 데뷔 일정 변경 테스트 Notice 발송 완료: 총 ${sentCount}개 채널로 전송되었습니다.`,
+    sentCount,
+  });
+});
+
+// 13. 관리자 즉시 자동 심사 파이프라인 수동 기동 API
+app.post('/api/v1/admin/auto-review/run', async (c) => {
+  if (!c.env.DB) return c.json({ success: false, error: 'Database unavailable' }, 500);
+
+  const authHeader = c.req.header('Authorization') || c.req.header('X-Admin-Token') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const isAuthed = await validateAdminToken(token, c.env.DB);
+  if (!isAuthed) {
+    return c.json({ success: false, error: 'Unauthorized: 관리자 인증이 필요합니다.' }, 401);
+  }
+
+  const report = await runAutoReviewPipeline(c.env.DB);
+  return c.json({
+    success: true,
+    message: `자동 심사 완료: 대기열 ${report.totalProcessed}건 검증 중 ${report.approvedCount}건 자동 승인, ${report.rejectedCount}건 반려, ${report.heldCount}건 보류`,
+    report,
+  });
+});
+
+// 14. VDébut Analytics Dashboard API Endpoints
+// 새 대시보드는 예시 자료를 사용하지 않고 실제 수집 결과만 전달한다.
+// 등록된 채널 및 치지직/SOOP 플랫폼 전체에서 스트리머를 실시간 검색한다.
+app.get('/api/analytics/streamers/search', async (c) => {
+  const query = c.req.query('q') || '';
+  if (query.length > 80) return c.json({ error: '검색어는 80자 이내로 입력해 주세요.' }, 400);
+  const includeExternal = c.req.query('external') !== 'false';
+  const platform = c.req.query('platform') || 'ALL';
+  if (!['ALL', 'CHZZK', 'SOOP'].includes(platform)) return c.json({ error: '검색 플랫폼을 확인해 주세요.' }, 400);
+  try {
+    const result = await searchStatisticsStreamers(c.env.DB, query, includeExternal, platform as 'ALL' | 'CHZZK' | 'SOOP');
+    c.header('Cache-Control', 'public, max-age=15');
+    return c.json(result);
+  } catch (error) {
+    console.error('[Statistics] Streamer search failed', String(error));
+    return c.json({ error: '스트리머 정보를 불러오지 못했습니다.' }, 503);
+  }
+});
+
+// 외부 검색 스트리머를 VDébut DB에 정식 등록/수집 연동하는 1-클릭 엔드포인트
+app.post('/api/analytics/streamers/register', async (c) => {
+  if (!c.env.DB) {
+    return c.json({ success: false, message: 'D1 데이터베이스가 구성되지 않았습니다.' }, 503);
+  }
+  try {
+    const body = await c.req.json();
+    if (!body || !body.platform || !body.channelUrl || !body.name) {
+      return c.json({ success: false, message: '필수 스트리머 정보가 누락되었습니다.' }, 400);
+    }
+    const result = await registerExternalStreamerToD1(c.env.DB, body);
+    return c.json(result);
+  } catch (error: any) {
+    console.error('[Statistics] Streamer auto-register failed', error);
+    return c.json({ success: false, message: error?.message || '스트리머 등록에 실패했습니다.' }, 500);
+  }
+});
+
+// 미등록 스트리머 온디맨드 자동 등록 및 실시간 프로필 조회 엔드포인트 (Smart Fallback)
+app.all('/api/analytics/streamers/resolve', async (c) => {
+  if (!c.env.DB) {
+    return c.json({ success: false, message: 'D1 데이터베이스가 구성되지 않았습니다.' }, 503);
+  }
+  let channelKey = c.req.query('channelKey');
+  if (!channelKey && c.req.method === 'POST') {
+    try {
+      const body = await c.req.json();
+      channelKey = body?.channelKey;
+    } catch { /* 무시 */ }
+  }
+  if (!channelKey) {
+    return c.json({ success: false, message: 'channelKey 파라미터가 필요합니다.' }, 400);
+  }
+  try {
+    const result = await ensureStreamerRegistered(c.env.DB, channelKey);
+    return c.json(result);
+  } catch (error: any) {
+    console.error('[Statistics] Streamer resolve failed', error);
+    return c.json({ success: false, message: error?.message || '스트리머 조회/등록에 실패했습니다.' }, 500);
+  }
+});
+app.get('/api/analytics/broadcast-statistics', async (c) => {
+  const date = c.req.query('date');
+  const forceFresh = c.req.query('fresh') === 'true';
+  const isPastDate = !!date && /^\d{4}-\d{2}-\d{2}$/.test(date);
+  const cacheUrl = isPastDate
+    ? `${new URL(c.req.url).origin}/api/analytics/broadcast-statistics?date=${date}`
+    : `${new URL(c.req.url).origin}/api/analytics/broadcast-statistics`;
+  const cacheKey = new Request(cacheUrl);
+  if (!forceFresh) {
+    const cached = await caches.default.match(cacheKey);
+    if (cached) return cached;
+  }
+  try {
+    const result = await getBroadcastStatistics(c.env.DB, date, forceFresh);
+    const cacheControl = isPastDate
+      ? 'public, max-age=86400, s-maxage=86400'
+      : 'public, max-age=30, s-maxage=60';
+    const response = new Response(JSON.stringify(result), {
+      headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': cacheControl },
+    });
+    c.executionCtx.waitUntil(caches.default.put(cacheKey, response.clone()));
+    return response;
+  } catch (error) {
+    console.error('[Statistics] Request failed', String(error));
+    return c.json({ error: '방송 통계를 불러오지 못했습니다.' }, 503);
+  }
+});
+
+// 전체 방송 현황과 검색한 스트리머의 활동을 같은 기준으로 조회한다.
+app.get('/api/analytics/activity', async (c) => {
+  const defaults = activityPeriod(7);
+  const from = c.req.query('from') || defaults.from;
+  const to = c.req.query('to') || defaults.to;
+  const platform = c.req.query('platform') || 'ALL';
+  const category = c.req.query('category') || '';
+  const channel = c.req.query('channel') || '';
+  if (!validActivityRange(from, to) || !['ALL', 'CHZZK', 'SOOP'].includes(platform)
+    || category.length > 100 || (channel && !/^(CHZZK:[a-f0-9]{32}|SOOP:[a-z0-9_]{1,50})$/i.test(channel))) {
+    return c.json({ error: '조회 조건을 확인해 주세요.' }, 400);
+  }
+  try {
+    const selectedPlatform = channel ? channel.toUpperCase().startsWith('SOOP:') ? 'SOOP' : 'CHZZK' : platform as 'ALL' | 'CHZZK' | 'SOOP';
+    // 검증된 공개 조회 조건만 정규화해 같은 집계 결과를 2분간 재사용한다.
+    const key = new URL('/api/analytics/activity', c.req.url);
+    key.search = new URLSearchParams({ from, to, platform: selectedPlatform, channel, category, cache: 'v2' }).toString();
+    return await publicResponseCache(c.req.raw, key, 120, async () => c.json(await getBroadcastActivity(c.env.DB, { from, to, platform: selectedPlatform, category, channel })), (promise) => c.executionCtx.waitUntil(promise));
+  } catch (error) {
+    console.error('[Statistics] Activity request failed', String(error));
+    c.header('Cache-Control', 'no-store');
+    return c.json({ error: '방송 통계를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.' }, 503);
+  }
+});
+
+// 차트 선택과 이력 더 보기는 요약 집계를 다시 실행하지 않는다.
+app.get('/api/analytics/activity/broadcasts', async (c) => {
+  const defaults = activityPeriod(7);
+  const from = c.req.query('from') || defaults.from;
+  const to = c.req.query('to') || defaults.to;
+  const platform = c.req.query('platform') || 'ALL';
+  const category = c.req.query('category') || '';
+  const channel = c.req.query('channel') || '';
+  const day = c.req.query('day') || '';
+  const weekday = c.req.query('weekday') === undefined ? null : Number(c.req.query('weekday'));
+  const hour = c.req.query('hour') === undefined ? null : Number(c.req.query('hour'));
+  const timeMetric = c.req.query('timeMetric') || 'activity';
+  const cursor = c.req.query('cursor') || '';
+  const asOf = c.req.query('asOf') || new Date().toISOString();
+  if (!validActivityRange(from, to) || !['ALL', 'CHZZK', 'SOOP'].includes(platform) || category.length > 100
+    || (channel && !/^(CHZZK:[a-f0-9]{32}|SOOP:[a-z0-9_]{1,50})$/i.test(channel))
+    || (day && (!validActivityRange(day, day) || day < from || day > to))
+    || (weekday !== null && (!Number.isInteger(weekday) || weekday < 0 || weekday > 6))
+    || (hour !== null && (!Number.isInteger(hour) || hour < 0 || hour > 23)) || (weekday === null) !== (hour === null)
+    || (day && weekday !== null) || !['activity', 'starts'].includes(timeMetric) || cursor.length > 800 || !readActivityCursor(cursor)
+    || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(asOf) || !Number.isFinite(Date.parse(asOf)) || Date.parse(asOf) > Date.now() + 1000) {
+    return c.json({ error: '조회 조건을 확인해 주세요.' }, 400);
+  }
+  try {
+    const selectedPlatform = channel ? channel.toUpperCase().startsWith('SOOP:') ? 'SOOP' : 'CHZZK' : platform as 'ALL' | 'CHZZK' | 'SOOP';
+    const key = new URL('/api/analytics/activity/broadcasts', c.req.url);
+    key.search = new URLSearchParams({ from, to, platform: selectedPlatform, category, channel, day, weekday: String(weekday), hour: String(hour), timeMetric, cursor, asOf, cache: 'v2' }).toString();
+    return await publicResponseCache(c.req.raw, key, 120, async () => c.json(await getActivityBroadcastPage(c.env.DB, { from, to, platform: selectedPlatform, category, channel },
+      { day, weekday, hour, timeMetric: timeMetric as 'activity' | 'starts' }, cursor, asOf)), (promise) => c.executionCtx.waitUntil(promise));
+  } catch (error) {
+    console.error('[Statistics] Activity history request failed', String(error));
+    c.header('Cache-Control', 'no-store');
+    return c.json({ error: '방송 이력을 불러오지 못했습니다. 다시 시도해 주세요.' }, 503);
+  }
+});
+
+// 특정 스트리머의 기존 방송 이력 엔드포인트를 유지한다.
+app.get('/api/analytics/streamers/:key/history', async (c) => {
+  const key = decodeURIComponent(c.req.param('key') || '');
+  const days = Number(c.req.query('days')) || 7;
+  if (!key) return c.json({ error: '스트리머 키가 필요합니다.' }, 400);
+  try {
+    const result = await getStreamerBroadcastHistory(c.env.DB, key, days);
+    c.header('Cache-Control', 'public, max-age=120');
+    return c.json(result);
+  } catch (error) {
+    console.error('[Statistics] Streamer history failed', String(error));
+    return c.json({ error: '스트리머 방송 이력을 불러오지 못했습니다.' }, 500);
+  }
+});
+app.get('/api/analytics/overview', async (c) => {
+  const platform = c.req.query('platform') || 'ALL';
+  const result = await getAnalyticsOverview(c.env.DB, platform);
+  return c.json(result);
+});
+
+app.get('/api/analytics/timeseries', async (c) => {
+  const platform = c.req.query('platform') || 'ALL';
+  const dayScope = c.req.query('day_scope') || 'ALL';
+  const result = await getAnalyticsTimeseries(c.env.DB, platform, dayScope);
+  return c.json(result);
+});
+
+app.get('/api/analytics/heatmap', async (c) => {
+  const platform = c.req.query('platform') || 'ALL';
+  const result = await getAnalyticsHeatmap(c.env.DB, platform);
+  return c.json(result);
+});
+
+app.get('/api/analytics/categories', async (c) => {
+  const platform = c.req.query('platform') || 'ALL';
+  const result = await getAnalyticsCategories(c.env.DB, platform);
+  return c.json(result);
+});
+
+app.get('/api/analytics/opportunities', async (c) => {
+  const platform = (c.req.query('platform') || 'ALL') as any;
+  const dayScope = (c.req.query('day_scope') || 'ALL') as any;
+  const creatorTier = (c.req.query('creator_tier') || 'ALL') as any;
+  const categoryGroup = (c.req.query('category_group') || 'ALL') as any;
+  const result = await getAnalyticsOpportunities(c.env.DB, {
+    platform,
+    dayScope,
+    creatorTier,
+    categoryGroup,
+  } as any);
+  return c.json(result);
+});
+
+app.post('/api/analytics/opportunities', async (c) => {
+  try {
+    const body = await c.req.json();
+    const result = await getAnalyticsOpportunities(c.env.DB, body);
+    return c.json(result);
+  } catch (err: any) {
+    return c.json({ error: 'Invalid opportunity payload', details: err?.message }, 400);
+  }
+});
+
+// 수동 즉시 수집 트리거 (1회성 스냅샷 수집)
+app.post('/api/analytics/collect-now', async (c) => {
+  try {
+    const results = await collectBroadcastStatistics(c.env.DB, Date.now());
+    return c.json({ success: true, results, timestamp: new Date().toISOString() });
+  } catch (err: any) {
+    return c.json({ success: false, error: err?.message || 'Collection failed' }, 500);
+  }
+});
+
+app.get('/api/analytics/live-samples', async (c) => {
+  const platform = c.req.query('platform') || 'ALL';
+  const result = await getAnalyticsLiveSamples(c.env.DB, platform);
+  return c.json(result);
+});
+
+app.get('/api/analytics/methodology', (c) => {
+  const result = getAnalyticsMethodology();
+  return c.json(result);
+});
+
+app.get('/api/analytics/current-content', async (c) => {
+  const platform = c.req.query('platform') || 'CHZZK';
+  const result = await getCurrentContentDrilldown(c.env.DB, platform);
+  c.header('Cache-Control', 'public, max-age=30, s-maxage=60');
+  return c.json(result);
+});
+
+// 14.2 VDébut 실시간 방송 탐색 API (기획서 10.2절: GET /api/discovery/live)
+app.get('/api/discovery/live', async (c) => {
+  const platform = (c.req.query('platform') || 'ALL').toUpperCase() as 'ALL' | 'CHZZK' | 'SOOP';
+  const categoryGroup = c.req.query('category') || c.req.query('categoryGroup') || 'ALL';
+  const game = c.req.query('game') || 'ALL';
+  const sort = (c.req.query('sort') || 'viewers') as 'viewers' | 'recent';
+  const query = c.req.query('q') || c.req.query('query') || '';
+
+  const result = await getLiveDiscovery(c.env.DB, {
+    platform,
+    categoryGroup,
+    game,
+    sort,
+    query,
+  });
+
+  c.header('Cache-Control', 'public, max-age=30, s-maxage=60');
+  return c.json(result);
+});
+
+// 14.3 VDébut 방송 기록(History) 타임라인 조회 API
+app.get('/api/discovery/history', async (c) => {
+  const date = c.req.query('date') || '';
+  const hourParam = c.req.query('hour');
+  const hour = hourParam !== undefined && hourParam !== '' ? Number(hourParam) : undefined;
+  const platform = (c.req.query('platform') || 'ALL').toUpperCase() as 'ALL' | 'CHZZK' | 'SOOP';
+  const category = c.req.query('category') || c.req.query('categoryGroup') || 'ALL';
+  const streamer = c.req.query('streamer') || '';
+  const query = c.req.query('q') || c.req.query('query') || '';
+
+  const result = await getLiveHistory(c.env.DB, {
+    date,
+    hour,
+    platform,
+    category,
+    streamer,
+    query,
+  });
+
+  c.header('Cache-Control', 'public, max-age=60, s-maxage=120');
+  return c.json(result);
+});
+
+// 14.4 VDébut 스트리머 방송 이력 요약 API
+app.get('/api/discovery/history/creator', async (c) => {
+  const name = c.req.query('name') || c.req.query('streamer') || '';
+  if (!name.trim()) {
+    return c.json({ error: 'Streamer name is required' }, 400);
+  }
+
+  const result = await getCreatorHistory(c.env.DB, name);
+  if (!result) {
+    return c.json({ error: 'Creator not found' }, 404);
+  }
+
+  c.header('Cache-Control', 'public, max-age=120, s-maxage=300');
+  return c.json(result);
+});
+
+// 통계 주소는 검색로봇과 사용자에게 같은 초기 본문과 메타데이터를 제공한다.
+const activityPageHandler = async (c: any) => {
+  const url = new URL(c.req.url);
+  let channel = '';
+  if (url.pathname.startsWith('/analytics/streamer/')) {
+    try { channel = decodeURIComponent(url.pathname.slice('/analytics/streamer/'.length)); } catch { return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404); }
+    if (!/^(CHZZK:[a-f0-9]{32}|SOOP:[a-z0-9_]{1,50})$/i.test(channel)) return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404);
+    channel = `${channel.split(':')[0].toUpperCase()}:${channel.split(':')[1].toLowerCase()}`;
+  } else if (!['/analytics', '/analytics/chzzk', '/analytics/soop'].includes(url.pathname)) {
+    c.header('X-Robots-Tag', 'noindex');
+    return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404);
+  }
+  const defaults = activityPeriod(7);
+  const from = url.searchParams.get('from') || url.searchParams.get('date') || defaults.from;
+  const to = url.searchParams.get('to') || url.searchParams.get('date') || defaults.to;
+  const platformValue = url.pathname === '/analytics/chzzk' ? 'CHZZK' : url.pathname === '/analytics/soop' ? 'SOOP' : url.searchParams.get('platform');
+  const filters = { ...(validActivityRange(from, to) ? { from, to } : defaults), channel,
+    platform: (platformValue === 'CHZZK' || platformValue === 'SOOP' ? platformValue : 'ALL') as 'ALL' | 'CHZZK' | 'SOOP', category: (url.searchParams.get('category') || '').slice(0, 100) };
+  try {
+    const data = await getBroadcastActivity(c.env.DB, filters);
+    if (channel && !data.streamer?.isRegistered && !url.searchParams.has('name')) {
+      const exists = await c.env.DB.prepare('SELECT 1 FROM analytics_broadcast_snapshots WHERE channel_key=? COLLATE NOCASE LIMIT 1').bind(channel).first();
+      if (!exists) { c.header('X-Robots-Tag', 'noindex'); return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404); }
+    }
+    // 통계의 초기 본문과 조회 자료를 새 셸에서도 그대로 유지한다.
+    const shellRequest = c.env.PORTAL_ENABLED === 'true' ? new Request(new URL(new URL(c.req.url).hostname === 'vdebut.live' ? '/portal.html' : '/dev.html', c.req.url), c.req.raw) : c.req.raw;
+    const asset = await getAssetFromKV({ request: shellRequest, waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, {
+      // 지정한 포털 HTML을 SPA 기본 index.html로 다시 바꾸지 않는다.
+      ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}'),
+      ...(c.env.PORTAL_ENABLED === 'true' ? {} : { mapRequestToAsset: serveSinglePageApp }),
+    });
+    c.header('Cache-Control', 'public, max-age=60, s-maxage=120');
+    if (activityNoindex(url, data)) c.header('X-Robots-Tag', 'noindex, follow');
+    return c.html(renderActivityPage(await asset.text(), url, filters, data));
+  } catch (error) {
+    console.error('[Statistics] Initial page failed', String(error));
+    c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex');
+    return c.html(publicErrorPage(url, '방송 통계를 불러오지 못했어요', 503), 503);
+  }
+};
+app.get('/analytics', activityPageHandler);
+app.get('/analytics/*', activityPageHandler);
+
+// 15. Safe Static Asset & SPA Fallback Handler
+app.all('*', async (c) => {
+  const assetManifest = JSON.parse(manifestJSON || '{}');
+  try {
+    return await getAssetFromKV(
+      {
+        request: c.req.raw,
+        waitUntil: (promise) => c.executionCtx.waitUntil(promise),
+      },
+      {
+        ASSET_NAMESPACE: c.env.__STATIC_CONTENT,
+        ASSET_MANIFEST: assetManifest,
+        mapRequestToAsset: serveSinglePageApp,
+      }
+    );
+  } catch (e: any) {
+    return c.text(`SPA Asset Error: ${e?.message || 'Asset NotFound'}`, 404);
+  }
+});
+
+// Cloudflare Workers Scheduled Cron Handler (1시간 주기 자동 심사, 모닝 브리핑 및 정기 크롤러 수행)
+export default {
+  fetch: app.fetch,
+  async scheduled(event: any, env: Bindings, ctx: any) {
+    const scheduledTime = event?.scheduledTime || Date.now();
+    // 매주 월요일 00:00(KST) 주간 응원 수 초기화 전용 크론은 다른 수집 작업과 분리한다.
+    if (event?.cron === WEEKLY_RESET_CRON) {
+      if (env.DB) ctx.waitUntil(resetWeeklyCheers(env.DB).then(() => console.log('[Scheduled Cron] Weekly cheers reset')).catch((err) => console.error('[Scheduled Cron] Weekly cheers reset error:', err)));
+      return;
+    }
+    if (env.DB) {
+      ctx.waitUntil(
+        collectBroadcastStatistics(env.DB, scheduledTime)
+          .then((reports) => console.log('[Scheduled Cron] Broadcast statistics collected:', JSON.stringify(reports)))
+          .catch((err) => console.error('[Scheduled Cron] Broadcast statistics error:', err))
+      );
+    }
+    if (env.DB && new Date().getUTCMinutes() < 10) {
+      // 1. 신청서 3단계 자동 심사 및 캘린더 자동 반영 파이프라인 (매시간 1회 자동 실행)
+      ctx.waitUntil(
+        runAutoReviewPipeline(env.DB)
+          .then((report) => console.log('[Scheduled Cron] Auto-review success:', report.approvedCount, 'approved /', report.totalProcessed, 'processed'))
+          .catch((err) => console.error('[Scheduled Cron] Auto-review error:', err))
+      );
+
+      // 2. 누락 프로필 자동 동기화
+      ctx.waitUntil(
+        syncMissingProfilesInD1(env.DB)
+          .then((res) => console.log('[Scheduled Cron] Profile sync success:', res.updatedCount))
+          .catch((err) => console.error('[Scheduled Cron] Profile sync error:', err))
+      );
+
+      // 3. 치지직 실시간 라이브 스냅샷 정기 수집
+      ctx.waitUntil(
+        collectChzzkLiveSnapshot(env.DB)
+          .then((res) => console.log('[Scheduled Cron] Chzzk live snapshot collected:', res.collectedCount, 'lives /', res.vtuberMatchCount, 'matched'))
+          .catch((err) => console.error('[Scheduled Cron] Chzzk live snapshot error:', err))
+      );
+
+      // 4. 디스코드 모닝 데뷔 브리핑 발송 (KST 오전 9시 = UTC 00시)
+      const nowUtc = new Date();
+      if (nowUtc.getUTCHours() === 0 && env.DISCORD_BOT_TOKEN) {
+        ctx.waitUntil(
+          broadcastMorningBriefingToDiscord(env.DB, env.DISCORD_BOT_TOKEN)
+            .then((sentCount) => console.log('[Scheduled Cron] Discord morning briefing sent to channels:', sentCount))
+            .catch((err) => console.error('[Scheduled Cron] Discord morning briefing error:', err))
+        );
+      }
+    }
+    const isKst7Am = (new Date(scheduledTime).getUTCHours() === 22 && new Date().getUTCMinutes() < 10) || event?.cron === '0 22 * * *';
+    if (isKst7Am) {
+      ctx.waitUntil(
+      runDebutCrawlerProcess(env.DB || null, 'kimjichang1234@gmail.com')
+        .then((res) => console.log(`[Scheduled Cron] 07:00 KST Debut sync success: Range=${res.auditRange?.description}, Total=${res.totalCrawledCount}, New=${res.newDiscoveredCount}`))
+        .catch((err) => console.error('[Scheduled Cron] Error:', err))
+    );
+    }
+  }
+};

@@ -1,0 +1,140 @@
+/* 활동명·일정·본문·보조 정보의 크기와 대비를 단계별로 구분한다. */
+.vd-profile-experience { padding-bottom: 12px; }
+.vd-profile-experience .vd-profile-cover { height: 156px; }
+.vd-profile-identity { position: relative; padding: 0 32px 24px; display: flex; gap: 24px; align-items: flex-start; margin-top: -40px; }
+.vd-profile-identity .vd-avatar-large { width: 112px; height: 112px; border: 5px solid white; border-radius: 28px; }
+.vd-profile-identity-copy { min-width: 0; flex: 1; padding-top: 49px; }
+.vd-profile-identity-copy h1,.vd-profile-identity-copy h2 { font-size: 36px; font-weight: 800; overflow-wrap: anywhere; margin: 0 0 8px; }
+.vd-profile-headline { color: #40516b; font-size: 16px; line-height: 1.65; overflow-wrap: anywhere; margin-bottom: 8px!important; }
+.vd-profile-experience .vd-profile-meta { font-size: 13px; color: #64748b; gap: 14px; align-items: center; }
+.vd-profile-meta .vd-platform { font-size: 12px; }
+.vd-profile-meta .vd-profile-agency { color: #334155; font-size: 14px; font-weight: 650; }
+/* 저장·공유는 배너 쪽에 두어 이름 다음에 소개가 바로 이어지게 한다. */
+.vd-profile-tools { position: absolute; top: -14px; right: 32px; display: flex; align-items: center; gap: 10px; }
+.vd-profile-tools .vd-icon-button { width: 40px; height: 40px; background: rgba(255, 255, 255, 0.95); border: 1px solid #dce3ee; border-radius: 9px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+.vd-profile-tools .vd-icon-button:hover { background: #f6f9fd; border-color: #b7c8e1; }
+.vd-profile-tools .vd-button { min-height: 40px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+.vd-profile-identity .vd-tags { margin: 12px 0 0; }
+/* 일정은 이미 본 캘린더의 보조 정보로 낮추고 소개 다음에 채널 방문을 연결한다. */
+.vd-debut-callout { margin: 0 32px 28px; padding: 18px 0 0; border-top: 1px solid #e4eaf2; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.vd-profile-label { display: block; color: #64748b; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+.vd-debut-date { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.vd-debut-callout h2 { font-size: 22px; font-weight: 750; margin: 0; overflow-wrap: anywhere; }
+.vd-profile-timezone { font-size: 12px; color: #64748b; white-space: nowrap; }
+.vd-debut-callout .vd-text-button { margin-top: 8px; color: #52647c!important; font-weight: 500; }
+.vd-profile-countdown { display: flex; align-items: center; gap: 6px; color: #52647c; font-size: 13px; font-weight: 500; margin-top: 8px; }
+.vd-profile-channel-action { margin: 0 32px 28px; }
+.vd-debut-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; max-width: 330px; }
+.vd-profile-about { padding: 0 32px 24px; }
+.vd-profile-about .vd-intro-text { color: #40516b; font-size: 16px; line-height: 1.85; white-space: pre-wrap; overflow-wrap: anywhere; max-width: 860px; }
+.vd-profile-destinations { margin-top: 24px; }
+.vd-profile-destinations:empty { display: none; }
+.vd-profile-destinations .vd-panel { padding: 24px 28px; }
+.vd-profile-destinations .vd-profile-links { grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); }
+.vd-profile-content { display: grid; gap: 22px; min-width: 0; }
+.vd-profile-media { margin-top: 24px; }
+.vd-profile-media:empty { display: none; }
+.vd-profile-activity { display: inline-flex; gap: 8px; align-items: center; margin-top: 24px; color: #64748b!important; font-size: 13px; }
+.vd-profile-activity:hover { color: #2563eb!important; }
+.vd-profile-content .vd-panel { padding: 28px; }
+.vd-profile-experience .vd-panel h2 { font-size: 18px; font-weight: 700; margin: 0 0 18px; }
+.vd-profile-experience .vd-debut-callout h2 { margin: 0; }
+.vd-profile-experience .vd-profile-languages { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; color: #52647c; font-size: 13px; }
+.vd-profile-languages>span { color: #64748b; }
+.vd-profile-related>.vd-section-heading h2 { font-size: 18px; font-weight: 700; }
+.vd-profile-links { display: grid; gap: 10px; }
+.vd-profile-links a { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 12px 14px; background: white; border: 1px solid #e4eaf2; border-radius: 9px; font-size: 14px; min-height: 46px; min-width: 0; }
+.vd-profile-links a:hover { background: #edf4ff; border-color: #c8d9f5; }
+.vd-profile-links a>span { flex: 1; }
+.vd-profile-links .vd-platform { display: flex; color: #40516b; font-size: 14px; font-weight: 600; }
+.vd-profile-links strong { display: block; font-weight: 600; }
+.vd-profile-links small { display: block; color: #7a879b; overflow-wrap: anywhere; }
+.vd-profile-links .vd-text-button { justify-content: center; background: transparent; }
+.vd-video-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 18px; }
+.vd-profile-experience .vd-video-heading h2 { margin: 0; overflow-wrap: anywhere; }
+.vd-profile-video { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; border-radius: 11px; background: #17263d; }
+.vd-profile-video>button { position: absolute; inset: 0; width: 100%; border: 0; background: #17263d; color: white; padding: 0; }
+.vd-profile-video img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .7; }
+.vd-profile-video .vd-video-play { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border: 1px solid #ffffff55; border-radius: 99px; background: #14243ee6; font-size: 13px; font-weight: 650; }
+.vd-profile-video iframe { display: block; width: 100%; height: 100%; border: 0; }
+/* 소속·팀은 제목에 모으고 멤버 카드는 얼굴, 활동명, 데뷔 시각 순서로 읽는다. */
+.vd-profile-content .vd-debut-group { padding: 6px 0 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+.vd-debut-group-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+.vd-debut-group-agency { color: #475569; font-size: 15px; font-weight: 650; margin: 0 0 6px; }
+.vd-profile-experience .vd-debut-group-heading h2 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; font-size: 28px; font-weight: 800; letter-spacing: -.7px; line-height: 1.2; margin: 0; }
+.vd-debut-group-heading h2>span { color: #64748b; font-size: 14px; font-weight: 500; letter-spacing: 0; }
+.vd-debut-group-timezone { color: #7b8799; font-size: 11px; }
+.vd-debut-members { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 14px; }
+.vd-debut-members li { min-width: 0; border: 1px solid #e6eaf0; border-radius: 18px; background: #fff; overflow: hidden; }
+.vd-debut-members li[aria-current] { border-color: #bccdf2; background: #f0f5ff; }
+.vd-debut-member { height: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 24px 14px 20px; }
+.vd-debut-members a.vd-debut-member:hover { background: #eef3fc; }
+.vd-debut-members a.vd-debut-member:focus-visible { outline: 3px solid #2563eb; outline-offset: -3px; border-radius: 18px; }
+.vd-debut-member .vd-avatar { width: 112px; height: 112px; border-radius: 26px; font-size: 38px; box-shadow: 0 5px 18px #182a4510; margin-bottom: 18px; flex-shrink: 0; }
+.vd-debut-member h3 { color: #15243b; font-size: 20px; font-weight: 800; line-height: 1.4; margin: 0 0 16px; overflow-wrap: anywhere; }
+.vd-debut-member-date { display: flex; flex-direction: column; gap: 5px; align-items: center; margin-top: auto; font-variant-numeric: tabular-nums; }
+.vd-debut-member-date>span { color: #52627a; font-size: 14px; font-weight: 500; }
+.vd-debut-member-date>strong { color: #1e3a65; font-size: 21px; font-weight: 750; letter-spacing: -.4px; }
+.vd-debut-member-pending { margin: auto 0 0; color: #52627a; font-size: 13px; overflow-wrap: anywhere; }
+/* 선택 입력은 등록 화면·관리 화면에서도 같은 배치로 읽고 수정한다. */
+.vd-presentation-fields { display: grid; gap: 18px; min-width: 0; }
+.vd-presentation-fields label { display: flex; flex-direction: column; gap: 7px; font-size: 12px; font-weight: 650; min-width: 0; }
+.vd-presentation-fields input,.vd-presentation-fields select { width: 100%; min-width: 0; border: 1px solid #dce4ef; border-radius: 8px; padding: 10px 12px; background: white; color: #40516b; font-size: 12px; }
+.vd-presentation-fields small { color: #7b899d; font-size: 11px; font-weight: 400; }
+.vd-presentation-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 16px; }
+.vd-presentation-channels { border: 1px solid #e4eaf2; padding: 16px; border-radius: 10px; min-width: 0; margin: 0; }
+.vd-presentation-channels legend { padding: 0 6px; font-weight: 650; font-size: 13px; }
+.vd-presentation-channel { display: grid; grid-template-columns: 110px minmax(0,1fr) 32px; gap: 8px; align-items: center; margin: 12px 0; }
+.vd-presentation-channels>.vd-button { margin-top: 12px; }
+.vd-presentation-group { padding-top: 18px; border-top: 1px solid #e4eaf2; }
+.vd-presentation-group>p { margin: 8px 0 14px; }
+.vd-profile-preview { margin-top: 20px; padding: 20px; background: #f7f9fc; border: 1px solid #e4eaf2; border-radius: 14px; }
+.vd-profile-preview>summary { color: #2563eb; font-size: 13px; font-weight: 700; }
+.vd-profile-preview .vd-profile-experience { margin-top: 20px; }
+/* 작은 화면에서도 소개 다음에 일정과 방문 버튼을 이어서 보여준다. */
+@media(max-width:1000px) {
+  .vd-profile-identity { gap: 16px; flex-wrap: wrap; }
+  .vd-profile-tools { right: 22px; }
+  .vd-debut-callout { align-items: flex-start; flex-direction: column; }
+  .vd-debut-actions { justify-content: flex-start; max-width: none; }
+}
+@media(max-width:760px) {
+  .vd-profile-identity { padding: 0 22px 22px; }
+  .vd-profile-about { padding: 0 22px 22px; }
+  .vd-debut-callout,.vd-profile-channel-action { margin: 0 22px 22px; }
+}
+@media(max-width:480px) {
+  .vd-profile-experience .vd-profile-cover { height: 112px; }
+  .vd-profile-identity { margin-top: -25px; padding: 0 16px 18px; gap: 12px; }
+  .vd-profile-identity .vd-avatar-large { width: 76px; height: 76px; border-width: 4px; border-radius: 22px; }
+  .vd-profile-identity-copy { padding-top: 30px; }
+  .vd-profile-identity-copy h1,.vd-profile-identity-copy h2 { font-size: 28px; margin: 0 0 7px; }
+  .vd-profile-headline { font-size: 14px; }
+  .vd-profile-experience .vd-profile-meta { font-size: 12px; gap: 8px; }
+  .vd-profile-tools { top: -16px; right: 16px; gap: 8px; }
+  .vd-profile-tools .vd-button { font-size: 11px; min-height: 34px; }
+  .vd-profile-tools .vd-icon-button { width: 34px; height: 34px; }
+  .vd-profile-about { padding: 0 16px 20px; }
+  .vd-profile-about .vd-intro-text { font-size: 15px; }
+  .vd-debut-callout { margin: 0 16px 20px; padding: 16px 0 0; gap: 14px; }
+  .vd-profile-channel-action { margin: 0 16px 18px; }
+  .vd-debut-callout h2 { font-size: 20px; }
+  .vd-debut-actions { width: 100%; }
+  .vd-debut-actions .vd-button { white-space: normal; font-size: 12px; flex: 1; padding: 9px; }
+  .vd-profile-content .vd-panel,.vd-profile-destinations .vd-panel { padding: 20px; }
+  .vd-profile-content .vd-debut-group { padding: 4px 0 0; }
+  .vd-profile-destinations .vd-profile-links { grid-template-columns: minmax(0,1fr); }
+  .vd-video-heading { flex-direction: column; gap: 10px; }
+  .vd-video-heading h2 { font-size: 18px; }
+  .vd-profile-experience .vd-debut-group-heading h2 { font-size: 25px; }
+  .vd-debut-members { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+  .vd-debut-member { padding: 18px 10px 16px; }
+  .vd-debut-member .vd-avatar { width: 88px; height: 88px; border-radius: 22px; margin-bottom: 14px; }
+  .vd-debut-member h3 { font-size: 16px; margin-bottom: 12px; }
+  .vd-debut-member-date>span { font-size: 12px; }
+  .vd-debut-member-date>strong { font-size: 19px; }
+  .vd-profile-preview { padding: 12px; }
+  .vd-presentation-grid { grid-template-columns: minmax(0,1fr); }
+  .vd-presentation-channel { grid-template-columns: minmax(0,1fr) 32px; }
+  .vd-presentation-channel>label:first-child { grid-column: 1/-1; }
+}

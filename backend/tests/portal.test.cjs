@@ -34,6 +34,15 @@ test('대표 영상·채널·공지의 저장 흐름과 관리자 전용 데뷔 
   const call = (route, method = 'GET', body, headers = {}) => portalApi.request(`https://dev.vdebut.live${route}`, { method, headers: { 'Content-Type': 'application/json', ...headers }, body: body ? JSON.stringify(body) : undefined }, env);
   const details = { ...profile, headline: '노래와 게임으로 만나요', bannerUrl: 'https://example.com/banner.jpg', websiteUrl: 'https://example.com/', cafeUrl: 'https://cafe.naver.com/example', noticeUrl: 'https://example.com/news?id=1', xUrl: 'https://x.com/example', videoUrl: 'https://youtu.be/tlCeLkw8Upc', videoTitle: '팀 소개', videoKind: 'GROUP_PV', additionalChannels: [{ platform: 'YOUTUBE', channelUrl: 'https://youtube.com/@example' }], debutGroupId: 'forged-group', debutGroupName: '임의 그룹' };
   details.debutVideoUrl = 'https://www.youtube.com/watch?v=abcdefghijk';
+  // 새 영상 목록도 접수·승인·운영자 수정·소유자 수정 전체 경로를 통과한다.
+  details.media = [
+    { provider: 'YOUTUBE', kind: 'COVER', url: 'https://youtu.be/MZNKiadMo3U', title: '개인 커버곡', featured: true },
+    { provider: 'YOUTUBE', kind: 'GROUP_PV', url: 'https://youtu.be/tlCeLkw8Upc', title: '팀 공통 PV' },
+    { provider: 'CHZZK', kind: 'CLIP', url: 'https://chzzk.naver.com/clips/fixtureClip01', title: '클립' },
+    { provider: 'SOOP', kind: 'REPLAY', url: 'https://vod.sooplive.com/player/123456', title: '첫 방송' },
+  ];
+  details.notices = [{ title: '공식 일정', url: 'https://example.com/news' }];
+  details.fanGuide = '공식 팬 가이드';
   const submission = await (await call('/requests', 'POST', { ...details, kind: 'DEBUT' })).json();
   const payload = JSON.parse(db.sqlite.prepare('SELECT payload FROM portal_requests WHERE id=?').get(submission.id).payload);
   assert.equal(payload.debutGroupId, undefined); assert.equal(payload.noticeUrl, details.noticeUrl);
@@ -43,6 +52,8 @@ test('대표 영상·채널·공지의 저장 흐름과 관리자 전용 데뷔 
   const registered = (await readPortalProfiles(db))[0];
   for (const field of ['headline', 'bannerUrl', 'websiteUrl', 'cafeUrl', 'noticeUrl', 'xUrl', 'videoUrl', 'videoTitle', 'videoKind']) assert.equal(registered[field], details[field]);
   assert.deepEqual(registered.additionalChannels, details.additionalChannels);
+  assert.deepEqual(registered.media.map((item) => item.url), details.media.map((item) => item.url));
+  assert.deepEqual(registered.notices, details.notices);
   assert.equal(registered.debutVideoUrl, details.debutVideoUrl);
   const listing = await (await call('/admin/profiles', 'GET', undefined, admin)).json();
   const managed = listing.profiles[0];
@@ -51,6 +62,9 @@ test('대표 영상·채널·공지의 저장 흐름과 관리자 전용 데뷔 
   assert.equal((await call(`/admin/requests/${claim.id}/decision`, 'POST', { status: 'APPROVED', proofChecked: true }, admin)).status, 200);
   assert.equal((await call(`/profiles/${approved.slug}`, 'PUT', { ...details, headline: '수정한 한 줄 소개', debutGroupId: 'spoofed', debutGroupName: '가짜' }, { 'X-Request-Key': claim.token })).status, 200);
   const saved = (await readPortalProfiles(db))[0];
+  assert.deepEqual(saved.media.map((item) => item.url), details.media.map((item) => item.url));
+  assert.equal(saved.fanGuide, details.fanGuide);
+  assert.equal((await call(`/profiles/${approved.slug}`, 'PUT', { ...details, media: [{ ...details.media[0], provider: 'SOOP' }] }, { 'X-Request-Key': claim.token })).status, 400);
   assert.equal(saved.debutVideoUrl, details.debutVideoUrl);
   assert.equal((await call(`/profiles/${approved.slug}`, 'PUT', { ...details, debutVideoUrl: 'https://youtube.com.attacker.example/watch?v=abcdefghijk' }, { 'X-Request-Key': claim.token })).status, 400);
   assert.equal(saved.headline, '수정한 한 줄 소개'); assert.equal(saved.debutGroupId, 'abyss-2026'); assert.equal(saved.debutGroupName, 'ABYSS');
@@ -206,7 +220,7 @@ test('접수 키·관리자 승인·소유권 키로 등록과 수정 권한을 
   assert.equal((await portalApi.request('https://dev.vdebut.live/profiles', {}, { ...env, PORTAL_ENABLED: undefined })).status, 404);
   assert.deepEqual(await (await call('/profiles')).json(), { profiles: [] });
   assert.equal((await call('/requests', 'POST', { ...profile, kind: 'DEBUT' }, { Origin: 'https://attacker.example' })).status, 403);
-  assert.equal((await call('/requests', 'POST', { kind: 'CONTACT', message: '가'.repeat(8000) })).status, 413);
+  assert.equal((await call('/requests', 'POST', { kind: 'CONTACT', message: '가'.repeat(22000) })).status, 413);
   const submission = await (await call('/requests', 'POST', { ...profile, kind: 'DEBUT' })).json();
   assert.ok(submission.id && submission.token);
   const stored = db.sqlite.prepare('SELECT token_hash FROM portal_requests WHERE id=?').get(submission.id);

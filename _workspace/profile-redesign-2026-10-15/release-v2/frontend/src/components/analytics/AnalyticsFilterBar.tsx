@@ -1,0 +1,211 @@
+import {
+  AnalyticsFilterState,
+} from '../../services/analyticsApiService';
+import { Calendar, Clock, Layers, Users } from 'lucide-react';
+
+interface AnalyticsFilterBarProps {
+  filters: AnalyticsFilterState;
+  onChange: (filters: AnalyticsFilterState) => void;
+  onRefresh?: () => void;
+  isLoading?: boolean;
+}
+
+export function AnalyticsFilterBar({
+  filters,
+  onChange,
+}: AnalyticsFilterBarProps) {
+  const updateFilter = <K extends keyof AnalyticsFilterState>(key: K, value: AnalyticsFilterState[K]) => {
+    onChange({
+      ...filters,
+      [key]: value,
+    });
+  };
+
+  return (
+    <div className="bg-white border border-[#CBD5E1] rounded-2xl p-4 sm:p-5 shadow-sm mb-6">
+      {/* 상단 스트리머 검색창 영역 (추후 유저 검색 기능 진입점) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3.5 mb-3.5 border-b border-[#CBD5E1]">
+        <div className="flex-1 min-w-[280px] max-w-md relative">
+          <input
+            type="text"
+            disabled
+            placeholder="🔍 치지직 / SOOP 스트리머 채널 검색 (Beta 준비중)"
+            className="w-full bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-500 cursor-not-allowed"
+          />
+          <span className="absolute right-3 top-2.5 text-[10px] font-black bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
+            NEXT
+          </span>
+        </div>
+        <div className="text-xs text-slate-600 font-bold hidden md:block">
+          💡 특정 스트리머의 방송 패턴과 선호 태그 분석 기능이 곧 오픈됩니다.
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3.5 border-b border-[#CBD5E1]">
+        {/* 6대 기간 선택 (오늘, 어제, 1주, 한달, 3개월, 6개월) */}
+        <div className="flex flex-wrap items-center gap-2.5">
+          <span className="text-xs sm:text-sm font-black text-slate-800 flex items-center gap-1.5">
+            <Calendar className="w-4 h-4 text-[#2563EB]" />
+            <span>관측 기간:</span>
+          </span>
+          <div className="flex flex-wrap items-center gap-1 bg-[#F1F5F9] p-1 rounded-xl border border-[#CBD5E1] text-xs sm:text-sm font-bold">
+            <button
+              type="button"
+              onClick={() => updateFilter('period', 'today')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                filters.period === 'today'
+                  ? 'bg-white text-[#0F172A] shadow-2xs font-black'
+                  : 'text-slate-700 hover:text-[#0F172A]'
+              }`}
+            >
+              오늘 (실시간)
+            </button>
+            <button
+              type="button"
+              onClick={() => updateFilter('period', 'yesterday')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                filters.period === 'yesterday'
+                  ? 'bg-white text-[#0F172A] shadow-2xs font-black'
+                  : 'text-slate-700 hover:text-[#0F172A]'
+              }`}
+            >
+              어제 (1일)
+            </button>
+            <button
+              type="button"
+              onClick={() => updateFilter('period', '7d')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                filters.period === '7d'
+                  ? 'bg-white text-[#0F172A] shadow-2xs font-black'
+                  : 'text-slate-700 hover:text-[#0F172A]'
+              }`}
+            >
+              1주 (7일)
+            </button>
+            <button
+              type="button"
+              onClick={() => updateFilter('period', '30d')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                filters.period === '30d'
+                  ? 'bg-white text-[#0F172A] shadow-2xs font-black'
+                  : 'text-slate-700 hover:text-[#0F172A]'
+              }`}
+            >
+              한달 (30일)
+            </button>
+            <button
+              type="button"
+              onClick={() => updateFilter('period', '90d')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                filters.period === '90d'
+                  ? 'bg-white text-[#0F172A] shadow-2xs font-black'
+                  : 'text-slate-700 hover:text-[#0F172A]'
+              }`}
+            >
+              3개월
+            </button>
+            <button
+              type="button"
+              onClick={() => updateFilter('period', '180d')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                filters.period === '180d'
+                  ? 'bg-white text-[#0F172A] shadow-2xs font-black'
+                  : 'text-slate-700 hover:text-[#0F172A]'
+              }`}
+            >
+              6개월
+            </button>
+          </div>
+        </div>
+
+        <div className="text-xs text-slate-700 font-semibold">
+          * 기간별 집계는 정기 스냅샷 중앙값으로 산출됩니다.
+        </div>
+      </div>
+
+      {/* 세부 필터 그룹 (요일, 시간대, 대분류, 규모) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3.5 text-xs sm:text-sm">
+        {/* 요일 필터 */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-black text-slate-800 flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5 text-[#2563EB]" />
+            <span>요일 기준</span>
+          </label>
+          <select
+            value={filters.dayScope}
+            onChange={(e) => updateFilter('dayScope', e.target.value as any)}
+            className="bg-white border border-[#CBD5E1] rounded-xl px-3 py-2 text-[#0F172A] text-xs sm:text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-2xs transition-colors cursor-pointer"
+          >
+            <option value="ALL">전체 요일 (종합)</option>
+            <option value="WEEKDAY">평일 (월~금)</option>
+            <option value="WEEKEND">주말 (토·일)</option>
+            <option value="SAT">토요일 집중</option>
+            <option value="SUN">일요일 집중</option>
+            <option value="FRI">금요일 심야</option>
+          </select>
+        </div>
+
+        {/* 시간대 구간 필터 */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-black text-slate-800 flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-[#2563EB]" />
+            <span>시간대 구간</span>
+          </label>
+          <select
+            value={filters.timeSlot}
+            onChange={(e) => updateFilter('timeSlot', e.target.value as any)}
+            className="bg-white border border-[#CBD5E1] rounded-xl px-3 py-2 text-[#0F172A] text-xs sm:text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-2xs transition-colors cursor-pointer"
+          >
+            <option value="ALL">24시간 전체</option>
+            <option value="PRIME">골든타임 (20:00 ~ 24:00)</option>
+            <option value="NIGHT">심야 시간 (00:00 ~ 04:00)</option>
+            <option value="AFTERNOON">오후 (12:00 ~ 18:00)</option>
+            <option value="MORNING">오전 (08:00 ~ 12:00)</option>
+            <option value="DAWN">새벽 (04:00 ~ 08:00)</option>
+          </select>
+        </div>
+
+        {/* 콘텐츠 대분류 */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-black text-slate-800 flex items-center gap-1.5">
+            <Layers className="w-3.5 h-3.5 text-[#2563EB]" />
+            <span>콘텐츠 대분류</span>
+          </label>
+          <select
+            value={filters.categoryGroup}
+            onChange={(e) => updateFilter('categoryGroup', e.target.value as any)}
+            className="bg-white border border-[#CBD5E1] rounded-xl px-3 py-2 text-[#0F172A] text-xs sm:text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-2xs transition-colors cursor-pointer"
+          >
+            <option value="ALL">전체 콘텐츠</option>
+            <option value="GAME">게임 (종합/마크/발로 등)</option>
+            <option value="TALK">잡담 / 소통 / 라디오</option>
+            <option value="MUSIC">음악 / 노래 / 버스킹</option>
+            <option value="ART">그림 / 드로잉 / 아트</option>
+            <option value="ASMR">ASMR / 힐링 / 수면</option>
+            <option value="FOOD">먹방 / 쿡방</option>
+            <option value="ETC">기타</option>
+          </select>
+        </div>
+
+        {/* 채널 규모 */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-black text-slate-800 flex items-center gap-1.5">
+            <Users className="w-3.5 h-3.5 text-[#2563EB]" />
+            <span>채널 규모</span>
+          </label>
+          <select
+            value={filters.creatorTier}
+            onChange={(e) => updateFilter('creatorTier', e.target.value as any)}
+            className="bg-white border border-[#CBD5E1] rounded-xl px-3 py-2 text-[#0F172A] text-xs sm:text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-2xs transition-colors cursor-pointer"
+          >
+            <option value="ALL">전체 규모</option>
+            <option value="NEW">신규 버튜버 (데뷔 30일 이내)</option>
+            <option value="SMALL">소형 채널 (하위 50%)</option>
+            <option value="MID">중형 채널 (50~90%)</option>
+            <option value="LARGE">대형 채널 (상위 10%)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  );
+}

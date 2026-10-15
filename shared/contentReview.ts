@@ -26,7 +26,8 @@ export function reviewSnapshot(profile: PortalProfile): string {
 // 기존 라이브 등록 데이터(source === 'EXISTING')는 기본 공개하되 부적절 표현은 차단한다.
 export function isPublicProfile(profile: PortalProfile): boolean {
   if (looksLikeVideoTitle(profile.displayName)) return false;
-  if (needsContentReview([profile.displayName, profile.description, profile.headline, profile.videoTitle, profile.debutGroupName, profile.agency, ...profile.tags].join(' '))) return false;
+  // 영상 목록·팬 안내·소식에도 기존 공개 검토 기준을 동일하게 적용한다.
+  if (needsContentReview([profile.displayName, profile.description, profile.headline, profile.videoTitle, profile.debutGroupName, profile.agency, profile.regularSchedule, profile.fanGuide, ...(profile.media || []).flatMap((item) => [item.title, item.credit]), ...(profile.notices || []).map((item) => item.title), ...profile.tags].join(' '))) return false;
   if (profile.contentReview) {
     return profile.contentReview.state === 'APPROVED' && profile.contentReview.snapshot === reviewSnapshot(profile);
   }

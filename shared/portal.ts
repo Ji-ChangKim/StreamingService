@@ -11,6 +11,13 @@ export const REGISTRATION_REGIONS = [
 ] as const;
 // 상세 화면에서 외부 채널의 배너와 실제 소개를 함께 사용한다.
 export interface PortalChannelDetails { bannerUrl: string; mobileBannerUrl: string; description: string }
+// 제공 플랫폼과 영상의 역할을 분리해 개인·팀 자료를 함께 보관한다.
+export interface PortalMedia {
+  provider: 'YOUTUBE' | 'CHZZK' | 'SOOP';
+  kind: 'INTRO' | 'TEASER' | 'GROUP_PV' | 'REPLAY' | 'COVER' | 'HIGHLIGHT' | 'CLIP' | 'CATCH' | 'SHORT' | 'BROADCAST_REPLAY';
+  url: string; title: string; thumbnailUrl?: string; credit?: string;
+  featured?: boolean; linkOnly?: boolean;
+}
 export interface PortalProfile {
   // 소유권 확인과 별개로 운영자가 검토한 내용에만 공개 권한을 부여한다.
   contentReview?: { state: 'APPROVED' | 'HOLD'; snapshot: string; reviewedAt: string };
@@ -25,6 +32,10 @@ export interface PortalProfile {
   additionalChannels?: { platform: PortalPlatform; channelUrl: string }[];
   videoUrl?: string; videoTitle?: string; videoKind?: 'INTRO' | 'TEASER' | 'GROUP_PV' | 'REPLAY' | 'COVER' | 'HIGHLIGHT';
   debutVideoUrl?: string;
+  // 영상 목록이 없는 기존 프로필은 단일 영상 필드에서 호환해서 읽는다.
+  media?: PortalMedia[];
+  regularSchedule?: string; fanGuide?: string;
+  notices?: { title: string; url: string }[];
   // 같은 팀·기수의 데뷔 연결은 관리자만 설정한다.
   debutGroupId?: string; debutGroupName?: string;
 }

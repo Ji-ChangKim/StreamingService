@@ -1,0 +1,514 @@
+import { fetchPlatformProfile } from './platformApiService';
+import { generateCleanSlug, resolveUniqueSlug } from '../utils/slugUtils';
+import { detectCountryFromChannel } from '../utils/countryDetector';
+
+export interface SubmissionData {
+  id: number;
+  displayName: string;
+  platform: string;
+  channelUrl: string;
+  avatarUrl?: string;
+  description?: string;
+  agencyName?: string;
+  groupName?: string;
+  videoUrl?: string;
+  websiteUrl?: string;
+  countryCode?: string;
+  debutDate: string;
+  debutTime: string;
+  timezone: string;
+  startAtUtc: string;
+  xUrl?: string;
+  contactEmail?: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  adminNote?: string;
+  createdAt: string;
+  processedAt?: string;
+}
+
+/**
+ * 1. 사용자의 신규 데뷔 신청서를 debut_submissions 테이블에 PENDING 상태로 저장
+ */
+export async function createSubmissionToD1(db: D1Database, body: any): Promise<number> {
+  const now = Date.now();
+  let displayName = body.creator?.displayName || body.displayName || '신입 버튜버';
+  let avatarUrl = body.creator?.avatarUrl || body.avatarUrl || '';
+  const agencyName = body.creator?.agency || body.agency || '개인세';
+  const groupName = body.creator?.groupName || body.groupName || body.debutGroupName || '';
+  const videoUrl = body.videoUrl || body.creator?.videoUrl || body.pvUrl || '';
+  const websiteUrl = body.websiteUrl || body.creator?.websiteUrl || '';
+  let description = body.description || body.creator?.description || `${displayName}의 데뷔 방송입니다.`;
+
+  const primaryLink = body.links?.[0] || null;
+  const platform = (primaryLink?.platform || body.platform || 'CHZZK').toUpperCase();
+  const channelUrl = primaryLink?.url || body.watchUrl || body.channelUrl || 'https://chzzk.naver.com';
+  const xUrl = body.creator?.xUrl || body.xUrl || '';
+  const contactEmail = body.contactEmail || '';
+
+  // 프로필 아바타가 없으면 외부 API에서 자동 수집 시도
+  if (!avatarUrl && channelUrl) {
+    try {
+      const apiResult = await fetchPlatformProfile(platform, channelUrl);
+      if (apiResult.success) {
+        avatarUrl = apiResult.profileImageUrl || avatarUrl;
+        displayName = apiResult.creatorName || displayName;
+        description = apiResult.description || description;
+      }
+    } catch {}
+  }
+
+  // 💡 채널 정보를 바탕으로 국가(KR / JP / EN) 자동 판별
+  const rawCountry = body.creator?.countryCode || body.countryCode;
+  const countryCode = detectCountryFromChannel({
+    platform,
+    channelUrl,
+    displayName,
+    description,
+    existingCountryCode: rawCountry,
+  });
+
+  const startAtUtc = body.startAtUtc || new Date(now + 86400000 * 3).toISOString();
+  const timezone = body.originalTimezone || body.timezone || 'Asia/Seoul';
+
+  const d = new Date(startAtUtc);
+  const debutDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const debutTime = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+
+  try {
+    const res: any = await db.prepare(`
+      INSERT INTO debut_submissions (
+        display_name, platform, channel_url, avatar_url, description,
+        agency_name, group_name, country_code, debut_date, debut_time, timezone,
+        start_at_utc, x_url, video_url, website_url, contact_email, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING')
+      RETURNING id
+    `).bind(
+      displayName, platform, channelUrl, avatarUrl, description,
+      agencyName, groupName, countryCode, debutDate, debutTime, timezone,
+      startAtUtc, xUrl, videoUrl, websiteUrl, contactEmail
+    ).first();
+
+    return res?.id || now;
+  } catch (err: any) {
+    // 0038 마이그레이션 적용 전 DB의 경우 기존 14개 컬럼 구조로 fallback
+    const res: any = await db.prepare(`
+      INSERT INTO debut_submissions (
+        display_name, platform, channel_url, avatar_url, description,
+        agency_name, country_code, debut_date, debut_time, timezone,
+        start_at_utc, x_url, contact_email, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING')
+      RETURNING id
+    `).bind(
+      displayName, platform, channelUrl, avatarUrl, description,
+      agencyName, countryCode, debutDate, debutTime, timezone,
+      startAtUtc, xUrl, contactEmail
+    ).first();
+
+    return res?.id || now;
+  }
+}
+
+/**
+ * 데뷔 날짜 및 시간으로 ISO UTC 문자열 생성 (SRP 헬퍼)
+ */
+export function formatStartAtUtc(debutDate: string, debutTime: string, timezone: string = 'Asia/Seoul'): string {
+  try {
+    const cleanDate = debutDate.trim().replace(/\//g, '-').replace(/\./g, '-');
+    let cleanTime = debutTime.trim();
+    if (cleanTime.length === 5) cleanTime += ':00';
+
+    if (timezone === 'Asia/Seoul') {
+      const d = new Date(`${cleanDate}T${cleanTime}+09:00`);
+      if (!isNaN(d.getTime())) return d.toISOString();
+    }
+    const d = new Date(`${cleanDate}T${cleanTime}Z`);
+    if (!isNaN(d.getTime())) return d.toISOString();
+  } catch {}
+  return new Date().toISOString();
+}
+
+/**
+ * 1-2. 엑셀/CSV 일괄 업로드용: debut_submissions 테이블에 PENDING 상태로 대량 일괄 저장 (db.batch)
+ */
+export async function createSubmissionsBatchToD1(
+  db: D1Database,
+  items: any[]
+): Promise<{ success: boolean; insertedCount: number; error?: string }> {
+  if (!items || items.length === 0) {
+    return { success: true, insertedCount: 0 };
+  }
+
+  try {
+    let insertedCount = 0;
+    const CHUNK_SIZE = 50;
+
+    for (let i = 0; i < items.length; i += CHUNK_SIZE) {
+      const chunk = items.slice(i, i + CHUNK_SIZE);
+      const statements = chunk.map((item) => {
+        const displayName = (item.displayName || '신입 버튜버').trim();
+        const platform = (item.platform || 'CHZZK').toUpperCase().trim();
+        const channelUrl = (item.channelUrl || '').trim();
+        const avatarUrl = (item.avatarUrl || '').trim();
+        const description = (item.description || `${displayName}의 데뷔 방송입니다.`).trim();
+        const agencyName = (item.agencyName || '개인세').trim();
+        const debutDate = (item.debutDate || '').trim();
+        const debutTime = (item.debutTime || '00:00').trim();
+        const timezone = item.timezone || 'Asia/Seoul';
+        const startAtUtc = item.startAtUtc || formatStartAtUtc(debutDate, debutTime, timezone);
+        const xUrl = (item.xUrl || '').trim();
+        const contactEmail = (item.contactEmail || '').trim();
+
+        // 💡 엑셀/CSV 일괄 항목 국가(KR / JP / EN) 자동 판별
+        const countryCode = detectCountryFromChannel({
+          platform,
+          channelUrl,
+          displayName,
+          description,
+          existingCountryCode: item.countryCode,
+        });
+
+        return db.prepare(`
+          INSERT INTO debut_submissions (
+            display_name, platform, channel_url, avatar_url, description,
+            agency_name, country_code, debut_date, debut_time, timezone,
+            start_at_utc, x_url, contact_email, status
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING')
+        `).bind(
+          displayName, platform, channelUrl, avatarUrl, description,
+          agencyName, countryCode, debutDate, debutTime, timezone,
+          startAtUtc, xUrl, contactEmail
+        );
+      });
+
+      await db.batch(statements);
+      insertedCount += chunk.length;
+    }
+
+    return { success: true, insertedCount };
+  } catch (err: any) {
+    console.error('createSubmissionsBatchToD1 error:', err);
+    return { success: false, insertedCount: 0, error: err?.message || 'DB 배치 저장 실패' };
+  }
+}
+
+/**
+ * 2. 관리자 CMS용 신청서 목록 조회 (전체 / PENDING / APPROVED / REJECTED)
+ */
+export async function fetchSubmissionsFromD1(db: D1Database, statusFilter?: string): Promise<SubmissionData[]> {
+  try {
+    let query = 'SELECT * FROM debut_submissions ORDER BY created_at DESC';
+    let stmt;
+
+    if (statusFilter && statusFilter !== 'ALL') {
+      query = 'SELECT * FROM debut_submissions WHERE status = ? ORDER BY created_at DESC';
+      stmt = db.prepare(query).bind(statusFilter);
+    } else {
+      stmt = db.prepare(query);
+    }
+
+    const { results } = await stmt.all();
+    if (!results || results.length === 0) return [];
+
+    return (results as any[]).map((r) => ({
+      id: r.id,
+      displayName: r.display_name,
+      platform: r.platform,
+      channelUrl: r.channel_url,
+      avatarUrl: r.avatar_url,
+      description: r.description,
+      agencyName: r.agency_name,
+      groupName: r.group_name || '',
+      videoUrl: r.video_url || '',
+      websiteUrl: r.website_url || '',
+      countryCode: r.country_code,
+      debutDate: r.debut_date,
+      debutTime: r.debut_time,
+      timezone: r.timezone,
+      startAtUtc: r.start_at_utc,
+      xUrl: r.x_url,
+      contactEmail: r.contact_email,
+      status: r.status,
+      adminNote: r.admin_note,
+      createdAt: r.created_at,
+      processedAt: r.processed_at,
+    }));
+  } catch (err) {
+    console.error('fetchSubmissionsFromD1 error:', err);
+    return [];
+  }
+}
+
+/**
+ * 2-3. 관리자 신청서 데이터 상세 수정 저장 (SRP 원칙)
+ */
+export async function updateSubmissionInD1(
+  db: D1Database,
+  submissionId: number,
+  data: Partial<SubmissionData>
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const fields: string[] = [];
+    const values: any[] = [];
+
+    const fieldMap: Record<string, string> = {
+      displayName: 'display_name',
+      platform: 'platform',
+      channelUrl: 'channel_url',
+      avatarUrl: 'avatar_url',
+      description: 'description',
+      agencyName: 'agency_name',
+      groupName: 'group_name',
+      countryCode: 'country_code',
+      debutDate: 'debut_date',
+      debutTime: 'debut_time',
+      timezone: 'timezone',
+      startAtUtc: 'start_at_utc',
+      xUrl: 'x_url',
+      videoUrl: 'video_url',
+      websiteUrl: 'website_url',
+      contactEmail: 'contact_email',
+      adminNote: 'admin_note',
+      status: 'status',
+    };
+
+    for (const [key, col] of Object.entries(fieldMap)) {
+      if ((data as any)[key] !== undefined) {
+        fields.push(`${col} = ?`);
+        values.push((data as any)[key]);
+      }
+    }
+
+    if (fields.length === 0) return { success: true };
+
+    values.push(submissionId);
+    await db.prepare(`UPDATE debut_submissions SET ${fields.join(', ')} WHERE id = ?`).bind(...values).run();
+    return { success: true };
+  } catch (err: any) {
+    console.error('updateSubmissionInD1 error:', err);
+    return { success: false, error: err?.message || '신청서 수정 실패' };
+  }
+}
+
+/**
+ * 3. 관리자 1-클릭 승인: debut_submissions ➔ streamerChannel & streamerChannel_info 정식 캘린더 DB 등록!
+ * (스마트 깔끔한 영문/로마자 슬러그 및 커스텀 슬러그 지원, 수정 데이터 동시 반영 지원)
+ */
+export async function approveSubmissionInD1(
+  db: D1Database,
+  submissionId: number,
+  customSlug?: string,
+  customData?: Partial<SubmissionData>
+): Promise<{ success: boolean; eventId?: string; slug?: string; error?: string }> {
+  try {
+    // 💡 관리자가 수정 데이터를 함께 보낸 경우 먼저 신청서에 반영
+    if (customData && Object.keys(customData).length > 0) {
+      await updateSubmissionInD1(db, submissionId, customData);
+    }
+
+    const sub: any = await db
+      .prepare('SELECT * FROM debut_submissions WHERE id = ? LIMIT 1')
+      .bind(submissionId)
+      .first();
+
+    if (!sub) {
+      return { success: false, error: '해당 신청서를 찾을 수 없습니다.' };
+    }
+
+    const now = Date.now();
+    
+    // 💡 스마트 슬러그 생성: 관리자 커스텀 슬러그 > 채널URL/이름 기반 자동 생성 > DB 중복 체크 해결
+    const rawSlug = customSlug && customSlug.trim()
+      ? customSlug.trim()
+      : generateCleanSlug(sub.display_name, sub.channel_url, sub.x_url);
+
+    const slug = await resolveUniqueSlug(db, rawSlug);
+
+    // ① 메인 streamerChannel 등록
+    const chRes: any = await db.prepare(`
+      INSERT INTO streamerChannel (platform, channel_url, channel_name)
+      VALUES (?, ?, ?)
+      RETURNING id
+    `).bind(sub.platform, sub.channel_url, `${sub.display_name} ${sub.platform}`).first();
+
+    const channelId = chRes?.id || now;
+
+    let avatarUrl = sub.avatar_url || '';
+    let description = sub.description || '';
+    let displayName = sub.display_name || '';
+
+    // 프로필 이미지가 누락된 경우 승인 시점에 외부 API로 실시간 자동 수집 보완
+    if (!avatarUrl && sub.channel_url) {
+      try {
+        const profile = await fetchPlatformProfile(sub.platform, sub.channel_url);
+        if (profile.success && profile.profileImageUrl) {
+          avatarUrl = profile.profileImageUrl;
+          description = profile.description || description;
+          displayName = profile.creatorName || displayName;
+        }
+      } catch {}
+    }
+
+    // 국가 코드 최종 정밀 판별
+    const finalCountryCode = detectCountryFromChannel({
+      platform: sub.platform,
+      channelUrl: sub.channel_url,
+      displayName,
+      description,
+      existingCountryCode: sub.country_code,
+    });
+
+    const groupName = sub.group_name || '';
+    const videoUrl = sub.video_url || '';
+    const websiteUrl = sub.website_url || '';
+
+    // ② 메인 streamerChannel_info 등록 (깔끔한 슬러그로 저장)
+    let infoRes: any;
+    try {
+      infoRes = await db.prepare(`
+        INSERT INTO streamerChannel_info (
+          channel_id, slug, display_name, profile_image_url, description,
+          agency_name, group_name, debut_date, debut_time, timezone, start_at_utc,
+          country_code, x_url, video_url, website_url
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        RETURNING id
+      `).bind(
+        channelId, slug, displayName, avatarUrl, description,
+        sub.agency_name || '개인세', groupName, sub.debut_date, sub.debut_time, sub.timezone || 'Asia/Seoul',
+        sub.start_at_utc, finalCountryCode, sub.x_url || '', videoUrl, websiteUrl
+      ).first();
+    } catch {
+      // 0038 마이그레이션 전 fallback
+      infoRes = await db.prepare(`
+        INSERT INTO streamerChannel_info (
+          channel_id, slug, display_name, profile_image_url, description,
+          agency_name, debut_date, debut_time, timezone, start_at_utc,
+          country_code, x_url
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        RETURNING id
+      `).bind(
+        channelId, slug, displayName, avatarUrl, description,
+        sub.agency_name || '개인세', sub.debut_date, sub.debut_time, sub.timezone || 'Asia/Seoul',
+        sub.start_at_utc, finalCountryCode, sub.x_url || ''
+      ).first();
+    }
+
+    const infoId = infoRes?.id || channelId;
+
+    // ③ debut_submissions 상태를 APPROVED로 업데이트
+    await db.prepare(`
+      UPDATE debut_submissions
+      SET status = 'APPROVED', processed_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(submissionId).run();
+
+    return { success: true, eventId: `evt_${infoId}`, slug };
+  } catch (err: any) {
+    console.error('approveSubmissionInD1 error:', err);
+    return { success: false, error: err?.message || '승인 처리 중 오류 발생' };
+  }
+}
+
+/**
+ * 3-2. 관리자 체크박스 기반 신청서 일괄 승인 (Batch Approval)
+ */
+export async function approveSubmissionsBatchInD1(
+  db: D1Database,
+  submissionIds: number[]
+): Promise<{ success: boolean; approvedCount: number; failedCount: number; errors: string[] }> {
+  if (!submissionIds || submissionIds.length === 0) {
+    return { success: true, approvedCount: 0, failedCount: 0, errors: [] };
+  }
+
+  let approvedCount = 0;
+  let failedCount = 0;
+  const errors: string[] = [];
+
+  for (const id of submissionIds) {
+    const res = await approveSubmissionInD1(db, id);
+    if (res.success) {
+      approvedCount++;
+    } else {
+      failedCount++;
+      errors.push(`ID ${id}: ${res.error || '승인 실패'}`);
+    }
+  }
+
+  return {
+    success: approvedCount > 0 || failedCount === 0,
+    approvedCount,
+    failedCount,
+    errors,
+  };
+}
+
+/**
+ * 4. 관리자 신청서 반려
+
+ */
+export async function rejectSubmissionInD1(
+  db: D1Database,
+  submissionId: number,
+  adminNote?: string
+): Promise<boolean> {
+  try {
+    await db.prepare(`
+      UPDATE debut_submissions
+      SET status = 'REJECTED', admin_note = ?, processed_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(adminNote || null, submissionId).run();
+    return true;
+  } catch (err) {
+    console.error('rejectSubmissionInD1 error:', err);
+    return false;
+  }
+}
+
+/**
+ * 5. 관리자 신청서 영구 삭제
+ */
+export async function deleteSubmissionFromD1(db: D1Database, submissionId: number): Promise<boolean> {
+  try {
+    await db.prepare('DELETE FROM debut_submissions WHERE id = ?').bind(submissionId).run();
+    return true;
+  } catch (err) {
+    console.error('deleteSubmissionFromD1 error:', err);
+    return false;
+  }
+}
+
+/**
+ * 6. CMS용 전체 등록 버튜버 목록 조회 (실시간 검색 및 1-클릭 삭제/관리용)
+ */
+export async function fetchAllActiveStreamersForAdmin(db: D1Database): Promise<any[]> {
+  try {
+    const { results } = await db.prepare(`
+      SELECT 
+        i.id as info_id,
+        i.channel_id,
+        i.slug,
+        i.display_name,
+        i.profile_image_url,
+        i.description,
+        i.agency_name,
+        i.debut_date,
+        i.debut_time,
+        i.timezone,
+        i.start_at_utc,
+        i.country_code,
+        i.x_url,
+        c.platform,
+        c.channel_url,
+        c.channel_name,
+        i.created_at,
+        i.updated_at
+      FROM streamerChannel_info i
+      INNER JOIN streamerChannel c ON i.channel_id = c.id
+      ORDER BY i.start_at_utc DESC
+    `).all();
+
+    return results || [];
+  } catch (err) {
+    console.error('fetchAllActiveStreamersForAdmin error:', err);
+    return [];
+  }
+}

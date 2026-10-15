@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 100" fill="none">
+  <defs>
+    <!-- V Shape Gradient -->
+    <linearGradient id="logoVGrad" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF5C8A"/>
+      <stop offset="50%" stop-color="#B86ADF"/>
+      <stop offset="100%" stop-color="#8C7CFF"/>
+    </linearGradient>
+
+    <!-- Spotlight Beam Gradient -->
+    <linearGradient id="logoSpotlight" x1="42" y1="75" x2="42" y2="20" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFF5D6" stop-opacity="0.95"/>
+      <stop offset="40%" stop-color="#FFD76A" stop-opacity="0.75"/>
+      <stop offset="100%" stop-color="#8C7CFF" stop-opacity="0"/>
+    </linearGradient>
+
+    <radialGradient id="logoGlow" cx="42" cy="74" r="24" fx="42" fy="74" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFF0B3" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#FF5C8A" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="logoSparkGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFD76A"/>
+      <stop offset="100%" stop-color="#FF5C8A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Left Logo Symbol -->
+  <g transform="translate(4, 8) scale(0.9)">
+    <ellipse cx="42" cy="74" rx="24" ry="6" fill="url(#logoGlow)" />
+    <polygon points="42,72 24,25 60,25" fill="url(#logoSpotlight)" />
+    
+    <!-- V Shape -->
+    <path d="M 12 16 C 10 16 8 18 8 20 L 35 72 C 38 76 46 76 49 72 L 76 20 C 76 18 74 16 72 16 L 62 16 C 60 16 58 17 57 19 L 42 50 L 27 19 C 26 17 24 16 22 16 Z" 
+          fill="url(#logoVGrad)" />
+
+    <!-- Spark Star -->
+    <g transform="translate(42, 20) scale(0.65)">
+      <path d="M 0 -16 Q 0 0 16 0 Q 0 0 0 16 Q 0 0 -16 0 Q 0 0 0 -16 Z" fill="url(#logoSparkGrad)"/>
+    </g>
+  </g>
+
+  <!-- Right Text Brand: "VDébut" -->
+  <!-- V letter -->
+  <text x="96" y="58" font-family="'Sora', 'Outfit', sans-serif" font-weight="900" font-size="52" fill="#0F172A" letter-spacing="-1">V</text>
+  <!-- Début text with Pink Spark on é -->
+  <text x="132" y="58" font-family="'Sora', 'Outfit', sans-serif" font-weight="800" font-size="52" fill="#0F172A" letter-spacing="-0.5">D</text>
+  
+  <!-- e with accent spark -->
+  <text x="168" y="58" font-family="'Sora', 'Outfit', sans-serif" font-weight="800" font-size="52" fill="#0F172A" letter-spacing="-0.5">e</text>
+  <!-- Spark above e -->
+  <path d="M 180 8 Q 180 15 186 15 Q 180 15 180 22 Q 180 15 174 15 Q 180 15 180 8 Z" fill="#FF5C8A"/>
+
+  <text x="198" y="58" font-family="'Sora', 'Outfit', sans-serif" font-weight="800" font-size="52" fill="#0F172A" letter-spacing="-0.5">but</text>
+
+  <!-- Subtitle Tagline: "VTUBER DEBUT CALENDAR" -->
+  <text x="98" y="80" font-family="'Sora', 'Inter', sans-serif" font-weight="700" font-size="12" fill="#64748B" letter-spacing="4">VTUBER DEBUT CALENDAR</text>
+</svg>

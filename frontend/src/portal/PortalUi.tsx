@@ -8,10 +8,11 @@ import { PortalProfile, PORTAL_PLATFORMS, portalWebUrl } from '../../../shared/p
 import { readPortalStorage, savePortalStorage } from './portalApi';
 
 // 같은 화면 이동을 링크로 제공해 새 탭과 키보드 탐색도 지원한다.
-export function PortalLink({ to, children, className = '', onNavigate }: { to: string; children: ReactNode; className?: string; onNavigate: (path: string) => void }) {
+export function PortalLink({ to, children, className = '', onNavigate, ariaCurrent }: { to: string; children: ReactNode; className?: string; onNavigate: (path: string) => void; ariaCurrent?: 'page' }) {
   usePortalLocale(); // 언어 변경은 화면 상태를 유지한 채 문구만 갱신한다.
 
-  return <a href={portalLanguagePath(to)} className={className} onClick={(event) => { if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); onNavigate(portalLanguagePath(to)); } }}>{children}</a>;
+  // 현재 메뉴를 스크린 리더에도 전달하고 새 탭·키보드 탐색 동작은 유지한다.
+  return <a href={portalLanguagePath(to)} className={className} aria-current={ariaCurrent} onClick={(event) => { if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); onNavigate(portalLanguagePath(to)); } }}>{children}</a>;
 }
 
 // 화면별 핵심 제목과 설명의 위계를 통일한다.

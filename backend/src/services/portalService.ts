@@ -11,6 +11,8 @@ import { generateCleanSlug } from '../utils/slugUtils';
 import { PortalProfile, PortalRequest, RequestKind, PORTAL_PLATFORMS, PORTAL_TIMEZONES, REGISTRATION_REGIONS, portalChannelKey, portalChannelUrl, portalWebUrl, portalUtc } from '../../../shared/portal';
 
 type PortalBindings = { DB: D1Database; PORTAL_ENABLED?: string; DISCORD_BOT_TOKEN?: string };
+// 최대 12개 영상과 소식·팬 안내를 담되 요청 전체 크기는 제한한다.
+const PORTAL_BODY_LIMIT = 65536;
 type RequestRow = { id: string; kind: RequestKind; status: PortalRequest['status']; slug: string; payload: string; token_hash: string; note: string; created_at: string };
 
 // 확인 키의 원문 대신 단방향 해시만 보관한다.
@@ -127,13 +129,13 @@ portalApi.use('*', async (c, next) => {
   if (!['GET', 'HEAD'].includes(c.req.method)) {
     const origin = c.req.header('Origin');
     if (origin && origin !== new URL(c.req.url).origin) return c.json({ error: '요청을 확인해 주세요.' }, 403);
-    if (Number(c.req.header('Content-Length') || 0) > 20000) return c.json({ error: '입력 내용이 너무 깁니다.' }, 413);
+    if (Number(c.req.header('Content-Length') || 0) > PORTAL_BODY_LIMIT) return c.json({ error: '입력 내용이 너무 깁니다.' }, 413);
   }
   await next();
 });
 portalApi.onError((error, c) => { console.error('[portal]', error.message); return c.json({ error: '요청을 처리하지 못했습니다. 다시 시도해 주세요.' }, 500); });
 // Content-Length가 없는 요청도 실제 본문 크기를 제한한다.
-portalApi.use('*', bodyLimit({ maxSize: 20000, onError: (c) => c.json({ error: '입력 내용이 너무 깁니다.' }, 413) }));
+portalApi.use('*', bodyLimit({ maxSize: PORTAL_BODY_LIMIT, onError: (c) => c.json({ error: '입력 내용이 너무 깁니다.' }, 413) }));
 
 // 공개 프로필은 실제 DB 결과만 반환한다.
 portalApi.get('/profiles', async (c) => {
@@ -173,7 +175,7 @@ portalApi.get('/requests/:id', async (c) => {
 // 새 신청에는 조회용 키를 발급하고 IP별 과도한 접수를 제한한다.
 portalApi.post('/requests', async (c) => {
   const raw = await c.req.text();
-  if (raw.length > 20000) return c.json({ error: '입력 내용이 너무 깁니다.' }, 413);
+  if (raw.length > PORTAL_BODY_LIMIT) return c.json({ error: '입력 내용이 너무 깁니다.' }, 413);
   let body: Record<string, unknown>;
   try { body = JSON.parse(raw); } catch { return c.json({ error: '입력 내용을 확인해 주세요.' }, 400); }
   if (!body || typeof body !== 'object' || body.website) return c.json({ error: '입력 내용을 확인해 주세요.' }, 400);
@@ -236,7 +238,7 @@ portalApi.put('/profiles/:slug', async (c) => {
   if (profile.channelUrl !== original.channelUrl || profile.platform !== original.platform) return c.json({ error: '방송 채널 변경은 문의를 통해 신청해 주세요.' }, 400);
   // 소유자 수정은 관리자만 지정할 수 있는 데뷔 그룹과 등록 출처를 보존한다.
   profile = { ...profile, slug, ownerVerified: true, source: original.source, requesterRole: original.requesterRole,
-    debutGroupId: original.debutGroupId, debutGroupName: original.debutGroupName };
+    debutGroupId: original.debutGroupId, debutGroupName: original.debutGroupName, media: profile.media ?? original.media };
   await c.env.DB.prepare('INSERT INTO portal_profiles(slug,channel_url,data) VALUES(?,?,?) ON CONFLICT(slug) DO UPDATE SET data=excluded.data,updated_at=CURRENT_TIMESTAMP').bind(slug, profile.channelUrl, JSON.stringify(profile)).run();
   return c.json({ profile });
 });
@@ -290,7 +292,7 @@ portalApi.put('/admin/profiles/:slug', async (c) => {
   let profile: PortalProfile;
   try { profile = cleanPortalProfile(body.profile as Record<string, unknown>); } catch (error) { return c.json({ error: (error as Error).message || '활동명과 일정 정보를 확인해 주세요.' }, 400); }
   if (profile.channelUrl !== original.channelUrl || profile.platform !== original.platform) return c.json({ error: '기존 방송 채널 주소를 유지해 주세요.' }, 400);
-  profile = { ...profile, slug, source: original.source, ownerVerified: original.ownerVerified, ...(original.requesterRole ? { requesterRole: original.requesterRole } : {}) };
+  profile = { ...profile, slug, source: original.source, ownerVerified: original.ownerVerified, media: profile.media ?? original.media, ...(original.requesterRole ? { requesterRole: original.requesterRole } : {}) };
   // 팀·기수 연결은 관리자 정정 경로에서만 허용하고 이름과 식별자를 함께 받는다.
   const group = body.profile as Record<string, unknown>;
   const debutGroupId = field(group, 'debutGroupId', 80);

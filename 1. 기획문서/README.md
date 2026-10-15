@@ -31,6 +31,8 @@ VDébut 프로젝트의 제품 기획 및 기술 문서 목차입니다. 각 문
 13. **[16_LIVE_RELEASE_READINESS.md](./16_LIVE_RELEASE_READINESS.md)**: LIVE 배포·데이터 보존·운영 검증 기록
 14. **[17_PRD_GAP_CHECKLIST.md](./17_PRD_GAP_CHECKLIST.md)**: PRD 요구사항별 완료·부분·제외 판정과 등록·운영·발견·계측 잔여 과제
 15. **[18_REGISTRATION_AND_ADMIN_IMPROVEMENTS.md](./18_REGISTRATION_AND_ADMIN_IMPROVEMENTS.md)**: 등록 국가·시간대·신청 역할, 재시도/채널 중복 방지, 관리자 정정·이력·복구 구현 및 개발 배포 결과
+16. **[20_CREATOR_PROFILE_CONTENT_STRATEGY.md](./20_CREATOR_PROFILE_CONTENT_STRATEGY.md)**: 데뷔 버튜버 상세페이지 콘텐츠 기획 — 정보 위계·데뷔 단계별 구성·치지직/SOOP 클립·다시보기·YouTube·X 활용 범위와 적용 순서
+17. **[21_CREATOR_PROFILE_IMPLEMENTATION.md](./21_CREATOR_PROFILE_IMPLEMENTATION.md)**: 상세페이지 개편 운영 적용 — 토아·랑 개인 커버곡과 공통 PV, 플랫폼별 영상 등록·검토·원문 보기, PC/모바일 및 데이터 보존 검증
 
 ---
 

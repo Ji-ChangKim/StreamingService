@@ -1,0 +1,1 @@
+This folder contains the built output assets for the worker "streaming" generated at 2026-10-15T12:34:26.722Z.

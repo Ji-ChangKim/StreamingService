@@ -1,0 +1,156 @@
+[
+  {
+    "results": [
+      {
+        "slug": "cogane-rang",
+        "channel_url": "https://chzzk.naver.com/c657aa3592260a2b59669a72ec151936",
+        "data": "{\"slug\":\"cogane-rang\",\"displayName\":\"코가네 랑\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/c657aa3592260a2b59669a72ec151936\",\"description\":\"코가네 랑의 공식 치지직 방송국입니다.\",\"avatarUrl\":\"https://nng-phinf.pstatic.net/MjAyNjEwMTFfMjM3/MDAxNzkxNzA1ODY5MjA5.Hugj_v0YBjAf_-tjXp8J4EnY9NesLqrs03AD_uwEDCwg.1OC540ofeGkRMblzh4tKz9J02KIO04Cjp_DjKZIKAUwg.PNG/image.png\",\"agency\":\"스텔라이브\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[],\"xUrl\":\"https://x.com/CoganeRang\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-10-17\",\"debutTime\":\"18:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-10-17T09:00:00.000Z\",\"targetMonth\":\"2026-10\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"headline\":\"스텔라이브 4기 ABYSS\",\"websiteUrl\":\"https://stellive.me/\",\"noticeUrl\":\"https://stellive.me/news/14262\",\"videoUrl\":\"https://youtu.be/tlCeLkw8Upc\",\"videoTitle\":\"STELLIVE 4th Generation ABYSS\",\"videoKind\":\"GROUP_PV\",\"additionalChannels\":[{\"platform\":\"YOUTUBE\",\"channelUrl\":\"https://www.youtube.com/@coganerang\"}],\"debutGroupId\":\"stellive-abyss-2026\",\"debutGroupName\":\"ABYSS\",\"bannerUrl\":\"https://vdebut.live/images/stellive-common-banner.jpg\",\"cafeUrl\":\"https://cafe.naver.com/tteokbokk1/\"}",
+        "updated_at": "2026-10-13 03:48:52"
+      },
+      {
+        "slug": "shizuki-toa",
+        "channel_url": "https://chzzk.naver.com/2299fad4bebb504b0978e1ec08b2f7d3",
+        "data": "{\"slug\":\"shizuki-toa\",\"displayName\":\"시즈키 토아\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/2299fad4bebb504b0978e1ec08b2f7d3\",\"description\":\"시즈키 토아의 공식 치지직 방송국입니다.\",\"avatarUrl\":\"https://nng-phinf.pstatic.net/MjAyNjEwMTFfMTEg/MDAxNzkxNzA1ODc5NTk1.uOBSzqpGxdfZMkp-lCQTzKJFJq5MvMvemHb9X-tkf6Mg.wI-aCm7PU6GvSDa9i0Dw8-noAlXD4ZiKHHLrQo75Iwog.PNG/image.png\",\"agency\":\"스텔라이브\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[],\"xUrl\":\"https://x.com/ShizukiToa\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-10-17\",\"debutTime\":\"17:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-10-17T08:00:00.000Z\",\"targetMonth\":\"2026-10\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"headline\":\"스텔라이브 4기 ABYSS\",\"websiteUrl\":\"https://stellive.me/\",\"noticeUrl\":\"https://stellive.me/news/14262\",\"videoUrl\":\"https://youtu.be/tlCeLkw8Upc\",\"videoTitle\":\"STELLIVE 4th Generation ABYSS\",\"videoKind\":\"GROUP_PV\",\"additionalChannels\":[{\"platform\":\"YOUTUBE\",\"channelUrl\":\"https://www.youtube.com/@ShizukiToa\"}],\"debutGroupId\":\"stellive-abyss-2026\",\"debutGroupName\":\"ABYSS\",\"bannerUrl\":\"https://vdebut.live/images/stellive-common-banner.jpg\",\"cafeUrl\":\"https://cafe.naver.com/tteokbokk1/\"}",
+        "updated_at": "2026-10-13 03:48:52"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.3646
+      },
+      "duration": 0.3646,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 583471104,
+      "rows_read": 4,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "id": 52626,
+        "channel_id": 63780,
+        "slug": "cogane-rang",
+        "display_name": "코가네 랑",
+        "profile_image_url": "https://nng-phinf.pstatic.net/MjAyNjEwMTFfMjM3/MDAxNzkxNzA1ODY5MjA5.Hugj_v0YBjAf_-tjXp8J4EnY9NesLqrs03AD_uwEDCwg.1OC540ofeGkRMblzh4tKz9J02KIO04Cjp_DjKZIKAUwg.PNG/image.png",
+        "description": "코가네 랑의 공식 치지직 방송국입니다.",
+        "agency_name": "스텔라이브",
+        "debut_date": "2026-10-17",
+        "debut_time": "18:00",
+        "timezone": "Asia/Seoul",
+        "start_at_utc": "2026-10-17T09:00:00.000Z",
+        "created_at": "2026-10-13 03:34:03",
+        "updated_at": "2026-10-13 03:48:52",
+        "country_code": "KR",
+        "x_url": "https://x.com/CoganeRang",
+        "group_name": "ABYSS",
+        "video_url": "https://youtu.be/tlCeLkw8Upc",
+        "website_url": "https://stellive.me/",
+        "event_type": "DEBUT",
+        "total_cheers": 0,
+        "weekly_cheers": 0,
+        "is_verified": 0
+      },
+      {
+        "id": 52625,
+        "channel_id": 63779,
+        "slug": "shizuki-toa",
+        "display_name": "시즈키 토아",
+        "profile_image_url": "https://nng-phinf.pstatic.net/MjAyNjEwMTFfMTEg/MDAxNzkxNzA1ODc5NTk1.uOBSzqpGxdfZMkp-lCQTzKJFJq5MvMvemHb9X-tkf6Mg.wI-aCm7PU6GvSDa9i0Dw8-noAlXD4ZiKHHLrQo75Iwog.PNG/image.png",
+        "description": "시즈키 토아의 공식 치지직 방송국입니다.",
+        "agency_name": "스텔라이브",
+        "debut_date": "2026-10-17",
+        "debut_time": "17:00",
+        "timezone": "Asia/Seoul",
+        "start_at_utc": "2026-10-17T08:00:00.000Z",
+        "created_at": "2026-10-13 03:34:03",
+        "updated_at": "2026-10-13 03:48:52",
+        "country_code": "KR",
+        "x_url": "https://x.com/ShizukiToa",
+        "group_name": "ABYSS",
+        "video_url": "https://youtu.be/tlCeLkw8Upc",
+        "website_url": "https://stellive.me/",
+        "event_type": "DEBUT",
+        "total_cheers": 0,
+        "weekly_cheers": 0,
+        "is_verified": 0
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.6199
+      },
+      "duration": 0.6199,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 583471104,
+      "rows_read": 4,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "total": 6
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.0625
+      },
+      "duration": 0.0625,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 583471104,
+      "rows_read": 6,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "total": 378
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1437
+      },
+      "duration": 0.1437,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 583471104,
+      "rows_read": 378,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

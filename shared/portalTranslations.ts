@@ -1,5 +1,24 @@
+import { PROFILE_CONTENT_TRANSLATIONS } from './profileContentTranslations';
 // 서비스 문구만 번역하며 활동명·자기소개 같은 이용자 입력은 원문으로 유지한다.
 const rows = String.raw`
+등록|||登録|||Submit
+표시 시간대: {0} · {1}명|||表示タイムゾーン: {0}・{1}人|||Time zone: {0} · {1} creators
+접수일: {0}|||受付日: {0}|||Submitted: {0}
+지원하는 방송 채널: {0}|||対応チャンネル: {0}|||Supported channel: {0}
+{0}월 등록 일정|||{0}月の登録日程|||Schedules in month {0}
+이번 달 {0}|||今月の{0}|||{0} this month
+방송 채널 정보를 불러오고 소개와 일정을 확인해 주세요.|||チャンネル情報を取得して、紹介と予定を確認してください。|||Load your channel, then review your introduction and schedule.
+데뷔 날짜 미정|||デビュー日未定|||Debut date undecided
+선택한 조건에 맞는 데뷔 예정자가 없어요.|||選択した条件に合うデビュー予定者はいません。|||No upcoming debuts match your filters.
+플랫폼과 방송 콘텐츠, 소개를 살펴보고 마음에 드는 버튜버를 찾아보세요.|||プラットフォームや配信内容、紹介を見て、気になるVTuberを見つけましょう。|||Explore platforms, content and profiles to find VTubers you like.
+방송 채널 소개 확인|||配信チャンネルの紹介を確認|||Review your channel profile
+채널 정보를 불러왔어요|||チャンネル情報を読み込みました|||Channel details loaded
+불러온 소개글을 확인해 주세요.|||読み込んだ紹介文を確認してください。|||Review the imported introduction.
+방송 채널을 확인해 주세요|||配信チャンネルを確認してください|||Check your streaming channel
+방송 소개|||配信の紹介|||Stream introduction
+활동명과 소개도 함께 불러와요.|||活動名と紹介文も一緒に読み込みます。|||Your name and introduction are loaded too.
+불러온 문구를 확인하고 나의 소개로 다듬어 주세요.|||読み込んだ文章を確認して、自分の紹介文に整えてください。|||Review the imported text and make it your own.
+표시는 꼭 입력해 주세요.|||印の項目は必須です。|||marks a required field.
 방송 통계를 불러오지 못했어요|||配信統計を読み込めませんでした|||Unable to load streaming statistics
 주요 콘텐츠와 방송 언어, 데뷔 일정을 살펴보세요. 관심 있는 버튜버는 하트로 저장할 수 있어요.|||主なコンテンツ、配信言語、デビュー日程を確認しましょう。気になるVTuberはハートで保存できます。|||Explore content, streaming languages and debut schedules. Save creators you like with the heart button.
 방송 채널과 데뷔 일정을 등록하세요. 날짜와 시간이 미정인 일정도 신청할 수 있으며, 운영자 검토 후 공개됩니다.|||配信チャンネルとデビュー日程を登録してください。日時が未定でも申請でき、運営の審査後に公開されます。|||Submit your channel and debut schedule, even if the date or time is undecided. Submissions are published after review.
@@ -660,10 +679,10 @@ X 등에 올린 공지 주소를 남겨주세요. HTTPS 주소를 사용할 수 
 {0} · 시간 미정 ({1})|||{0}・時間未定（{1}）|||{0} · Time undecided ({1})
 `.trim().split('\n');
 
-export const PORTAL_TRANSLATIONS: Record<string, readonly [string, string]> = Object.fromEntries(rows.map((row) => {
+export const PORTAL_TRANSLATIONS: Record<string, readonly [string, string]> = { ...PROFILE_CONTENT_TRANSLATIONS, ...Object.fromEntries(rows.map((row) => {
   const [key, ja, en] = row.split('|||').map((value) => value.replace(/\\n/g, '\n'));
   return [key, [ja, en] as const];
-}));
+})) };
 
 // 동적 값은 번역하지 않고 자리표시자에 그대로 넣는다.
 export function translatePortalText(source: string, language: 'ko' | 'ja' | 'en', values: unknown[] = []): string {

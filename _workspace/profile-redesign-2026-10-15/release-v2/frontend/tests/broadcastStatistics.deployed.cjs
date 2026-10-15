@@ -1,0 +1,100 @@
+const assert = require('node:assert/strict');
+const path = require('node:path');
+const fs = require('node:fs');
+const { chromium } = require(process.env.STATISTICS_PLAYWRIGHT_MODULE || 'playwright');
+const XLSX = require('../node_modules/xlsx');
+
+// 배포된 개발 사이트는 응답을 가로채지 않고 실제 API와 화면을 함께 확인한다.
+async function main() {
+  const output = path.resolve(__dirname, '../../.cache/statistics-browser');
+  fs.mkdirSync(output, { recursive: true });
+  const browser = await chromium.launch({ channel: 'msedge', headless: true });
+  try {
+    const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+    const errors = [];
+    page.on('pageerror', (error) => errors.push(String(error)));
+    const responsePromise = page.waitForResponse((response) => response.url().includes('/api/analytics/broadcast-statistics'), { timeout: 40000 });
+    const navigation = await page.goto('https://dev.vdebut.live/analytics?tab=live', { waitUntil: 'domcontentloaded' });
+    assert.equal(navigation.status(), 200);
+    const response = await responsePromise;
+    assert.equal(response.status(), 200);
+    const data = await response.json();
+    await page.locator('.bs-broadcast-row').first().waitFor();
+    assert.equal(data.sources.find((source) => source.platform === 'CHZZK').state, 'available');
+    assert.ok(data.lives.filter((row) => row.platform === 'CHZZK').length >= 95);
+    assert.equal(data.sources.find((source) => source.platform === 'SOOP').state, 'available');
+    assert.equal(data.sources.find((source) => source.platform === 'SOOP').checkedChannels, 40);
+    assert.ok(['available', 'empty'].includes(data.meta.historyState));
+    if (data.meta.historyState === 'empty') assert.equal(data.points.filter((point) => point.kind === 'history').length, 0);
+    const total = data.lives.reduce((sum, row) => sum + row.viewers, 0);
+    assert.equal(await page.locator('.bs-grand strong').innerText(), total.toLocaleString('ko-KR'));
+    assert.equal(await page.locator('.bs-chart-summary strong').innerText(), total.toLocaleString('ko-KR'));
+    await page.waitForFunction(() => [...document.querySelectorAll('.bs-brand-clearspace img')].every((image) => image.complete), { timeout: 15000 });
+    const logos = await page.locator('.bs-brand-clearspace img').evaluateAll((images) => images.map((image) => ({ loaded: image.complete && image.naturalWidth > 0, height: image.getBoundingClientRect().height, padding: parseFloat(getComputedStyle(image.parentElement).paddingTop), filter: getComputedStyle(image).filter })));
+    for (const logo of logos) { assert.ok(logo.loaded); assert.ok(logo.height >= 20); assert.ok(logo.padding >= 5); assert.equal(logo.filter, 'none'); }
+    await page.screenshot({ path: path.join(output, 'deployed-desktop.jpg'), fullPage: true, type: 'jpeg', quality: 85 });
+    assert.deepEqual(data.sources.map((source) => source.platform).sort(), ['CHZZK', 'SOOP']);
+    assert.equal(await page.locator('.bs-platform-tabs button').count(), 3);
+    assert.ok(!/트위치|씨미|Twitch/.test(await page.locator('body').innerText()));
+    const registeredResponse = await page.request.get('https://dev.vdebut.live/api/analytics/streamers/search?q=' + encodeURIComponent('아'));
+    assert.equal(registeredResponse.status(), 200);
+    const registered = await registeredResponse.json();
+    assert.ok(registered.streamers.length > 0);
+    assert.ok(registered.streamers.every((streamer) => ['CHZZK', 'SOOP'].includes(streamer.platform)));
+    assert.ok(registered.streamers.filter((streamer) => streamer.platform === 'SOOP').every((streamer) => streamer.channelKey?.startsWith('SOOP:')));
+    const chosen = registered.streamers.find((streamer) => streamer.channelUrl && streamer.profileSlug) || registered.streamers[0];
+    const search = page.getByRole('combobox', { name: '스트리머·카테고리 검색' });
+    const searchResponse = page.waitForResponse((response) => response.url().includes('/api/analytics/streamers/search?q=') && decodeURIComponent(new URL(response.url()).searchParams.get('q')) === chosen.name);
+    await search.fill(chosen.name);
+    await page.getByRole('button', { name: '검색', exact: true }).click();
+    assert.equal((await searchResponse).status(), 200);
+    const selectedOption = page.getByRole('option').filter({ has: page.locator('strong', { hasText: chosen.name }) }).first();
+    await selectedOption.waitFor();
+    await page.screenshot({ path: path.join(output, 'deployed-search-desktop.jpg'), type: 'jpeg', quality: 85 });
+    await selectedOption.click();
+    await page.getByRole('dialog').waitFor();
+    assert.ok((await page.getByRole('dialog').innerText()).includes(chosen.name));
+    if (chosen.channelUrl) assert.ok(await page.getByRole('link', { name: /플랫폼 채널 보기/ }).isVisible());
+    if (chosen.profileSlug) assert.equal(await page.getByRole('link', { name: 'VDébut 프로필 보기' }).getAttribute('href'), '/creator/' + encodeURIComponent(chosen.profileSlug));
+    await page.keyboard.press('Escape');
+    await page.getByRole('button', { name: '검색어 지우기', exact: true }).click();
+    await page.getByRole('button', { name: '데이터 다운로드', exact: true }).click();
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('button', { name: '전체 데이터 저장 (.xlsx)', exact: true }).click();
+    const download = await downloadPromise;
+    const file = path.join(output, 'deployed-statistics.xlsx');
+    await download.saveAs(file);
+    const book = XLSX.readFile(file);
+    assert.equal(XLSX.utils.sheet_to_json(book.Sheets['실시간 방송']).length, data.lives.length);
+    assert.equal(book.SheetNames.length, 7);
+    assert.equal(XLSX.utils.sheet_to_json(book.Sheets['플랫폼']).length, 2);
+    await page.keyboard.press('Escape');
+    await page.locator('.bs-broadcast-row .bs-person').first().click();
+    await page.getByRole('dialog').waitFor();
+    assert.ok(await page.getByRole('link', { name: /방송 보러 가기/ }).isVisible());
+    await page.keyboard.press('Escape');
+    for (const width of [390, 320]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.evaluate(() => scrollTo(0, 0));
+      await page.waitForTimeout(200);
+      const bounds = await page.evaluate(() => ({ viewport: innerWidth, document: document.documentElement.scrollWidth }));
+      assert.ok(bounds.document <= bounds.viewport, `Overflow at ${width}px`);
+      await page.screenshot({ path: path.join(output, `deployed-mobile-${width}.jpg`), type: 'jpeg', quality: 85 });
+      await search.fill(chosen.name);
+      await page.getByRole('option').first().waitFor();
+      const searchBounds = await page.locator('.bs-streamer-results').boundingBox();
+      assert.ok(searchBounds.x >= 0 && searchBounds.x + searchBounds.width <= width, `Search overflow at ${width}px`);
+      await page.screenshot({ path: path.join(output, `deployed-search-mobile-${width}.jpg`), type: 'jpeg', quality: 85 });
+      await page.getByRole('option').first().click();
+      await page.getByRole('dialog').waitFor();
+      const dialogBounds = await page.getByRole('dialog').boundingBox();
+      assert.ok(dialogBounds.x >= 0 && dialogBounds.x + dialogBounds.width <= width, `Dialog overflow at ${width}px`);
+      await page.keyboard.press('Escape');
+      await page.getByRole('button', { name: '검색어 지우기', exact: true }).click();
+    }
+    assert.deepEqual(errors, []);
+    fs.writeFileSync(path.join(output, 'deployed-data.json'), JSON.stringify(data, null, 2));
+    console.log(JSON.stringify({ status: 'PASS', registeredSearchName: chosen.name, registeredSearchCount: registered.streamers.length, url: page.url(), generatedAt: data.meta.generatedAt, sources: data.sources, lives: data.lives.length, points: data.points.length, peaks: data.peaks.length, totalViewers: total, browserErrors: errors.length, downloadRows: XLSX.utils.sheet_to_json(book.Sheets['실시간 방송']).length }, null, 2));
+  } finally { await browser.close(); }
+}
+main().catch((error) => { console.error(error); process.exitCode = 1; });

@@ -154,10 +154,10 @@ export function PlatformMiniSpotlight({
   return (
     <section
       aria-label="Platform Debut Showcase"
-      className="w-full relative select-none pt-2 pb-6 sm:pb-8"
+      className="vd-showcase w-full relative select-none pt-2 pb-6 sm:pb-8"
     >
       {/* 1. 상단 플랫폼 탭 바 (글래스모피즘 & 완전한 중앙 정렬) */}
-      <div className="flex items-center justify-center relative mb-6">
+      <div className="vd-showcase-tabs flex items-center justify-center relative mb-6">
         <div className="inline-flex items-center gap-2 overflow-x-auto no-scrollbar py-1 px-3 bg-white/40 backdrop-blur-md rounded-full border border-white/60 shadow-xs">
           {PLATFORMS.map((p) => {
             const isSelected = selectedPlatform === p.id;
@@ -203,8 +203,8 @@ export function PlatformMiniSpotlight({
 
       {/* 2. 5단 피라미드 커버플로우 덱 [1(소) - 2(중) - 3(대) - 4(중) - 5(소)] */}
       <div className="py-2">
-        {/* 빈 플랫폼도 카드 덱과 같은 높이를 사용해 배경과 아래 달력 위치를 유지한다. */}
-        <div className="relative flex items-center justify-center w-full max-w-7xl mx-auto min-h-[300px] sm:min-h-[330px]">
+        {/* 빈 플랫폼과 카드 덱의 높이를 맞추고 포털에서는 간결한 여백을 적용한다. */}
+        <div className="vd-showcase-deck relative flex items-center justify-center w-full max-w-7xl mx-auto min-h-[300px] sm:min-h-[330px]">
         {items.length === 0 ? (
           <div className="w-full py-14 text-center text-xs font-bold text-[#64748B] bg-white/75 backdrop-blur-md rounded-2xl border border-dashed border-slate-300 max-w-md mx-auto shadow-xs">
             {t('현재 등록된 {0} 데뷔 일정이 없습니다.', [selectedPlatform])}
@@ -264,7 +264,7 @@ export function PlatformMiniSpotlight({
 
                   {/* 중앙 메인 카드 본체 (bg_profile.png 3D 무대 배경 적용) */}
                   <div
-                    className="flex flex-col items-center justify-between w-[300px] sm:w-[340px] h-[290px] sm:h-[315px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[24px] border-2 border-blue-400/90 p-5 transition-all relative group scale-100 overflow-hidden"
+                    className="vd-showcase-card flex flex-col items-center justify-between w-[300px] sm:w-[340px] h-[290px] sm:h-[315px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[24px] border-2 border-blue-400/90 p-5 transition-all relative group scale-100 overflow-hidden"
                     style={{
                       boxShadow: '0 16px 40px -6px rgba(15, 23, 42, 0.45), 0 0 35px -2px rgba(59, 130, 246, 0.35)',
                     }}
@@ -385,7 +385,7 @@ function SpotlightCardContent({
 
         <div
           onClick={() => isCenter && slug && onNavigate && onNavigate(`/creator/${slug}`)}
-          className={`relative rounded-full overflow-hidden border-2 transition-transform ${
+          className={`vd-showcase-avatar relative rounded-full overflow-hidden border-2 transition-transform ${
             isLive
               ? 'border-red-500 ring-2 ring-red-400/40'
               : isCenter
@@ -437,7 +437,7 @@ function SpotlightCardContent({
 
         {/* 실제 기업세 소속사가 있을 때만 표시 (중앙 카드에 한함) */}
         {isCenter && hasRealAgency && (
-          <p className="text-[11px] text-slate-700 font-bold truncate mt-0.5">
+          <p className="vd-showcase-agency text-[11px] text-slate-700 font-bold truncate mt-0.5">
             {agency}
           </p>
         )}
@@ -449,7 +449,7 @@ function SpotlightCardContent({
           href={channelUrl}
           target="_blank"
           rel="noreferrer"
-          className={`inline-flex items-center rounded-full border transition-all cursor-pointer select-none max-w-full overflow-hidden ${
+          className={`vd-showcase-channel inline-flex items-center rounded-full border transition-all cursor-pointer select-none max-w-full overflow-hidden ${
             isCenter
               ? 'gap-1.5 px-2.5 sm:px-3 py-1.5'
               : isSmall
@@ -464,7 +464,7 @@ function SpotlightCardContent({
         >
           {/* 상태 알약 뱃지: "데뷔일" (라이브 시 LIVE) */}
           <span
-            className={`font-black rounded-full whitespace-nowrap shrink-0 ${
+            className={`vd-showcase-status font-black rounded-full whitespace-nowrap shrink-0 ${
               isCenter
                 ? 'text-[10px] px-2 py-0.5'
                 : isSmall
@@ -481,7 +481,7 @@ function SpotlightCardContent({
 
           {/* 일시 텍스트: "MM월 DD일 (요일) 오후 00:00" */}
           <span
-            className={`font-bold whitespace-nowrap truncate text-white ${
+            className={`vd-showcase-date font-bold whitespace-nowrap truncate text-white ${
               isCenter
                 ? 'text-[11px] sm:text-xs'
                 : isSmall

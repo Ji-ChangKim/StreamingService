@@ -3,3 +3,19 @@
 @media(max-width:760px){.vd-learning-grid{grid-template-columns:1fr}.vd-learning .vd-panel{padding:20px}.vd-learning h2{font-size:18px}.vd-guide-index{flex-direction:column}.vd-profile-facts{grid-template-columns:1fr}.vd-home-actions .vd-button{font-size:13px}.vd-home-intro p{font-size:13px!important;max-width:540px!important}}
 
 .vd-week-profiles{padding-left:22px;display:grid;gap:12px}.vd-week-profiles li>a{font-weight:700;color:#2453a5}.vd-week-profiles li>span{display:block;color:#52647c;font-size:13px;margin-top:5px}.vd-week-profiles li>p{margin:5px 0 0}
+
+/* 공통 패널 규칙보다 구체적으로 지정해 가이드 문단의 읽기 간격을 보존한다. */
+.vd .vd-learning .vd-guide-article { max-width: 800px; margin-bottom: 24px; }
+.vd .vd-learning:has(> .vd-guide-index) { max-width: 800px; margin-inline: auto; }
+.vd .vd-learning .vd-guide-index { gap: 12px; margin-bottom: 24px; }
+.vd .vd-learning .vd-guide-index a { min-height: 44px; display: inline-flex; align-items: center; padding: 8px 16px; }
+.vd .vd-learning .vd-panel { padding: var(--vd-card-padding,24px); }
+.vd .vd-learning .vd-panel > h2 { margin: 0 0 16px; }
+.vd .vd-learning .vd-panel > p { font-size: 14px; line-height: 1.85; margin: 0 0 16px; }
+.vd .vd-learning .vd-panel > p:last-child { margin-bottom: 0; }
+.vd .vd-learning p { font-size: 14px; }
+.vd .vd-learning .vd-learning-grid { gap: var(--vd-layout-gap,24px); }
+.vd .vd-learning .vd-guide-article .vd-button { margin-top: 8px; }
+.vd .vd-profile-facts { gap: 16px; margin-top: 24px; }
+.vd .vd-profile-facts dd { font-size: 14px; line-height: 1.8; }
+.vd .vd-profile-evidence p { font-size: 14px; line-height: 1.8; }
