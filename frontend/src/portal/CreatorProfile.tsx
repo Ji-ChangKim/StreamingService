@@ -175,6 +175,9 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
   const [activeMedia, setActiveMedia] = useState('');
   const media = profileMediaItems(profile);
   const personal = media.filter((item) => item.featured || ['INTRO', 'TEASER', 'COVER', 'HIGHLIGHT'].includes(item.kind));
+  const personalTitle = personal.some((item) => item.kind === 'COVER')
+    ? t('{0} 커버곡', [profile.displayName])
+    : t('{0} 대표 영상', [profile.displayName]);
   const moments = media.filter((item) => !item.featured && ['CLIP', 'CATCH', 'SHORT'].includes(item.kind));
   const firstBroadcast = media.filter((item) => !item.featured && item.kind === 'REPLAY');
   const broadcasts = media.filter((item) => !item.featured && item.kind === 'BROADCAST_REPLAY');
@@ -219,7 +222,7 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
       <div id="profile-first"><ProfileMediaGallery title={t('역사적인 첫 방송 다시보기')} items={firstBroadcast} active={activeMedia} onPlay={setActiveMedia} featured /></div>
     )}
 
-    <div id="profile-intro"><ProfileMediaGallery title={t('처음 만나는 영상')} items={personal} active={activeMedia} onPlay={setActiveMedia} featured={!isPast || firstBroadcast.length === 0} /></div>
+    <div id="profile-intro"><ProfileMediaGallery title={personalTitle} items={personal} active={activeMedia} onPlay={setActiveMedia} featured={!isPast || firstBroadcast.length === 0} /></div>
     <div id="profile-moments"><ProfileMediaGallery title={t('짧게 먼저 만나보기')} items={moments} active={activeMedia} onPlay={setActiveMedia} /></div>
     {(introduction || profile.tags.length > 0 || profile.regularSchedule) && <section className="vd-profile-editorial">
       {introduction && <p>{introduction}</p>}

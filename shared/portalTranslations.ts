@@ -205,6 +205,8 @@ YouTube 등 다른 채널을 최대 4개까지 연결할 수 있어요.|||YouTub
 데뷔 티저|||デビューティザー|||Debut teaser
 팀 공통 PV|||チーム共通PV|||Team PV
 커버곡|||カバー曲|||Cover song
+{0} 커버곡|||{0} カバー曲|||{0} Cover Songs
+{0} 대표 영상|||{0} 代表動画|||{0} Featured Videos
 방송 하이라이트|||配信ハイライト|||Stream highlights
 함께 데뷔하는 팀·기수|||一緒にデビューするチーム・期|||Debut team or generation
 공식 공지로 확인한 멤버에게만 같은 그룹 식별자를 지정해 주세요.|||公式告知で確認したメンバーにのみ同じグループIDを設定してください。|||Assign the same group ID only to members confirmed in an official announcement.

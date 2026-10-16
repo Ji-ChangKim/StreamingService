@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { ArrowUpRight, Play, X } from 'lucide-react';
 import type { PortalMedia } from '../../../shared/portal';
-import { PROFILE_MEDIA_LABELS, profileMediaKey, profileMediaSource } from '../../../shared/profileMedia';
+import { profileMediaKey, profileMediaSource } from '../../../shared/profileMedia';
 import { portalWebUrl } from '../../../shared/portal';
-import { PlatformBadge } from './PortalUi';
 import { t } from './portalLocale';
 import './profileMedia.css';
 
@@ -29,9 +28,14 @@ function ProfileMediaCard({ item, active, onPlay, featured = false }: {
       {thumbnail && !imageFailed && <img src={thumbnail} alt="" loading="lazy" onError={() => setImageFailed(true)} />}
       <span><Play size={22} />{t('원문에서 보기')}<ArrowUpRight size={16} /></span>
     </a>}
-    <div className="vd-media-card-copy"><div className="vd-media-meta"><PlatformBadge platform={item.provider} /><span>{t(PROFILE_MEDIA_LABELS[item.kind])}</span></div>
-      <h3>{item.title}</h3>{item.credit && <p className="vd-media-credit">{t('제작·출처')} · {item.credit}</p>}
-      <a className="vd-text-button" href={source.url} target="_blank" rel="noopener noreferrer">{t('원본 영상 보기')}<ArrowUpRight size={14} /></a>
+    <div className="vd-media-card-copy">
+      <div className="vd-media-card-header">
+        <h3>{item.title}</h3>
+        <a className="vd-media-origin-link" href={source.url} target="_blank" rel="noopener noreferrer">
+          <span>{t('원본 영상 보기')}</span>
+          <ArrowUpRight size={14} />
+        </a>
+      </div>
     </div>
   </article>;
 }
