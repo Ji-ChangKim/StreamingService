@@ -1,6 +1,7 @@
 // 상세페이지와 영상 편집에 새로 추가한 문구를 같은 번역으로 제공한다.
 export const PROFILE_CONTENT_TRANSLATIONS: Record<string, readonly [string, string]> = {
   '처음 만나는 영상': ['はじめての動画', 'Meet this creator'],
+  '대표 영상': ['代表動画', 'Featured video'],
   '짧게 먼저 만나보기': ['短い動画で出会う', 'A few moments to meet'],
   '짧은 장면': ['ショートクリップ', 'Short moments'],
   '첫 방송': ['初配信', 'Debut stream'],

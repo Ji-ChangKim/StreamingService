@@ -677,6 +677,12 @@ X 등에 올린 공지 주소를 남겨주세요. HTTPS 주소를 사용할 수 
 언어 선택|||言語を選択|||Select language
 {0} · 날짜 미정|||{0}・日付未定|||{0} · Date undecided
 {0} · 시간 미정 ({1})|||{0}・時間未定（{1}）|||{0} · Time undecided ({1})
+{0} 채널 바로가기|||{0}チャンネルへ|||Visit {0} channel
+X(트위터) 데뷔 공지 확인하기|||X（Twitter）のデビュー告知を見る|||Check debut announcement on X (Twitter)
+공식 데뷔 공지 확인하기|||公式デビュー告知を見る|||Check official debut announcement
+데뷔 완료|||デビュー完了|||Debut completed
+데뷔일|||デビュー日|||Debut date
+역사적인 첫 방송 다시보기|||記念すべき初配信アーカイブ|||Debut stream archive
 `.trim().split('\n');
 
 export const PORTAL_TRANSLATIONS: Record<string, readonly [string, string]> = { ...PROFILE_CONTENT_TRANSLATIONS, ...Object.fromEntries(rows.map((row) => {

@@ -37,23 +37,71 @@ function ProfileSchedule({ profile, now, preview }: { profile: PortalProfile; no
   const phase = profileDebutPhase(profile, now);
   const replayUrl = profileFirstReplay(profile)?.url || '';
   const replay = Boolean(replayUrl);
-  // 일정이 없는 소개에서는 빈 일정 안내 대신 채널 방문 동작만 남긴다.
-  const channelAction = profile.channelUrl && <a className={`vd-button${phase !== 'UPCOMING' && !replay ? ' vd-primary' : ''}`} href={portalWebUrl(profile.channelUrl)} target="_blank" rel="noopener noreferrer">{t('채널 바로가기')}<ArrowUpRight size={16} /></a>;
+  const platformName = PORTAL_PLATFORMS.find((p) => p.id === profile.platform)?.label || profile.platform;
+  const isPast = phase === 'PAST';
+  const noticeUrl = portalWebUrl(profile.noticeUrl || '');
+  const isXNotice = noticeUrl.includes('x.com') || noticeUrl.includes('twitter.com');
+
+  // 채널 방문 버튼은 스트리머 채널 유입과 팔로우를 만드는 핵심 액션이다.
+  const isChannelPrimary = phase === 'UPCOMING' || !replay;
+  const channelAction = profile.channelUrl && (
+    <a
+      className={`vd-button${isChannelPrimary ? ' vd-primary' : ''}`}
+      href={portalWebUrl(profile.channelUrl)}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {t('{0} 채널 바로가기', [platformName])}
+      <ArrowUpRight size={16} />
+    </a>
+  );
+
   if (profile.dateState === 'NONE') return channelAction ? <div className="vd-profile-channel-action">{channelAction}</div> : null;
-  return <div className="vd-debut-callout">
-    <div><span className="vd-profile-label">{t('데뷔 일정')}</span>
-      <div className="vd-debut-date"><h2>{portalSchedule(profile)}</h2>
-        {profile.dateState === 'FIXED' && phase !== 'UNCONFIRMED' && <span className="vd-profile-timezone">{portalDateKey(profile.startAtUtc, 'Asia/Seoul').slice(0, 4)} · KST</span>}
+
+  return (
+    <div className="vd-debut-callout">
+      <div className="vd-debut-info">
+        <div className="vd-debut-status-line">
+          <span className="vd-profile-label">{isPast ? t('데뷔일') : t('데뷔 일정')}</span>
+          {isPast && <span className="vd-profile-completed-badge">{t('데뷔 완료')}</span>}
+        </div>
+        <div className="vd-debut-date">
+          <h2>{portalSchedule(profile)}</h2>
+          {profile.dateState === 'FIXED' && phase !== 'UNCONFIRMED' && (
+            <span className="vd-profile-timezone">{portalDateKey(profile.startAtUtc, 'Asia/Seoul').slice(0, 4)} · KST</span>
+          )}
+        </div>
+        {phase === 'UPCOMING' && (
+          <span className="vd-profile-countdown">
+            <Clock size={13} /> {profileCountdown(profile, now)}
+          </span>
+        )}
+        {noticeUrl && (
+          <div className="vd-debut-notice-box">
+            <a className="vd-debut-notice-link" href={noticeUrl} target="_blank" rel="noopener noreferrer">
+              <span>{isXNotice ? t('X(트위터) 데뷔 공지 확인하기') : t('공식 데뷔 공지 확인하기')}</span>
+              <ArrowUpRight size={14} />
+            </a>
+          </div>
+        )}
       </div>
-      {phase === 'UPCOMING' && <span className="vd-profile-countdown"><Clock size={13} /> {profileCountdown(profile, now)}</span>}
-      {profile.noticeUrl && portalWebUrl(profile.noticeUrl) && <a className="vd-text-button" href={portalWebUrl(profile.noticeUrl)} target="_blank" rel="noopener noreferrer">{t('데뷔 공지 보기')}<ArrowUpRight size={13} /></a>}
+      <div className="vd-debut-actions">
+        {replay && (
+          <a className="vd-button vd-primary" href={portalWebUrl(replayUrl)} target="_blank" rel="noopener noreferrer">
+            <Play size={15} />
+            {t('첫 방송 다시보기')}
+          </a>
+        )}
+        {channelAction}
+        {phase === 'UPCOMING' && (
+          <button type="button" className="vd-button" disabled={preview} onClick={() => downloadPortalSchedule(profile)}>
+            <CalendarPlus size={16} />
+            {t('내 캘린더에 저장')}
+          </button>
+        )}
+      </div>
     </div>
-    <div className="vd-debut-actions">
-      {channelAction}
-      {phase === 'UPCOMING' && <button type="button" className="vd-button vd-primary" disabled={preview} onClick={() => downloadPortalSchedule(profile)}><CalendarPlus size={16} />{t('내 캘린더에 저장')}</button>}
-      {replay && <a className="vd-button vd-primary" href={portalWebUrl(replayUrl)} target="_blank" rel="noopener noreferrer"><Play size={15} />{t('첫 방송 다시보기')}</a>}
-    </div>
-  </div>;
+  );
 }
 
 // 여러 플랫폼의 채널을 주소 기준으로 중복 제거해 목적별로 보여준다.
@@ -112,6 +160,9 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
 }) {
   usePortalLocale();
   const now = useProfileClock(profile, preview);
+  const phase = profileDebutPhase(profile, now);
+  const isPast = phase === 'PAST';
+
   // 상세페이지의 모든 영상 영역이 하나의 재생 선택을 공유한다.
   const [activeMedia, setActiveMedia] = useState('');
   const media = profileMediaItems(profile);
@@ -133,36 +184,59 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
   const platformName = PORTAL_PLATFORMS.find((platform) => platform.id === profile.platform)?.label || profile.platform;
   // 추천 제목과 실제 목록의 플랫폼을 맞추고 같은 팀 멤버는 별도 영역에 남긴다.
   const related = profiles.filter((p) => p.slug !== profile.slug && p.platform === profile.platform && (!profile.debutGroupId || p.debutGroupId !== profile.debutGroupId) && (!profile.tags.length || p.tags.some((tag) => profile.tags.includes(tag)))).slice(0, 4);
-  return <article className="vd-profile-experience">
+
+  // 섹션 바로가기 네비게이션: 데뷔 상태와 실제 보유 자료에 따라 가변 구성
+  const navSections = [
+    { id: 'profile-first', label: t('첫 방송 다시보기'), show: isPast && firstBroadcast.length > 0 },
+    { id: 'profile-intro', label: t('대표 영상'), show: personal.length > 0 },
+    { id: 'profile-moments', label: t('짧은 장면'), show: moments.length > 0 },
+    { id: 'profile-first', label: t('첫 방송'), show: !isPast && firstBroadcast.length > 0 },
+    { id: 'profile-news', label: t('주요 소식'), show: (profile.notices || []).length > 0 },
+    { id: 'profile-team', label: t('함께 데뷔해요'), show: teamVideos.length > 0 || Boolean(profile.debutGroupId) },
+    { id: 'profile-channels', label: t('채널'), show: true },
+  ].filter((item) => item.show);
+
+  return <article className={`vd-profile-experience${media.length === 0 && !profile.debutGroupId ? ' vd-profile-compact' : ''}`}>
     {!preview && <div className="vd-breadcrumb"><PortalLink to="/creators" onNavigate={onNavigate}>{t('버튜버 둘러보기')}</PortalLink><span>/</span><span>{profile.displayName}</span></div>}
     <section className="vd-profile-hero"><ProfileCover key={`${profile.slug}:${bannerUrl}`} banner={banner} />
       <div className="vd-profile-identity"><PortalAvatar key={`${profile.slug}:${profile.avatarUrl}`} large profile={profile} />
         <div className="vd-profile-identity-copy"><IdentityHeading>{profile.displayName}</IdentityHeading>
           {profile.headline && <p className="vd-profile-headline">{profile.headline}</p>}
           <div className="vd-profile-meta">{agency && <span className="vd-profile-agency">{agency}</span>}<PlatformBadge platform={profile.platform} />{profile.ownerVerified && <span><ShieldCheck size={14} />{t('채널 운영자 확인')}</span>}</div>
-
         </div>
         {!preview && <div className="vd-profile-tools"><FavoriteButton slug={profile.slug} /><CopyButton value={`${window.location.origin}/creator/${encodeURIComponent(profile.slug)}`} /></div>}
       </div>
       {/* 만날 시간과 주 행동을 개인 콘텐츠보다 먼저 안내한다. */}
       <ProfileSchedule profile={profile} now={now} preview={preview} />
     </section>
-    <nav className="vd-profile-section-nav" aria-label={t('소개 바로가기')}>
-      {personal.length > 0 && <a href="#profile-intro">{t('대표 영상')}</a>}
-      {moments.length > 0 && <a href="#profile-moments">{t('짧은 장면')}</a>}
-      {firstBroadcast.length > 0 && <a href="#profile-first">{t('첫 방송')}</a>}
-      {(profile.notices || []).length > 0 && <a href="#profile-news">{t('주요 소식')}</a>}
-      {(teamVideos.length > 0 || profile.debutGroupId) && <a href="#profile-team">{t('함께 데뷔해요')}</a>}
-      <a href="#profile-channels">{t('채널')}</a>
-    </nav>
-    <div id="profile-intro"><ProfileMediaGallery title={t('처음 만나는 영상')} items={personal} active={activeMedia} onPlay={setActiveMedia} featured /></div>
+
+    {/* 섹션 항목이 3개 이상일 때만 네비게이션 바를 표시해 단출한 개인세 신입 화면을 깔끔하게 유지한다. */}
+    {navSections.length >= 3 && (
+      <nav className="vd-profile-section-nav" aria-label={t('소개 바로가기')}>
+        {navSections.map((sec) => (
+          <a key={sec.id} href={`#${sec.id}`}>{sec.label}</a>
+        ))}
+      </nav>
+    )}
+
+    {/* 데뷔 후(PAST) 상태일 때는 첫 방송 다시보기를 최상단으로 승격해 역사적 첫 만남을 바로 감상하도록 한다. */}
+    {isPast && firstBroadcast.length > 0 && (
+      <div id="profile-first"><ProfileMediaGallery title={t('역사적인 첫 방송 다시보기')} items={firstBroadcast} active={activeMedia} onPlay={setActiveMedia} featured /></div>
+    )}
+
+    <div id="profile-intro"><ProfileMediaGallery title={t('처음 만나는 영상')} items={personal} active={activeMedia} onPlay={setActiveMedia} featured={!isPast || firstBroadcast.length === 0} /></div>
     <div id="profile-moments"><ProfileMediaGallery title={t('짧게 먼저 만나보기')} items={moments} active={activeMedia} onPlay={setActiveMedia} /></div>
     {(introduction || profile.languages.length > 0 || profile.tags.length > 0 || profile.regularSchedule) && <section className="vd-profile-editorial">
       {introduction && <p>{introduction}</p>}
       <dl className="vd-profile-facts">{profile.tags.length > 0 && <div><dt>{t('주요 콘텐츠')}</dt><dd>{profile.tags.join(' · ')}</dd></div>}{profile.languages.length > 0 && <div><dt>{t('방송 언어')}</dt><dd>{profile.languages.join(' · ')}</dd></div>}</dl>
       {profile.regularSchedule && <p>{profile.regularSchedule}</p>}
     </section>}
-    <div id="profile-first"><ProfileMediaGallery title={t('첫 방송 다시보기')} items={firstBroadcast} active={activeMedia} onPlay={setActiveMedia} /></div>
+
+    {/* 데뷔 전이거나 아직 지나지 않은 경우의 첫 방송 다시보기 */}
+    {!isPast && firstBroadcast.length > 0 && (
+      <div id="profile-first"><ProfileMediaGallery title={t('첫 방송 다시보기')} items={firstBroadcast} active={activeMedia} onPlay={setActiveMedia} /></div>
+    )}
+
     <ProfileMediaGallery title={t('방송 다시보기')} items={broadcasts} active={activeMedia} onPlay={setActiveMedia} />
     {(profile.notices || []).length > 0 && <section id="profile-news" className="vd-profile-editorial"><h2>{t('주요 소식')}</h2><ul className="vd-profile-notices">{profile.notices!.filter((notice) => portalWebUrl(notice.url)).map((notice, index) => <li key={`${notice.url}:${index}`}><a href={portalWebUrl(notice.url)} target="_blank" rel="noopener noreferrer">{notice.title}<ArrowUpRight size={16} /></a></li>)}</ul></section>}
     {profile.fanGuide && <section className="vd-profile-editorial"><h2>{t('팬으로 함께하기')}</h2><p>{profile.fanGuide}</p></section>}
