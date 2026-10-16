@@ -48,8 +48,8 @@ export function ProfileMediaGallery({ title, items, active, onPlay, featured = f
   const ordered = featured ? [...items].sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured))) : items;
   const visible = ordered.slice(0, featured ? 3 : 6);
   const remaining = ordered.slice(visible.length);
-  return <section className="vd-profile-media-section" aria-label={title}>
-    <header className="vd-media-section-heading"><h2>{title}</h2></header>
+  return <section className="vd-profile-media-section" aria-label={title || undefined}>
+    {Boolean(title) && <header className="vd-media-section-heading"><h2>{title}</h2></header>}
     <div className={`vd-media-grid${featured ? ' vd-media-intro-grid' : ''}`}>{visible.map((item, index) => <ProfileMediaCard key={profileMediaKey(item)} item={item} active={active} onPlay={onPlay} featured={featured && index === 0} />)}</div>
     {remaining.length > 0 && <details className="vd-media-more"><summary>{t('영상 더 보기')}</summary><div className="vd-media-grid">{remaining.map((item) => <ProfileMediaCard key={profileMediaKey(item)} item={item} active={active} onPlay={onPlay} />)}</div></details>}
   </section>;

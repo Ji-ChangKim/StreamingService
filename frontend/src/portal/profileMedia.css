@@ -51,6 +51,7 @@
 @media(min-width:1000px) {
   .vd-team-unified-grid { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); gap: 28px; align-items: start; }
   .vd-team-unified-grid .vd-profile-media-section { margin: 0; }
+  .vd-team-unified-grid .vd-profile-content { margin: 0; }
   .vd-team-unified-grid .vd-media-grid { grid-template-columns: minmax(0,1fr); }
   .vd-team-unified-grid .vd-debut-members { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
   .vd-team-unified-grid .vd-debut-member { padding: 16px 12px; }

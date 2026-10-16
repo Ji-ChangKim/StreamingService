@@ -200,8 +200,18 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
   const teamMembers = profileDebutMembers(profile, profiles);
   const hasTeamMembers = teamMembers.length >= 2;
   const hasTeamVideos = teamVideos.length > 0;
-  const groupTitle = [agency, profile.debutGroupName].filter(Boolean).join(' ');
-  const teamHeadingTitle = groupTitle ? `${groupTitle} ${t('멤버')}` : t('함께 데뷔해요');
+  const agencyTitle = agency || '';
+  let subHeadingText = profile.headline ? profile.headline.replace(agency, '').trim() : '';
+  if (subHeadingText) {
+    subHeadingText = subHeadingText.replace(/(\d+)기(?![가-힣a-zA-Z0-9])/g, '$1기생');
+  } else if (profile.debutGroupName) {
+    subHeadingText = profile.debutGroupName;
+  }
+  if (hasTeamVideos) {
+    subHeadingText = subHeadingText ? `${subHeadingText} PV` : t('팀 공통 PV');
+  } else if (hasTeamMembers) {
+    subHeadingText = subHeadingText ? `${subHeadingText} ${t('멤버')}` : t('함께 데뷔해요');
+  }
 
   return <article className={`vd-profile-experience${media.length === 0 && !profile.debutGroupId ? ' vd-profile-compact' : ''}`}>
     {!preview && <div className="vd-breadcrumb"><PortalLink to="/creators" onNavigate={onNavigate}>{t('버튜버 둘러보기')}</PortalLink><span>/</span><span>{profile.displayName}</span></div>}
@@ -246,18 +256,19 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
     {(profile.notices || []).length > 0 && <section id="profile-news" className="vd-profile-editorial"><h2>{t('주요 소식')}</h2><ul className="vd-profile-notices">{profile.notices!.filter((notice) => portalWebUrl(notice.url)).map((notice, index) => <li key={`${notice.url}:${index}`}><a href={portalWebUrl(notice.url)} target="_blank" rel="noopener noreferrer">{notice.title}<ArrowUpRight size={16} /></a></li>)}</ul></section>}
     {profile.fanGuide && <section className="vd-profile-editorial"><h2>{t('팬으로 함께하기')}</h2><p>{profile.fanGuide}</p></section>}
 
-    {/* 팀·기수 섹션: PV와 멤버를 {소속} {크루} 멤버 단일 타이틀 아래로 통합 */}
+    {/* 팀·기수 섹션: PV와 멤버를 단일 타이틀 아래로 통합하고 카드 상단 라인을 완벽히 일치시킨다 */}
     {(hasTeamVideos || hasTeamMembers) && (
       <div id="profile-team" className="vd-debut-team-section">
-        {hasTeamVideos && hasTeamMembers && (
-          <header className="vd-team-unified-heading">
-            <h2>{teamHeadingTitle}</h2>
-          </header>
-        )}
+        <header className="vd-team-unified-heading">
+          <h2>
+            {agencyTitle && <span className="vd-team-agency">{agencyTitle}</span>}
+            {subHeadingText && <span className="vd-team-sub">{subHeadingText}</span>}
+          </h2>
+        </header>
         <div className="vd-team-unified-grid">
           {hasTeamVideos && (
             <ProfileMediaGallery
-              title={hasTeamMembers ? t('팀 공통 PV') : teamHeadingTitle}
+              title=""
               items={teamVideos}
               active={activeMedia}
               onPlay={setActiveMedia}
@@ -270,7 +281,7 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
                   profile={profile}
                   profiles={profiles}
                   onNavigate={onNavigate}
-                  hideHeading={hasTeamVideos}
+                  hideHeading
                 />
               )}
             </div>
