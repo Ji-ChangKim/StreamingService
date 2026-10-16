@@ -200,17 +200,6 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
   const groupTitle = [agency, profile.debutGroupName].filter(Boolean).join(' ');
   const teamHeadingTitle = groupTitle ? `${groupTitle} ${t('멤버')}` : t('함께 데뷔해요');
 
-  // 섹션 바로가기 네비게이션: 데뷔 상태와 실제 보유 자료에 따라 가변 구성
-  const navSections = [
-    { id: 'profile-first', label: t('첫 방송 다시보기'), show: isPast && firstBroadcast.length > 0 },
-    { id: 'profile-intro', label: t('대표 영상'), show: personal.length > 0 },
-    { id: 'profile-moments', label: t('짧은 장면'), show: moments.length > 0 },
-    { id: 'profile-first', label: t('첫 방송'), show: !isPast && firstBroadcast.length > 0 },
-    { id: 'profile-news', label: t('주요 소식'), show: (profile.notices || []).length > 0 },
-    { id: 'profile-team', label: t('함께 데뷔해요'), show: hasTeamVideos || Boolean(profile.debutGroupId) },
-    { id: 'profile-channels', label: t('채널'), show: true },
-  ].filter((item) => item.show);
-
   return <article className={`vd-profile-experience${media.length === 0 && !profile.debutGroupId ? ' vd-profile-compact' : ''}`}>
     {!preview && <div className="vd-breadcrumb"><PortalLink to="/creators" onNavigate={onNavigate}>{t('버튜버 둘러보기')}</PortalLink><span>/</span><span>{profile.displayName}</span></div>}
     <section className="vd-profile-hero"><ProfileCover key={`${profile.slug}:${bannerUrl}`} banner={banner} />
@@ -224,15 +213,6 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
       {/* 만날 시간과 주 행동을 개인 콘텐츠보다 먼저 안내한다. */}
       <ProfileSchedule profile={profile} now={now} preview={preview} />
     </section>
-
-    {/* 섹션 항목이 3개 이상일 때만 네비게이션 바를 표시해 단출한 개인세 신입 화면을 깔끔하게 유지한다. */}
-    {navSections.length >= 3 && (
-      <nav className="vd-profile-section-nav" aria-label={t('소개 바로가기')}>
-        {navSections.map((sec) => (
-          <a key={sec.id} href={`#${sec.id}`}>{sec.label}</a>
-        ))}
-      </nav>
-    )}
 
     {/* 데뷔 후(PAST) 상태일 때는 첫 방송 다시보기를 최상단으로 승격해 역사적 첫 만남을 바로 감상하도록 한다. */}
     {isPast && firstBroadcast.length > 0 && (
