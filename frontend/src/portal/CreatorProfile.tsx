@@ -139,19 +139,27 @@ function ProfileMemberSchedule({ profile }: { profile: PortalProfile }) {
 }
 
 // 팀·기수는 명시적으로 연결한 멤버만 사진과 활동명 중심으로 안내한다.
-function ProfileDebutGroup({ profile, profiles, onNavigate }: { profile: PortalProfile; profiles: PortalProfile[]; onNavigate: (path: string) => void }) {
+function ProfileDebutGroup({ profile, profiles, onNavigate, hideHeading = false }: {
+  profile: PortalProfile; profiles: PortalProfile[]; onNavigate: (path: string) => void; hideHeading?: boolean;
+}) {
   const members = profileDebutMembers(profile, profiles);
   const agency = profileAgencyName(profile.agency);
   if (members.length < 2) return null;
-  return <section className="vd-panel vd-debut-group"><header className="vd-debut-group-heading"><div>
-    {agency && <p className="vd-debut-group-agency">{agency}</p>}
-    <h2>{profile.debutGroupName || t('함께 데뷔해요')}{profile.debutGroupName && <span>{t('멤버')}</span>}</h2>
-  </div><span className="vd-debut-group-timezone">KST</span></header><ol className="vd-debut-members" aria-label={t('함께 데뷔해요')}>
-    {members.map((member) => <li key={member.slug} aria-current={member.slug === profile.slug ? 'true' : undefined}>
-      {member.slug === profile.slug ? <div className="vd-debut-member"><PortalAvatar profile={member} /><h3>{member.displayName}</h3><ProfileMemberSchedule profile={member} /></div>
-        : <PortalLink to={`/creator/${encodeURIComponent(member.slug)}`} onNavigate={onNavigate} className="vd-debut-member"><PortalAvatar profile={member} /><h3>{member.displayName}</h3><ProfileMemberSchedule profile={member} /></PortalLink>}
-    </li>)}
-  </ol></section>;
+  const groupTitle = [agency, profile.debutGroupName].filter(Boolean).join(' ');
+
+  return <section className="vd-panel vd-debut-group">
+    {!hideHeading && (
+      <header className="vd-debut-group-heading">
+        <h2>{groupTitle ? `${groupTitle} ${t('멤버')}` : t('함께 데뷔해요')}</h2>
+      </header>
+    )}
+    <ol className="vd-debut-members" aria-label={groupTitle ? `${groupTitle} ${t('멤버')}` : t('함께 데뷔해요')}>
+      {members.map((member) => <li key={member.slug} aria-current={member.slug === profile.slug ? 'true' : undefined}>
+        {member.slug === profile.slug ? <div className="vd-debut-member"><PortalAvatar profile={member} /><h3>{member.displayName}</h3><ProfileMemberSchedule profile={member} /></div>
+          : <PortalLink to={`/creator/${encodeURIComponent(member.slug)}`} onNavigate={onNavigate} className="vd-debut-member"><PortalAvatar profile={member} /><h3>{member.displayName}</h3><ProfileMemberSchedule profile={member} /></PortalLink>}
+      </li>)}
+    </ol>
+  </section>;
 }
 
 // 공개 화면과 미리보기에서 동일한 소개·일정·미디어 배치를 사용한다.
@@ -185,6 +193,13 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
   // 추천 제목과 실제 목록의 플랫폼을 맞추고 같은 팀 멤버는 별도 영역에 남긴다.
   const related = profiles.filter((p) => p.slug !== profile.slug && p.platform === profile.platform && (!profile.debutGroupId || p.debutGroupId !== profile.debutGroupId) && (!profile.tags.length || p.tags.some((tag) => profile.tags.includes(tag)))).slice(0, 4);
 
+  // 팀·크루 정보 계산
+  const teamMembers = profileDebutMembers(profile, profiles);
+  const hasTeamMembers = teamMembers.length >= 2;
+  const hasTeamVideos = teamVideos.length > 0;
+  const groupTitle = [agency, profile.debutGroupName].filter(Boolean).join(' ');
+  const teamHeadingTitle = groupTitle ? `${groupTitle} ${t('멤버')}` : t('함께 데뷔해요');
+
   // 섹션 바로가기 네비게이션: 데뷔 상태와 실제 보유 자료에 따라 가변 구성
   const navSections = [
     { id: 'profile-first', label: t('첫 방송 다시보기'), show: isPast && firstBroadcast.length > 0 },
@@ -192,7 +207,7 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
     { id: 'profile-moments', label: t('짧은 장면'), show: moments.length > 0 },
     { id: 'profile-first', label: t('첫 방송'), show: !isPast && firstBroadcast.length > 0 },
     { id: 'profile-news', label: t('주요 소식'), show: (profile.notices || []).length > 0 },
-    { id: 'profile-team', label: t('함께 데뷔해요'), show: teamVideos.length > 0 || Boolean(profile.debutGroupId) },
+    { id: 'profile-team', label: t('함께 데뷔해요'), show: hasTeamVideos || Boolean(profile.debutGroupId) },
     { id: 'profile-channels', label: t('채널'), show: true },
   ].filter((item) => item.show);
 
@@ -226,9 +241,16 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
 
     <div id="profile-intro"><ProfileMediaGallery title={t('처음 만나는 영상')} items={personal} active={activeMedia} onPlay={setActiveMedia} featured={!isPast || firstBroadcast.length === 0} /></div>
     <div id="profile-moments"><ProfileMediaGallery title={t('짧게 먼저 만나보기')} items={moments} active={activeMedia} onPlay={setActiveMedia} /></div>
-    {(introduction || profile.languages.length > 0 || profile.tags.length > 0 || profile.regularSchedule) && <section className="vd-profile-editorial">
+    {(introduction || profile.tags.length > 0 || profile.regularSchedule) && <section className="vd-profile-editorial">
       {introduction && <p>{introduction}</p>}
-      <dl className="vd-profile-facts">{profile.tags.length > 0 && <div><dt>{t('주요 콘텐츠')}</dt><dd>{profile.tags.join(' · ')}</dd></div>}{profile.languages.length > 0 && <div><dt>{t('방송 언어')}</dt><dd>{profile.languages.join(' · ')}</dd></div>}</dl>
+      {profile.tags.length > 0 && (
+        <dl className="vd-profile-facts">
+          <div>
+            <dt>{t('주요 콘텐츠')}</dt>
+            <dd>{profile.tags.join(' · ')}</dd>
+          </div>
+        </dl>
+      )}
       {profile.regularSchedule && <p>{profile.regularSchedule}</p>}
     </section>}
 
@@ -240,10 +262,40 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
     <ProfileMediaGallery title={t('방송 다시보기')} items={broadcasts} active={activeMedia} onPlay={setActiveMedia} />
     {(profile.notices || []).length > 0 && <section id="profile-news" className="vd-profile-editorial"><h2>{t('주요 소식')}</h2><ul className="vd-profile-notices">{profile.notices!.filter((notice) => portalWebUrl(notice.url)).map((notice, index) => <li key={`${notice.url}:${index}`}><a href={portalWebUrl(notice.url)} target="_blank" rel="noopener noreferrer">{notice.title}<ArrowUpRight size={16} /></a></li>)}</ul></section>}
     {profile.fanGuide && <section className="vd-profile-editorial"><h2>{t('팬으로 함께하기')}</h2><p>{profile.fanGuide}</p></section>}
-    <div id="profile-team">
-      <ProfileMediaGallery title={profile.debutGroupName ? `${profile.debutGroupName} · ${t('팀 공통 PV')}` : t('팀 공통 PV')} items={teamVideos} active={activeMedia} onPlay={setActiveMedia} />
-      <div className="vd-profile-content">{!preview && <ProfileDebutGroup profile={profile} profiles={profiles} onNavigate={onNavigate} />}</div>
-    </div>
+
+    {/* 팀·기수 섹션: PV와 멤버를 {소속} {크루} 멤버 단일 타이틀 아래로 통합 */}
+    {(hasTeamVideos || hasTeamMembers) && (
+      <div id="profile-team" className="vd-debut-team-section">
+        {hasTeamVideos && hasTeamMembers && (
+          <header className="vd-team-unified-heading">
+            <h2>{teamHeadingTitle}</h2>
+          </header>
+        )}
+        <div className="vd-team-unified-grid">
+          {hasTeamVideos && (
+            <ProfileMediaGallery
+              title={hasTeamMembers ? t('팀 공통 PV') : teamHeadingTitle}
+              items={teamVideos}
+              active={activeMedia}
+              onPlay={setActiveMedia}
+            />
+          )}
+          {hasTeamMembers && (
+            <div className="vd-profile-content">
+              {!preview && (
+                <ProfileDebutGroup
+                  profile={profile}
+                  profiles={profiles}
+                  onNavigate={onNavigate}
+                  hideHeading={hasTeamVideos}
+                />
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    )}
+
     <div id="profile-channels" className="vd-profile-destinations"><ProfileLinks profile={profile} /></div>
     {!preview && <section className="vd-profile-evidence"><h2>{t('소개와 일정 확인하기')}</h2>{reviewedAt && Number.isFinite(Date.parse(reviewedAt)) && <p>{t('소개 검토일')} · <time dateTime={reviewedAt}>{dateTimeFormatter(getPortalLanguage(), { timeZone: 'Asia/Seoul', year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(reviewedAt))}</time> · KST</p>}{portalWebUrl(profile.noticeUrl || '') && <a className="vd-text-button" href={portalWebUrl(profile.noticeUrl || '')} target="_blank" rel="noopener noreferrer">{t('데뷔 공지 원문 보기')}<ArrowUpRight size={14} /></a>}</section>}
     {!preview && channelKey && <PortalLink to={`/analytics/streamer/${encodeURIComponent(channelKey)}?returnTo=${encodeURIComponent(`/creator/${profile.slug}`)}`} className="vd-profile-activity" onNavigate={onNavigate}>{t('방송 활동 기록')}<ArrowRight size={15} /></PortalLink>}

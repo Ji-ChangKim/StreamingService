@@ -66,12 +66,11 @@
 .vd-profile-video .vd-video-play { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border: 1px solid #ffffff55; border-radius: 99px; background: #14243ee6; font-size: 13px; font-weight: 650; }
 .vd-profile-video iframe { display: block; width: 100%; height: 100%; border: 0; }
 /* 소속·팀은 제목에 모으고 멤버 카드는 얼굴, 활동명, 데뷔 시각 순서로 읽는다. */
-.vd-profile-content .vd-debut-group { padding: 6px 0 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
-.vd-debut-group-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
-.vd-debut-group-agency { color: #475569; font-size: 15px; font-weight: 650; margin: 0 0 6px; }
-.vd-profile-experience .vd-debut-group-heading h2 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; font-size: 28px; font-weight: 800; letter-spacing: -.7px; line-height: 1.2; margin: 0; }
-.vd-debut-group-heading h2>span { color: #64748b; font-size: 14px; font-weight: 500; letter-spacing: 0; }
-.vd-debut-group-timezone { color: #7b8799; font-size: 11px; }
+.vd-profile-content .vd-debut-group { padding: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+.vd-debut-group-heading { margin-bottom: 20px; }
+.vd-profile-experience .vd-debut-group-heading h2 { font-size: 26px; font-weight: 800; letter-spacing: -.7px; line-height: 1.25; margin: 0; color: #0f172a; }
+.vd-team-unified-heading { margin: 36px 0 18px; }
+.vd-team-unified-heading h2 { font-size: 26px; font-weight: 800; letter-spacing: -.7px; line-height: 1.25; margin: 0; color: #0f172a; }
 .vd-debut-members { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 14px; }
 .vd-debut-members li { min-width: 0; border: 1px solid #e6eaf0; border-radius: 18px; background: #fff; overflow: hidden; }
 .vd-debut-members li[aria-current] { border-color: #bccdf2; background: #f0f5ff; }

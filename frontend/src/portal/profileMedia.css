@@ -48,15 +48,16 @@
 .vd-profile-evidence h2 { font-size: 16px!important; }
 .vd-media-card button:focus-visible,.vd-profile-section-nav a:focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
 /* 넓은 화면에서는 공통 PV와 멤버를 나란히 묶어 팀 자료를 한눈에 살펴본다. */
+.vd-team-unified-grid { display: flex; flex-direction: column; gap: 24px; }
 @media(min-width:1000px) {
-  #profile-team:has(>.vd-profile-media-section):has(.vd-debut-group) { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); gap: 28px; align-items: start; margin: 36px 0; }
-  #profile-team:has(.vd-debut-group)>.vd-profile-media-section { margin: 0; }
-  #profile-team:has(.vd-debut-group) .vd-media-grid { grid-template-columns: minmax(0,1fr); }
-  #profile-team:has(>.vd-profile-media-section) .vd-debut-members { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
-  #profile-team:has(>.vd-profile-media-section) .vd-debut-member { padding: 16px 12px; }
-  #profile-team:has(>.vd-profile-media-section) .vd-debut-member .vd-avatar { width: 80px; height: 80px; border-radius: 20px; margin-bottom: 12px; }
-  #profile-team:has(>.vd-profile-media-section) .vd-debut-member h3 { font-size: 17px; margin-bottom: 10px; }
-  #profile-team:has(>.vd-profile-media-section) .vd-debut-member-date>strong { font-size: 17px; }
+  .vd-team-unified-grid { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); gap: 28px; align-items: start; }
+  .vd-team-unified-grid .vd-profile-media-section { margin: 0; }
+  .vd-team-unified-grid .vd-media-grid { grid-template-columns: minmax(0,1fr); }
+  .vd-team-unified-grid .vd-debut-members { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+  .vd-team-unified-grid .vd-debut-member { padding: 16px 12px; }
+  .vd-team-unified-grid .vd-debut-member .vd-avatar { width: 80px; height: 80px; border-radius: 20px; margin-bottom: 12px; }
+  .vd-team-unified-grid .vd-debut-member h3 { font-size: 17px; margin-bottom: 10px; }
+  .vd-team-unified-grid .vd-debut-member-date>strong { font-size: 17px; }
 }
 @media(min-width:1100px) {
   .vd-media-intro-grid:has(>.vd-media-card:nth-child(2)) { grid-template-columns: minmax(0,2fr) minmax(0,1fr); align-items: start; }
