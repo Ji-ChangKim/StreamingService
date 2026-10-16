@@ -99,3 +99,4 @@
 - `0046_add_tokino_mary_cover.sql`: 2026-10-16 운영 명시 실행. 사용자 제공 공식 커버곡(괴수 Monster, `https://youtu.be/rKQptWhAvO0`)을 토키노 메리(`tokino-mary`)의 대표 영상 및 media 목록으로 등록한다. 단체 PV는 보존하고 개인 커버곡을 featured: true로 추가하여 상세페이지에 커버곡과 팀 PV가 함께 노출되도록 한다. 기존 일정·채널·SNS 등 타 정보는 완벽 보존한다.
 - `0047_fix_hiyori_mary_cover_titles.sql`: 2026-10-16 운영 명시 실행. 하나요 히요리 및 토키노 메리의 커버곡 제목 정정.
 - `0048_set_exact_hiyori_mary_cover_titles.sql`: 2026-10-16 운영 명시 실행. 사용자 지정 정확한 곡명(하나요 히요리: `유령이 되고싶어 [ゆうれいになりたい / 유이카] / 하나요 히요리 (Hanayo Hiyori) Cover`, 토키노 메리: `도쿄 테디베어 [東京テディベア l Neru] / 토키노 메리 (Tokino Mary) Cover`)으로 갱신 반영한다.
+- `0049_update_shizuki_toa_and_cogane_rang_posts.sql`: 2026-10-16 운영 명시 실행. 시즈키 토아 및 코가네 랑의 데뷔 안내 소개글(치지직 공식 공지 본문 내용), 스트리머 고유 상단 배너 이미지(`shizuki-toa-banner.jpg`, `cogane-rang-banner.jpg`), 치지직 공식 커뮤니티 공지 링크를 갱신 반영한다.
