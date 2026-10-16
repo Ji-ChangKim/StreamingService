@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowUpRight, Play, X } from 'lucide-react';
+import { ArrowUpRight, Play } from 'lucide-react';
 import type { PortalMedia } from '../../../shared/portal';
 import { profileMediaKey, profileMediaSource } from '../../../shared/profileMedia';
 import { portalWebUrl } from '../../../shared/portal';
@@ -23,7 +23,6 @@ function ProfileMediaCard({ item, active, onPlay, featured = false }: {
         {thumbnail && !imageFailed && <img src={thumbnail} alt="" loading="lazy" onError={() => setImageFailed(true)} />}
         <span className="vd-media-play"><Play size={20} fill="currentColor" />{t('영상 재생')}</span>
       </button>}
-      {active === key && <button type="button" className="vd-media-stop" aria-label={t('재생 닫기')} onClick={() => onPlay('')}><X size={16} /></button>}
     </div> : <a className="vd-media-link-preview" href={source.url} target="_blank" rel="noopener noreferrer">
       {thumbnail && !imageFailed && <img src={thumbnail} alt="" loading="lazy" onError={() => setImageFailed(true)} />}
       <span><Play size={22} />{t('원문에서 보기')}<ArrowUpRight size={16} /></span>
