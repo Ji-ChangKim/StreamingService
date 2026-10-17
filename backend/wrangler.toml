@@ -37,6 +37,13 @@ database_id = "888a8c04-5657-4bff-9b50-5002a47ac7c7"
 # Production (live) env
 [env.production]
 name = "streaming"
+# 운영 Worker의 기존 접근 주소와 도메인 연결을 보존한다.
+workers_dev = true
+preview_urls = true
+routes = [
+  { pattern = "vdebut.live", custom_domain = true },
+  { pattern = "dev.vdebut.live", custom_domain = true }
+]
 [env.production.vars]
 PORTAL_ENABLED = "true"
 DISCORD_APPLICATION_ID = "1547493885733900351"
@@ -48,4 +55,8 @@ database_name = "vdebut-db"
 database_id = "888a8c04-5657-4bff-9b50-5002a47ac7c7"
 
 [triggers]
+crons = ["*/10 * * * *", "0 22 * * *"]
+
+# 환경별 트리거를 명시해 운영 배포 시 기존 예약 작업을 보존한다.
+[env.production.triggers]
 crons = ["*/10 * * * *", "0 22 * * *"]

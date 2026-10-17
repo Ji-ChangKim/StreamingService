@@ -1,0 +1,182 @@
+VDébut 배포 및 데뷔 공지 조사·반영 절차
+기준일: 2026-10-17 / 모든 조사 일정은 한국시간(KST)
+
+1. 확인한 장애 원인과 실제 서비스 구조
+
+- GitHub Actions run 39019061072의 화면 빌드는 성공했다. 실패 단계는 Setup Pages이며,
+  Pages 사이트 조회가 HTTP 404를 반환했다. 저장소의 has_pages는 false다.
+- vdebut.live는 GitHub Pages 또는 Cloudflare Pages 프로젝트가 아니다.
+  streaming Worker가 Hono API와 frontend/dist를 함께 제공한다.
+  화면 파일은 기존 Workers Sites의 __STATIC_CONTENT KV 바인딩으로 제공한다.
+- 운영 D1 바인딩은 DB / vdebut-db다. 이번 작업에서 SQL을 실행하지 않는다.
+- 별도 vdebut-debut-report Worker는 수집 비밀키만 가지며 D1/KV 바인딩과 예약 작업이 없다.
+  보고 요청은 후보 JSON만 반환한다.
+
+2. 이번에 바꾼 배포 동작
+
+- .github/workflows/deploy.yml
+  GitHub Pages 설정·업로드·배포 작업과 pages/id-token 권한을 제거한다.
+  main push 및 PR에서는 의존성 설치, 화면 빌드, 서버 타입 검사, 로컬 테스트,
+  Wrangler 4.151.0 운영 번들 dry-run, 7일 보관 산출물 업로드만 수행한다.
+  validate 성공은 실제 운영 배포 성공과 구분한다.
+  수동 workflow_dispatch에서 deploy_production=true이고 main일 때만 deploy 작업을 실행한다.
+  별도 CLOUDFLARE_API_TOKEN이 없으면 배포 전에 이유를 표시하고 중단한다.
+  검증과 배포가 같은 커밋을 사용하며 검증 산출물의 frontend/dist를 배포한다.
+  D1 마이그레이션, 데이터 등록·승인 API, 크롤러 실행은 포함하지 않는다.
+- backend/wrangler.toml
+  실제 운영에서 확인한 vdebut.live 및 dev.vdebut.live custom domain 연결,
+  workers.dev와 preview URL 설정, 운영 환경의 기존 cron 2개를 명시한다.
+  dev.vdebut.live/* -> streaming-dev인 별도 zone route는 변경하지 않는다.
+  dev 설정이 운영 D1을 공유하는 기존 상태도 유지한다. 개발 검증에 이를 사용하지 않는다.
+- backend/package.json
+  deploy:live는 CI와 동일한 Wrangler 4.151.0을 사용하도록 고정한다.
+- README.md
+  호스팅 설명을 Workers Sites / KV로 정정하고 이 운영 절차를 연결한다.
+- 이 문서
+  현재 구현, 추가 구현, 운영 반영 절차와 인증 선행 조건을 기록한다.
+
+3. 실행 방법과 남아 있는 인증 조건
+
+가. 평상시 코드 검증
+   main에 push하거나 PR을 열면 validate가 실행된다.
+   Actions의 cloudflare-release-<커밋 SHA> 산출물에서 화면 파일, Worker 번들,
+   wrangler.toml, release/commit.txt를 확인한다.
+   이 작업에는 Cloudflare 토큰과 운영 DB 접근 권한이 필요 없다.
+
+나. Cloudflare 운영 코드 배포
+   전용 Cloudflare API 토큰을 GitHub의 CLOUDFLARE_API_TOKEN Secret에 등록해야 한다.
+   대상 계정: 3e59f61d073e3892fcbc9c74f6e88316 / 대상 zone: vdebut.live.
+   Workers Scripts, Workers KV Storage, Workers Routes 배포 권한과 필요한 계정/zone
+   조회 권한을 해당 계정·zone에 한정한다. D1은 필요할 경우 메타데이터 조회만 허용하며
+   D1 Edit 권한은 부여하지 않는다. DNS 등 추가 권한은 실제 배포 오류 근거 없이 늘리지 않는다.
+   개인 Wrangler OAuth 인증을 GitHub에 복사하지 않는다.
+   현재 이 전용 Secret은 등록되어 있지 않으며, 배포 작업의 실제 업로드는 미검증이다.
+   Actions > Validate and Deploy Cloudflare Worker > Run workflow > main을 선택하고
+   deploy_production을 켜면 검증 후 명시적으로 배포한다. 기본값은 false다.
+   배포 후 robots.txt 같은 정적 GET을 확인한다. DB 쓰기 기능은 호출하지 않는다.
+   이 코드 배포 선택은 아래의 후보 데이터 반영 승인과 별개다.
+
+다. 데뷔 후보 보고
+   별도 cron_crawler.yml은 매일 KST 09:00·21:00에 보고 Worker를 호출한다.
+   GitHub schedule은 정각 실행을 보장하지 않으므로 지연과 누락을 실행 이력에서 확인한다.
+   CRAWLER_REPORT_SECRET은 보고 API 인증 전용이며 Cloudflare 배포 권한이 없다.
+   성공 응답의 REPORT_ONLY, dbRead=false, dbWritten=false를 검사하고
+   debut-candidates-<run ID>-<attempt> 산출물에 report.json을 7일 보관한다.
+
+4. 현재 조사 기능의 범위와 한계
+
+- 실제 자동 수집원은 아래 공개 Google Sheets의 CSV 1개다.
+  https://docs.google.com/spreadsheets/d/1SEcOZAhMqFLUW7bxSsBkWK0UriMD3fD82xXX2HrUf38/export?format=csv&gid=1884409648
+- 현재 날짜 필터는 요일별 당주/차주 집중 구간, 모든 향후 일정, 최근 45일이다.
+  CSV 형식·응답 상태·2 MiB 제한·20초 제한을 검사하고 원본 장애를 빈 목록 성공으로 숨기지 않는다.
+- 현재 결과는 커뮤니티 시트 후보다. 본인 공지 확인이나 최초 버튜버 데뷔 검증 결과가 아니다.
+  DB 대조를 하지 않아 신규/기존 건수는 null이다. 개별 isNew=false도 대조 결과가 아니다.
+- 기존 파서에는 일반 링크의 CHZZK 추정과 소속 '개인세' 기본값이 남아 있다.
+  이를 검증된 플랫폼·소속으로 사용하면 안 된다. 다음 수집기 개선에서 미확인 값으로 바꾼다.
+- X 검색, 공식 공지 대조, 이벤트 종류 분류, 최초 활동 검증, 승인별 반영은 추가 구현이 필요하다.
+- 메인 Worker의 기존 예약 수집과 자동 등록 코드는 여전히 존재한다.
+  이번 보고 자동화의 DB 격리는 서비스 전체 DB 쓰기를 중지했다는 뜻이 아니다.
+  향후 새 승인 파이프라인 전환 때 기존 자동 등록 경로를 함께 정리해야 한다.
+
+5. 추가할 구체적 조사 방법
+
+가. 후보 발견
+   하루 두 번 공개 시트를 읽고, 공식 API 사용 승인이 준비되면 X 최근 검색을 추가한다.
+   예시 검색식:
+   (치지직 OR CHZZK) (데뷔 OR 첫방송 OR 첫방 OR 신인버튜버) -is:retweet
+   (치지직 OR CHZZK) (재데뷔 OR 리데뷔 OR 2.0 OR 3D OR 신의상) -is:retweet
+   재데뷔·신의상은 검색에서 제외하지 않고 별도 분류해서 첫 데뷔 오인을 막는다.
+   검색 시작점은 마지막 성공한 수집 시점에서 48시간 겹치게 설정하고 공지 ID로 중복을 제거한다.
+   X 최근 검색의 7일 범위를 넘긴 공백은 별도 누락 조사로 표시한다.
+   게시 날짜와 실제 행사 날짜를 별도 필드로 보관한다.
+   유료 X API는 계정·예산 확인 전 호출하지 않는다. API가 없을 때는 시트·제보·수동 검색으로
+   후보를 보완하며 'X 전체 자동 조사 완료'로 표시하지 않는다.
+   검색 엔진 결과·커뮤니티 글·타인 RT는 후보 발견에만 사용한다.
+
+나. 원문 확인
+   본인 X 계정의 원문 공지, 소속사의 공식 공지, 방송 채널 공지를 우선한다.
+   공지 URL, 작성자 ID, 게시 시각, 수집 시각, 필요한 짧은 근거 문구,
+   원문 해시와 본문/포스터의 날짜·시각을 기록한다. 전체 게시물 재배포는 피한다.
+   이미지에만 있는 날짜는 OCR로 추출한 뒤 사람이 포스터를 대조한다.
+   검색 결과 요약이나 생성형 모델의 서술만으로 확정하지 않는다.
+
+다. 채널과 일시 확인
+   단축 URL을 실제 치지직 채널 URL로 해석하고 32자리 채널 ID를 확보한다.
+   채널 ID가 잘리거나 이름만 일치하면 보류한다. 동명이인을 이름으로 합치지 않는다.
+   치지직 공식 채널 API로 채널 존재·이름·이미지를 확인하되 API 인증이 없으면 미확인으로 둔다.
+   날짜는 YYYY-MM-DD, 시간은 HH:mm, 시간대는 Asia/Seoul과 UTC를 함께 저장한다.
+   연도, 자정 전후 날짜, 본문과 포스터의 불일치를 확인한다.
+   날짜/시간 미정은 그대로 유지한다. 오후 8시나 임의 채널 주소를 채우지 않는다.
+
+라. 첫 데뷔·다른 공개 행사 분류
+   FIRST_DEBUT: 본인/공식 데뷔 공지와 채널 연결을 확인하고 이전 버튜버 활동을 조사한 후보.
+   RE_DEBUT: 재데뷔/리데뷔 표기나 확인 가능한 이전 버튜버 활동이 있는 경우.
+   MODEL_2_0 / DEBUT_3D / NEW_OUTFIT / RETURN: 모델, 3D, 의상, 복귀 행사.
+   VERIFY: 원문 접근 실패, 행사 종류 불명, 첫 활동 근거 부족, 상충 정보가 있는 경우.
+   이전 방송·영상·고정 공지·자기소개와 소속사 발표를 대조한다.
+   기록이 없다는 이유만으로 '생애 최초'를 입증했다고 간주하지 않는다.
+   기존 채널의 사전 테스트 방송은 내용과 본인 공지의 설명을 함께 보고 판단한다.
+   종류와 상태는 분리한다: '데뷔 예정 공지'와 '실제 데뷔 방송 완료'는 다른 상태다.
+   취소·연기·정정은 기존 일정의 변경 후보로 기록하고, 날짜가 다르다는 이유로 새 인물로 만들지 않는다.
+
+마. 결과 보관과 재조사
+   후보 키는 platform + channelId + eventType + 원문 event/source ID로 관리한다.
+   동일 행사 판정과 날짜 변경 이력을 별도로 유지하고 최신 공식 정정을 우선한다.
+   원문 두 개가 충돌하면 자동 선택하지 않고 VERIFY로 보류한다.
+   후보별 이름·채널·행사 종류·KST 일정·원문·검증 근거·미확인 항목·직전 결과와 차이를 출력한다.
+   보고 JSON/CSV와 사람이 보는 표를 Actions 산출물로 남긴다.
+   현재 7일 보관 기간 안에 검토하고, 장기 이력이 필요하면 별도 보관 정책을 정한 뒤 구현한다.
+
+6. 승인과 운영 데이터 반영 절차: 아직 구현하지 않은 설계
+
+1) 수집/검증 단계에는 운영 D1 바인딩과 쓰기 자격증명을 주지 않는다.
+   대기 후보도 운영 DB에 넣지 않고 파일로 관리한다.
+2) 필요하면 공개 조회 API로 기존 공개 일정과 비교한다. DB 직접 조회는 별도 허용 때만 한다.
+   최초 구현은 신규·변경·중복·보류 목록과 before/after 파일을 생성하는 데서 종료한다.
+3) 후보의 증거 파일, 수정 필드, 예상 추가/수정 건수, 파일 해시를 사용자에게 제시한다.
+   사용자는 정확한 후보 ID와 변경 내역을 지정해 승인한다. 보고 자동 실행이나 코드 배포를
+   데이터 승인으로 간주하지 않는다. 승인 후 원문/내용이 바뀌면 재승인을 받는다.
+4) 분리된 수동 반영 작업만 승인 파일·해시·허용 후보 ID를 받아 실행한다.
+   이 작업은 향후 별도 구현·허용 대상이며 현재 워크플로에는 존재하지 않는다.
+5) 반영 직전에 중복과 기존 값 변화를 재검사한다. 승인 당시 before 값이 달라지면 중단한다.
+   같은 승인 파일 재실행은 중복 등록을 만들지 않도록 반영 키를 사용한다.
+6) 기존 관리자 신청/승인 서비스와 공개 소개 저장소를 재사용하는 방식으로 연결한다.
+   portal_requests / portal_profiles와 레거시 streamerChannel / streamerChannel_info를
+   모두 검토한다. 현재 통합 공개 조회는 승인된 portal_profiles 중심이므로 레거시 테이블에만
+   INSERT하는 방식은 화면 반영을 보장하지 않는다.
+   공개 변환부의 FIRST_DEBUT 고정값도 행사 종류를 보존하도록 먼저 개선해야 한다.
+7) 로컬 SQLite에서 중복, 시간 미정, 일정 정정, 재데뷔/2.0 분리, 재실행, 실패 취소를 검증한다.
+   표준 스키마와 필요한 변경만 확인하며 과거 마이그레이션을 일괄 재실행하지 않는다.
+8) 승인받은 변경만 트랜잭션으로 반영하고 반영 영수증과 수정 전 값을 남긴다.
+   이후 공개 조회로 일정과 분류를 확인한다. 이 단계는 이번 작업에서 실행하지 않는다.
+9) 기존 메인 Worker 자동 등록과 새 수동 승인 경로가 함께 쓰지 않도록 전환 순서를 먼저 정한다.
+   코드 롤백과 데이터 롤백을 구분하고 데이터 복구 역시 승인받은 범위로 실행한다.
+
+7. 데이터 소스/API 제약: 공식 문서 확인
+
+- CHZZK: GET /open/v1/channels는 앱 등록과 Client 인증이 필요하고 채널 ID 최대 20개를 조회한다.
+  이 API만으로 최초 데뷔나 과거 방송 부재를 증명할 수 없다. 정확한 호출 한도는 앱 설정과
+  실제 응답을 확인해야 한다. 401/403은 인증·권한 점검, 429는 대기 후 재시도 대상으로 구분한다.
+  https://chzzk.gitbook.io/chzzk/chzzk-api/channel
+  https://chzzk.gitbook.io/chzzk/chzzk-api/tips
+- X: 최근 검색은 최근 7일, 과거 전체 검색은 pay-per-use/Enterprise 접근이 필요하다.
+  앱별 접근 권한, 과금, 결과 수와 속도 제한을 계정에서 확인하고 비용 상한을 정한다.
+  429는 응답 헤더의 reset 시각에 맞춰 대기한다. 403을 우회 수집으로 해결하지 않는다.
+  https://docs.x.com/x-api/posts/search/introduction
+  https://docs.x.com/x-api/fundamentals/rate-limits
+- Google: 현재 공개 CSV export는 Sheets API 호출과 다르며 공식 Sheets API 쿼터 수치를
+  그대로 보장받는 경로가 아니다. 공개 해제·양식 변경·일시 차단에 대비해 실패를 보고한다.
+  향후 Sheets API를 사용하면 문서상 분당 읽기 한도는 프로젝트 300회, 사용자/프로젝트 60회다.
+  https://developers.google.com/workspace/sheets/api/limits
+- Cloudflare: 현재 Workers Sites를 유지한다. 정적 자산 신방식으로의 이전은 별도 작업이다.
+  https://developers.cloudflare.com/workers/configuration/sites/
+  https://developers.cloudflare.com/workers/ci-cd/external-cicd/github-actions/
+  https://developers.cloudflare.com/workers/wrangler/configuration/
+
+8. 다음 구현 순서
+
+1) 보고서의 원문 출처·행사 종류·미확인 값·변경 이력 스키마부터 추가한다.
+2) 공식 채널 API 인증과 X API 접근/예산을 확인한 범위만 수집기에 연결한다.
+3) 증거 확인·분류·중복/정정 비교를 로컬 자료와 보고 전용 실행으로 검증한다.
+4) 승인 파일과 dry-run 차이 보고를 구현한다. 여기까지 운영 DB 쓰기는 없다.
+5) 사용자가 데이터 반영을 별도로 승인한 뒤 수동 반영 기능과 기존 자동 등록 전환을 진행한다.

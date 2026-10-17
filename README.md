@@ -19,7 +19,7 @@
 ### Frontend
 - **Core / Framework**: React 18, TypeScript, Vite
 - **Styling**: TailwindCSS, Vanilla CSS Design System, Lucide Icons
-- **Deployment & Hosting**: Cloudflare Pages / KV
+- **Deployment & Hosting**: Cloudflare Workers Sites / KV (streaming Worker)
 
 ### Backend
 - **Framework**: Hono (Lightweight Web Standard Framework)
@@ -88,3 +88,6 @@ npx wrangler dev --local
 ## 📄 문서 가이드 (Documentation)
 
 자세한 기획 및 설계 문서는 [`1. 기획문서/README.md`](file:///j:/개인 프로젝트/WEB/StreamingService/1.%20기획문서/README.md)에서 확인하실 수 있습니다.
+
+
+Cloudflare 배포 및 데뷔 공지 조사·승인·반영 절차: [운영 절차](docs/cloudflare-release-process.txt)

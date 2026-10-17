@@ -1,51 +1,148 @@
-name: Deploy V-DEBUT HUB Frontend to GitHub Pages
+name: Validate and Deploy Cloudflare Worker
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_production:
+        description: '검증한 Worker와 화면 파일을 운영 Cloudflare에 배포 (DB 마이그레이션 없음)'
+        type: boolean
+        required: true
+        default: false
 
+# Pages와 OIDC 권한은 사용하지 않으며 배포 인증은 별도 Secret으로 제한한다.
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: 'pages'
-  cancel-in-progress: true
+  group: cloudflare-release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  WRANGLER_SEND_METRICS: 'false'
+  CLOUDFLARE_ACCOUNT_ID: 3e59f61d073e3892fcbc9c74f6e88316
 
 jobs:
-  build-and-deploy:
+  validate:
+    name: Build and validate Workers Sites release
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - name: Checkout Code
+      - name: Checkout exact source
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            frontend/package-lock.json
+            backend/package-lock.json
 
-      - name: Install Frontend Dependencies
+      - name: Install frontend dependencies
+        run: npm ci --prefix frontend
+
+      - name: Install backend dependencies
+        run: npm ci --prefix backend
+
+      - name: Build frontend
+        run: npm run build --prefix frontend
+
+      - name: Check backend types
+        working-directory: backend
+        run: npx tsc --noEmit
+
+      # 고정 입력을 쓰는 로컬 테스트만 실행하며 운영 DB와 원격 쓰기를 호출하지 않는다.
+      - name: Verify report isolation and site routing locally
+        run: node --test backend/tests/debutCrawlerReport.test.cjs backend/tests/liveRelease.test.cjs
+
+      # 인증 없이 실제 운영 설정으로 번들링만 수행한다. 업로드와 트리거 실행은 없다.
+      - name: Build Cloudflare Worker without deploying
+        working-directory: backend
+        run: npx --yes wrangler@4.151.0 deploy --env production --dry-run --outdir ../release/worker
+
+      - name: Record release revision
+        env:
+          RELEASE_SHA: ${{ github.sha }}
         run: |
-          cd frontend
-          npm ci
+          mkdir -p release
+          printf '%s\n' "$RELEASE_SHA" > release/commit.txt
 
-      - name: Build Frontend
-        run: |
-          cd frontend
-          npm run build
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Save validated release files
+        uses: actions/upload-artifact@v4
         with:
-          path: 'frontend/dist'
+          name: cloudflare-release-${{ github.sha }}
+          path: |
+            frontend/dist
+            release
+            backend/wrangler.toml
+          if-no-files-found: error
+          retention-days: 7
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Explain validation result
+        run: |
+          echo '### Cloudflare release validation passed' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Worker bundle, frontend build, local tests and release artifact completed.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'This job did not deploy, run migrations or write to the production database.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Production deployment requires a manual run with deploy_production enabled and CLOUDFLARE_API_TOKEN configured.' >> "$GITHUB_STEP_SUMMARY"
+
+  deploy:
+    name: Deploy explicitly requested production release
+    needs: validate
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy_production && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    steps:
+      - name: Check dedicated Cloudflare deployment credential
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo '::error::Configure a dedicated CLOUDFLARE_API_TOKEN with Workers/KV/routes deployment permissions and no D1 write permission.'
+            exit 1
+          fi
+
+      - name: Checkout validated revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Download validated frontend and Worker artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cloudflare-release-${{ github.sha }}
+          path: .
+
+      - name: Confirm artifact revision
+        env:
+          RELEASE_SHA: ${{ github.sha }}
+        run: test "$(cat release/commit.txt)" = "$RELEASE_SHA"
+
+      - name: Install backend dependencies
+        run: npm ci --prefix backend
+
+      # 공개 파일은 Workers Sites KV에 올리고 기존 D1은 바인딩만 유지한다.
+      # DB 쓰기 API·마이그레이션·크롤러 실행은 이 작업에 포함하지 않는다.
+      - name: Deploy Worker and Workers Sites assets
+        working-directory: backend
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npm run deploy:live
+
+      - name: Check public static file
+        run: curl --fail --silent --show-error --max-time 30 https://vdebut.live/robots.txt
