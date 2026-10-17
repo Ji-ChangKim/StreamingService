@@ -60,7 +60,7 @@ jobs:
 
       # 고정 입력을 쓰는 로컬 테스트만 실행하며 운영 DB와 원격 쓰기를 호출하지 않는다.
       - name: Verify report isolation and site routing locally
-        run: node --test backend/tests/debutCrawlerReport.test.cjs backend/tests/liveRelease.test.cjs
+        run: node --test backend/tests/debutCrawlerReport.test.cjs backend/tests/liveRelease.test.cjs backend/tests/deployedSiteVerification.test.cjs
 
       # 인증 없이 실제 운영 설정으로 번들링만 수행한다. 업로드와 트리거 실행은 없다.
       - name: Build Cloudflare Worker without deploying
@@ -145,4 +145,4 @@ jobs:
         run: npm run deploy:live
 
       - name: Check public static file
-        run: curl --fail --silent --show-error --max-time 30 https://vdebut.live/robots.txt
+        run: node backend/scripts/verify_deployed_site.cjs
