@@ -16,6 +16,7 @@ import { fetchEventsFromD1, insertEventToD1, updateEventInD1, MOCK_EVENTS } from
 import { fetchPlatformProfile } from './services/platformApiService';
 import { fetchCreatorProfileBySlug, fetchAllCreatorSlugs, updateCreatorProfileInD1, deleteCreatorProfileFromD1 } from './services/creatorDbService';
 import { runDebutCrawlerProcess } from './services/debutCrawlerService';
+import { debutCrawlerReportApi } from './services/debutCrawlerReportApi';
 import { validateDebutEventPayload } from './services/eventValidationService';
 import { validateAdminToken } from './services/adminAuthService';
 import {
@@ -96,6 +97,9 @@ app.use('/api/analytics/*', async (c, next) => {
     c.res = new Response(JSON.stringify(data), { status: c.res.status, headers: c.res.headers });
   }
 });
+
+// 보고 전용 경로는 DB 기반 관리자 인증보다 먼저 연결해 DB 접근 자체를 차단한다.
+app.route('/api/v1/admin/crawler/report', debutCrawlerReportApi);
 
 // 기존 관리 API도 서버 세션을 요구하고 비공개 응답을 캐시하지 않는다.
 app.use('/api/v1/admin/*', async (c, next) => {

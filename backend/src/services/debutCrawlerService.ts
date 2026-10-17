@@ -7,6 +7,8 @@ import {
   type AuditDateRange,
 } from './weeklyAuditRangeService';
 import { generateCleanSlug, resolveUniqueSlug } from '../utils/slugUtils';
+import { readCrawlerReportSource } from './crawlerReportSource';
+import { parseCrawlerCsv } from './crawlerCsv';
 
 export interface CrawledCreatorData {
   displayName: string;
@@ -33,6 +35,26 @@ export interface CrawlerRunResult {
   error?: string;
 }
 
+// 보고 모드는 운영 DB와 대조하지 않으므로 신규·기존 건수를 미확인 값으로 반환한다.
+export interface CrawlerReportResult extends Omit<CrawlerRunResult, 'existingMatchedCount' | 'newDiscoveredCount'> {
+  schemaVersion: 1;
+  mode: 'REPORT_ONLY';
+  dbRead: false;
+  dbWritten: false;
+  comparisonPerformed: false;
+  existingMatchedCount: null;
+  newDiscoveredCount: null;
+}
+
+// DB와 이메일 인자를 받지 않는 수집·보고 전용 진입점이다.
+export function runDebutCrawlerReport(baseDate?: Date): Promise<CrawlerReportResult> {
+  return runDebutCrawlerProcess(undefined, undefined, undefined, baseDate, true);
+}
+
+// 기존 실행자의 반환 형식을 유지하면서 보고 모드의 별도 결과 형식을 보장한다.
+export function runDebutCrawlerProcess(db: D1Database | undefined, recipientEmail: string | undefined, apiKey: string | undefined, forcedBaseDate: Date | undefined, reportOnly: true): Promise<CrawlerReportResult>;
+export function runDebutCrawlerProcess(db?: D1Database, recipientEmail?: string, apiKey?: string, forcedBaseDate?: Date, reportOnly?: false): Promise<CrawlerRunResult>;
+
 /**
  * 1. 매일 아침 7시(KST) 요일별 검사 범위 및 치지직/숲(KR) 기준 정기 데뷔 동기화 프로세스 (SRP)
  */
@@ -40,8 +62,9 @@ export async function runDebutCrawlerProcess(
   db?: D1Database,
   recipientEmail: string = 'kimjichang1234@gmail.com',
   apiKey?: string,
-  forcedBaseDate?: Date
-): Promise<CrawlerRunResult> {
+  forcedBaseDate?: Date,
+  reportOnly: boolean = false
+): Promise<CrawlerRunResult | CrawlerReportResult> {
   const runAt = new Date().toISOString();
   // KST 요일별 검사 날짜 범위 및 오늘(KST) 날짜 산출
   const baseDate = forcedBaseDate || new Date();
@@ -50,22 +73,26 @@ export async function runDebutCrawlerProcess(
   console.log(`[Crawler] Starting Debut Auto Web Search & Sync at ${runAt}... Range: ${auditRange.description} (Today KST: ${todayKst})`);
 
   const crawledList: CrawledCreatorData[] = [];
+  // 원본 조회 실패를 빈 목록 성공으로 표시하지 않는다.
+  let sourceError: string | undefined;
 
   try {
     // 1-A. 공개 구글 시트 / 커뮤니티 데뷔 데이터 파싱
     const sheetCsvUrl = 'https://docs.google.com/spreadsheets/d/1SEcOZAhMqFLUW7bxSsBkWK0UriMD3fD82xXX2HrUf38/export?format=csv&gid=1884409648';
-    const response = await fetch(sheetCsvUrl);
+    const response = await fetch(sheetCsvUrl, reportOnly ? { signal: AbortSignal.timeout(20_000) } : undefined);
+
+    if (reportOnly && !response.ok) throw new Error(`수집 원본 응답 오류: HTTP ${response.status}`);
 
     if (response.ok) {
-      const csvText = await response.text();
-      const lines = csvText.split('\n');
+      const csvText = reportOnly ? await readCrawlerReportSource(response) : await response.text();
+      const lines = reportOnly ? parseCrawlerCsv(csvText) : csvText.split('\n');
 
       for (let i = 5; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (!line) continue;
+        const line = lines[i];
+        if (typeof line === 'string' && !line.trim()) continue;
 
         // CSV 행 분할
-        const parts = line.split(',').map((p) => p.replace(/^"|"$/g, '').trim());
+        const parts = Array.isArray(line) ? line.map((part) => part.trim()) : line.trim().split(',').map((p) => p.replace(/^"|"$/g, '').trim());
         if (parts.length > 4) {
           const dateRaw = parts[1] || '';
           const hourRaw = parts[2] || '';
@@ -110,11 +137,12 @@ export async function runDebutCrawlerProcess(
               continue;
             }
 
-            let formattedTime = '20:00';
+            // 보고서에서는 알려지지 않은 시간을 임의로 채우지 않는다.
+            let formattedTime: string | undefined = reportOnly ? undefined : '20:00';
             if (hourRaw) {
               const h = hourRaw.replace(/[^0-9]/g, '').padStart(2, '0');
               const m = minRaw.replace(/[^0-9]/g, '').padStart(2, '0') || '00';
-              formattedTime = `${h}:${m}`;
+              formattedTime = reportOnly && (!/\d/.test(hourRaw) || Number(h) > 23 || Number(m) > 59 || (minRaw && !/\d/.test(minRaw))) ? undefined : `${h}:${m}`;
             }
 
             let xUrl = xId;
@@ -128,7 +156,7 @@ export async function runDebutCrawlerProcess(
               platform,
               debutDate: formattedDate,
               debutTime: formattedTime,
-              channelUrl: channelUrl || `https://chzzk.naver.com/search?query=${encodeURIComponent(name)}`,
+              channelUrl: channelUrl || (reportOnly ? '' : `https://chzzk.naver.com/search?query=${encodeURIComponent(name)}`),
               xUrl,
               agencyName: '개인세',
               isNew: false,
@@ -138,8 +166,27 @@ export async function runDebutCrawlerProcess(
       }
     }
   } catch (err) {
+    sourceError = err instanceof Error ? err.message : '수집 원본을 읽지 못했습니다.';
     console.error('[Crawler] Fetch error:', err);
   }
+
+  // DB가 전달되어도 조회·저장·로그·프로필 동기화·메일 코드에 도달하기 전에 종료한다.
+  if (reportOnly) return {
+    success: !sourceError,
+    schemaVersion: 1,
+    mode: 'REPORT_ONLY',
+    dbRead: false,
+    dbWritten: false,
+    comparisonPerformed: false,
+    runAt,
+    auditRange,
+    totalCrawledCount: sourceError ? 0 : crawledList.length,
+    existingMatchedCount: null,
+    newDiscoveredCount: null,
+    emailSent: false,
+    creators: sourceError ? [] : crawledList,
+    ...(sourceError ? { error: sourceError } : {}),
+  };
 
   // 중복 체크 및 D1 DB 안전 갱신
   let existingMatchedCount = 0;

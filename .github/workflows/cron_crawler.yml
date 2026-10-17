@@ -1,43 +1,45 @@
-name: Auto Refresh Virtual Debut Data & Run Crawler
+name: Collect Virtual Debut Report (No DB Writes)
 
 on:
   schedule:
-    # 매일 한국 시간 오전 09:00 (UTC 00:00) 및 오후 21:00 (UTC 12:00) 정기 수집
+    # 기존 한국 시간 09:00·21:00 수집 일정을 유지한다.
     - cron: '0 0,12 * * *'
-  workflow_dispatch: # 수동 실행 지원
+  workflow_dispatch:
+
+# 후보 보고서만 생성하며 저장소·배포·DB 쓰기 권한은 부여하지 않는다.
+permissions:
+  contents: read
+
+concurrency:
+  group: debut-crawler-report
+  cancel-in-progress: false
 
 jobs:
-  run-crawler:
+  collect-report:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
-      - name: Trigger Debut Crawler Process API
-        env:
-          CRAWLER_SECRET: ${{ secrets.CRAWLER_SECRET }}
-        run: |
-          echo "Starting Virtual Debut Crawler Auto-Refresh via GitHub Action..."
-          
-          TARGET_URL="https://vdebut.live/api/v1/admin/crawler/run"
-          USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-          
-          # API 호출 실행 (CRAWLER_SECRET 및 Cloudflare WAF Skip 헤더 전송)
-          HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" --max-time 60 -X POST "$TARGET_URL" \
-            -A "$USER_AGENT" \
-            -H "Content-Type: application/json" \
-            -H "Accept: application/json" \
-            -H "X-Crawler-Secret: ${CRAWLER_SECRET}" \
-            -d '{"recipientEmail": "kimjichang1234@gmail.com"}' || echo "000")
-          
-          echo "Endpoint HTTP Status: $HTTP_STATUS"
-          echo "--- Response Body ---"
-          cat response.json || true
-          echo ""
-          echo "---------------------"
-          
-          # 결과 검증
-          if [ "$HTTP_STATUS" -eq 200 ]; then
-            echo "✅ Virtual Debut Crawler Process Executed Successfully!"
-          else
-            echo "❌ Virtual Debut Crawler Process Failed with HTTP Status: $HTTP_STATUS"
-            exit 1
-          fi
+      - name: Checkout report client
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 보고 주소가 미배포·차단 상태면 실패하며 기존 자동 등록 주소로 재시도하지 않는다.
+      - name: Collect report without DB or email
+        env:
+          CRAWLER_SECRET: ${{ secrets.CRAWLER_REPORT_SECRET }}
+        run: node backend/scripts/collect_debut_report.cjs
+
+      # 성공한 보고서는 로그 전체 출력 대신 별도 산출물로 보관한다.
+      - name: Save candidate report
+        uses: actions/upload-artifact@v4
+        with:
+          name: debut-candidates-${{ github.run_id }}-${{ github.run_attempt }}
+          path: crawler-report/report.json
+          if-no-files-found: error
+          retention-days: 7

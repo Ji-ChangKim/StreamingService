@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "vdebut-debut-report",
+  "main": "src/reportWorker.ts",
+  "compatibility_date": "2026-10-17",
+  "workers_dev": true,
+  "preview_urls": false,
+  // 보고용 Worker에는 D1·KV·서비스 바인딩과 정기 작업을 설정하지 않는다.
+  "triggers": { "crons": [] },
+  "observability": { "enabled": true }
+}
