@@ -1,0 +1,76 @@
+VDébut 데뷔 공지 조사 기능 — 보고 전용 운영 절차
+기준일: 2026-10-18 KST
+
+현재 구현
+1. GitHub Actions가 공개 Google Sheets의 공지 본문까지 읽는다.
+   source URL: https://docs.google.com/spreadsheets/d/1SEcOZAhMqFLUW7bxSsBkWK0UriMD3fD82xXX2HrUf38/export?format=csv&gid=1884409648
+   필수 열 이름, 인용 CSV, 최대 2 MiB, 시간 초과, 리다이렉트 호스트를 검증한다.
+   범위는 KST 최근 45일~향후 180일이다. 날짜가 잘못되거나 없는 후보는 보류 대상으로 남긴다.
+2. 첫 데뷔 후보, 재데뷔, 2.0, 모델 공개, 3D, 신의상, 복귀, 복수 행사, 미확인을 구분한다.
+   분류는 공지 문구에 근거한 후보 판정이다. 최초 활동을 입증했다는 뜻이 아니다.
+   종류별 근거 단어와 기존 활동 언급을 별도로 보관한다.
+3. 실제 날짜, 오전·오후, 미정 시각, 표와 본문 날짜/시간의 일치 여부를 확인한다.
+   지난 일정은 방송 완료로 추정하지 않는다. 취소·연기 문구도 별도 상태로 남긴다.
+4. 치지직 채널 ID를 정규화하고 승인된 단축 호스트만 최대 세 번 해석한다.
+   채널 ID 형식 확인과 공식 API의 채널 존재 확인, 본인 소유권 확인을 구분한다.
+5. 같은 채널·행사 종류·날짜만 중복 병합한다. 동명이인은 이름으로 합치지 않는다.
+   시간 충돌과 각 출처를 보존한다. 이전 성공 보고서와 추가·정정·동일·재확인 건을 비교한다.
+   비교 대상은 이전 보고서이며 운영 DB의 기존 등록 여부는 조회하지 않는다.
+6. 후보 ID, 원문 URL/행 번호, 수집 시각, 짧은 근거 문구, 원문 SHA-256을 남긴다.
+   본문 전체와 API 토큰·연락처는 산출물에 복사하지 않는다.
+
+실행
+- .github/workflows/cron_crawler.yml
+- Actions 표시 이름: Investigate Virtual Debut Announcements (Report Only)
+- 한국시간 매일 09:00·21:00 또는 main 브랜치 수동 실행. 스케줄은 지연될 수 있다.
+- 로컬 실행: npm ci --prefix backend 후 node backend/scripts/investigate_debuts.cjs
+- 비교 파일: INVESTIGATION_BASELINE 환경변수로 지정한다. 파일이 없으면 비교 미실시를 표시한다.
+  Actions는 저장소 캐시에서 이전 성공 보고서를 복원한다. 캐시는 장기 보관 기록이 아니며
+  소실되면 최초 비교 상태로 돌아간다. 실패한 조사 결과로 기준 파일을 갱신하지 않는다.
+
+API 연결 상태와 필요한 Secret
+- 현재 GitHub에는 X/치지직 공식 API Secret이 없다. 공개 시트 수집과 형식·내용 검증은
+  실제 동작하지만, 이 상태를 X 검색·공식 채널 검증까지 완료한 것으로 표시하지 않는다.
+- X_BEARER_TOKEN: X 최근 검색 두 쿼리, 각 한 페이지·최대 20개, 총 최대 40개.
+  최근 7일 검색이며 페이지가 더 있으면 누락 가능성을 표시한다. 과거 전체 검색은 구현하지 않았다.
+  유료 API의 접근 권한과 비용 한도를 확인하고 등록해야 한다. 미등록 상태에서는 호출하지 않는다.
+- CHZZK_CLIENT_ID / CHZZK_CLIENT_SECRET: 공식 /open/v1/channels에서 20개씩 채널 존재를 조회한다.
+  이 조회로 최초 데뷔 이력이나 채널 소유권이 입증되지는 않는다.
+- 선택 API라도 키를 설정한 뒤 인증 오류·할당량 초과·잘못된 응답이 발생하면 소스 실패로 보고하고
+  Actions를 실패시킨다. 미설정 상태는 NOT_CONFIGURED / 전체 범위 PARTIAL로 명시한다.
+- 보고 작업에는 CLOUDFLARE_API_TOKEN과 운영 DB 인증을 전달하지 않는다.
+
+산출물과 승인
+- report.json: schemaVersion=2, 모든 후보·근거·검증 결과·변경 비교·소스 상태.
+- summary.md: Actions 실행 화면과 사람이 보는 후보 표.
+- candidates.csv: 스프레드시트 검토용. 수식 시작 문자와 따옴표를 안전하게 처리한다.
+- approval-preview.json: 후보 ID·변경 지문·검토 사유와 전체 보고서의 정규 JSON SHA-256.
+  hashAlgorithm은 SHA256_CANONICAL_JSON이다. 공백·키 순서가 다른 파일 원문 SHA와는 다르다.
+- 산출물은 14일 보관한다. 성공/실패 모두 가능한 조사 보고 파일을 업로드한다.
+- 승인 목록은 항상 빈 배열이며 executionSupported/applySupported=false다.
+  --apply와 임의 CLI 인자는 요청 전에 거부된다. 파일의 approved 값을 바꾸어도 DB 실행 경로는 없다.
+- 반영은 후보와 정확한 변경 내역을 사용자가 별도로 승인한 뒤, 승인 파일 지문 검증과
+  직전 값 재확인·중복 방지·트랜잭션을 갖춘 별도 반영 절차를 구현/실행해야 한다.
+  이번 구현에는 DB writer와 마이그레이션이 없다.
+
+기존 자동 반영 경로 전환
+- 메인 Worker의 /api/v1/admin/crawler/run은 기존 인증을 유지하되 결과만 보고 전용으로 생성한다.
+  SYNC/approved/recipientEmail 요청으로 DB 등록·메일 발송을 재활성화할 수 없다.
+- 기존 오전 7시 예약 데뷔 수집도 runDebutCrawlerReport()만 호출한다.
+- 다른 통계 수집, 사용자 제출 신청 심사 등 기존 기능은 이 변경의 대상이 아니다.
+  따라서 서비스 전체 DB 쓰기를 중지한 것은 아니다.
+- 이전 DB writer 함수는 호환 코드에 남아 있지만 메인 수동/예약 데뷔 수집 경로에서는 호출하지 않는다.
+
+검증 한계
+- 공개 시트가 후보를 제시하는 사실과 본인 명의의 공식 공지를 확인한 사실은 다르다.
+- 이름과 채널 형식이 맞아도 본인 여부, 최초 버튜버 활동 여부, 실제 방송 진행 여부는 미확인이다.
+- X 이미지/포스터 OCR과 방송 이력 전체 검색은 구현하지 않았다.
+- API 키를 연결한 실제 호출은 별도 검증이 필요하다. 연결부는 모의 응답으로 테스트한다.
+- 모든 후보는 검토 대기 또는 근거 상충이다. 자동 승인·운영 DB 반영은 하지 않는다.
+
+관련 공식 문서
+https://docs.x.com/x-api/posts/search/introduction
+https://docs.x.com/x-api/fundamentals/rate-limits
+https://chzzk.gitbook.io/chzzk/chzzk-api/channel
+https://chzzk.gitbook.io/chzzk/chzzk-api/tips
+https://csv.js.org/parse/options/

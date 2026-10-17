@@ -1,12 +1,12 @@
-name: Collect Virtual Debut Report (No DB Writes)
+name: Investigate Virtual Debut Announcements (Report Only)
 
 on:
   schedule:
-    # 기존 한국 시간 09:00·21:00 수집 일정을 유지한다.
+    # 한국 시간 09:00·21:00. GitHub 스케줄은 지연될 수 있다.
     - cron: '0 0,12 * * *'
   workflow_dispatch:
 
-# 후보 보고서만 생성하며 저장소·배포·DB 쓰기 권한은 부여하지 않는다.
+# 소스 읽기와 보고서 보관만 허용한다. Cloudflare 배포 인증은 전달하지 않는다.
 permissions:
   contents: read
 
@@ -15,11 +15,12 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  collect-report:
+  investigate-report:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 8
     steps:
-      - name: Checkout report client
+      - name: Checkout investigation code
         uses: actions/checkout@v4
         with:
           persist-credentials: false
@@ -28,18 +29,44 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
 
-      # 보고 주소가 미배포·차단 상태면 실패하며 기존 자동 등록 주소로 재시도하지 않는다.
-      - name: Collect report without DB or email
+      - name: Install report parser dependencies
+        run: npm ci --prefix backend --ignore-scripts --no-audit --no-fund
+
+      - name: Test investigation rules without external requests
+        run: node --test backend/tests/debutInvestigation.test.cjs
+
+      # 이전 성공 보고서만 비교 기준으로 사용하며 캐시가 없으면 첫 실행으로 표시한다.
+      - name: Restore previous report for comparison
+        uses: actions/cache/restore@v4
+        with:
+          path: investigation-baseline
+          key: debut-investigation-v2-main-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: debut-investigation-v2-main-
+
+      # 미등록 API 키는 미설정 상태로 보고한다. 수집·검증에는 DB 인증이 없다.
+      - name: Collect classify and verify public announcements
         env:
-          CRAWLER_SECRET: ${{ secrets.CRAWLER_REPORT_SECRET }}
-        run: node backend/scripts/collect_debut_report.cjs
+          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+          CHZZK_CLIENT_ID: ${{ secrets.CHZZK_CLIENT_ID }}
+          CHZZK_CLIENT_SECRET: ${{ secrets.CHZZK_CLIENT_SECRET }}
+          INVESTIGATION_BASELINE: investigation-baseline/report.json
+        run: node backend/scripts/investigate_debuts.cjs
 
-      # 성공한 보고서는 로그 전체 출력 대신 별도 산출물로 보관한다.
-      - name: Save candidate report
+      - name: Save evidence and approval preview
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: debut-candidates-${{ github.run_id }}-${{ github.run_attempt }}
-          path: crawler-report/report.json
+          name: debut-investigation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: crawler-report/
           if-no-files-found: error
-          retention-days: 7
+          retention-days: 14
+
+      - name: Save successful report for next comparison
+        if: success()
+        uses: actions/cache/save@v4
+        with:
+          path: investigation-baseline
+          key: debut-investigation-v2-main-${{ github.run_id }}-${{ github.run_attempt }}

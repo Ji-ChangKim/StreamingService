@@ -91,3 +91,5 @@ npx wrangler dev --local
 
 
 Cloudflare 배포 및 데뷔 공지 조사·승인·반영 절차: [운영 절차](docs/cloudflare-release-process.txt)
+
+데뷔 공지 자동 조사·분류·검증 보고서 운영: [보고 전용 조사 절차](docs/debut-investigation-runbook.txt)

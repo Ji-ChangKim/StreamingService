@@ -116,3 +116,9 @@ function verifySavedReport(report, directory) {
 
 // 비밀키가 없는 직접 실행은 통신 없이 실패 종료하며 민감한 응답을 출력하지 않는다.
 test('Actions 직접 실행의 실패 종료 코드를 확인한다', () => assert.equal(spawnSync(process.execPath, [path.join(root, 'backend/scripts/collect_debut_report.cjs')], { env: { ...process.env, CRAWLER_SECRET: '' }, encoding: 'utf8', timeout: 5000 }).status, 1));
+
+// 기존 수동 실행 주소에도 승인·동기화 본문으로 DB 반영을 요청할 수 없다.
+test('기존 수집 실행 주소도 DB·메일 없이 보고만 반환한다', () => Promise.resolve(mock.method(globalThis, 'fetch', sourceFetch)).then(() => modules.worker.fetch(new Request(REPORT_URL.replace('/report', '/run'), { method: 'POST', headers: { 'X-Crawler-Secret': 'test-secret' }, body: JSON.stringify({ approved: true, mode: 'SYNC', recipientEmail: 'no-send@example.invalid' }) }), reportEnv('test-secret'), {})).then((response) => response.json()).then((body) => Promise.resolve(assert.deepEqual([body.success, body.mode, body.dbWritten], [true, 'REPORT_ONLY', false])).then(() => assertReport(body.result))));
+
+// DB가 없는 스케줄 입력에서도 오전 7시 데뷔 작업은 수집 요청 한 번으로 보고만 생성한다.
+test('오전 7시 데뷔 예약 실행은 보고 경로만 사용한다', () => Promise.resolve(mock.method(globalThis, 'fetch', sourceFetch)).then(() => ((pending) => modules.worker.scheduled({ cron: '0 22 * * *', scheduledTime: Date.parse('2026-10-17T22:00:00Z') }, { DB: null }, { waitUntil: (promise) => pending.push(promise) }).then(() => Promise.all(pending)).then(() => assert.equal(globalThis.fetch.mock.callCount(), 1)))([])));

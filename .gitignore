@@ -216,3 +216,7 @@ playground.xcworkspace
 graphify-out/
 
 
+
+# 보고 전용 조사 산출물과 이전 비교 자료는 GitHub 산출물/캐시로만 보관한다.
+crawler-report/
+investigation-baseline/

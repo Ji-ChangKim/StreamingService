@@ -15,7 +15,7 @@ import manifestJSON from '__STATIC_CONTENT_MANIFEST';
 import { fetchEventsFromD1, insertEventToD1, updateEventInD1, MOCK_EVENTS } from './services/eventDbService';
 import { fetchPlatformProfile } from './services/platformApiService';
 import { fetchCreatorProfileBySlug, fetchAllCreatorSlugs, updateCreatorProfileInD1, deleteCreatorProfileFromD1 } from './services/creatorDbService';
-import { runDebutCrawlerProcess } from './services/debutCrawlerService';
+import { runDebutCrawlerReport } from './services/debutCrawlerService';
 import { debutCrawlerReportApi } from './services/debutCrawlerReportApi';
 import { validateDebutEventPayload } from './services/eventValidationService';
 import { validateAdminToken } from './services/adminAuthService';
@@ -830,29 +830,14 @@ app.get('/admin', async (c) => {
   }
 });
 
-// 9. Admin Crawler Web Search & Email Report Manual Trigger
-app.post('/api/v1/admin/crawler/run', async (c) => {
-  try {
-    const crawlerSecret = c.env.CRAWLER_SECRET;
-    const requestSecret = c.req.header('X-Crawler-Secret') || c.req.header('x-crawler-secret');
-    
-    // CRAWLER_SECRET이 설정되어 있는 경우, 헤더 비밀키와 일치 여부 검증
-    if (crawlerSecret && requestSecret !== crawlerSecret) {
-      return c.json({ success: false, error: 'Unauthorized: Invalid crawler secret key' }, 401);
-    }
-
-    const body = await c.req.json().catch(() => ({}));
-    const recipient = body.recipientEmail || 'kimjichang1234@gmail.com';
-    const result = await runDebutCrawlerProcess(c.env.DB || null, recipient);
-    return c.json({
-      success: true,
-      message: '자동 웹서치 수집 및 이메일 리포트 발송 프로세스가 성공적으로 수행되었습니다.',
-      result
-    });
-  } catch (err: any) {
-    return c.json({ success: false, error: err.message || '크롤러 실행 중 오류 발생' }, 500);
-  }
-});
+// 기존 수집 실행도 보고 전용으로 제한하여 사용자 승인 전 DB·메일 경로를 차단한다.
+app.post('/api/v1/admin/crawler/run', (c) => runDebutCrawlerReport().then((result) => c.json({
+  success: result.success,
+  mode: 'REPORT_ONLY',
+  dbWritten: false,
+  message: '후보 보고서를 생성했습니다. 운영 반영에는 별도 승인이 필요합니다.',
+  result,
+}, result.success ? 200 : 502)));
 
 // 10. Admin Crawler Logs History Fetch API
 app.get('/api/v1/admin/crawler/logs', async (c) => {
@@ -1408,10 +1393,11 @@ export default {
       }
     }
     const isKst7Am = (new Date(scheduledTime).getUTCHours() === 22 && new Date().getUTCMinutes() < 10) || event?.cron === '0 22 * * *';
+    // 자동 수집의 기존 DB 등록·메일 발송을 사용하지 않고 보고만 만든다.
     if (isKst7Am) {
       ctx.waitUntil(
-      runDebutCrawlerProcess(env.DB || null, 'kimjichang1234@gmail.com')
-        .then((res) => console.log(`[Scheduled Cron] 07:00 KST Debut sync success: Range=${res.auditRange?.description}, Total=${res.totalCrawledCount}, New=${res.newDiscoveredCount}`))
+      runDebutCrawlerReport()
+        .then((res) => console.log(`[Scheduled Cron] 07:00 KST Debut REPORT_ONLY: Success=${res.success}, Total=${res.totalCrawledCount}, DBWrites=false`))
         .catch((err) => console.error('[Scheduled Cron] Error:', err))
     );
     }
