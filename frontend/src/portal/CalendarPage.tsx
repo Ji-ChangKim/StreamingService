@@ -1,6 +1,6 @@
 import { t, usePortalLocale, getPortalLanguage } from './portalLocale';
 import { memo, useEffect, useMemo, useState } from 'react';
-import { ArrowRight, CalendarDays, CalendarPlus, ChevronLeft, ChevronRight, Search, RotateCcw } from 'lucide-react';
+import { ArrowRight, CalendarDays, CalendarPlus, ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import { PortalProfile, PORTAL_PLATFORMS, portalDateKey } from '../../../shared/portal';
 import { CreatorCard, PortalLink, PortalState, PlatformBadge, PortalAvatar, PortalDialog, portalSchedule, downloadPortalSchedule, downloadPortalSchedules } from './PortalUi';
 import { PortalHomeLearning } from './PortalLearning';
@@ -15,15 +15,17 @@ const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 // 현재 서비스 대상인 한·일·미만 탐색 선택지로 제공한다.
 const CALENDAR_COUNTRIES = [{ id: 'KR', label: '한국' }, { id: 'JP', label: '일본' }, { id: 'US', label: '미국' }];
 const CALENDAR_TIMEZONES = [{ id: 'Asia/Seoul', label: '한국 (KST)' }, { id: 'Asia/Tokyo', label: '일본 (JST)' }, { id: 'America/Los_Angeles', label: '미국 서부 (LA)' }, { id: 'America/New_York', label: '미국 동부 (뉴욕)' }];
-type CalendarState = { month: string; platform: string; country: string; query: string; timezone: string; view: 'month' | 'week'; day: string };
+type CalendarState = { month: string; platform: string; country: string; timezone: string; view: 'month' | 'week'; day: string };
 
 // 달력 복귀 시 마지막 탐색 조건을 복원한다.
 function initialCalendar(): CalendarState {
   const timezone = 'Asia/Seoul';
   const day = portalDateKey(new Date(), timezone);
-  const fallback: CalendarState = { month: day.slice(0, 7), platform: 'ALL', country: 'KR', query: '', timezone, view: window.innerWidth < 640 ? 'week' : 'month', day };
+  const fallback: CalendarState = { month: day.slice(0, 7), platform: 'ALL', country: 'KR', timezone, view: window.innerWidth < 640 ? 'week' : 'month', day };
   try {
     const saved = { ...fallback, ...JSON.parse(sessionStorage.getItem('vd-calendar') || '{}') };
+    // 제거된 검색어가 남아 일정이 보이지 않는 일을 막는다.
+    delete saved.query;
     // 이전에 저장된 제외 국가·시간대가 선택지 없는 상태로 남지 않도록 복원한다.
     return { ...saved, country: CALENDAR_COUNTRIES.some((country) => country.id === saved.country) ? saved.country : 'ALL', timezone: CALENDAR_TIMEZONES.some((zone) => zone.id === saved.timezone) ? saved.timezone : timezone };
   } catch { return fallback; }
@@ -35,9 +37,8 @@ function shiftedMonth(month: string, delta: number): string {
 }
 
 // 공통 필터를 달력·예정자·미정 목록에 동일하게 적용한다.
-export function filterPortalProfiles(profiles: PortalProfile[], platform: string, country: string, query: string): PortalProfile[] {
-  const search = query.trim().toLocaleLowerCase();
-  return profiles.filter((p) => (platform === 'ALL' || p.platform === platform) && (country === 'ALL' || p.countryCode === country) && (!search || p.displayName.toLocaleLowerCase().includes(search)));
+export function filterPortalProfiles(profiles: PortalProfile[], platform: string, country: string): PortalProfile[] {
+  return profiles.filter((p) => (platform === 'ALL' || p.platform === platform) && (country === 'ALL' || p.countryCode === country));
 }
 
 // 메인에서는 날짜 탐색을 먼저 제공하고 그다음 가까운 예정자를 소개한다.
@@ -50,7 +51,7 @@ export const CalendarPage = memo(function CalendarPage({ profiles, loading, erro
   const update = (patch: Partial<CalendarState>) => setState((previous) => ({ ...previous, ...patch }));
   const today = portalDateKey(new Date(), state.timezone);
   useEffect(() => { try { sessionStorage.setItem('vd-calendar', JSON.stringify(state)); } catch { /* 저장 제한 시 현재 화면의 조건만 유지한다. */ } }, [state]);
-  const filtered = useMemo(() => filterPortalProfiles(profiles, state.platform, state.country, state.query), [profiles, state.platform, state.country, state.query]);
+  const filtered = useMemo(() => filterPortalProfiles(profiles, state.platform, state.country), [profiles, state.platform, state.country]);
   // 전체 프로필을 각 날짜 셀에서 다시 검색하지 않고 현재 조건별 색인을 재사용한다.
   const index = useMemo(() => buildCalendarIndex(filtered, state.timezone), [filtered, state.timezone]);
   const monthProfiles = index.byMonth.get(state.month) || [];
@@ -74,7 +75,7 @@ export const CalendarPage = memo(function CalendarPage({ profiles, loading, erro
     <PortalStage profiles={profiles} timezone={state.timezone} loading={loading} error={error} refresh={refresh} onNavigate={onNavigate} />
     <section id="debut-calendar" className="vd-calendar-panel" aria-label={t("데뷔 일정")}>
       <div className="vd-calendar-toolbar"><div className="vd-month-control"><button type="button" className="vd-icon-button" aria-label={state.view === 'month' ? t("이전 달") : t("이전 주")} onClick={() => move(-1)}><ChevronLeft size={20} /></button><label className="vd-month-label"><span className="vd-sr-only">{t("조회 월")}</span><input type="month" value={state.month} onChange={(event) => { if (event.target.value) update({ month: event.target.value, day: `${event.target.value}-01` }); }} /></label><button type="button" className="vd-icon-button" aria-label={state.view === 'month' ? t("다음 달") : t("다음 주")} onClick={() => move(1)}><ChevronRight size={20} /></button><button type="button" className="vd-button vd-small" onClick={() => update({ month: today.slice(0, 7), day: today })}>{t("오늘")}</button></div><div className="vd-toolbar-right"><button type="button" className="vd-button vd-small" disabled={loading || Boolean(error) || !profiles.some((profile) => profile.dateState === 'FIXED')} onClick={() => downloadPortalSchedules(profiles)}><CalendarPlus size={15} />{t("전체 일정 저장")}</button><span className="vd-count">{loading ? t("불러오는 중") : error ? t("확인 필요") : t("{0}명의 데뷔 일정", [monthProfiles.length])}</span><div className="vd-segment" aria-label={t("달력 보기")}><button type="button" aria-pressed={state.view === 'month'} onClick={() => update({ view: 'month' })}>{t("월간")}</button><button type="button" aria-pressed={state.view === 'week'} onClick={() => update({ view: 'week' })}>{t("주간")}</button></div></div></div>
-      <div className="vd-calendar-filters"><div className="vd-platform-filter" aria-label={t("방송 플랫폼")}><button type="button" aria-pressed={state.platform === 'ALL'} onClick={() => update({ platform: 'ALL' })}>{t("전체")}</button>{PORTAL_PLATFORMS.map((p) => <button type="button" key={p.id} aria-pressed={state.platform === p.id} onClick={() => update({ platform: p.id })}><img src={p.icon} alt="" /><span>{p.label}</span></button>)}</div><div className="vd-search"><Search size={16} /><input aria-label={t("선택한 월의 데뷔자 이름 검색")} placeholder={t("데뷔자 이름 검색")} value={state.query} onChange={(e) => update({ query: e.target.value })} /></div><label className="vd-filter-select"><span className="vd-sr-only">{t("활동 국가")}</span><select value={state.country} onChange={(e) => update({ country: e.target.value })}><option value="ALL">{t("전체 국가")}</option>{CALENDAR_COUNTRIES.map((country) => <option key={country.id} value={country.id}>{t(country.label)}</option>)}</select></label><label className="vd-filter-select"><span className="vd-sr-only">{t("일정 표시 시간대")}</span><select value={state.timezone} onChange={(e) => update({ timezone: e.target.value })}>{CALENDAR_TIMEZONES.map((zone) => <option key={zone.id} value={zone.id}>{t(zone.label)}</option>)}</select></label></div>
+      <div className="vd-calendar-filters"><div className="vd-platform-filter" aria-label={t("방송 플랫폼")}><button type="button" aria-pressed={state.platform === 'ALL'} onClick={() => update({ platform: 'ALL' })}>{t("전체")}</button>{PORTAL_PLATFORMS.map((p) => <button type="button" key={p.id} aria-pressed={state.platform === p.id} onClick={() => update({ platform: p.id })}><img src={p.icon} alt="" /><span>{p.label}</span></button>)}</div><label className="vd-filter-select"><span className="vd-sr-only">{t("활동 국가")}</span><select value={state.country} onChange={(e) => update({ country: e.target.value })}><option value="ALL">{t("전체 국가")}</option>{CALENDAR_COUNTRIES.map((country) => <option key={country.id} value={country.id}>{t(country.label)}</option>)}</select></label><label className="vd-filter-select"><span className="vd-sr-only">{t("일정 표시 시간대")}</span><select value={state.timezone} onChange={(e) => update({ timezone: e.target.value })}>{CALENDAR_TIMEZONES.map((zone) => <option key={zone.id} value={zone.id}>{t(zone.label)}</option>)}</select></label></div>
       {loading ? <PortalState loading title={t("데뷔 일정을 불러오는 중이에요")} /> : error ? <PortalState error title={t("일정을 불러오지 못했어요")} description={t("잠시 후 다시 시도해 주세요. 문제가 계속되면 문의 화면으로 알려주세요.")} action={<button className="vd-button" type="button" onClick={refresh}>{t("다시 시도")}</button>} /> : <>
         <div className="vd-weekdays">{WEEKDAYS.map((day, index) => <span key={day}>{dateTimeFormatter(getPortalLanguage(), { weekday: 'short', timeZone: 'UTC' }).format(new Date(Date.UTC(2026, 9, 11 + index)))}</span>)}</div>
         <div className={`vd-calendar-grid ${state.view === 'week' ? 'is-week' : ''}`}>
@@ -84,7 +85,7 @@ export const CalendarPage = memo(function CalendarPage({ profiles, loading, erro
             return <div className={`vd-day ${outside ? 'is-outside' : ''} ${today === day ? 'is-today' : ''} ${selected === day ? 'is-selected' : ''}`} key={day}><button type="button" className="vd-day-open" aria-label={t("{0}{1} · 데뷔 {2}명 · 전체 일정 보기", [day, today === day ? ' ' + t('오늘') : '', items.length])} onClick={() => { update({ day, month: day.slice(0, 7) }); setInspectedDay(day); }}><span className="vd-day-number">{Number(day.slice(8))}</span>{day === today && <small>{t("오늘")}</small>}<span className="vd-mobile-count">{items.length ? t("{0}명", [items.length]) : ''}</span></button><div className="vd-day-events">{items.slice(0, state.view === 'week' ? 4 : 2).map((p) => <button type="button" key={p.slug} onClick={() => { update({ day }); setInspectedDay(day); }} title={`${p.displayName} · ${portalSchedule(p, state.timezone)}`}><img className="vd-event-platform-icon" src={CALENDAR_PLATFORM_ICONS[p.platform]} alt={p.platform} width={16} height={16} /><time>{p.dateState === 'TIME_TBD' ? t("미정") : dateTimeFormatter(getPortalLanguage(), { timeZone: state.timezone, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date(p.startAtUtc))}</time><span>{p.displayName}</span></button>)}</div>{items.length > (state.view === 'week' ? 4 : 2) && <button type="button" className="vd-more" onClick={() => setInspectedDay(day)}>+{items.length - (state.view === 'week' ? 4 : 2)}{t("명 더 보기")}</button>}</div>;
           })}
         </div>
-        <div className="vd-calendar-caption"><span><CalendarDays size={14} /> {t("날짜를 선택하면 소개와 방송 채널을 확인할 수 있어요.")}</span><button className="vd-text-button" type="button" onClick={() => update({ platform: 'ALL', country: 'ALL', query: '' })}><RotateCcw size={13} /> {t("조건 초기화")}</button></div>
+        <div className="vd-calendar-caption"><span><CalendarDays size={14} /> {t("날짜를 선택하면 소개와 방송 채널을 확인할 수 있어요.")}</span><button className="vd-text-button" type="button" onClick={() => update({ platform: 'ALL', country: 'ALL' })}><RotateCcw size={13} /> {t("조건 초기화")}</button></div>
         {!monthProfiles.length && <div className="vd-empty-inline"><p>{t("선택한 조건의 데뷔 일정이 없어요.")}</p><button type="button" className="vd-text-button" onClick={() => move(1)}>{t("다음")}{state.view === 'month' ? t("달") : t("주")} {t("확인")}<ArrowRight size={15} /></button></div>}
       </>}
     </section>

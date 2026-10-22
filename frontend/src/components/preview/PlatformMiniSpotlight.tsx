@@ -1,6 +1,6 @@
 import { translatePortalText } from '../../../../shared/portalTranslations';
 import { dateTimeFormatter } from '../../../../shared/dateTimeFormatter';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { DebutEvent } from '../../types';
 import {
@@ -28,14 +28,14 @@ interface PlatformTabConfig {
 
 const PLATFORMS: PlatformTabConfig[] = [
   {
-    id: 'SOOP',
-    label: 'SOOP',
-    officialLogo: '/icons/soop/soop_symbol_blue.svg',
-  },
-  {
     id: 'CHZZK',
     label: '치지직',
     officialLogo: '/icons/chzzk_icon.png',
+  },
+  {
+    id: 'SOOP',
+    label: 'SOOP',
+    officialLogo: '/icons/soop/soop_symbol_blue.svg',
   },
   {
     id: 'YOUTUBE',
@@ -96,7 +96,7 @@ export function PlatformMiniSpotlight({
   onNavigate,
 }: PlatformMiniSpotlightProps) {
   const t = (source: string, values: unknown[] = []) => translatePortalText(source, currentLang, values);
-  const [selectedPlatform, setSelectedPlatform] = useState<PlatformKey>('SOOP');
+  const [selectedPlatform, setSelectedPlatform] = useState<PlatformKey>('CHZZK');
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   // 플랫폼별 요약 데이터 계산
@@ -108,7 +108,19 @@ export function PlatformMiniSpotlight({
     return map;
   }, [allEvents, selectedTimezone]);
 
-  const currentSummary = summaries.get(selectedPlatform) || {
+  // 요청한 순서를 유지하면서 실제 일정이 있는 플랫폼만 표시한다.
+  const visiblePlatforms = PLATFORMS.filter((platform) => (summaries.get(platform.id)?.totalCount || 0) > 0);
+  const activePlatform = visiblePlatforms.find((platform) => platform.id === selectedPlatform)?.id || visiblePlatforms[0]?.id;
+
+  // 조회 결과가 바뀌어 선택한 플랫폼이 사라지면 첫 플랫폼의 첫 카드로 전환한다.
+  useEffect(() => {
+    if (activePlatform && activePlatform !== selectedPlatform) {
+      setSelectedPlatform(activePlatform);
+      setActiveIndex(0);
+    }
+  }, [activePlatform, selectedPlatform]);
+
+  const currentSummary = (activePlatform && summaries.get(activePlatform)) || {
     items: [],
     liveCount: 0,
     totalCount: 0,
@@ -116,6 +128,8 @@ export function PlatformMiniSpotlight({
   };
 
   const items = currentSummary.items;
+  // 목록이 줄어들어도 존재하는 카드 범위에서만 탐색한다.
+  const deckIndex = activePlatform === selectedPlatform ? Math.min(activeIndex, Math.max(0, items.length - 1)) : 0;
 
   // 탭 변경 시 인덱스 리셋
   const handleTabChange = (platform: PlatformKey) => {
@@ -126,31 +140,34 @@ export function PlatformMiniSpotlight({
   // 슬라이드 이동 함수들 (SRP)
   const handlePrev = () => {
     if (items.length <= 1) return;
-    setActiveIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1));
+    setActiveIndex(deckIndex === 0 ? items.length - 1 : deckIndex - 1);
   };
 
   const handleNext = () => {
     if (items.length <= 1) return;
-    setActiveIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1));
+    setActiveIndex(deckIndex === items.length - 1 ? 0 : deckIndex + 1);
   };
 
   const handleFarPrev = () => {
     if (items.length <= 1) return;
-    setActiveIndex((prev) => (prev - 2 + items.length) % items.length);
+    setActiveIndex((deckIndex - 2 + items.length) % items.length);
   };
 
   const handleFarNext = () => {
     if (items.length <= 1) return;
-    setActiveIndex((prev) => (prev + 2) % items.length);
+    setActiveIndex((deckIndex + 2) % items.length);
   };
 
   // 5단 피라미드 덱 인덱스 계산: [1(소) - 2(중) - 3(대) - 4(중) - 5(소)]
   // 2명 이상일 때는 원형 순환(Circular Modulo Loop)으로 5개 슬롯을 모두 채워 좌2 - 중1 - 우2 대칭 완성
-  const currentItem = items.length > 0 ? items[activeIndex] : null;
-  const prevItem = items.length >= 2 ? items[(activeIndex - 1 + items.length) % items.length] : null;
-  const nextItem = items.length >= 2 ? items[(activeIndex + 1) % items.length] : null;
-  const farLeftItem = items.length >= 2 ? items[(activeIndex - 2 + items.length) % items.length] : null;
-  const farRightItem = items.length >= 2 ? items[(activeIndex + 2) % items.length] : null;
+  const currentItem = items.length > 0 ? items[deckIndex] : null;
+  const prevItem = items.length >= 2 ? items[(deckIndex - 1 + items.length) % items.length] : null;
+  const nextItem = items.length >= 2 ? items[(deckIndex + 1) % items.length] : null;
+  const farLeftItem = items.length >= 2 ? items[(deckIndex - 2 + items.length) % items.length] : null;
+  const farRightItem = items.length >= 2 ? items[(deckIndex + 2) % items.length] : null;
+
+  // 모든 플랫폼의 일정이 없으면 빈 탭과 빈 쇼케이스를 남기지 않는다.
+  if (!activePlatform) return null;
 
   return (
     <section
@@ -160,8 +177,8 @@ export function PlatformMiniSpotlight({
       {/* 1. 상단 플랫폼 탭 바 (글래스모피즘 & 완전한 중앙 정렬) */}
       <div className="vd-showcase-tabs flex items-center justify-center relative mb-6">
         <div className="inline-flex items-center gap-2 overflow-x-auto no-scrollbar py-1 px-3 bg-white/40 backdrop-blur-md rounded-full border border-white/60 shadow-xs">
-          {PLATFORMS.map((p) => {
-            const isSelected = selectedPlatform === p.id;
+          {visiblePlatforms.map((p) => {
+            const isSelected = activePlatform === p.id;
             const pSummary = summaries.get(p.id);
             const hasLive = (pSummary?.liveCount || 0) > 0;
             const count = pSummary?.totalCount || 0;
