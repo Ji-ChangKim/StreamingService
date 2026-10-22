@@ -1,0 +1,151 @@
+/* 시안의 본문 비율을 유지하며 공통 Header·Footer에는 영향을 주지 않는다. */
+.vd-creator-detail { --detail-line:#e2e8f0; --detail-muted:#64748b; padding-top:28px; padding-bottom:40px; }
+.vd-creator-detail .vd-profile-hero { border-radius:16px; border-color:var(--detail-line); box-shadow:0 2px 8px #25385804; }
+.vd-creator-detail .vd-profile-cover { height:150px; background:radial-gradient(ellipse at 20% 20%,#ddd6fe,transparent 65%),linear-gradient(115deg,#ede9fe,#e0e7ff 55%,#e0f2fe); }
+.vd-creator-detail .vd-profile-banner { opacity:.5; }
+.vd-creator-detail .vd-profile-identity { margin-top:-8px; padding:0 28px 26px; gap:22px; align-items:center; flex-wrap:nowrap; }
+.vd-creator-detail .vd-profile-identity .vd-avatar-large { width:132px; height:144px; border:4px solid #fff; border-radius:16px; box-shadow:0 2px 12px #33415515; flex-shrink:0; }
+.vd-creator-detail .vd-profile-identity-copy { padding-top:22px; flex:1; }
+.vd-creator-detail .vd-archive-name { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+.vd-creator-detail .vd-profile-identity-copy :is(h1,h2) { font-size:26px; letter-spacing:-.7px; line-height:1.3; margin:0; }
+.vd-creator-detail .vd-profile-headline { font-size:13px; margin:8px 0!important; }
+.vd-creator-detail .vd-profile-meta { margin-top:8px; gap:9px; }
+.vd-creator-detail .vd-profile-meta .vd-profile-agency { font-size:12px; }
+.vd-creator-detail .vd-profile-tools { top:-45px; right:24px; gap:6px; }
+.vd-creator-detail .vd-profile-tools :is(.vd-icon-button,.vd-button) { min-height:30px; height:30px; font-size:11px; }
+.vd-creator-detail .vd-profile-tools .vd-icon-button { width:30px; }
+.vd-creator-detail .vd-archive-credits { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.vd-creator-detail .vd-archive-credits>span { padding:4px 8px; border:1px solid #edf0f5; border-radius:6px; background:#f8fafc; color:#64748b; font-size:10px; }
+.vd-creator-detail .vd-archive-credits b { margin-left:10px; color:#94a3b8; }
+.vd-creator-detail .vd-detail-quicklinks { max-width:42%; padding-top:42px; }
+.vd-creator-detail .vd-detail-quicklinks .vd-profile-links { display:flex; flex-wrap:wrap; gap:7px; justify-content:flex-end; }
+.vd-creator-detail .vd-detail-quicklinks a { padding:8px 10px; gap:8px; min-height:36px; border-radius:8px; font-size:11px; }
+.vd-creator-detail .vd-detail-quicklinks .vd-platform { font-size:11px; }
+.vd-creator-detail .vd-detail-quicklinks a:first-child { background:#e8f2ff; border-color:#cdddff; }
+.vd-creator-detail .vd-detail-quicklinks a[href*='chzzk.naver.com']:first-child { background:#00efa0; border-color:#00efa0; }
+.vd-creator-detail .vd-detail-quicklinks a:hover { filter:brightness(.96); }
+
+/* 데이터가 없는 경우에도 동일한 세 메뉴와 2:1 본문 구성을 표시한다. */
+.vd-creator-detail .vd-detail-nav { display:flex; gap:8px; overflow-x:auto; border-bottom:1px solid var(--detail-line); margin:20px 0 24px; }
+.vd-creator-detail .vd-detail-nav button { display:inline-flex; align-items:center; gap:8px; padding:14px 18px; border:0; border-bottom:2px solid transparent; background:transparent; color:#64748b; font:inherit; font-size:13px; font-weight:600; white-space:nowrap; cursor:pointer; }
+.vd-creator-detail .vd-detail-nav button[aria-pressed=true] { border-bottom-color:#2563eb; color:#2563eb; }
+.vd-creator-detail .vd-detail-nav button:hover { background:#eff6ff; }
+.vd-creator-detail .vd-detail-nav button>span { font-size:10px; background:#eaf0fc; border-radius:20px; padding:2px 6px; }
+.vd-creator-detail :is(button,a):focus-visible { outline:3px solid #2563eb; outline-offset:-3px; }
+.vd-creator-detail .vd-detail-layout { display:grid; grid-template-columns:minmax(0,2.08fr) minmax(260px,1fr); gap:24px; align-items:start; }
+.vd-creator-detail .vd-detail-main { min-width:0; display:grid; gap:24px; }
+.vd-creator-detail .vd-detail-sidebar { min-width:0; display:grid; gap:22px; }
+.vd-creator-detail :is(.vd-archive-section,.vd-profile-editorial,.vd-debut-team-section) { margin:0; padding:24px; background:#fff; border:1px solid var(--detail-line); border-radius:14px; }
+.vd-creator-detail :is(.vd-archive-section,.vd-profile-editorial)>h2 { display:flex; align-items:center; gap:8px; font-size:16px; font-weight:750; margin:0 0 20px; padding-bottom:16px; border-bottom:1px solid #f1f5f9; }
+.vd-creator-detail .vd-archive-section>h2:before { content:''; width:4px; height:15px; background:#2563eb; border-radius:4px; }
+.vd-creator-detail .vd-archive-clips>h2:before { background:#9333ea; }
+.vd-creator-detail .vd-archive-charms>h2:before { background:#0f172a; }
+
+/* 방송 영역은 실제 상태가 연결되기 전까지 채널 안내로 표시한다. */
+.vd-creator-detail .vd-archive-channel { display:flex; align-items:center; gap:16px; padding:20px; background:linear-gradient(110deg,#0f172a,#202144 70%,#32224c); color:white; border-radius:13px; }
+.vd-creator-detail .vd-archive-channel-preview { width:124px; height:88px; flex-shrink:0; border-radius:8px; background:#090f1e; display:flex; justify-content:center; align-items:center; gap:10px; color:#94a3b8; }
+.vd-creator-detail .vd-archive-channel-preview .vd-avatar { width:48px; height:48px; border-radius:10px; }
+.vd-creator-detail .vd-archive-channel-copy { flex:1; min-width:0; }
+.vd-creator-detail .vd-archive-channel-copy .vd-platform { color:#a7f3d0; font-size:11px; }
+.vd-creator-detail .vd-archive-channel h2 { color:#fff; font-size:15px; margin:8px 0 5px; overflow-wrap:anywhere; }
+.vd-creator-detail .vd-archive-channel p { color:#b8c3d6; font-size:11px; line-height:1.7; margin:0; }
+.vd-creator-detail .vd-archive-live { display:inline-block; margin-left:8px; padding:2px 6px; border-radius:4px; background:#e11d48; color:#fff; font-size:10px; font-weight:800; }
+.vd-creator-detail .vd-archive-channel>a { display:inline-flex; align-items:center; gap:7px; padding:11px 12px; color:#fff; background:#e53b70; border-radius:8px; font-size:11px; font-weight:700; white-space:nowrap; }
+
+/* 대표 영상은 한 카드가 전체 너비를 차지하지 않도록 항상 2열로 배치한다. */
+.vd-creator-detail .vd-archive-videos .vd-profile-media-section { margin:0; padding:0; border:0; background:transparent; }
+.vd-creator-detail .vd-archive-videos .vd-media-grid,
+.vd-creator-detail .vd-archive-empty-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+.vd-creator-detail .vd-media-card { border-radius:10px; }
+.vd-creator-detail .vd-media-card-copy { padding:14px; }
+.vd-creator-detail .vd-media-card-header { flex-direction:column; gap:10px; }
+.vd-creator-detail .vd-media-card-header h3 { font-size:13px; line-height:1.6; }
+.vd-creator-detail .vd-media-origin-link { font-size:11px; }
+.vd-creator-detail .vd-archive-media-labels { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:10px; }
+.vd-creator-detail .vd-archive-media-labels>span { background:#fff1f2; color:#be123c; border-radius:4px; padding:3px 6px; font-size:10px; font-weight:700; }
+.vd-creator-detail .vd-archive-media-labels small { font-size:10px; color:#64748b; }
+.vd-creator-detail .vd-media-play { font-size:11px; padding:9px 12px; }
+.vd-creator-detail .vd-archive-empty-card { border:1px solid var(--detail-line); border-radius:10px; overflow:hidden; }
+.vd-creator-detail .vd-archive-empty-card>div { aspect-ratio:16/9; background:linear-gradient(135deg,#eef2ff,#e9eff8); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; font-size:12px; color:#8491aa; }
+.vd-creator-detail .vd-archive-empty-card>strong { display:block; margin:14px 14px 6px; font-size:13px; }
+.vd-creator-detail .vd-archive-empty-card>p { color:#64748b; margin:0 14px 14px; font-size:11px; line-height:1.7; }
+.vd-creator-detail .vd-archive-clip-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.vd-creator-detail .vd-archive-clip { display:flex; align-items:center; gap:12px; padding:12px; border:1px solid #edf0f6; background:#f8fafc; border-radius:10px; min-width:0; }
+.vd-creator-detail .vd-archive-clip-art { display:grid; place-items:center; flex-shrink:0; width:52px; height:52px; border-radius:8px; background:#e7e8ff; color:#818cf8; }
+.vd-creator-detail .vd-archive-clip>span:nth-child(2) { min-width:0; flex:1; }
+.vd-creator-detail .vd-archive-clip strong { display:block; font-size:12px; line-height:1.6; overflow-wrap:anywhere; }
+.vd-creator-detail .vd-archive-clip small { display:block; color:#7c83a3; font-size:10px; line-height:1.7; }
+.vd-creator-detail .vd-archive-clip>svg { flex-shrink:0; }
+.vd-creator-detail .vd-archive-charm-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.vd-creator-detail .vd-archive-charm-grid article { background:#f8fafc; border:1px solid #edf0f6; border-radius:10px; padding:16px; min-width:0; }
+.vd-creator-detail .vd-archive-charm-grid article>span { display:inline-flex; padding:8px; background:#dbeafe; color:#3b82f6; border-radius:8px; }
+.vd-creator-detail .vd-archive-charm-grid article:nth-child(2)>span { background:#d1fae5; color:#10b981; }
+.vd-creator-detail .vd-archive-charm-grid article:nth-child(3)>span { background:#f3e8ff; color:#a855f7; }
+.vd-creator-detail .vd-archive-charm-grid h3 { font-size:12px; margin:12px 0 8px; }
+.vd-creator-detail .vd-archive-charm-grid p { margin:0; color:#64748b; font-size:11px; line-height:1.8; white-space:pre-wrap; overflow-wrap:anywhere; }
+
+/* 상세 정보는 시안의 항목 순서대로 두고 미연결 값은 대시로 구분한다. */
+.vd-creator-detail .vd-detail-sidebar .vd-panel { padding:22px; border-radius:14px; border-color:var(--detail-line); }
+.vd-creator-detail .vd-detail-info>h2 { display:flex; align-items:center; gap:7px; font-size:14px; padding-bottom:14px; margin:0; border-bottom:1px solid #eef2f6; }
+.vd-creator-detail .vd-detail-info>h2 svg { color:#2563eb; }
+.vd-creator-detail .vd-detail-info>h2 small { margin-left:auto; font-size:10px; color:#94a3b8; font-weight:500; }
+.vd-creator-detail .vd-detail-facts { margin:12px 0 0; font-size:12px; }
+.vd-creator-detail .vd-detail-facts>div { display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding:12px 0; border-bottom:1px solid #f1f5f9; }
+.vd-creator-detail .vd-detail-facts dt { color:#64748b; flex-shrink:0; }
+.vd-creator-detail .vd-detail-facts dd { margin:0; text-align:right; font-weight:600; overflow-wrap:anywhere; }
+.vd-creator-detail .vd-detail-facts dd small { display:block; font-size:10px; font-weight:400; color:#94a3b8; margin-top:4px; }
+.vd-creator-detail .vd-archive-fandom { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:18px; }
+.vd-creator-detail .vd-archive-fandom>div { background:#f8fafc; padding:10px; border:1px solid #f1f5f9; border-radius:8px; }
+.vd-creator-detail .vd-archive-fandom span { display:block; font-size:10px; color:#94a3b8; }
+.vd-creator-detail .vd-archive-fandom strong { display:block; font-size:13px; margin-top:4px; color:#64748b; }
+.vd-creator-detail .vd-archive-hashtag { display:flex; justify-content:center; align-items:center; gap:8px; background:#f1f5f9; color:#64748b; padding:10px; margin-top:14px; border-radius:8px; font-size:11px; }
+.vd-creator-detail .vd-archive-hashtag span { color:#94a3b8; }
+.vd-creator-detail .vd-archive-hashtag .vd-button { max-width:100%; white-space:normal; overflow-wrap:anywhere; font-size:11px; }
+.vd-creator-detail .vd-archive-credits b,.vd-creator-detail .vd-archive-fandom strong { overflow-wrap:anywhere; }
+.vd-detail-load-status { display:flex; align-items:center; gap:10px; padding-top:16px; color:#64748b; font-size:12px; }
+.vd-creator-detail .vd-detail-contribute { text-align:center; background:linear-gradient(140deg,#f8fafc,#fff); }
+.vd-creator-detail .vd-detail-contribute-icon { display:inline-flex; padding:11px; background:#eff6ff; color:#2563eb; border-radius:50%; margin-bottom:12px; }
+.vd-creator-detail .vd-detail-contribute h2 { font-size:13px; margin-bottom:9px; }
+.vd-creator-detail .vd-detail-contribute p { font-size:11px; line-height:1.8; color:#64748b; overflow-wrap:anywhere; }
+.vd-creator-detail .vd-detail-contribute .vd-button { width:100%; margin-top:14px; font-size:11px; white-space:normal; }
+.vd-creator-detail .vd-detail-reviewed { font-size:10px; color:#94a3b8; margin:0; text-align:center; }
+.vd-creator-detail .vd-profile-editorial p { color:#475569; font-size:14px; line-height:1.9; }
+.vd-creator-detail .vd-team-unified-heading { margin:0 0 20px; }
+.vd-creator-detail .vd-team-unified-heading :is(.vd-team-agency,.vd-team-sub) { font-size:18px; }
+.vd-creator-detail .vd-team-unified-grid { display:block; }
+
+/* 태블릿과 모바일에서는 같은 콘텐츠 순서를 유지하며 열 수만 줄인다. */
+@media(max-width:1100px) {
+  .vd-creator-detail .vd-profile-identity { flex-wrap:wrap; }
+  .vd-creator-detail .vd-detail-quicklinks { padding-top:0; max-width:none; width:100%; }
+  .vd-creator-detail .vd-detail-quicklinks .vd-profile-links { justify-content:flex-start; }
+  .vd-creator-detail .vd-archive-channel { flex-wrap:wrap; }
+  .vd-creator-detail .vd-archive-channel>a { margin-left:auto; }
+}
+@media(max-width:800px) {
+  .vd-creator-detail .vd-detail-layout { grid-template-columns:minmax(0,1fr); gap:22px; }
+  .vd-creator-detail .vd-profile-cover { height:140px; }
+}
+@media(max-width:480px) {
+  .vd-creator-detail { padding-top:18px; }
+  .vd-creator-detail .vd-profile-cover { height:120px; }
+  .vd-creator-detail .vd-profile-identity { padding:0 16px 20px; gap:14px; }
+  .vd-creator-detail .vd-profile-identity .vd-avatar-large { width:82px; height:98px; border-radius:12px; }
+  .vd-creator-detail .vd-profile-identity-copy { padding-top:16px; }
+  .vd-creator-detail .vd-profile-identity-copy :is(h1,h2) { font-size:22px; }
+  .vd-creator-detail .vd-profile-tools { top:-38px; right:12px; }
+  .vd-creator-detail .vd-detail-quicklinks a { flex:1 1 auto; }
+  .vd-creator-detail .vd-detail-nav { gap:0; margin:16px 0 20px; }
+  .vd-creator-detail .vd-detail-nav button { padding:12px; font-size:12px; }
+  .vd-creator-detail :is(.vd-archive-section,.vd-profile-editorial,.vd-debut-team-section) { padding:18px; }
+  .vd-creator-detail .vd-archive-channel { padding:16px; gap:12px; }
+  .vd-creator-detail .vd-archive-channel-preview { width:72px; height:64px; }
+  .vd-creator-detail .vd-archive-channel-preview>svg { display:none; }
+  .vd-creator-detail .vd-archive-channel-copy { flex:1 1 calc(100% - 84px); }
+  .vd-creator-detail .vd-archive-channel>a { justify-content:center; width:100%; margin-left:0; }
+  .vd-creator-detail .vd-archive-channel h2 { font-size:14px; }
+  .vd-creator-detail .vd-archive-videos .vd-media-grid,
+  .vd-creator-detail .vd-archive-empty-grid,
+  .vd-creator-detail .vd-archive-clip-grid,
+  .vd-creator-detail .vd-archive-charm-grid { grid-template-columns:minmax(0,1fr); }
+}

@@ -1,4 +1,5 @@
 import { dateTimeFormatter } from './dateTimeFormatter';
+import type { ProfileDetails } from './profileDetails';
 export type PortalPlatform = 'CHZZK' | 'SOOP' | 'YOUTUBE' | 'TWITCH';
 export type DateState = 'FIXED' | 'TIME_TBD' | 'DATE_TBD' | 'NONE';
 export type RequestKind = 'DEBUT' | 'PROFILE' | 'CLAIM' | 'UPDATE' | 'CONTACT';
@@ -19,6 +20,8 @@ export interface PortalMedia {
   featured?: boolean; linkOnly?: boolean;
 }
 export interface PortalProfile {
+  // 공개 캐릭터 스펙과 소개 카드는 기존 프로필 JSON에 함께 저장한다.
+  details?: ProfileDetails;
   // 소유권 확인과 별개로 운영자가 검토한 내용에만 공개 권한을 부여한다.
   contentReview?: { state: 'APPROVED' | 'HOLD'; snapshot: string; reviewedAt: string };
   slug: string; displayName: string; description: string; avatarUrl: string;

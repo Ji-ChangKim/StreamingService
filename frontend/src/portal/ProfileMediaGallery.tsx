@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { ArrowUpRight, Play } from 'lucide-react';
 import type { PortalMedia } from '../../../shared/portal';
-import { profileMediaKey, profileMediaSource } from '../../../shared/profileMedia';
+import { PROFILE_MEDIA_LABELS, profileMediaKey, profileMediaSource } from '../../../shared/profileMedia';
 import { portalWebUrl } from '../../../shared/portal';
 import { t } from './portalLocale';
 import './profileMedia.css';
 
 // 클릭한 영상 하나만 불러오고 원문 이동은 재생 상태와 무관하게 제공한다.
-function ProfileMediaCard({ item, active, onPlay, featured = false }: {
-  item: PortalMedia; active: string; onPlay: (key: string) => void; featured?: boolean;
+function ProfileMediaCard({ item, active, onPlay, featured = false, showMetadata = false }: {
+  item: PortalMedia; active: string; onPlay: (key: string) => void; featured?: boolean; showMetadata?: boolean;
 }) {
   const [imageFailed, setImageFailed] = useState(false);
   const source = profileMediaSource(item.url);
@@ -28,6 +28,8 @@ function ProfileMediaCard({ item, active, onPlay, featured = false }: {
       <span><Play size={22} />{t('원문에서 보기')}<ArrowUpRight size={16} /></span>
     </a>}
     <div className="vd-media-card-copy">
+      {/* 아카이브 레이아웃에서는 실제 제공 플랫폼과 등록된 영상 종류만 표시한다. */}
+      {showMetadata && <div className="vd-archive-media-labels"><span>{source.provider === 'YOUTUBE' ? 'YouTube' : source.provider}</span><small>{t(PROFILE_MEDIA_LABELS[item.kind])}</small></div>}
       <div className="vd-media-card-header">
         <h3>{item.title}</h3>
         <a className="vd-media-origin-link" href={source.url} target="_blank" rel="noopener noreferrer">
@@ -40,8 +42,8 @@ function ProfileMediaCard({ item, active, onPlay, featured = false }: {
 }
 
 // 자료가 있는 종류만 보여주며 대표 영상과 보조 영상의 위계를 구분한다.
-export function ProfileMediaGallery({ title, items, active, onPlay, featured = false }: {
-  title: string; items: PortalMedia[]; active: string; onPlay: (key: string) => void; featured?: boolean;
+export function ProfileMediaGallery({ title, items, active, onPlay, featured = false, showMetadata = false }: {
+  title: string; items: PortalMedia[]; active: string; onPlay: (key: string) => void; featured?: boolean; showMetadata?: boolean;
 }) {
   if (!items.length) return null;
   const ordered = featured ? [...items].sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured))) : items;
@@ -49,7 +51,7 @@ export function ProfileMediaGallery({ title, items, active, onPlay, featured = f
   const remaining = ordered.slice(visible.length);
   return <section className="vd-profile-media-section" aria-label={title || undefined}>
     {Boolean(title) && <header className="vd-media-section-heading"><h2>{title}</h2></header>}
-    <div className={`vd-media-grid${featured ? ' vd-media-intro-grid' : ''}`}>{visible.map((item, index) => <ProfileMediaCard key={profileMediaKey(item)} item={item} active={active} onPlay={onPlay} featured={featured && index === 0} />)}</div>
-    {remaining.length > 0 && <details className="vd-media-more"><summary>{t('영상 더 보기')}</summary><div className="vd-media-grid">{remaining.map((item) => <ProfileMediaCard key={profileMediaKey(item)} item={item} active={active} onPlay={onPlay} />)}</div></details>}
+    <div className={`vd-media-grid${featured ? ' vd-media-intro-grid' : ''}`}>{visible.map((item, index) => <ProfileMediaCard key={profileMediaKey(item)} item={item} active={active} onPlay={onPlay} featured={featured && index === 0} showMetadata={showMetadata} />)}</div>
+    {remaining.length > 0 && <details className="vd-media-more"><summary>{t('영상 더 보기')}</summary><div className="vd-media-grid">{remaining.map((item) => <ProfileMediaCard key={profileMediaKey(item)} item={item} active={active} onPlay={onPlay} showMetadata={showMetadata} />)}</div></details>}
   </section>;
 }

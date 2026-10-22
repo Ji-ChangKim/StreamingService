@@ -3,6 +3,7 @@ import { Plus, X } from 'lucide-react';
 import { t, usePortalLocale } from './portalLocale';
 import './profilePresentation.css';
 import { ProfileMediaFields, ProfileNoticeFields } from './ProfileMediaFields';
+import { ProfileDetailFields } from './ProfileDetailFields';
 
 // 등록·본인 수정·운영 정정에서 같은 선택 입력과 길이 제한을 제공한다.
 export function ProfilePresentationFields({ profile, onChange, allowGroups = false }: {
@@ -13,6 +14,7 @@ export function ProfilePresentationFields({ profile, onChange, allowGroups = fal
   // 추가 채널 한 항목만 수정하며 다른 채널의 입력을 보존한다.
   const updateChannel = (index: number, patch: Partial<typeof channels[number]>) => onChange({ additionalChannels: channels.map((channel, i) => i === index ? { ...channel, ...patch } : channel) });
   return <div className="vd-presentation-fields">
+    <ProfileDetailFields profile={profile} onChange={onChange} />
     <label>{t('한 줄 소개')}<input maxLength={100} value={profile.headline || ''} onChange={(e) => onChange({ headline: e.target.value })} placeholder={t('나의 방송을 한 문장으로 소개해 주세요.')} /></label>
     <label>{t('개인 배너 이미지 주소')}<input type="url" maxLength={1000} value={profile.bannerUrl || ''} onChange={(e) => onChange({ bannerUrl: e.target.value })} placeholder="https://…" /><small>{t('사용 권한이 있는 이미지의 HTTPS 주소')}</small></label>
     <div className="vd-presentation-grid">

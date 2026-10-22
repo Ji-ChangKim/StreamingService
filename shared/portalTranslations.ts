@@ -1,6 +1,64 @@
 import { PROFILE_CONTENT_TRANSLATIONS } from './profileContentTranslations';
 // 서비스 문구만 번역하며 활동명·자기소개 같은 이용자 입력은 원문으로 유지한다.
 const rows = String.raw`
+상세 프로필|||詳細プロフィール|||Detailed profile
+공개된 캐릭터 정보만 입력해 주세요. 모르는 항목은 비워 두세요.|||公開されているキャラクター情報のみ入力してください。不明な項目は空欄にしてください。|||Enter public character information only. Leave unknown fields blank.
+상세 프로필 정보를 확인해 주세요.|||詳細プロフィール情報を確認してください。|||Check the detailed profile information.
+상세 프로필의 입력 형식과 길이를 확인해 주세요.|||詳細プロフィールの入力形式と長さを確認してください。|||Check the format and length of the profile fields.
+MBTI를 확인해 주세요.|||MBTIを確認してください。|||Check the MBTI type.
+생일|||誕生日|||Birthday
+별자리|||星座|||Zodiac sign
+신장|||身長|||Height
+혈액형|||血液型|||Blood type
+주요 콘텐츠 소개|||主なコンテンツの紹介|||Content introduction
+방송 스타일|||配信スタイル|||Streaming style
+상세 정보를 불러오지 못했어요.|||詳細情報を読み込めませんでした。|||Unable to load profile details.
+상세 정보를 불러오는 중이에요|||詳細情報を読み込み中です|||Loading profile details
+시청자 {0}명|||視聴者 {0}人|||{0} viewers
+최근 방송 확인|||最近の配信確認|||Recently observed live
+생방송 보러가기|||ライブ配信を見る|||Watch live
+현재 방송 중이 아니에요.|||現在配信していません。|||Currently offline.
+방송 상태를 확인하지 못했어요. 채널에서 확인해 주세요.|||配信状況を確認できませんでした。チャンネルをご確認ください。|||Could not check live status. Please visit the channel.
+추천 영상|||おすすめ動画|||Recommended videos
+활동 기록 & 타임라인|||活動記録＆タイムライン|||Activity & timeline
+대표 영상 & 방송 콘텐츠|||代表動画＆配信コンテンツ|||Featured videos & broadcasts
+대표 영상|||代表動画|||Featured video
+인기 클립|||人気クリップ|||Popular clips
+활동 소개 및 매력 포인트|||活動紹介＆魅力|||Activities & highlights
+등록된 영상이 없어요|||登録された動画はありません|||No videos added yet
+새로운 영상이 등록되면 이곳에서 볼 수 있어요.|||新しい動画が登録されるとここに表示されます。|||New videos will appear here when added.
+아직 등록된 클립이 없어요|||クリップはまだ登録されていません|||No clips added yet
+기억하고 싶은 방송의 한 장면|||覚えておきたい配信のワンシーン|||Memorable moments from streams
+함께 모아갈 순간들|||一緒に集めていく思い出|||Moments to collect together
+새로운 클립을 기다리고 있어요|||新しいクリップを待っています|||Waiting for new clips
+{0}의 방송 채널|||{0}の配信チャンネル|||{0}'s streaming channel
+방송 소식과 다시보기를 채널에서 만나보세요.|||配信のお知らせやアーカイブをチャンネルでご覧ください。|||Visit the channel for updates and replays.
+방송 스타일 & 일정|||配信スタイル＆スケジュール|||Streaming style & schedule
+팬과 함께하는 이야기|||ファンと紡ぐストーリー|||Stories with fans
+아직 등록된 콘텐츠 소개가 없어요.|||コンテンツの紹介はまだ登録されていません。|||No content introduction has been added yet.
+아직 등록된 정기 방송 일정이 없어요.|||定期配信の予定はまだ登録されていません。|||No regular streaming schedule has been added yet.
+새로운 이야기를 기다리고 있어요.|||新しいストーリーを待っています。|||Waiting for new stories.
+새로운 소식이 등록되면 이곳에서 볼 수 있어요.|||新しいお知らせが登録されるとここに表示されます。|||New updates will appear here when added.
+일러스트|||イラスト|||Illustration
+리깅|||モデリング|||Rigging
+종족|||種族|||Species
+생일 / 별자리|||誕生日／星座|||Birthday / zodiac
+신장 / 혈액형|||身長／血液型|||Height / blood type
+팬덤명|||ファンネーム|||Fandom name
+오시마크|||ファンマーク|||Fan mark
+팬아트 태그|||ファンアートタグ|||Fan art tag
+미등록|||未登録|||Not added
+프로필 메뉴|||プロフィールメニュー|||Profile menu
+프로필 정보|||プロフィール情報|||Profile information
+프로필|||プロフィール|||Profile
+영상|||動画|||Videos
+정보|||情報|||Information
+팀|||チーム|||Team
+방송 일정|||配信スケジュール|||Stream schedule
+{0} 소개|||{0}の紹介|||About {0}
+아직 등록된 소개가 없어요.|||紹介はまだ登録されていません。|||No introduction has been added yet.
+함께 채우는 프로필|||みんなでつくるプロフィール|||Help complete this profile
+{0}의 새로운 소식이나 수정할 정보를 알려주세요.|||{0}の新しいお知らせや修正したい情報を教えてください。|||Share news or corrections about {0}.
 등록|||登録|||Submit
 표시 시간대: {0} · {1}명|||表示タイムゾーン: {0}・{1}人|||Time zone: {0} · {1} creators
 접수일: {0}|||受付日: {0}|||Submitted: {0}

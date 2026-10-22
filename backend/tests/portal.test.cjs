@@ -43,6 +43,7 @@ test('대표 영상·채널·공지의 저장 흐름과 관리자 전용 데뷔 
   ];
   details.notices = [{ title: '공식 일정', url: 'https://example.com/news' }];
   details.fanGuide = '공식 팬 가이드';
+  details.details = { species: '달의 정령', birthday: '12월 24일', zodiac: '염소자리', height: '154cm', bloodType: 'A형', mbti: 'INFP', fandomName: '테스트단', oshiMark: '🌙', fanArtTag: '#테스트아트', illustrator: '작가 A', rigger: '작가 B', contentSummary: '노래와 이야기', broadcastStyle: '편안한 소통', fanMessage: '함께 노래해요' };
   const submission = await (await call('/requests', 'POST', { ...details, kind: 'DEBUT' })).json();
   const payload = JSON.parse(db.sqlite.prepare('SELECT payload FROM portal_requests WHERE id=?').get(submission.id).payload);
   assert.equal(payload.debutGroupId, undefined); assert.equal(payload.noticeUrl, details.noticeUrl);
@@ -54,6 +55,7 @@ test('대표 영상·채널·공지의 저장 흐름과 관리자 전용 데뷔 
   assert.deepEqual(registered.additionalChannels, details.additionalChannels);
   assert.deepEqual(registered.media.map((item) => item.url), details.media.map((item) => item.url));
   assert.deepEqual(registered.notices, details.notices);
+  assert.deepEqual(registered.details, details.details);
   assert.equal(registered.debutVideoUrl, details.debutVideoUrl);
   const listing = await (await call('/admin/profiles', 'GET', undefined, admin)).json();
   const managed = listing.profiles[0];
@@ -64,6 +66,13 @@ test('대표 영상·채널·공지의 저장 흐름과 관리자 전용 데뷔 
   const saved = (await readPortalProfiles(db))[0];
   assert.deepEqual(saved.media.map((item) => item.url), details.media.map((item) => item.url));
   assert.equal(saved.fanGuide, details.fanGuide);
+  assert.deepEqual(saved.details, details.details);
+  // 구형 편집 화면에서 새 필드를 보내지 않아도 저장된 스펙은 사라지지 않는다.
+  const oldEditor = { ...details }; delete oldEditor.details;
+  assert.equal((await call(`/profiles/${approved.slug}`, 'PUT', oldEditor, { 'X-Request-Key': claim.token })).status, 200);
+  assert.deepEqual((await readPortalProfiles(db))[0].details, details.details);
+  assert.equal((await call(`/profiles/${approved.slug}`, 'PUT', { ...details, details: {} }, { 'X-Request-Key': claim.token })).status, 200);
+  assert.deepEqual((await readPortalProfiles(db))[0].details, {});
   assert.equal((await call(`/profiles/${approved.slug}`, 'PUT', { ...details, media: [{ ...details.media[0], provider: 'SOOP' }] }, { 'X-Request-Key': claim.token })).status, 400);
   assert.equal(saved.debutVideoUrl, details.debutVideoUrl);
   assert.equal((await call(`/profiles/${approved.slug}`, 'PUT', { ...details, debutVideoUrl: 'https://youtube.com.attacker.example/watch?v=abcdefghijk' }, { 'X-Request-Key': claim.token })).status, 400);
@@ -254,4 +263,71 @@ test('접수 키·관리자 승인·소유권 키로 등록과 수정 권한을 
   const updated = await (await call('/profiles')).json(); assert.equal(updated.profiles.length, 0); assert.equal((await readPortalProfiles(db))[0].description, '소개 수정 완료');
   await call('/admin/logout', 'POST', {}, admin); assert.equal((await call('/admin/requests', 'GET', undefined, admin)).status, 401);
   db.sqlite.close();
+});
+
+// 선택 스펙의 잘못된 입력과 검토 우회를 차단한다.
+test('상세 스펙 검증과 콘텐츠 검토를 적용한다', () => {
+  const { isPublicProfile, reviewedProfile } = load('../../shared/contentReview.ts');
+  for (const details of [null, [], { species: 42 }, { species: 'a'.repeat(81) }, { mbti: 'XXXX' }]) {
+    assert.throws(() => cleanPortalProfile({ ...profile, details }));
+  }
+  const clean = { ...cleanPortalProfile({ ...profile, details: { species: '  요정  ', mbti: 'infp' } }), slug: 'spec' };
+  assert.deepEqual(clean.details, { species: '요정', mbti: 'INFP' });
+  const approved = reviewedProfile(clean, 'APPROVED', new Date().toISOString());
+  assert.equal(isPublicProfile(approved), true);
+  assert.equal(isPublicProfile({ ...approved, details: { species: '다른 종족' } }), false);
+  assert.equal(isPublicProfile(reviewedProfile({ ...clean, details: { contentSummary: '성인방송' } }, 'APPROVED', new Date().toISOString())), false);
+});
+
+// 상세 API가 DB 저장값을 반환하고 최신 회차만 생방송으로 사용하는지 확인한다.
+test('상세 단건 조회·공개 권한·플랫폼 직접 조회를 검증한다', async (t) => {
+  let platformResponse = {};
+  t.mock.method(globalThis, 'fetch', async () => Response.json(platformResponse));
+  const { reviewedProfile } = load('../../shared/contentReview.ts');
+  const db = database();
+  const saved = reviewedProfile({ ...cleanPortalProfile({ ...profile, details: { species: '요정', fanArtTag: '#테스트' }, media: [{ provider: 'YOUTUBE', kind: 'COVER', url: 'https://youtu.be/MZNKiadMo3U', title: '커버 영상' }] }), slug: 'detail' }, 'APPROVED', new Date().toISOString());
+  db.sqlite.prepare('INSERT INTO portal_profiles(slug,channel_url,data) VALUES(?,?,?)').run(saved.slug, saved.channelUrl, JSON.stringify(saved));
+  const call = (slug = 'detail') => portalApi.request(`https://example.test/profiles/${slug}/detail`, {}, { DB: db, PORTAL_ENABLED: 'true' });
+  const first = await call();
+  assert.equal(first.status, 200);
+  assert.equal(first.headers.get('cache-control'), 'no-store');
+  const payload = await first.json();
+  assert.deepEqual(payload.profile.details, saved.details);
+  assert.deepEqual(payload.profile.media, saved.media);
+  assert.equal(payload.broadcast.state, 'UNAVAILABLE');
+  assert.equal((await call('missing')).status, 404);
+  platformResponse = { code: 200, content: { status: 'OPEN', liveTitle: '오늘의 방송', concurrentUserCount: 123 } };
+  const live = await (await call()).json();
+  assert.equal(live.broadcast.state, 'LIVE');
+  assert.equal(live.broadcast.viewers, 123);
+  platformResponse = { code: 200, content: { status: 'CLOSE' } };
+  assert.equal((await (await call()).json()).broadcast.state, 'OFFLINE');
+  db.sqlite.prepare('UPDATE portal_profiles SET data=? WHERE slug=?').run(JSON.stringify({ ...saved, details: { species: '검토되지 않은 수정' } }), saved.slug);
+  assert.equal((await call()).status, 404);
+  db.sqlite.close();
+});
+
+// 플랫폼 실패와 응답 누락은 종료로 표시하지 않으며 외부 호스트를 임의 호출하지 않는다.
+test('직접 방송 조회는 두 플랫폼과 오류 상태를 구분한다', async () => {
+  const { readProfileBroadcast } = load('../src/services/portalProfileDetail.ts');
+  const soop = { ...profile, platform: 'SOOP', channelUrl: 'https://www.sooplive.com/station/oiguu5252' };
+  let calls = 0;
+  const reply = data => async (url, options) => {
+    calls++;
+    assert.equal(url, 'https://chapi.sooplive.co.kr/api/oiguu5252/station');
+    assert.ok(options.signal);
+    assert.equal(options.redirect, 'manual');
+    assert.equal(options.cf.cacheTtl, 0);
+    return Response.json(data);
+  };
+  assert.equal((await readProfileBroadcast(soop, reply({ station: {user_id:'oiguu5252'}, broad:null }))).state, 'OFFLINE');
+  const live = await readProfileBroadcast(soop, reply({ station: {user_id:'oiguu5252'}, broad:{broad_no:123,broad_title:'방송',current_sum_viewer:0} }));
+  assert.equal(live.state, 'LIVE');
+  assert.equal(live.viewers, 0);
+  assert.equal(live.url, 'https://play.sooplive.co.kr/oiguu5252/123');
+  for (const data of [{}, {station:{user_id:'other'},broad:null}, {station:{user_id:'oiguu5252'}}]) assert.equal((await readProfileBroadcast(soop, reply(data))).state, 'UNAVAILABLE');
+  assert.equal((await readProfileBroadcast(soop, async()=>new Response('', {status:429}))).state, 'UNAVAILABLE');
+  assert.equal((await readProfileBroadcast(soop, async()=>{throw new Error('timeout')})).state, 'UNAVAILABLE');
+  assert.equal((await readProfileBroadcast({...soop,channelUrl:'https://example.com/a'}, reply({}))).state, 'UNKNOWN');
+  assert.equal(calls, 5);
 });
