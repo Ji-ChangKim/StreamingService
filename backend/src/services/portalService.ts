@@ -2,6 +2,7 @@ import { readPortalProfiles, readPortalProfileBySlug, readPublicPortalProfiles, 
 import { isPublicProfile, reviewedProfile } from '../../../shared/contentReview';
 import { cleanProfilePresentation } from '../../../shared/profilePresentation';
 import { readProfileBroadcast } from './portalProfileDetail';
+import { readProfileChannelMedia } from './portalChannelMedia';
 import { broadcastNewDebutToDiscord } from './discordBotService';
 import { portalProfileEvent } from './unifiedEventService';
 export { readPortalProfiles, readPortalProfileBySlug, readPublicPortalProfiles, readPublicPortalProfileBySlug } from './portalProfileRepository';
@@ -157,7 +158,8 @@ portalApi.get('/profiles/:slug/detail', async (c) => {
   try {
     const profile = await readPublicPortalProfileBySlug(c.env.DB, c.req.param('slug'));
     if (!profile) return c.json({ error: '소개를 찾을 수 없습니다.' }, 404);
-    return c.json({ profile, broadcast: await readProfileBroadcast(profile) });
+    const [broadcast, channelMedia] = await Promise.all([readProfileBroadcast(profile), readProfileChannelMedia(profile)]);
+    return c.json({ profile, broadcast, channelMedia });
   } catch {
     return c.json({ error: '소개를 불러오지 못했습니다. 다시 시도해 주세요.' }, 503);
   }

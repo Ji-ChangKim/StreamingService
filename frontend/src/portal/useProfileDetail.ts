@@ -14,7 +14,7 @@ export function useProfileDetail(slug: string) {
         const response = await fetch(`/api/v1/portal/profiles/${encodeURIComponent(slug)}/detail`, { signal: abort.signal, cache: 'no-store' });
         if (response.status === 404) { if (!abort.signal.aborted) setResult({ slug, missing: true }); return; }
         const data = await parseJsonSafely<ProfileDetailResponse | null>(response, null);
-        if (!response.ok || !data || data.profile?.slug !== slug || !data.broadcast) throw new Error('detail unavailable');
+        if (!response.ok || !data || data.profile?.slug !== slug || !data.broadcast || !data.channelMedia?.videos || !data.channelMedia?.clips) throw new Error('detail unavailable');
         if (!abort.signal.aborted) setResult({ slug, data });
       } catch {
         if (!abort.signal.aborted) setResult({ slug, error: true });

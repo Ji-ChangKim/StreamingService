@@ -9,7 +9,7 @@ import { ProfileCover } from './ProfileCover';
 import { getPortalLanguage, t, usePortalLocale } from './portalLocale';
 import { isPublicProfile } from '../../../shared/contentReview';
 import { ProfileArchiveOverview } from './ProfileArchiveOverview';
-import type { ProfileBroadcast } from '../../../shared/profileDetails';
+import type { ProfileBroadcast, ProfileChannelMedia } from '../../../shared/profileDetails';
 import { useProfileDetail } from './useProfileDetail';
 import './profilePresentation.css';
 import './portalLearning.css';
@@ -165,18 +165,15 @@ function ProfileDebutGroup({ profile, profiles, onNavigate, hideHeading = false 
 }
 
 // 공개 화면과 미리보기에서 동일한 소개·일정·미디어 배치를 사용한다.
-export function ProfileExperience({ profile, profiles = [], onNavigate, preview = false, broadcast }: {
-  profile: PortalProfile; profiles?: PortalProfile[]; onNavigate: (path: string) => void; preview?: boolean; broadcast?: ProfileBroadcast;
+export function ProfileExperience({ profile, profiles = [], onNavigate, preview = false, broadcast, channelMedia }: {
+  profile: PortalProfile; profiles?: PortalProfile[]; onNavigate: (path: string) => void; preview?: boolean; broadcast?: ProfileBroadcast; channelMedia?: ProfileChannelMedia;
 }) {
   usePortalLocale();
   const now = useProfileClock(profile, preview);
   const phase = profileDebutPhase(profile, now);
 
-  // 상세페이지의 모든 영상 영역이 하나의 재생 선택을 공유한다.
-  const [activeMedia, setActiveMedia] = useState('');
+  // 프로필 탐색 항목은 다른 프로필로 이동할 때 첫 영역으로 복원한다.
   const [activeSection, setActiveSection] = useState('media');
-  // 다른 프로필로 이동하거나 탐색 항목을 바꾸면 이전 영상 재생을 끝낸다.
-  useEffect(() => setActiveMedia(''), [profile.slug, activeSection]);
   useEffect(() => setActiveSection('media'), [profile.slug]);
   const media = profileMediaItems(profile);
   const selectedSection = activeSection;
@@ -225,7 +222,7 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
     </nav>
     <div className="vd-detail-layout">
     <div id="profile-detail-content" className="vd-detail-main">
-    {selectedSection === 'media' && <ProfileArchiveOverview profile={profile} broadcast={broadcast} active={activeMedia} onPlay={setActiveMedia} />}
+    {selectedSection === 'media' && <ProfileArchiveOverview profile={profile} broadcast={broadcast} channelMedia={channelMedia} preview={preview} />}
     {selectedSection === 'about' && <>
     <section className="vd-profile-editorial">
       <h2>{t('{0} 소개', [profile.displayName])}</h2>
@@ -298,5 +295,5 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
 export function ProfilePage({ profile, profiles, onNavigate }: { profile: PortalProfile; profiles: PortalProfile[]; onNavigate: (path: string) => void }) {
   const detail = useProfileDetail(profile.slug);
   if (detail.missing) return <PortalState pageHeading title={t('버튜버 소개를 찾을 수 없어요')} />;
-  return <>{!detail.data && <div className="vd-detail-load-status" role="status">{detail.error ? <>{t('상세 정보를 불러오지 못했어요.')} <button type="button" className="vd-text-button" onClick={detail.retry}>{t('다시 시도')}</button></> : t('상세 정보를 불러오는 중이에요')}</div>}<ProfileExperience profile={detail.data?.profile || profile} profiles={profiles} onNavigate={onNavigate} broadcast={detail.data?.broadcast || { state: 'UNAVAILABLE' }} /></>;
+  return <>{!detail.data && <div className="vd-detail-load-status" role="status">{detail.error ? <>{t('상세 정보를 불러오지 못했어요.')} <button type="button" className="vd-text-button" onClick={detail.retry}>{t('다시 시도')}</button></> : t('상세 정보를 불러오는 중이에요')}</div>}<ProfileExperience profile={detail.data?.profile || profile} profiles={profiles} onNavigate={onNavigate} broadcast={detail.data?.broadcast || { state: 'UNAVAILABLE' }} channelMedia={detail.data?.channelMedia || (detail.error ? { videos: { state: 'UNAVAILABLE', items: [] }, clips: { state: 'UNAVAILABLE', items: [] } } : undefined)} /></>;
 }

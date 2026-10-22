@@ -1,10 +1,9 @@
 import { ArrowUpRight, Film, Mic, Play, Radio, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import type { PortalMedia, PortalProfile } from '../../../shared/portal';
-import type { ProfileBroadcast } from '../../../shared/profileDetails';
+import type { ChannelMediaSection, ProfileBroadcast, ProfileChannelMedia } from '../../../shared/profileDetails';
 import { portalWebUrl } from '../../../shared/portal';
-import { PROFILE_MEDIA_LABELS, profileMediaItems, profileMediaSource } from '../../../shared/profileMedia';
-import { ProfileMediaGallery } from './ProfileMediaGallery';
+import { profileMediaItems, profileMediaSource } from '../../../shared/profileMedia';
 import { PlatformBadge, PortalAvatar } from './PortalUi';
 import { t } from './portalLocale';
 
@@ -13,9 +12,21 @@ function EmptyArchiveCard({ label }: { label: string }) {
   return <div className="vd-archive-empty-card"><div><Film size={28} /><span>{t('등록된 영상이 없어요')}</span></div><strong>{t(label)}</strong><p>{t('새로운 영상이 등록되면 이곳에서 볼 수 있어요.')}</p></div>;
 }
 
-// 클립은 작은 가로 카드로 보여주고 검증된 원본 주소로 연결한다.
-function ArchiveClip({ item }: { item: PortalMedia }) {
-  return <a className="vd-archive-clip" href={profileMediaSource(item.url)?.url} target="_blank" rel="noopener noreferrer"><span className="vd-archive-clip-art"><Play size={20} /></span><span><small>{t(PROFILE_MEDIA_LABELS[item.kind])}</small><strong>{item.title}</strong></span><ArrowUpRight size={16} /></a>;
+// 영상은 썸네일과 제목만 표시하고 카드 전체를 하나의 원본 링크로 연결한다.
+function ArchiveMediaCard({ item, portrait = false }: { item: PortalMedia; portrait?: boolean }) {
+  const [failedImage, setFailedImage] = useState('');
+  const source = profileMediaSource(item.url);
+  if (!source) return null;
+  const thumbnail = portalWebUrl(item.thumbnailUrl || source.thumbnailUrl);
+  return <a className={`vd-archive-media-card${portrait ? ' is-portrait' : ''}`} href={source.url} target="_blank" rel="noopener noreferrer">
+    <span className="vd-archive-media-art">{thumbnail && failedImage !== thumbnail ? <img src={thumbnail} alt="" loading="lazy" onError={() => setFailedImage(thumbnail)} /> : <Film size={28} aria-hidden="true" />}</span>
+    <strong>{item.title}</strong>
+  </a>;
+}
+
+// 로딩·조회 실패·빈 채널을 구분하여 오래된 자료를 최신 영상처럼 보여주지 않는다.
+function ChannelMediaEmpty({ section, clips }: { section?: ChannelMediaSection; clips?: boolean }) {
+  return <p className="vd-channel-media-empty" role="status">{t(!section ? '채널 영상을 불러오는 중이에요.' : section.state === 'UNAVAILABLE' ? '영상을 불러오지 못했어요. 채널에서 확인해 주세요.' : section.state === 'UNSUPPORTED' ? '영상은 공식 채널에서 확인해 주세요.' : clips ? '아직 공개된 클립이 없어요.' : '아직 공개된 영상이 없어요.')}</p>;
 }
 
 // 생방송 여부를 추측하지 않고 공식 채널로 이동하는 방송 영역을 유지한다.
@@ -33,17 +44,17 @@ function ArchiveChannel({ profile, broadcast }: { profile: PortalProfile; broadc
 }
 
 // 등록된 영상·클립을 시안의 고정 영역에 연결하고 빈 영역도 같은 크기로 남긴다.
-export function ProfileArchiveOverview({ profile, active, onPlay, broadcast }: { profile: PortalProfile; active: string; onPlay: (key: string) => void; broadcast?: ProfileBroadcast }) {
+export function ProfileArchiveOverview({ profile, broadcast, channelMedia, preview = false }: { profile: PortalProfile; broadcast?: ProfileBroadcast; channelMedia?: ProfileChannelMedia; preview?: boolean }) {
   const media = profileMediaItems(profile);
-  const videos = media.filter((item) => !['CLIP', 'CATCH', 'SHORT'].includes(item.kind));
-  const clips = media.filter((item) => ['CLIP', 'CATCH', 'SHORT'].includes(item.kind));
+  const videos = preview ? media.filter((item) => !['CLIP', 'CATCH', 'SHORT'].includes(item.kind)).slice(0, 2) : channelMedia?.videos.items || [];
+  const clips = preview ? media.filter((item) => ['CLIP', 'CATCH', 'SHORT'].includes(item.kind)).slice(0, 4) : channelMedia?.clips.items || [];
   return <>
     <ArchiveChannel profile={profile} broadcast={broadcast} />
-    <section className="vd-archive-section vd-archive-videos"><h2>{t('대표 영상 & 방송 콘텐츠')}</h2>
-      {videos.length > 0 ? <ProfileMediaGallery title="" items={videos} active={active} onPlay={onPlay} showMetadata /> : <div className="vd-archive-empty-grid"><EmptyArchiveCard label="대표 영상" /><EmptyArchiveCard label="방송 다시보기" /></div>}
+    <section className="vd-archive-section vd-archive-videos"><h2>{t('추천 영상')}</h2>
+      {videos.length > 0 ? <div className="vd-archive-video-grid">{videos.map((item) => <ArchiveMediaCard key={item.url} item={item} />)}</div> : preview ? <div className="vd-archive-empty-grid"><EmptyArchiveCard label="대표 영상" /><EmptyArchiveCard label="방송 다시보기" /></div> : <ChannelMediaEmpty section={channelMedia?.videos} />}
     </section>
-    <section className="vd-archive-section vd-archive-clips"><h2>{t('인기 클립')}</h2><div className="vd-archive-clip-grid">
-      {clips.length > 0 ? clips.map((item) => <ArchiveClip key={item.url} item={item} />) : <><div className="vd-archive-clip is-empty"><span className="vd-archive-clip-art"><Play size={20} /></span><span><strong>{t('아직 등록된 클립이 없어요')}</strong><small>{t('기억하고 싶은 방송의 한 장면')}</small></span></div><div className="vd-archive-clip is-empty"><span className="vd-archive-clip-art"><Sparkles size={20} /></span><span><strong>{t('함께 모아갈 순간들')}</strong><small>{t('새로운 클립을 기다리고 있어요')}</small></span></div></>}
+    <section className="vd-archive-section vd-archive-clips"><h2>{t('최신 클립')}</h2><div className="vd-archive-clip-grid">
+      {clips.length > 0 ? clips.map((item) => <ArchiveMediaCard key={item.url} item={item} portrait />) : <ChannelMediaEmpty section={channelMedia?.clips} clips />}
     </div></section>
     <section className="vd-archive-section vd-archive-charms"><h2>{t('활동 소개 및 매력 포인트')}</h2><div className="vd-archive-charm-grid">
       <article><span><Mic size={19} /></span><h3>{t('주요 콘텐츠')}</h3><p>{profile.details?.contentSummary || profile.tags.join(' · ') || t('아직 등록된 콘텐츠 소개가 없어요.')}</p></article>

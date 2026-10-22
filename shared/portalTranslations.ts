@@ -1,6 +1,12 @@
 import { PROFILE_CONTENT_TRANSLATIONS } from './profileContentTranslations';
 // 서비스 문구만 번역하며 활동명·자기소개 같은 이용자 입력은 원문으로 유지한다.
 const rows = String.raw`
+최신 클립|||最新クリップ|||Latest clips
+채널 영상을 불러오는 중이에요.|||チャンネルの動画を読み込み中です。|||Loading channel videos.
+영상을 불러오지 못했어요. 채널에서 확인해 주세요.|||動画を読み込めませんでした。チャンネルでご確認ください。|||Unable to load videos. Please check the channel.
+영상은 공식 채널에서 확인해 주세요.|||動画は公式チャンネルでご確認ください。|||Watch videos on the official channel.
+아직 공개된 클립이 없어요.|||公開されているクリップはまだありません。|||No public clips yet.
+아직 공개된 영상이 없어요.|||公開されている動画はまだありません。|||No public videos yet.
 상세 프로필|||詳細プロフィール|||Detailed profile
 공개된 캐릭터 정보만 입력해 주세요. 모르는 항목은 비워 두세요.|||公開されているキャラクター情報のみ入力してください。不明な項目は空欄にしてください。|||Enter public character information only. Leave unknown fields blank.
 상세 프로필 정보를 확인해 주세요.|||詳細プロフィール情報を確認してください。|||Check the detailed profile information.

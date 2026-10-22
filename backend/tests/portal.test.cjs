@@ -334,3 +334,68 @@ test('직접 방송 조회는 두 플랫폼과 오류 상태를 구분한다', a
   assert.equal((await readProfileBroadcast({...soop,channelUrl:'https://example.com/a'}, reply({}))).state, 'UNKNOWN');
   assert.equal(calls, 5);
 });
+
+// 최신순 요청·첫 페이지 제한·타 채널 및 제한 영상 제외를 함께 검증한다.
+test('채널 영상은 최신순의 제한된 목록만 반환한다', async () => {
+  const { readProfileChannelMedia } = load('../src/services/portalChannelMedia.ts');
+  const id = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+  const calls = [];
+  const chzzk = await readProfileChannelMedia(profile, async (url, options) => {
+    const query = new URL(url); calls.push(query);
+    assert.equal(options.redirect, 'manual'); assert.equal(options.cf.cacheTtl, 0);
+    assert.equal(query.searchParams.get('page'), '0');
+    if (query.pathname.endsWith('/clips')) {
+      assert.equal(query.searchParams.get('orderType'), 'RECENT'); assert.equal(query.searchParams.get('size'), '4');
+      return Response.json({ code: 200, content: { data: [
+        { clipUID: 'clip001', clipTitle: '먼저 만든 클립', ownerChannelId: id, adult: false, createdDate: '2026-10-20 12:00:00', readCount: 9999 },
+        { clipUID: 'clip002', clipTitle: '새 클립', ownerChannelId: id, adult: false, createdDate: '2026-10-21 12:00:00', readCount: 0 },
+        { clipUID: 'clip003', clipTitle: '다른 채널', ownerChannelId: 'other', adult: false, createdDate: '2026-10-22 12:00:00' },
+        { clipUID: 'clip004', clipTitle: '제한 클립', ownerChannelId: id, adult: true, createdDate: '2026-10-22 12:00:00' },
+      ] } });
+    }
+    assert.equal(query.searchParams.get('sortType'), 'LATEST'); assert.equal(query.searchParams.get('size'), '2');
+    return Response.json({ code: 200, content: { data: [
+      { videoNo: 123, videoTitle: '최근 방송', channel: {channelId: id}, adult: false, publishDate: '2026-10-21 22:50:41', thumbnailImageUrl: 'https://example.com/video.jpg' },
+      { videoNo: 124, videoTitle: '유료 방송', channel: {channelId: id}, adult: false, paidProductId: 'paid', publishDate: '2026-10-22 22:50:41' },
+    ] } });
+  });
+  assert.equal(calls.length, 2);
+  assert.equal(chzzk.videos.items.length, 1);
+  assert.deepEqual(chzzk.clips.items.map(x => x.title), ['새 클립', '먼저 만든 클립']);
+  assert.equal(chzzk.clips.items[0].publishedAt, '2026-10-21T03:00:00.000Z');
+  assert.equal(chzzk.videos.items[0].url, 'https://chzzk.naver.com/video/123');
+});
+
+// 공식 채널 목록에 연결된 팬 클립을 허용하되 다시보기·타 채널·중복은 제외한다.
+test('SOOP는 첫 페이지에서 공개 다시보기 2개와 최신 클립 4개만 선택한다', async () => {
+  const { readProfileChannelMedia } = load('../src/services/portalChannelMedia.ts');
+  const soop = { ...profile, platform: 'SOOP', channelUrl: 'https://www.sooplive.com/station/oiguu5252' };
+  let calls = 0;
+  const media = await readProfileChannelMedia(soop, async url => {
+    calls++;
+    const query = new URL(url), clips = query.pathname.endsWith('/clip');
+    assert.equal(query.hostname, 'api-channel.sooplive.com'); assert.equal(query.searchParams.get('orderBy'), 'reg_date');
+    assert.equal(query.searchParams.get('perPage'), '20'); assert.equal(query.searchParams.get('page'), '1');
+    const rows = Array.from({length: 20}, (_, i) => ({ titleNo: 100 + i, titleName: `영상 ${i}`, userId: clips ? 'fan' : 'oiguu5252', badge: clips ? { bjId: 'oiguu5252' } : null, authNo: 101, regDate: `2026-10-${String(22-i).padStart(2,'0')} 12:00:00`, ucc: { grade: 0, paidPpv: false, flag: 'SUCCEED', fileType: clips ? 'CLIP' : 'REVIEW', thumb: 'https://example.com/thumbnail.jpg' } }));
+    rows[0].ucc.grade = 19;
+    rows[2] = {...rows[1]};
+    rows[3].ucc.fileType = clips ? 'REVIEW' : 'CLIP';
+    rows[4].authNo = 104;
+    if (clips) rows[5].badge.bjId = 'other';
+    return Response.json({ contents: rows, meta: { totalPages: 999 } });
+  });
+  assert.equal(calls, 2); assert.equal(media.videos.items.length, 2); assert.equal(media.clips.items.length, 4);
+  assert.equal(media.clips.items[0].url, 'https://vod.sooplive.com/player/101');
+  assert.equal(media.clips.items[1].url, 'https://vod.sooplive.com/player/106');
+  assert.ok(media.clips.items.every(x => x.kind === 'CLIP' && x.thumbnailUrl));
+});
+
+// 일부 실패가 다른 목록을 지우지 않고, 빈 응답·오류·지원하지 않는 주소를 구분한다.
+test('채널 영상 조회 실패와 빈 목록을 구분한다', async () => {
+  const { readProfileChannelMedia } = load('../src/services/portalChannelMedia.ts');
+  const partial = await readProfileChannelMedia(profile, async url => url.includes('/clips?') ? new Response('', { status: 429 }) : Response.json({ code: 200, content: { data: [] } }));
+  assert.equal(partial.videos.state, 'AVAILABLE'); assert.equal(partial.clips.state, 'UNAVAILABLE');
+  assert.equal((await readProfileChannelMedia(profile, async () => { throw new Error('timeout'); })).videos.state, 'UNAVAILABLE');
+  assert.equal((await readProfileChannelMedia(profile, async () => Response.json({}))).clips.state, 'UNAVAILABLE');
+  assert.equal((await readProfileChannelMedia({ ...profile, channelUrl: 'https://example.com/a' }, async () => { assert.fail('잘못된 주소는 요청하지 않는다'); })).clips.state, 'UNSUPPORTED');
+});

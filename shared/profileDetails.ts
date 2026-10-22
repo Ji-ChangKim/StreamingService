@@ -1,4 +1,4 @@
-import type { PortalProfile } from './portal';
+import type { PortalMedia, PortalProfile } from './portal';
 
 // 입력 화면·서버 검증에서 같은 공개 캐릭터 정보와 길이 제한을 사용한다.
 export const PROFILE_DETAIL_FIELDS = [
@@ -27,7 +27,16 @@ export interface ProfileBroadcast {
 export interface ProfileDetailResponse {
   profile: PortalProfile;
   broadcast: ProfileBroadcast;
+  channelMedia: ProfileChannelMedia;
 }
+
+// 채널에서 조회한 영상은 등록 자료와 분리하여 저장하지 않고 응답에만 포함한다.
+export type ChannelMediaItem = PortalMedia & { publishedAt: string };
+export interface ChannelMediaSection {
+  state: 'AVAILABLE' | 'UNAVAILABLE' | 'UNSUPPORTED';
+  items: ChannelMediaItem[];
+}
+export interface ProfileChannelMedia { videos: ChannelMediaSection; clips: ChannelMediaSection }
 
 // 누락된 필드는 기존 값을 보존하고 명시적인 빈 객체는 전체 상세 정보 삭제를 뜻한다.
 export function cleanProfileDetails(value: unknown): ProfileDetails | undefined {
