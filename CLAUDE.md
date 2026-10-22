@@ -1,3 +1,8 @@
+## 화면 범위 유지
+
+- 메인 상단 하이라이트와 캘린더는 기존 그대로 유지한다. 상세·목록 시안 반영을 이유로 변경하지 않는다.
+- Header·Footer도 유지한다. 구체적인 유지 범위는 루트 `AGENTS.md`를 따른다.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.

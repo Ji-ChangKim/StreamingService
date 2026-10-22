@@ -3,6 +3,7 @@ import { isPublicProfile, reviewedProfile } from '../../../shared/contentReview'
 import { cleanProfilePresentation } from '../../../shared/profilePresentation';
 import { readProfileBroadcast } from './portalProfileDetail';
 import { readProfileChannelMedia } from './portalChannelMedia';
+import { cleanWikiParticipation } from '../../../shared/wikiParticipation';
 import { broadcastNewDebutToDiscord } from './discordBotService';
 import { portalProfileEvent } from './unifiedEventService';
 export { readPortalProfiles, readPortalProfileBySlug, readPublicPortalProfiles, readPublicPortalProfileBySlug } from './portalProfileRepository';
@@ -116,7 +117,7 @@ function cleanRequest(kind: RequestKind, body: Record<string, unknown>): Record<
   }
   if (kind === 'CONTACT') {
     if (!field(body, 'message', 2000)) throw new Error('문의 내용을 입력해 주세요.');
-    return { subject: field(body, 'subject'), message: field(body, 'message', 2000), contactEmail: field(body, 'contactEmail', 200), pageUrl: portalWebUrl(field(body, 'pageUrl', 1000)) };
+    return { subject: field(body, 'subject'), message: field(body, 'message', 2000), contactEmail: field(body, 'contactEmail', 200), pageUrl: portalWebUrl(field(body, 'pageUrl', 1000)), ...cleanWikiParticipation(body) };
   }
   throw new Error('지원하지 않는 신청입니다.');
 }
@@ -198,6 +199,12 @@ portalApi.post('/requests', async (c) => {
   const slug = field(body, 'slug', 150);
   let payload: Record<string, unknown>;
   try { payload = cleanRequest(kind, body); } catch (error) { return c.json({ error: (error as Error).message }, 400); }
+  // 공개 도감에만 제보·응원을 접수하며 사용자 입력으로 대상 이름이나 주소를 바꾸지 못하게 한다.
+  if (kind === 'CONTACT' && payload.requestType) {
+    const profile = await readPublicPortalProfileBySlug(c.env.DB, slug);
+    if (!profile) return c.json({ error: '소개를 찾을 수 없습니다.' }, 404);
+    payload = { ...payload, displayName: profile.displayName, pageUrl: `https://vdebut.live/creator/${encodeURIComponent(profile.slug)}` };
+  }
   const registration = kind === 'DEBUT' || kind === 'PROFILE';
   const submissionKey = c.req.header('X-Submission-Key') || '';
   if (registration && submissionKey && !/^[a-f0-9-]{36}$/i.test(submissionKey)) return c.json({ error: '신청 정보를 새로 확인해 주세요.' }, 400);
@@ -241,6 +248,13 @@ portalApi.post('/requests', async (c) => {
 
 // 승인된 소유자에게 현재 관리 권한을 알려준다.
 portalApi.get('/profiles/:slug/access', async (c) => c.json({ owner: await portalOwner(c.env.DB, c.req.param('slug'), c.req.header('X-Request-Key') || '') }));
+
+// 응원글은 운영자가 공개 내용을 확인해 승인한 항목만 제한해서 반환한다.
+portalApi.get('/profiles/:slug/support', async (c) => {
+  if (!await readPublicPortalProfileBySlug(c.env.DB, c.req.param('slug'))) return c.json({ error: '소개를 찾을 수 없습니다.' }, 404);
+  const rows = await c.env.DB.prepare("SELECT id,payload,created_at FROM portal_requests WHERE kind='CONTACT' AND status='APPROVED' AND slug=? AND json_valid(payload) AND json_extract(payload,'$.requestType')='SUPPORT' ORDER BY created_at DESC,id DESC LIMIT 20").bind(c.req.param('slug')).all<{ id: string; payload: string; created_at: string }>();
+  return c.json({ messages: (rows.results || []).map(row => ({ id: row.id, message: String(JSON.parse(row.payload).message || ''), createdAt: row.created_at + 'Z' })) });
+});
 
 // 소유자만 소개·일정을 수정하며 공개 주소는 유지한다.
 portalApi.put('/profiles/:slug', async (c) => {
@@ -349,6 +363,7 @@ portalApi.post('/admin/requests/:id/decision', async (c) => {
   const row = await c.env.DB.prepare('SELECT * FROM portal_requests WHERE id=?').bind(c.req.param('id')).first<RequestRow>();
   if (!row) return c.json({ error: '신청을 찾을 수 없습니다.' }, 404);
   if (row.status !== 'PENDING') return c.json({ error: '이미 처리된 신청입니다.' }, 409);
+  if (status === 'APPROVED' && row.kind === 'CONTACT' && JSON.parse(row.payload).requestType === 'SUPPORT' && body.contentChecked !== true) return c.json({ error: '응원 메시지의 공개 내용을 확인해 주세요.' }, 400);
   const statements: D1PreparedStatement[] = [];
   let slug = row.slug;
   let published: PortalProfile | undefined;

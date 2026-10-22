@@ -1,6 +1,119 @@
 import { PROFILE_CONTENT_TRANSLATIONS } from './profileContentTranslations';
 // 서비스 문구만 번역하며 활동명·자기소개 같은 이용자 입력은 원문으로 유지한다.
 const rows = String.raw`
+{0} · 데뷔 {1}명|||{0} · デビュー {1}人|||{0} · {1} debuts
+{0} 관심 저장|||{0}をお気に入りに追加|||Save {0}
+{0} 관심 해제|||{0}をお気に入りから削除|||Unsave {0}
+{0} 데뷔|||{0}デビュー|||{0} debut
+{0}월 데뷔|||{0}月デビュー|||Debut month: {0}
+{0}의 새로운 이야기를 알고 있나요?|||{0}の新しい情報をご存じですか？|||Know something new about {0}?
+{0}의 이야기를 알려주세요|||{0}の情報を教えてください|||Share information about {0}
+{0}의 프로필|||{0}のプロフィール|||About {0}
+{0}회|||{0}回|||{0} streams
+가장 먼저 응원을 남겨보세요.|||最初の応援メッセージを送りましょう。|||Be the first to leave a message.
+검색어나 플랫폼을 바꿔서 찾아보세요.|||検索語やプラットフォームを変えてみてください。|||Try another search or platform.
+공식 X, YouTube, 치지직, SOOP, 네이버 카페의 게시물|||公式X、YouTube、CHZZK、SOOP、NAVERカフェの投稿|||Posts on official X, YouTube, CHZZK, SOOP or NAVER Cafe channels
+공식 그룹|||公式グループ|||Official group
+공식 데뷔 공지|||公式デビュー告知|||Official debut announcement
+공식 소개를 함께 채워주세요.|||公式の紹介情報を一緒に集めましょう。|||Help add an official introduction.
+공식 소식|||公式のお知らせ|||Official news
+공식 출처 URL|||公式情報のURL|||Official source URL
+공식 출처로 확인된 정보가 아직 없어요.|||公式情報で確認できる内容はまだありません。|||No information verified from official sources yet.
+공식 출처를 확인하고 담아요.|||公式情報を確認して掲載します。|||We check official sources before publishing.
+공식 출처에서 확인할 수 있는 정보만 함께 담아요.|||公式情報で確認できる内容のみ掲載します。|||Share information that can be verified from official sources.
+공식 팬카페|||公式ファンカフェ|||Official fan cafe
+공유할 주소를 복사했어요.|||共有用のURLをコピーしました。|||Link copied for sharing.
+관심 목록에서 데뷔 일정을 다시 볼 수 있어요.|||お気に入りからデビュー予定を確認できます。|||Find the debut schedule again in your saved list.
+관심 목록을 저장하지 못했어요.|||お気に入りを保存できませんでした。|||Could not save your favorites.
+내용을 확인할 수 있는 공식 채널의 게시물 주소를 입력해 주세요.|||内容を確認できる公式チャンネルの投稿URLを入力してください。|||Enter an official channel post URL that supports this information.
+다음 첫 만남을 기다리고 있어요|||次の出会いを待っています|||Waiting for the next first hello
+당신의 다음 이야기를 만나보세요|||次の物語に出会おう|||Discover your next story
+당신의 첫 무대를 응원해요!|||初めてのステージを応援しています！|||Cheering for your first stage!
+더 많은 이야기 만나기|||もっと出会う|||Discover more
+데뷔 +{0}일|||デビューから{0}日|||{0} days since debut
+데뷔 일정 미정|||デビュー日未定|||Debut date to be announced
+데뷔 일정 저장|||デビュー予定を保存|||Save debut schedule
+데뷔 일정을 기다리고 있어요|||デビュー予定を待っています|||Waiting for the debut schedule
+도감 메뉴|||図鑑メニュー|||Profile sections
+도감 보러가기|||図鑑を見る|||View profile
+미공개|||未公開|||Not disclosed
+방송 · 활동 기록|||配信・活動記録|||Streams & activities
+방송 기록을 불러오는 중이에요.|||配信記録を読み込んでいます。|||Loading stream history.
+방송 기록을 불러오지 못했어요.|||配信記録を読み込めませんでした。|||Could not load stream history.
+방송 보기|||配信を見る|||Watch stream
+방송 스타일 · 정기 일정|||配信スタイル・定期予定|||Streaming style & schedule
+방송 활동|||配信活動|||Streaming activity
+버튜버 검색|||VTuberを検索|||Search VTubers
+버튜버 도감|||VTuber図鑑|||VTuber directory
+버튜버 도감 둘러보기|||VTuber図鑑を探す|||Explore VTuber profiles
+새로운 발견|||新しい出会い|||New discovery
+새로운 소식이 찾아오면 이곳에서 만나요.|||新しいお知らせが届いたらここに掲載します。|||New announcements will appear here.
+새로운 순간부터|||新しい瞬間から|||Newest moments first
+새로운 영상이 올라오면 이곳에서 만나요.|||新しい動画が公開されたらここに掲載します。|||New videos will appear here when published.
+새로운 이야기가 시작되는 날|||新しい物語が始まる日|||The day a new story begins
+새로운 취향을 발견하는 곳|||新しい好みに出会う場所|||Find your next favorite
+설레는 첫 방송, 함께 기다려요.|||楽しみな初配信を一緒に待ちましょう。|||Look forward to their first stream together.
+세계관 · 캐릭터 이야기|||世界観・キャラクターの物語|||World & character
+수정할 항목|||修正する項目|||Field to update
+시청자|||視聴者|||Viewers
+아직 공개된 데뷔 일정이 없어요.|||公開されたデビュー予定はまだありません。|||No public debut schedules yet.
+아직 알려진 이야기가 없어요.|||公開されている情報はまだありません。|||No information shared yet.
+알고 있는 정보 제보하기|||情報を提供する|||Contribute information
+오늘 데뷔|||本日デビュー|||Debuting today
+응원 남기기|||応援を送る|||Leave a message
+응원 메시지|||応援メッセージ|||Support message
+응원 메시지는 확인 후 공개해요.|||応援メッセージは確認後に公開します。|||Messages are published after review.
+응원 메시지를 불러오는 중이에요.|||応援メッセージを読み込んでいます。|||Loading messages.
+응원 메시지를 불러오지 못했어요.|||応援メッセージを読み込めませんでした。|||Could not load messages.
+응원 방명록|||応援メッセージ帳|||Support messages
+응원이 접수됐어요.|||応援を受け付けました。|||Your message has been received.
+의상 · 유행어 · 팬 문화|||衣装・名言・ファン文化|||Outfits, phrases & fan culture
+이달의 첫 만남|||今月の出会い|||This month's first hellos
+이런 콘텐츠를 만나요|||こんなコンテンツに出会える|||What to expect
+이야기를 불러오는 중이에요.|||情報を読み込んでいます。|||Loading profiles.
+자료를 불러오지 못했어요.|||情報を読み込めませんでした。|||Could not load the information.
+저장한 이야기|||お気に入りの物語|||Saved profiles
+전체 버튜버|||すべてのVTuber|||All VTubers
+접수 내용 확인|||受付内容を確認|||View submission
+정보 제보 및 수정하기|||情報の提供・修正|||Contribute or correct information
+정보 제보하기|||情報を送る|||Submit information
+제보가 접수됐어요|||情報を受け付けました|||Your contribution has been received
+조금 더 알아가기|||もう少し知る|||Get to know them
+조회된 방송의 콘텐츠|||取得した配信のコンテンツ|||Categories in the returned streams
+주소를 복사하지 못했어요.|||URLをコピーできませんでした。|||Could not copy the link.
+지금까지의 발자취|||これまでの歩み|||Milestones
+지금은 영상을 불러오지 못했어요.|||現在動画を読み込めません。|||Videos are unavailable right now.
+지금은 클립을 불러오지 못했어요.|||現在クリップを読み込めません。|||Clips are unavailable right now.
+채널의 최근 영상|||チャンネルの最新動画|||Recent channel videos
+첫 만남까지, 조금만 기다려요|||初めての出会いまで、もう少し|||Counting down to the first hello
+첫 만남을 놓치지 않도록|||初めての出会いを逃さないために|||Catch the first hello
+첫 만남을 미리 만나보세요|||初めての出会いをひと足先に|||A preview of the first hello
+첫 무대를 함께 응원해요|||初めてのステージを一緒に応援しよう|||Cheer for their first stage
+첫 방송, 이야기의 시작|||初配信、物語の始まり|||First stream, the story begins
+첫 인사를 앞둔 {0}에게 따뜻한 한마디를 남겨주세요.|||初配信を控えた{0}に温かい言葉を送りましょう。|||Leave a kind message for {0} ahead of their debut.
+첫 인사부터 오래 함께할 순간까지, 버튜버의 이야기를 한곳에.|||最初の挨拶から長く一緒に過ごす時間まで、VTuberの物語をひとつの場所に。|||From the first hello to lasting memories, their stories in one place.
+최근 30일 · 최대 30개 방송|||過去30日・最大30配信|||Last 30 days · up to 30 streams
+추가하거나 수정할 내용|||追加・修正する内容|||Information to add or correct
+출처를 검토한 뒤 도감에 반영해요.|||出典を確認してから図鑑に反映します。|||We review the source before updating the profile.
+출처를 확인한 뒤 도감에 반영해요.|||出典を確認してから図鑑に反映します。|||We check the source before updating the profile.
+탐색 조건|||絞り込み条件|||Browse filters
+티저 · 데뷔 영상|||ティザー・デビュー動画|||Teasers & debut videos
+팬과 함께 쓰는 이야기|||ファンと紡ぐ物語|||Stories with fans
+필수|||必須|||Required
+한 페이지씩,|||1ページずつ、|||One page at a time,
+함께 만드는 도감|||みんなで作る図鑑|||A directory built together
+함께 채우는 이야기|||一緒に紡ぐ物語|||Stories we build together
+함께하는 방송|||一緒に楽しむ配信|||Streams to share
+항목을 선택해 주세요|||項目を選んでください|||Choose a field
+확인된 방송 기록이 아직 없어요.|||確認できる配信記録はまだありません。|||No recorded streams available yet.
+확인한 내용을 적어 주세요.|||確認できた内容を記入してください。|||Describe the information you verified.
+활동명 · 데뷔 기록 · 공식 프로필|||活動名・デビュー記録・公式プロフィール|||Names, debuts & official profiles
+활동명, 공식 그룹, 종족으로 찾아보세요|||活動名、公式グループ、種族で検索|||Search by name, official group or species
+공개할 응원 메시지의 내용을 직접 확인했습니다.|||公開する応援メッセージの内容を確認しました。|||I have reviewed the message for publication.
+접수 유형|||受付の種類|||Submission type
+도감 정보 제보|||図鑑情報の提供|||Profile contribution
+응원 공개|||応援を公開|||Publish message
+검토 완료|||確認完了|||Complete review
 최신 클립|||最新クリップ|||Latest clips
 채널 영상을 불러오는 중이에요.|||チャンネルの動画を読み込み中です。|||Loading channel videos.
 영상을 불러오지 못했어요. 채널에서 확인해 주세요.|||動画を読み込めませんでした。チャンネルでご確認ください。|||Unable to load videos. Please check the channel.
@@ -577,6 +690,7 @@ VDébut 운영|||VDébut 運営|||VDébut administration
 관심 목록에 저장|||お気に入りに保存|||Save to favorites
 브라우저 저장을 허용해 주세요.|||ブラウザの保存を許可してください。|||Allow browser storage to save favorites.
 주소 복사|||URLをコピー|||Copy link
+주소 공유|||URLを共有|||Share link
 복사 완료|||コピーしました|||Copied
 복사 실패 · 주소를 직접 복사해 주세요.|||コピーに失敗しました。URLを手動でコピーしてください。|||Copy failed. Please copy the URL manually.
 닫기|||閉じる|||Close

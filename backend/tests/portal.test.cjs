@@ -399,3 +399,53 @@ test('채널 영상 조회 실패와 빈 목록을 구분한다', async () => {
   assert.equal((await readProfileChannelMedia(profile, async () => Response.json({}))).clips.state, 'UNAVAILABLE');
   assert.equal((await readProfileChannelMedia({ ...profile, channelUrl: 'https://example.com/a' }, async () => { assert.fail('잘못된 주소는 요청하지 않는다'); })).clips.state, 'UNSUPPORTED');
 });
+
+// 제보는 원본을 바꾸지 않고 출처와 함께 비공개 검토 대기열에 남긴다.
+test('도감 제보의 공식 출처·공개 프로필·기존 문의 호환성을 검증한다', async () => {
+  const { reviewedProfile } = load('../../shared/contentReview.ts');
+  const { wikiEvidenceUrl } = load('../../shared/wikiParticipation.ts');
+  for (const url of ['http://x.com/user/status/1', 'https://x.com.attacker.example/post', 'https://x.com/', 'https://user:pass@x.com/user/status/1']) assert.equal(wikiEvidenceUrl(url), '');
+  assert.equal(wikiEvidenceUrl('https://x.com/user/status/123'), 'https://x.com/user/status/123');
+  const db = database(), env = { DB: db, PORTAL_ENABLED: 'true' };
+  const saved = reviewedProfile({ ...cleanPortalProfile(profile), slug: 'wiki' }, 'APPROVED', new Date().toISOString());
+  db.sqlite.prepare('INSERT INTO portal_profiles(slug,channel_url,data) VALUES(?,?,?)').run(saved.slug, saved.channelUrl, JSON.stringify(saved));
+  const call = body => portalApi.request('/requests', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }, env);
+  const revision = { kind: 'CONTACT', requestType: 'WIKI_REVISION', slug: 'wiki', targetField: 'species', message: '공식 소개의 종족', evidenceUrl: 'https://x.com/user/status/123' };
+  assert.equal((await call({ ...revision, evidenceUrl: 'https://example.com/no-proof' })).status, 400);
+  assert.equal((await call({ ...revision, targetField: 'ownerVerified' })).status, 400);
+  assert.equal((await call({ ...revision, slug: 'missing' })).status, 404);
+  const response = await call(revision); assert.equal(response.status, 201);
+  const receipt = await response.json();
+  const row = db.sqlite.prepare('SELECT * FROM portal_requests WHERE id=?').get(receipt.id);
+  const payload = JSON.parse(row.payload);
+  assert.equal(row.status, 'PENDING'); assert.equal(payload.evidenceUrl, revision.evidenceUrl); assert.equal(payload.targetField, 'species'); assert.equal(payload.displayName, profile.displayName);
+  assert.deepEqual(JSON.parse(db.sqlite.prepare('SELECT data FROM portal_profiles WHERE slug=?').get('wiki').data), saved);
+  assert.equal((await call({ kind: 'CONTACT', message: '일반 문의입니다.' })).status, 201);
+  db.sqlite.close();
+});
+
+// 응원은 내용 확인 후 승인한 글만 공개하며 접수 키·연락처는 숨긴다.
+test('응원 메시지의 승인 전 비공개·내용 확인·개인정보 제외를 검증한다', async () => {
+  const { reviewedProfile } = load('../../shared/contentReview.ts');
+  const db = database(), env = { DB: db, PORTAL_ENABLED: 'true' };
+  const saved = reviewedProfile({ ...cleanPortalProfile(profile), slug: 'support' }, 'APPROVED', new Date().toISOString());
+  db.sqlite.prepare('INSERT INTO portal_profiles(slug,channel_url,data) VALUES(?,?,?)').run(saved.slug, saved.channelUrl, JSON.stringify(saved));
+  const call = (route, method = 'GET', body, headers = {}) => portalApi.request(route, { method, headers: { 'Content-Type': 'application/json', ...headers }, body: body ? JSON.stringify(body) : undefined }, env);
+  const body = { kind: 'CONTACT', requestType: 'SUPPORT', slug: 'support', message: '첫 무대를 응원해요!', contactEmail: 'private@example.com' };
+  assert.equal((await call('/requests', 'POST', { ...body, message: '가'.repeat(151) })).status, 400);
+  const response = await call('/requests', 'POST', body); assert.equal(response.status, 201);
+  const receipt = await response.json();
+  assert.deepEqual(await (await call('/profiles/support/support')).json(), { messages: [] });
+  const token = 'e'.repeat(64), admin = { 'X-Admin-Key': token };
+  db.sqlite.prepare('INSERT INTO portal_sessions VALUES(?,?)').run(await portalTokenHash(token), Date.now() + 60000);
+  assert.equal((await call(`/admin/requests/${receipt.id}/decision`, 'POST', { status: 'APPROVED' }, admin)).status, 400);
+  assert.equal((await call(`/admin/requests/${receipt.id}/decision`, 'POST', { status: 'APPROVED', contentChecked: true }, admin)).status, 200);
+  const data = await (await call('/profiles/support/support')).json();
+  assert.equal(data.messages.length, 1); assert.equal(data.messages[0].message, body.message);
+  assert.deepEqual(Object.keys(data.messages[0]).sort(), ['createdAt', 'id', 'message']);
+  assert.ok(!JSON.stringify(data).includes('private@example.com')); assert.ok(!JSON.stringify(data).includes(receipt.token));
+  assert.equal((await call('/profiles/missing/support')).status, 404);
+  db.sqlite.prepare('UPDATE portal_profiles SET data=? WHERE slug=?').run(JSON.stringify({ ...saved, description: '미검토 변경' }), saved.slug);
+  assert.equal((await call('/profiles/support/support')).status, 404);
+  db.sqlite.close();
+});

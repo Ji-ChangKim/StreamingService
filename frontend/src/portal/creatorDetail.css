@@ -3,7 +3,7 @@
 .vd-creator-detail .vd-profile-hero { border-radius:16px; border-color:var(--detail-line); box-shadow:0 2px 8px #25385804; }
 .vd-creator-detail .vd-profile-cover { height:150px; background:radial-gradient(ellipse at 20% 20%,#ddd6fe,transparent 65%),linear-gradient(115deg,#ede9fe,#e0e7ff 55%,#e0f2fe); }
 .vd-creator-detail .vd-profile-banner { opacity:.5; }
-.vd-creator-detail .vd-profile-identity { margin-top:-8px; padding:0 28px 26px; gap:22px; align-items:center; flex-wrap:nowrap; }
+.vd-creator-detail .vd-profile-identity { margin-top:-8px; padding:0 28px 26px; gap:22px; align-items:center; flex-wrap:wrap; }
 .vd-creator-detail .vd-profile-identity .vd-avatar-large { width:132px; height:144px; border:4px solid #fff; border-radius:16px; box-shadow:0 2px 12px #33415515; flex-shrink:0; }
 .vd-creator-detail .vd-profile-identity-copy { padding-top:22px; flex:1; }
 .vd-creator-detail .vd-archive-name { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
@@ -17,13 +17,27 @@
 .vd-creator-detail .vd-archive-credits { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
 .vd-creator-detail .vd-archive-credits>span { padding:4px 8px; border:1px solid #edf0f5; border-radius:6px; background:#f8fafc; color:#64748b; font-size:10px; }
 .vd-creator-detail .vd-archive-credits b { margin-left:10px; color:#94a3b8; }
-.vd-creator-detail .vd-detail-quicklinks { max-width:42%; padding-top:42px; }
-.vd-creator-detail .vd-detail-quicklinks .vd-profile-links { display:flex; flex-wrap:wrap; gap:7px; justify-content:flex-end; }
-.vd-creator-detail .vd-detail-quicklinks a { padding:8px 10px; gap:8px; min-height:36px; border-radius:8px; font-size:11px; }
-.vd-creator-detail .vd-detail-quicklinks .vd-platform { font-size:11px; }
+/* 링크 묶음 전체를 한 줄로 유지하고 좁은 화면에서만 내부 가로 탐색을 허용한다. */
+.vd-creator-detail .vd-detail-quicklinks { max-width:100%; min-width:0; padding-top:22px; }
+.vd-creator-detail .vd-profile-channels .vd-profile-links,
+.vd-creator-detail .vd-detail-quicklinks .vd-profile-links { display:flex; flex-wrap:nowrap; gap:8px; overflow-x:auto; align-items:center; padding:4px; }
+.vd-creator-detail .vd-profile-links a { flex:0 0 auto; box-sizing:border-box; height:50px; min-height:50px; padding:0 16px; justify-content:center; border-radius:8px; font-size:12px; white-space:nowrap; }
+.vd-creator-detail .vd-profile-links a>span { display:flex; align-items:center; gap:8px; flex:initial; }
+.vd-creator-detail .vd-profile-links .vd-platform { gap:8px; }
+.vd-creator-detail .vd-profile-links small { font-size:10px; line-height:1.2; }
+.vd-creator-detail .vd-detail-quicklinks .vd-platform { font-size:12px; }
 .vd-creator-detail .vd-detail-quicklinks a:first-child { background:#e8f2ff; border-color:#cdddff; }
-.vd-creator-detail .vd-detail-quicklinks a[href*='chzzk.naver.com']:first-child { background:#00efa0; border-color:#00efa0; }
-.vd-creator-detail .vd-detail-quicklinks a:hover { filter:brightness(.96); }
+.vd-creator-detail .vd-detail-quicklinks a:hover { border-color:#94a3b8; }
+
+/* 공식 기본형: 최소 높이 16px 이상. 24px 원본에 사방 12px로 가이드의 X 보호 공간을 확보한다. */
+.vd-creator-detail .vd-profile-links a.vd-chzzk-channel-link,
+.vd-creator-detail .vd-profile-links a.vd-chzzk-channel-link:hover { padding:0; min-height:50px; gap:0; background:#00FFA3; border-color:#00FFA3; color:#000; filter:none; }
+.vd-creator-detail .vd-chzzk-channel-brand { display:inline-flex; align-items:center; padding:12px; line-height:0; }
+.vd-creator-detail .vd-chzzk-channel-link small { padding-right:12px; }
+.vd-creator-detail .vd-chzzk-channel-brand img { display:block; height:24px; width:auto; max-width:none; flex-shrink:0; object-fit:contain; opacity:1; filter:none; border:0; border-radius:0; box-shadow:none; transform:none; }
+.vd-creator-detail .vd-chzzk-channel-link:focus-visible { outline:3px solid #1d4ed8; outline-offset:3px; }
+/* 상세 화면의 공식 아이콘도 작은 일반 배지 규칙에 의해 축소되지 않게 한다. */
+.vd-creator-detail .vd-platform img { width:auto; height:24px; min-height:24px; max-width:none; object-fit:contain; flex-shrink:0; opacity:1; filter:none; }
 
 /* 데이터가 없는 경우에도 동일한 세 메뉴와 2:1 본문 구성을 표시한다. */
 .vd-creator-detail .vd-detail-nav { display:flex; gap:8px; overflow-x:auto; border-bottom:1px solid var(--detail-line); margin:20px 0 24px; }
@@ -140,7 +154,7 @@
   .vd-creator-detail .vd-profile-identity-copy { padding-top:16px; }
   .vd-creator-detail .vd-profile-identity-copy :is(h1,h2) { font-size:22px; }
   .vd-creator-detail .vd-profile-tools { top:-38px; right:12px; }
-  .vd-creator-detail .vd-detail-quicklinks a { flex:1 1 auto; }
+  .vd-creator-detail .vd-detail-quicklinks a { flex:0 0 auto; }
   .vd-creator-detail .vd-detail-nav { gap:0; margin:16px 0 20px; }
   .vd-creator-detail .vd-detail-nav button { padding:12px; font-size:12px; }
   .vd-creator-detail :is(.vd-archive-section,.vd-profile-editorial,.vd-debut-team-section) { padding:18px; }
