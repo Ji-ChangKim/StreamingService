@@ -1,4 +1,5 @@
 import { ArrowUpRight, Film, Mic, Play, Radio, Sparkles } from 'lucide-react';
+import { useState } from 'react';
 import type { PortalMedia, PortalProfile } from '../../../shared/portal';
 import type { ProfileBroadcast } from '../../../shared/profileDetails';
 import { portalWebUrl } from '../../../shared/portal';
@@ -19,6 +20,15 @@ function ArchiveClip({ item }: { item: PortalMedia }) {
 
 // 생방송 여부를 추측하지 않고 공식 채널로 이동하는 방송 영역을 유지한다.
 function ArchiveChannel({ profile, broadcast }: { profile: PortalProfile; broadcast?: ProfileBroadcast }) {
+  const [failedImage, setFailedImage] = useState('');
+  const thumbnail = portalWebUrl(broadcast?.thumbnailUrl || '');
+  // 실제 방송 이미지가 있을 때만 큰 미리보기를 표시하고 로드 실패 시 채널 카드로 복구한다.
+  if (broadcast?.state === 'LIVE' && thumbnail && failedImage !== thumbnail) return <a className="vd-live-preview" href={portalWebUrl(broadcast.url || profile.channelUrl)} target="_blank" rel="noopener noreferrer" aria-label={`${broadcast.title || profile.displayName} · ${t('생방송 보러가기')}`}>
+    <img className="vd-live-preview-image" src={thumbnail} alt="" onError={() => setFailedImage(thumbnail)} />
+    <span className="vd-live-preview-status"><b>LIVE</b>{broadcast.viewers !== undefined && <span>{t('시청자 {0}명', [broadcast.viewers.toLocaleString()])}</span>}</span>
+    <span className="vd-live-preview-play" aria-hidden="true"><Play size={28} fill="currentColor" /></span>
+    <div className="vd-live-preview-info"><PortalAvatar profile={profile} /><div><h2>{broadcast.title || profile.displayName}</h2><div className="vd-live-preview-meta"><span>{profile.displayName}</span><PlatformBadge platform={profile.platform} />{broadcast.category && <span>{broadcast.category}</span>}</div></div><ArrowUpRight size={20} /></div>
+  </a>;
   return <section className="vd-archive-channel" aria-label={t('방송 채널')}><div className="vd-archive-channel-preview"><PortalAvatar profile={profile} /><Radio size={18} /></div><div className="vd-archive-channel-copy"><PlatformBadge platform={profile.platform} />{broadcast?.state === 'LIVE' && <span className="vd-archive-live">LIVE</span>}<h2>{broadcast?.state === 'LIVE' ? broadcast.title : t('{0}의 방송 채널', [profile.displayName])}</h2><p>{broadcast?.state === 'LIVE' ? <>{broadcast.viewers !== undefined && t('시청자 {0}명', [broadcast.viewers.toLocaleString()])}{broadcast.observedAt && <> · <time dateTime={broadcast.observedAt}>{t('최근 방송 확인')}</time></>}</> : t(broadcast?.state === 'OFFLINE' ? '현재 방송 중이 아니에요.' : broadcast?.state === 'UNAVAILABLE' ? '방송 상태를 확인하지 못했어요. 채널에서 확인해 주세요.' : '방송 소식과 다시보기를 채널에서 만나보세요.')}</p></div>{portalWebUrl(profile.channelUrl) && <a href={portalWebUrl(broadcast?.state === 'LIVE' ? broadcast.url || profile.channelUrl : profile.channelUrl)} target="_blank" rel="noopener noreferrer"><Play size={15} />{t(broadcast?.state === 'LIVE' ? '생방송 보러가기' : '채널 바로가기')}<ArrowUpRight size={15} /></a>}</section>;
 }
 

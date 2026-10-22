@@ -296,10 +296,12 @@ test('상세 단건 조회·공개 권한·플랫폼 직접 조회를 검증한�
   assert.deepEqual(payload.profile.media, saved.media);
   assert.equal(payload.broadcast.state, 'UNAVAILABLE');
   assert.equal((await call('missing')).status, 404);
-  platformResponse = { code: 200, content: { status: 'OPEN', liveTitle: '오늘의 방송', concurrentUserCount: 123 } };
+  platformResponse = { code: 200, content: { status: 'OPEN', liveTitle: '오늘의 방송', concurrentUserCount: 123, liveImageUrl: 'https://example.com/live_{type}.jpg', liveCategoryValue: '게임' } };
   const live = await (await call()).json();
   assert.equal(live.broadcast.state, 'LIVE');
   assert.equal(live.broadcast.viewers, 123);
+  assert.equal(live.broadcast.thumbnailUrl, 'https://example.com/live_f720.jpg');
+  assert.equal(live.broadcast.category, '게임');
   platformResponse = { code: 200, content: { status: 'CLOSE' } };
   assert.equal((await (await call()).json()).broadcast.state, 'OFFLINE');
   db.sqlite.prepare('UPDATE portal_profiles SET data=? WHERE slug=?').run(JSON.stringify({ ...saved, details: { species: '검토되지 않은 수정' } }), saved.slug);
@@ -325,6 +327,7 @@ test('직접 방송 조회는 두 플랫폼과 오류 상태를 구분한다', a
   assert.equal(live.state, 'LIVE');
   assert.equal(live.viewers, 0);
   assert.equal(live.url, 'https://play.sooplive.co.kr/oiguu5252/123');
+  assert.equal(live.thumbnailUrl, 'https://liveimg.sooplive.co.kr/m/123');
   for (const data of [{}, {station:{user_id:'other'},broad:null}, {station:{user_id:'oiguu5252'}}]) assert.equal((await readProfileBroadcast(soop, reply(data))).state, 'UNAVAILABLE');
   assert.equal((await readProfileBroadcast(soop, async()=>new Response('', {status:429}))).state, 'UNAVAILABLE');
   assert.equal((await readProfileBroadcast(soop, async()=>{throw new Error('timeout')})).state, 'UNAVAILABLE');

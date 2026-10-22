@@ -22,6 +22,7 @@ export type ProfileDetails = Partial<Record<typeof PROFILE_DETAIL_FIELDS[number]
 export interface ProfileBroadcast {
   state: 'LIVE' | 'OFFLINE' | 'UNKNOWN' | 'UNAVAILABLE';
   title?: string; url?: string; viewers?: number; observedAt?: string;
+  thumbnailUrl?: string; category?: string;
 }
 export interface ProfileDetailResponse {
   profile: PortalProfile;

@@ -1,4 +1,5 @@
 import type { PortalProfile } from '../../../shared/portal';
+import { portalWebUrl } from '../../../shared/portal';
 import type { ProfileBroadcast } from '../../../shared/profileDetails';
 import { activityChannelKey } from '../../../shared/broadcastActivity';
 import { publicBroadcastTitle } from '../../../shared/contentReview';
@@ -9,7 +10,7 @@ export async function readProfileBroadcast(profile: PortalProfile, fetcher: type
   if (!key) return { state: 'UNKNOWN' };
   const id = key.split(':')[1];
   const chzzk = profile.platform === 'CHZZK';
-  const url = chzzk ? `https://api.chzzk.naver.com/polling/v2/channels/${id}/live-status` : `https://chapi.sooplive.co.kr/api/${id}/station`;
+  const url = chzzk ? `https://api.chzzk.naver.com/service/v3/channels/${id}/live-detail` : `https://chapi.sooplive.co.kr/api/${id}/station`;
   try {
     const response = await fetcher(url, {
       headers: { Accept: 'application/json', 'Cache-Control': 'no-cache', 'User-Agent': 'Mozilla/5.0', Referer: chzzk ? 'https://chzzk.naver.com/' : 'https://www.sooplive.com/' },
@@ -20,12 +21,16 @@ export async function readProfileBroadcast(profile: PortalProfile, fetcher: type
     const observedAt = new Date().toISOString();
     let title: unknown;
     let viewers: unknown;
+    let thumbnailUrl = '';
+    let category = '';
     let liveUrl = profile.channelUrl;
     if (chzzk) {
       if (data?.code !== 200 || !['OPEN', 'CLOSE'].includes(data.content?.status)) return { state: 'UNAVAILABLE' };
       if (data.content.status === 'CLOSE') return { state: 'OFFLINE', observedAt };
       title = data.content.liveTitle;
       viewers = data.content.concurrentUserCount;
+      thumbnailUrl = portalWebUrl((typeof data.content.liveImageUrl === 'string' ? data.content.liveImageUrl : data.content.defaultThumbnailImageUrl || '').replace('{type}', 'f720'));
+      category = typeof data.content.liveCategoryValue === 'string' ? publicBroadcastTitle(data.content.liveCategoryValue) : '';
       liveUrl = `https://chzzk.naver.com/live/${id}`;
     } else {
       // 정상 채널 응답의 명시적인 null만 방송 중이 아님으로 판단한다.
@@ -34,9 +39,12 @@ export async function readProfileBroadcast(profile: PortalProfile, fetcher: type
       if (!/^[1-9]\d*$/.test(String(data.broad?.broad_no ?? ''))) return { state: 'UNAVAILABLE' };
       title = data.broad.broad_title;
       viewers = data.broad.current_sum_viewer;
+      // 플랫폼의 방송 번호로 현재 방송 미리보기 이미지를 연결한다.
+      thumbnailUrl = `https://liveimg.sooplive.co.kr/m/${data.broad.broad_no}`;
+      category = typeof data.broad.broad_cate_name === 'string' ? publicBroadcastTitle(data.broad.broad_cate_name) : '';
       liveUrl = `https://play.sooplive.co.kr/${id}/${data.broad.broad_no}`;
     }
-    return { state: 'LIVE', observedAt, url: liveUrl,
+    return { state: 'LIVE', observedAt, url: liveUrl, thumbnailUrl, category,
       title: publicBroadcastTitle(typeof title === 'string' && title ? title : profile.displayName),
       ...(typeof viewers === 'number' && Number.isFinite(viewers) && viewers >= 0 ? { viewers } : {}) };
   } catch (error) {
