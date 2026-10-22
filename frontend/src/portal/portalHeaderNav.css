@@ -1,0 +1,62 @@
+/* 로고·헤더 높이·본문·Footer를 유지하고 상단 메뉴만 정리한다. */
+.vd-header .vd-desktop-nav {
+  align-items: center;
+  gap: 30px;
+}
+
+/* 아이콘 없이도 44px 클릭 영역과 일정한 글자 위치를 확보한다. */
+.vd-header .vd-desktop-nav > a {
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  transition: color 150ms ease;
+}
+
+/* 글자 아래 8px에 밑줄을 두어 헤더 경계선과 분리한다. */
+.vd-header .vd-desktop-nav > a::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--vd-blue);
+  opacity: 0;
+  transform: scaleX(.8);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.vd-header .vd-desktop-nav > a.is-active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.vd-header .vd-desktop-nav > a:hover {
+  color: var(--vd-ink, #182b49);
+}
+
+.vd-header .vd-desktop-nav > a.is-active {
+  color: var(--vd-blue);
+}
+
+/* 키보드 포커스를 색상 변화와 별도로 표시한다. */
+.vd-header .vd-desktop-nav > a:focus-visible,
+.vd-header .vd-mobile-menu > a:focus-visible {
+  outline: 2px solid var(--vd-blue);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* 좁은 화면에서도 기존 헤더 구성 안에 메뉴가 들어오도록 간격만 줄인다. */
+@media (max-width: 1100px) {
+  .vd-header .vd-desktop-nav { gap: 24px; }
+}
+
+@media (max-width: 800px) {
+  .vd-header .vd-desktop-nav { gap: 18px; }
+  .vd-header .vd-desktop-nav > a { font-size: 13px; }
+}
