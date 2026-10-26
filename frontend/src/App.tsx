@@ -2,7 +2,6 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroHeader } from './components/HeroHeader';
 import { PlatformMiniSpotlight } from './components/preview/PlatformMiniSpotlight';
-import { DebutSpotlightHighlight } from './components/preview/DebutSpotlightHighlight';
 import { MonthlyCalendarGrid } from './components/MonthlyCalendarGrid';
 import { FooterBanner } from './components/FooterBanner';
 import { Footer } from './components/Footer';
@@ -57,7 +56,6 @@ function PageLoadingFallback() {
 export function App() {
   const [currentPath, setCurrentPath] = useState<string>(() => window.location.pathname);
   const [activeNav, setActiveNav] = useState<string>('schedule');
-  const [spotlightMode, setSpotlightMode] = useState<'QUICK' | 'COVERFLOW'>('QUICK');
   const [currentLang, setCurrentLang] = useState<Language>(() => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -324,48 +322,12 @@ export function App() {
                 />
               </div>
 
-              {/* 하이라이트 뷰 모드 토글 (시안 검토용) */}
-              <div className="flex items-center justify-end mb-3 px-1">
-                <div className="inline-flex items-center p-1 bg-white/70 backdrop-blur-md rounded-xl border border-white/80 shadow-2xs text-[11px] font-bold">
-                  <button
-                    onClick={() => setSpotlightMode('QUICK')}
-                    className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
-                      spotlightMode === 'QUICK'
-                        ? 'bg-slate-900 text-white shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    <span>⚡ 금일·금주 퀵 뷰 (신규 시안)</span>
-                  </button>
-                  <button
-                    onClick={() => setSpotlightMode('COVERFLOW')}
-                    className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
-                      spotlightMode === 'COVERFLOW'
-                        ? 'bg-slate-900 text-white shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    <span>🎭 커버플로우 무대 뷰</span>
-                  </button>
-                </div>
-              </div>
-
-              {spotlightMode === 'QUICK' ? (
-                <DebutSpotlightHighlight
-                  allEvents={events}
-                  selectedTimezone={selectedTimezone}
-                  onDownloadICS={handleDownloadICS}
-                  onNavigate={handleNavigate}
-                  currentLang={currentLang}
-                />
-              ) : (
-                <PlatformMiniSpotlight
-                  allEvents={events}
-                  selectedTimezone={selectedTimezone}
-                  onDownloadICS={handleDownloadICS}
-                  onNavigate={handleNavigate}
-                />
-              )}
+              <PlatformMiniSpotlight
+                allEvents={events}
+                selectedTimezone={selectedTimezone}
+                onDownloadICS={handleDownloadICS}
+                onNavigate={handleNavigate}
+              />
             </div>
 
             {/* 하단 본문(#F8FAFC) 연결 페이드 그라데이션 오버레이 (경계선 그림자 제거 및 스무스 블렌딩) */}

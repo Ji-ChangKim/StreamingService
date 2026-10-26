@@ -1,9 +1,8 @@
 import { t, usePortalLocale } from './portalLocale';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { PortalProfile, PORTAL_PLATFORMS, portalDateKey, portalDay, portalMonth } from '../../../shared/portal';
 import { DebutEvent } from '../types';
 import { PlatformMiniSpotlight } from '../components/preview/PlatformMiniSpotlight';
-import { DebutSpotlightHighlight } from '../components/preview/DebutSpotlightHighlight';
 import { HOME_INTRO } from '../../../shared/portalEditorial';
 import { downloadPortalSchedule, PortalLink, PortalState } from './PortalUi';
 
@@ -17,7 +16,6 @@ export const PortalStage = memo(function PortalStage({ profiles, timezone, loadi
   profiles: PortalProfile[]; timezone: string; loading: boolean; error: string; refresh: () => void; onNavigate: (path: string) => void;
 }) {
   const language = usePortalLocale(); // 언어 변경은 화면 상태를 유지한 채 문구만 갱신한다.
-  const [spotlightMode, setSpotlightMode] = useState<'QUICK' | 'COVERFLOW'>('QUICK');
 
   const today = portalDateKey(new Date(), timezone);
   const month = today.slice(0, 7);
@@ -34,51 +32,13 @@ export const PortalStage = memo(function PortalStage({ profiles, timezone, loadi
       {/* 집계 기간과 플랫폼 사이의 띄어쓰기는 번역 문장에서도 유지한다. */}
       <div className="vd-home-counts"><div><span>{t("{0}월 등록 일정", [Number(month.slice(5))])}</span><strong>{monthProfiles.length}<small>{t("건")}</small></strong></div><div><span>{t("이번 주 등록 일정")}</span><strong>{weekProfiles.length}<small>{t("건")}</small></strong></div>{PORTAL_PLATFORMS.map((platform) => { const count = monthProfiles.filter((profile) => profile.platform === platform.id).length; return count ? <div key={platform.id}><span>{t("이번 달 {0}", [platform.label])}</span><strong>{count}<small>{t("건")}</small></strong></div> : null; })}</div>
 
-      {/* 하이라이트 뷰 모드 전환 토글 (신규 시안 vs 기존 커버플로우) */}
-      <div className="flex items-center justify-end mb-3 px-2 max-w-7xl mx-auto">
-        <div className="inline-flex items-center p-1 bg-white/70 backdrop-blur-md rounded-xl border border-white/80 shadow-2xs text-[11px] font-bold">
-          <button
-            type="button"
-            onClick={() => setSpotlightMode('QUICK')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
-              spotlightMode === 'QUICK'
-                ? 'bg-slate-900 text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <span>⚡ 금일·금주 퀵 뷰 (신규 시안)</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setSpotlightMode('COVERFLOW')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
-              spotlightMode === 'COVERFLOW'
-                ? 'bg-slate-900 text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <span>🎭 커버플로우 무대 뷰</span>
-          </button>
-        </div>
-      </div>
-
-      {spotlightMode === 'QUICK' ? (
-        <DebutSpotlightHighlight
-          allEvents={events}
-          selectedTimezone={timezone}
-          onDownloadICS={download}
-          onNavigate={onNavigate}
-          currentLang={language}
-        />
-      ) : (
-        <PlatformMiniSpotlight
-          currentLang={language}
-          allEvents={events}
-          selectedTimezone={timezone}
-          onNavigate={onNavigate}
-          onDownloadICS={download}
-        />
-      )}
+      <PlatformMiniSpotlight
+        currentLang={language}
+        allEvents={events}
+        selectedTimezone={timezone}
+        onNavigate={onNavigate}
+        onDownloadICS={download}
+      />
     </>}
   </section>;
 });
