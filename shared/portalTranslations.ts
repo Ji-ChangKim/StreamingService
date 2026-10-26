@@ -1,6 +1,13 @@
 import { PROFILE_CONTENT_TRANSLATIONS } from './profileContentTranslations';
 // 서비스 문구만 번역하며 활동명·자기소개 같은 이용자 입력은 원문으로 유지한다.
 const rows = String.raw`
+한국 시간|||韓国時間|||Korean time
+일본 시간|||日本時間|||Japan time
+미국 서부 시간|||米国西部時間|||US Pacific time
+미국 동부 시간|||米国東部時間|||US Eastern time
+{0} 기준|||{0}基準|||In {0}
+{0} 일정 저장|||{0}の予定を保存|||Save {0}'s schedule
+선택한 조건의 일정이 없어요.|||選択した条件に一致する予定はありません。|||No schedules match the selected filters.
 {0} · 데뷔 {1}명|||{0} · デビュー {1}人|||{0} · {1} debuts
 {0} 관심 저장|||{0}をお気に入りに追加|||Save {0}
 {0} 관심 해제|||{0}をお気に入りから削除|||Unsave {0}
@@ -15,6 +22,7 @@ const rows = String.raw`
 공식 X, YouTube, 치지직, SOOP, 네이버 카페의 게시물|||公式X、YouTube、CHZZK、SOOP、NAVERカフェの投稿|||Posts on official X, YouTube, CHZZK, SOOP or NAVER Cafe channels
 공식 그룹|||公式グループ|||Official group
 공식 데뷔 공지|||公式デビュー告知|||Official debut announcement
+공식 프로필|||公式プロフィール|||Official profile
 공식 소개를 함께 채워주세요.|||公式の紹介情報を一緒に集めましょう。|||Help add an official introduction.
 공식 소식|||公式のお知らせ|||Official news
 공식 출처 URL|||公式情報のURL|||Official source URL

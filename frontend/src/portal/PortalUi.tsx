@@ -103,7 +103,7 @@ export function CopyButton({ value, label = '주소 복사' }: { value: string; 
 }
 
 // 상세 창은 포커스를 가두고 닫으면 기존 버튼으로 되돌린다.
-export function PortalDialog({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
+export function PortalDialog({ title, onClose, children, className = '' }: { title: string; onClose: () => void; children: ReactNode; className?: string }) {
   usePortalLocale(); // 언어 변경은 화면 상태를 유지한 채 문구만 갱신한다.
 
   const ref = useRef<HTMLDivElement>(null);
@@ -123,7 +123,8 @@ export function PortalDialog({ title, onClose, children }: { title: string; onCl
     window.addEventListener('keydown', key);
     return () => { document.body.style.overflow = overflow; window.removeEventListener('keydown', key); previous?.focus(); };
   }, []);
-  return <div className="vd-overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><div className="vd-dialog" role="dialog" aria-modal="true" aria-labelledby="vd-dialog-title" ref={ref} tabIndex={-1}><div className="vd-dialog-heading"><h2 id="vd-dialog-title">{title}</h2><button className="vd-icon-button" type="button" aria-label={t("닫기")} onClick={onClose}><X size={20} /></button></div>{children}</div></div>;
+  // 전용 클래스가 있는 팝업만 개별 스타일을 적용하며 기존 모달은 동일한 클래스를 유지한다.
+  return <div className="vd-overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><div className={`vd-dialog${className ? ` ${className}` : ''}`} role="dialog" aria-modal="true" aria-labelledby="vd-dialog-title" ref={ref} tabIndex={-1}><div className="vd-dialog-heading"><h2 id="vd-dialog-title">{title}</h2><button className="vd-icon-button" type="button" aria-label={t("닫기")} onClick={onClose}><X size={20} /></button></div>{children}</div></div>;
 }
 
 // 자신의 데뷔 소식을 등록할 이유와 진입을 함께 제공한다.

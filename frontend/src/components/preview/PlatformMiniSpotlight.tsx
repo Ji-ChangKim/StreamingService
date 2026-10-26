@@ -110,9 +110,31 @@ export function PlatformMiniSpotlight({
 
   // 요청한 순서를 유지하면서 실제 일정이 있는 플랫폼만 표시한다.
   const visiblePlatforms = PLATFORMS.filter((platform) => (summaries.get(platform.id)?.totalCount || 0) > 0);
-  const activePlatform = visiblePlatforms.find((platform) => platform.id === selectedPlatform)?.id || visiblePlatforms[0]?.id;
 
-  // 조회 결과가 바뀌어 선택한 플랫폼이 사라지면 첫 플랫폼의 첫 카드로 전환한다.
+  // 가장 데뷔 일정이 많거나 LIVE가 있는 플랫폼을 스마트하게 기본값으로 결정
+  const bestPlatform = useMemo(() => {
+    let topPlatform: PlatformKey = 'CHZZK';
+    let maxScore = -1;
+    PLATFORMS.forEach((p) => {
+      const summary = summaries.get(p.id);
+      const count = summary?.totalCount || 0;
+      const live = summary?.liveCount || 0;
+      const score = live * 100 + count;
+      if (score > maxScore) {
+        maxScore = score;
+        topPlatform = p.id;
+      }
+    });
+    return topPlatform;
+  }, [summaries]);
+
+  const activePlatform =
+    (visiblePlatforms.find((platform) => platform.id === selectedPlatform && (summaries.get(platform.id)?.totalCount || 0) > 0)?.id) ||
+    bestPlatform ||
+    visiblePlatforms[0]?.id ||
+    'CHZZK';
+
+  // 조회 결과가 바뀌어 선택한 플랫폼이 사라지거나 일정이 0건이면 데뷔가 있는 플랫폼으로 전환한다.
   useEffect(() => {
     if (activePlatform && activePlatform !== selectedPlatform) {
       setSelectedPlatform(activePlatform);

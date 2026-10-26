@@ -19,7 +19,7 @@ export async function portalApi<T>(path: string, options: RequestInit = {}): Pro
 
 // 정상 응답의 빈 목록과 JSON 손상·응답 형식 오류를 구분한다.
 export async function fetchPublicProfiles(signal?: AbortSignal): Promise<PortalProfile[]> {
-  const data = await portalApi<{ profiles?: PortalProfile[] }>('/profiles?version=3', { signal, cache: 'no-store' });
+  const data = await portalApi<{ profiles?: PortalProfile[] }>('/profiles?version=3', { signal });
   if (!Array.isArray(data.profiles)) throw new Error('소개를 불러오지 못했어요');
   return data.profiles;
 }

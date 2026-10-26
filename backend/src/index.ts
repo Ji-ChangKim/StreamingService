@@ -260,7 +260,7 @@ app.get('/api/v1/events', async (c) => {
   if (c.env.PORTAL_ENABLED === 'true') {
     try {
       const events = await readUnifiedDebutEvents(c.env.DB);
-      c.header('Cache-Control', 'no-store');
+      c.header('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
       return c.json({ success: true, events, total: events.length, source: 'd1_database' });
     } catch {
       c.header('Cache-Control', 'no-store');

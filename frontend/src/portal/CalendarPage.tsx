@@ -2,11 +2,12 @@ import { t, usePortalLocale, getPortalLanguage } from './portalLocale';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { ArrowRight, CalendarDays, CalendarPlus, ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import { PortalProfile, PORTAL_PLATFORMS, portalDateKey } from '../../../shared/portal';
-import { CreatorCard, PortalLink, PortalState, PlatformBadge, PortalAvatar, PortalDialog, portalSchedule, downloadPortalSchedule, downloadPortalSchedules } from './PortalUi';
+import { CreatorCard, PortalLink, PortalState, PlatformBadge, PortalAvatar, portalSchedule, downloadPortalSchedule, downloadPortalSchedules } from './PortalUi';
 import { PortalHomeLearning } from './PortalLearning';
 import { profileExcerpt } from '../../../shared/portalEditorial';
 import { PortalStage } from './PortalStage';
 import { buildCalendarIndex } from './calendarIndex';
+import { CalendarDayDialog } from './CalendarDayDialog';
 import { dateTimeFormatter } from '../../../shared/dateTimeFormatter';
 
 // 기존 LIVE와 동일한 원본 플랫폼 아이콘을 달력 일정 앞에 표시한다.
@@ -93,7 +94,7 @@ export const CalendarPage = memo(function CalendarPage({ profiles, loading, erro
     {!loading && !error && <section className="vd-section"><div className="vd-section-heading"><h2>{state.month < today.slice(0, 7) ? t("이달 데뷔자") : t("다가오는 데뷔")}</h2><PortalLink to="/creators" onNavigate={onNavigate} className="vd-text-button">{t("버튜버 둘러보기")}<ArrowRight size={16} /></PortalLink></div>{ordered.length ? <><div className="vd-cards">{ordered.slice(0, expanded ? undefined : 4).map((profile) => <CreatorCard key={profile.slug} profile={profile} onNavigate={onNavigate} timezone={state.timezone} />)}</div>{ordered.length > 4 && <button type="button" className="vd-button vd-show-more" onClick={() => setExpanded(!expanded)}>{expanded ? t("접기") : t("예정자 {0}명 모두 보기", [ordered.length])}</button>}</> : <div className="vd-empty-inline"><p>{t("선택한 조건에 맞는 데뷔 예정자가 없어요.")}</p><button type="button" className="vd-button" onClick={() => update({ month: shiftedMonth(state.month, 1), day: `${shiftedMonth(state.month, 1)}-01` })}>{t("다음 달 살펴보기")}</button></div>}</section>}
     {!loading && !error && undecided.length > 0 && <section className="vd-section"><div className="vd-section-heading"><h2>{t("데뷔 날짜 미정")}<span className="vd-count">{undecided.length}{t("명")}</span></h2></div><div className="vd-cards">{undecided.map((profile) => <CreatorCard key={profile.slug} profile={profile} onNavigate={onNavigate} />)}</div></section>}
     <PortalHomeLearning profiles={profiles} timezone={state.timezone} loading={loading} error={error} onNavigate={onNavigate} />
-    {inspectedDay && <PortalDialog title={t("{0} 데뷔 일정", [inspectedDay])} onClose={() => setInspectedDay('')}><p className="vd-muted">{t("표시 시간대: {0} · {1}명", [state.timezone, dayItems.length])}</p>{dayItems.length ? <div className="vd-schedule-list">{dayItems.map((profile) => <ScheduleRow key={profile.slug} profile={profile} timezone={state.timezone} onNavigate={(path) => { setInspectedDay(''); onNavigate(path); }} />)}</div> : <PortalState title={t("등록된 일정이 없어요")} description={t("이 날짜의 첫 데뷔 소식을 알려주세요.")} />}<PortalLink to={`/upload?date=${inspectedDay}`} onNavigate={(path) => { setInspectedDay(''); onNavigate(path); }} className="vd-button vd-primary"><CalendarPlus size={16} /> {t("이 날짜에 데뷔 등록하기")}</PortalLink></PortalDialog>}
+    {inspectedDay && <CalendarDayDialog day={inspectedDay} profiles={dayItems} timezone={state.timezone} onClose={() => setInspectedDay('')} onNavigate={(path) => { setInspectedDay(''); onNavigate(path); }} />}
   </>;
 });
 

@@ -1,0 +1,43 @@
+/* 날짜별 일정 팝업에만 적용하며 공통 모달과 메인·상세 화면의 스타일은 유지한다. */
+.vd .vd-dialog.vd-day-schedule-dialog{width:720px;max-width:100%;max-height:80vh;max-height:80dvh;min-height:0;padding:24px;display:flex;flex-direction:column;overflow:hidden}
+.vd .vd-day-schedule-dialog .vd-dialog-heading{flex:none;align-items:center;gap:16px;margin:0}
+.vd .vd-day-schedule-dialog .vd-dialog-heading h2{font-size:22px;line-height:1.4;letter-spacing:-.04em;min-width:0;overflow-wrap:anywhere}
+.vd .vd-day-schedule-dialog .vd-dialog-heading .vd-icon-button{width:44px;height:44px;flex-shrink:0}
+.vd .vd-day-schedule-dialog .vd-day-schedule-meta{flex:none;margin:4px 0 16px;font-size:13px;color:var(--vd-muted);line-height:1.6}
+.vd .vd-day-schedule-dialog .vd-day-schedule-list{min-height:0;overflow-y:auto;overscroll-behavior:contain;margin:0}
+.vd .vd-day-schedule-dialog .vd-day-schedule-row{display:grid;grid-template-columns:62px minmax(0,1fr) auto;align-items:center;gap:16px;min-height:96px;padding:16px 0}
+.vd .vd-day-schedule-dialog .vd-day-schedule-row+.vd-day-schedule-row{border-top:1px solid var(--vd-line)}
+.vd .vd-day-schedule-dialog .vd-day-schedule-time{font-size:20px;line-height:1.4;font-weight:750;letter-spacing:-.035em;font-variant-numeric:tabular-nums;color:var(--vd-ink)}
+.vd .vd-day-schedule-dialog .vd-day-schedule-time.is-undecided{font-size:13px;color:var(--vd-muted);letter-spacing:0}
+.vd .vd-day-schedule-dialog .vd-day-schedule-time small{display:block;font-size:11px;font-weight:400;line-height:1.5;margin-top:4px}
+.vd .vd-day-schedule-dialog .vd-day-schedule-person{display:flex;gap:12px;align-items:center;min-width:0}
+.vd .vd-day-schedule-dialog .vd-avatar{width:48px;height:48px;flex-shrink:0;border-radius:14px;font-size:22px}
+.vd .vd-day-schedule-dialog .vd-day-schedule-person>div:last-child{min-width:0}
+.vd .vd-day-schedule-dialog .vd-day-schedule-name{display:block;color:var(--vd-ink);text-decoration:underline;text-decoration-color:#a9b8cc;text-underline-offset:4px}
+.vd .vd-day-schedule-dialog .vd-day-schedule-name:hover{color:var(--vd-blue);text-decoration-color:currentColor}
+.vd .vd-day-schedule-dialog .vd-day-schedule-name h3{font-size:17px;line-height:1.5;font-weight:750;margin:0 0 4px;overflow-wrap:anywhere}
+.vd .vd-day-schedule-dialog .vd-platform{font-size:12px;line-height:1.5}
+.vd .vd-day-schedule-dialog .vd-platform img{width:16px;height:16px;object-fit:contain;filter:none;opacity:1;border-radius:0}
+.vd .vd-day-schedule-dialog .vd-day-schedule-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.vd .vd-day-schedule-dialog .vd-day-schedule-channel{display:inline-flex;justify-content:center;align-items:center;min-height:44px;padding:0 14px;border:1px solid var(--vd-line);border-radius:8px;background:white;color:var(--vd-ink);font-size:13px;font-weight:650;white-space:nowrap}
+.vd .vd-day-schedule-dialog .vd-day-schedule-channel:hover{background:#f8fafc;border-color:#b7c6db}
+.vd .vd-day-schedule-dialog .vd-day-schedule-save{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 8px;border:0;background:transparent;color:var(--vd-blue);font:inherit;font-size:13px;white-space:nowrap;cursor:pointer}
+.vd .vd-day-schedule-dialog .vd-day-schedule-empty{font-size:14px;color:var(--vd-muted);padding:28px 0;margin:0;text-align:center;line-height:1.7}
+.vd .vd-day-schedule-dialog .vd-day-schedule-footer{flex:none;border-top:1px solid var(--vd-line);margin-top:8px;padding-top:12px}
+.vd .vd-day-schedule-dialog .vd-day-schedule-register{display:inline-flex;align-items:center;min-height:44px;font-size:13px;font-weight:500;color:var(--vd-blue)}
+.vd .vd-day-schedule-dialog :is(.vd-day-schedule-save,.vd-day-schedule-register):hover{text-decoration:underline;text-underline-offset:3px}
+.vd .vd-day-schedule-dialog :is(a,button):focus-visible{outline:2px solid var(--vd-blue);outline-offset:3px}
+/* 좁은 화면에서도 시간과 인물을 먼저 읽고 바로 아래에서 행동을 선택한다. */
+@media(max-width:639px){
+  .vd .vd-dialog.vd-day-schedule-dialog{padding:20px;border-radius:18px;max-height:80dvh}
+  .vd .vd-day-schedule-dialog .vd-dialog-heading{align-items:flex-start;gap:8px}
+  .vd .vd-day-schedule-dialog .vd-dialog-heading h2{font-size:19px;padding-top:8px}
+  .vd .vd-day-schedule-dialog .vd-day-schedule-meta{font-size:12px;margin:4px 0 12px}
+  .vd .vd-day-schedule-dialog .vd-day-schedule-row{grid-template-columns:54px minmax(0,1fr);gap:12px;min-height:0;padding:16px 0}
+  .vd .vd-day-schedule-dialog .vd-day-schedule-time{font-size:19px;align-self:start;padding-top:3px}
+  .vd .vd-day-schedule-dialog .vd-day-schedule-time.is-undecided{font-size:12px}
+  .vd .vd-day-schedule-dialog .vd-avatar{width:44px;height:44px;border-radius:12px}
+  .vd .vd-day-schedule-dialog .vd-day-schedule-person{gap:10px}
+  .vd .vd-day-schedule-dialog .vd-day-schedule-name h3{font-size:16px}
+  .vd .vd-day-schedule-dialog .vd-day-schedule-actions{grid-column:2;gap:8px}
+}

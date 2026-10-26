@@ -1,20 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroHeader } from './components/HeroHeader';
 import { PlatformMiniSpotlight } from './components/preview/PlatformMiniSpotlight';
+import { DebutSpotlightHighlight } from './components/preview/DebutSpotlightHighlight';
 import { MonthlyCalendarGrid } from './components/MonthlyCalendarGrid';
 import { FooterBanner } from './components/FooterBanner';
 import { Footer } from './components/Footer';
 import { StudioSubmitModal } from './components/StudioSubmitModal';
-import { CreatorProfilePage } from './components/profile/CreatorProfilePage';
-import { AboutPage } from './components/pages/AboutPage';
-import { GuidePage } from './components/pages/GuidePage';
-import { PrivacyPage } from './components/pages/PrivacyPage';
-import { TermsPage } from './components/pages/TermsPage';
-import { ContactPage } from './components/pages/ContactPage';
-import { AdminCmsPage } from './components/pages/AdminCmsPage';
-import { ErrorPage } from './components/pages/ErrorPage';
-import { AnalyticsLayout } from './components/analytics/AnalyticsLayout';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { DebutEvent } from './types';
 import { fetchDebutEvents } from './services/eventService';
@@ -22,9 +14,50 @@ import { generateICSContent, triggerFileDownload } from './utils/dateUtils';
 import { filterEventsByPlatform, filterEventsByQuery, filterEventsByCountry } from './utils/eventUtils';
 import { Language, SEO_DATA, UI_TRANSLATIONS } from './utils/i18n';
 
+// 동적 코드 분할 (Code Splitting): 메인 번들 경량화 (관리자 CMS 500KB, 통계, 상세 프로필 등 지연 로딩)
+const CreatorProfilePage = lazy(() =>
+  import('./components/profile/CreatorProfilePage').then((m) => ({ default: m.CreatorProfilePage }))
+);
+const AnalyticsLayout = lazy(() =>
+  import('./components/analytics/AnalyticsLayout').then((m) => ({ default: m.AnalyticsLayout }))
+);
+const AboutPage = lazy(() =>
+  import('./components/pages/AboutPage').then((m) => ({ default: m.AboutPage }))
+);
+const GuidePage = lazy(() =>
+  import('./components/pages/GuidePage').then((m) => ({ default: m.GuidePage }))
+);
+const PrivacyPage = lazy(() =>
+  import('./components/pages/PrivacyPage').then((m) => ({ default: m.PrivacyPage }))
+);
+const TermsPage = lazy(() =>
+  import('./components/pages/TermsPage').then((m) => ({ default: m.TermsPage }))
+);
+const ContactPage = lazy(() =>
+  import('./components/pages/ContactPage').then((m) => ({ default: m.ContactPage }))
+);
+const AdminCmsPage = lazy(() =>
+  import('./components/pages/AdminCmsPage').then((m) => ({ default: m.AdminCmsPage }))
+);
+const ErrorPage = lazy(() =>
+  import('./components/pages/ErrorPage').then((m) => ({ default: m.ErrorPage }))
+);
+
+function PageLoadingFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-[300px] w-full py-16">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-8 h-8 border-3 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
+        <span className="text-xs font-medium text-slate-400">페이지를 불러오는 중…</span>
+      </div>
+    </div>
+  );
+}
+
 export function App() {
   const [currentPath, setCurrentPath] = useState<string>(() => window.location.pathname);
   const [activeNav, setActiveNav] = useState<string>('schedule');
+  const [spotlightMode, setSpotlightMode] = useState<'QUICK' | 'COVERFLOW'>('QUICK');
   const [currentLang, setCurrentLang] = useState<Language>(() => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -291,13 +324,48 @@ export function App() {
                 />
               </div>
 
-              {/* 신규 플랫폼별 컴팩트 스포트라이트 (무대 배경 일체형) */}
-              <PlatformMiniSpotlight
-                allEvents={events}
-                selectedTimezone={selectedTimezone}
-                onDownloadICS={handleDownloadICS}
-                onNavigate={handleNavigate}
-              />
+              {/* 하이라이트 뷰 모드 토글 (시안 검토용) */}
+              <div className="flex items-center justify-end mb-3 px-1">
+                <div className="inline-flex items-center p-1 bg-white/70 backdrop-blur-md rounded-xl border border-white/80 shadow-2xs text-[11px] font-bold">
+                  <button
+                    onClick={() => setSpotlightMode('QUICK')}
+                    className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                      spotlightMode === 'QUICK'
+                        ? 'bg-slate-900 text-white shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <span>⚡ 금일·금주 퀵 뷰 (신규 시안)</span>
+                  </button>
+                  <button
+                    onClick={() => setSpotlightMode('COVERFLOW')}
+                    className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                      spotlightMode === 'COVERFLOW'
+                        ? 'bg-slate-900 text-white shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <span>🎭 커버플로우 무대 뷰</span>
+                  </button>
+                </div>
+              </div>
+
+              {spotlightMode === 'QUICK' ? (
+                <DebutSpotlightHighlight
+                  allEvents={events}
+                  selectedTimezone={selectedTimezone}
+                  onDownloadICS={handleDownloadICS}
+                  onNavigate={handleNavigate}
+                  currentLang={currentLang}
+                />
+              ) : (
+                <PlatformMiniSpotlight
+                  allEvents={events}
+                  selectedTimezone={selectedTimezone}
+                  onDownloadICS={handleDownloadICS}
+                  onNavigate={handleNavigate}
+                />
+              )}
             </div>
 
             {/* 하단 본문(#F8FAFC) 연결 페이드 그라데이션 오버레이 (경계선 그림자 제거 및 스무스 블렌딩) */}
@@ -307,80 +375,82 @@ export function App() {
 
         {/* 2. Main Content Container */}
         <main className={`flex-grow ${isAnalyticsPath ? 'w-full' : 'max-w-[1280px] w-full mx-auto px-0 sm:px-6'}`}>
-          {isCreatorPage && creatorSlug ? (
-            <CreatorProfilePage
-              slug={creatorSlug}
-              onNavigateHome={() => handleNavigate('/')}
-              currentLang={currentLang}
-            />
-          ) : isAnalyticsPath ? (
-            <AnalyticsLayout
-              currentSubPath={currentPath}
-              onNavigateSubPath={handleNavigate}
-            />
-          ) : currentPath === '/about' ? (
-            <AboutPage
-              onNavigateHome={() => handleNavigate('/')}
-              currentLang={currentLang}
-            />
-          ) : currentPath === '/guide' ? (
-            <GuidePage
-              onNavigateHome={() => handleNavigate('/')}
-              onOpenSubmitModal={() => handleOpenSubmitModal()}
-              currentLang={currentLang}
-            />
-          ) : currentPath === '/privacy' ? (
-            <PrivacyPage
-              onNavigateHome={() => handleNavigate('/')}
-              currentLang={currentLang}
-            />
-          ) : currentPath === '/terms' ? (
-            <TermsPage
-              onNavigateHome={() => handleNavigate('/')}
-              currentLang={currentLang}
-            />
-          ) : currentPath === '/contact' ? (
-            <ContactPage
-              onNavigateHome={() => handleNavigate('/')}
-              onOpenSubmitModal={() => handleOpenSubmitModal()}
-              currentLang={currentLang}
-            />
-          ) : currentPath === '/admin' ? (
-            <AdminCmsPage
-              onNavigateHome={() => handleNavigate('/')}
-            />
-          ) : !isKnownRoute ? (
-            <ErrorPage
-              code="404"
-              onNavigateHome={() => handleNavigate('/')}
-              currentLang={currentLang}
-            />
-          ) : (
-            <>
-              {/* Main Monthly / Mobile Calendar Grid Section */}
-              <div className="mt-6 sm:mt-8">
-                <MonthlyCalendarGrid
-                  events={filteredEvents}
-                  selectedTimezone={selectedTimezone}
-                  setSelectedTimezone={setSelectedTimezone}
-                  selectedPlatform={selectedPlatform}
-                  setSelectedPlatform={setSelectedPlatform}
-                  selectedCountry={selectedCountry}
-                  setSelectedCountry={setSelectedCountry}
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  onDownloadICS={handleDownloadICS}
-                  onOpenSubmitModal={handleOpenSubmitModal}
-                  onEditEvent={handleEditEvent}
-                />
-              </div>
+          <Suspense fallback={<PageLoadingFallback />}>
+            {isCreatorPage && creatorSlug ? (
+              <CreatorProfilePage
+                slug={creatorSlug}
+                onNavigateHome={() => handleNavigate('/')}
+                currentLang={currentLang}
+              />
+            ) : isAnalyticsPath ? (
+              <AnalyticsLayout
+                currentSubPath={currentPath}
+                onNavigateSubPath={handleNavigate}
+              />
+            ) : currentPath === '/about' ? (
+              <AboutPage
+                onNavigateHome={() => handleNavigate('/')}
+                currentLang={currentLang}
+              />
+            ) : currentPath === '/guide' ? (
+              <GuidePage
+                onNavigateHome={() => handleNavigate('/')}
+                onOpenSubmitModal={() => handleOpenSubmitModal()}
+                currentLang={currentLang}
+              />
+            ) : currentPath === '/privacy' ? (
+              <PrivacyPage
+                onNavigateHome={() => handleNavigate('/')}
+                currentLang={currentLang}
+              />
+            ) : currentPath === '/terms' ? (
+              <TermsPage
+                onNavigateHome={() => handleNavigate('/')}
+                currentLang={currentLang}
+              />
+            ) : currentPath === '/contact' ? (
+              <ContactPage
+                onNavigateHome={() => handleNavigate('/')}
+                onOpenSubmitModal={() => handleOpenSubmitModal()}
+                currentLang={currentLang}
+              />
+            ) : currentPath === '/admin' ? (
+              <AdminCmsPage
+                onNavigateHome={() => handleNavigate('/')}
+              />
+            ) : !isKnownRoute ? (
+              <ErrorPage
+                code="404"
+                onNavigateHome={() => handleNavigate('/')}
+                currentLang={currentLang}
+              />
+            ) : (
+              <>
+                {/* Main Monthly / Mobile Calendar Grid Section */}
+                <div className="mt-6 sm:mt-8">
+                  <MonthlyCalendarGrid
+                    events={filteredEvents}
+                    selectedTimezone={selectedTimezone}
+                    setSelectedTimezone={setSelectedTimezone}
+                    selectedPlatform={selectedPlatform}
+                    setSelectedPlatform={setSelectedPlatform}
+                    selectedCountry={selectedCountry}
+                    setSelectedCountry={setSelectedCountry}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    onDownloadICS={handleDownloadICS}
+                    onOpenSubmitModal={handleOpenSubmitModal}
+                    onEditEvent={handleEditEvent}
+                  />
+                </div>
 
-              {/* Creator Callout Banner (Desktop only) */}
-              <div className="hidden sm:block">
-                <FooterBanner onOpenSubmitModal={() => handleOpenSubmitModal()} currentLang={currentLang} />
-              </div>
-            </>
-          )}
+                {/* Creator Callout Banner (Desktop only) */}
+                <div className="hidden sm:block">
+                  <FooterBanner onOpenSubmitModal={() => handleOpenSubmitModal()} currentLang={currentLang} />
+                </div>
+              </>
+            )}
+          </Suspense>
         </main>
 
         {/* 3. Footer */}
