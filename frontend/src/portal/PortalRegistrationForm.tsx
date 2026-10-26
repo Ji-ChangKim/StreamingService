@@ -21,6 +21,7 @@ export function PortalRegistrationForm({ initial, profileOnly, onSubmit }: {
   const [url, setUrl] = useState('');
   const [lookup, setLookup] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [lookupMessage, setLookupMessage] = useState('');
+  const [duplicateSlug, setDuplicateSlug] = useState('');
   const [lookupAttempt, setLookupAttempt] = useState(0);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -41,6 +42,8 @@ export function PortalRegistrationForm({ initial, profileOnly, onSubmit }: {
     setUrl(value);
     setLookup('idle');
     setLookupMessage('');
+    setDuplicateSlug('');
+    setError('');
     setProfile((previous) => ({ ...previous, channelUrl: value, displayName: '', avatarUrl: '', description: '' }));
   };
 
@@ -52,16 +55,21 @@ export function PortalRegistrationForm({ initial, profileOnly, onSubmit }: {
     const timer = window.setTimeout(async () => {
       setLookup('loading');
       setLookupMessage('방송국 정보를 불러오고 있어요.');
+      setDuplicateSlug('');
+      setError('');
       try {
         const result = await fetchRegistrationProfile(url, platform, controller.signal);
         if (controller.signal.aborted) return;
         setProfile((previous) => ({ ...previous, platform, channelUrl: result.channelUrl, displayName: result.displayName, avatarUrl: result.avatarUrl, description: result.description.slice(0, 600) }));
         setLookup('success');
         setLookupMessage('방송국 정보를 불러왔어요. 활동명과 소개를 확인해 주세요.');
-      } catch (cause) {
+      } catch (cause: any) {
         if (controller.signal.aborted) return;
         setLookup('error');
-        setLookupMessage((cause as Error).message);
+        const message = cause?.message || '방송국 정보를 불러오지 못했어요.';
+        setLookupMessage(message);
+        setDuplicateSlug(cause?.existingSlug || '');
+        setProfile((previous) => ({ ...previous, displayName: '', avatarUrl: '', description: '' }));
       }
     }, lookupAttempt ? 0 : 500);
     return () => { window.clearTimeout(timer); controller.abort(); };
@@ -73,6 +81,10 @@ export function PortalRegistrationForm({ initial, profileOnly, onSubmit }: {
     setError('');
     if (!platform || !portalChannelUrl(url, platform)) { setError('지원하는 방송 플랫폼의 HTTPS 주소를 입력해 주세요.'); return; }
     if (lookup === 'loading') { setError('방송국 정보를 불러온 뒤 다시 신청해 주세요.'); return; }
+    if (lookup === 'error' && lookupMessage.includes('이미 등록된')) {
+      setError('이미 등록된 방송국 주소입니다. 다른 채널 주소를 입력해 주세요.');
+      return;
+    }
     const startAtUtc = profile.dateState === 'FIXED' ? portalUtc(profile.debutDate, profile.debutTime, profile.timezone) : '';
     if (profile.dateState === 'FIXED' && !startAtUtc) { setError('데뷔 날짜와 시간을 확인해 주세요.'); return; }
     if (!profile.displayName.trim()) { setError('채널 활동명을 입력해 주세요.'); return; }
@@ -92,6 +104,24 @@ export function PortalRegistrationForm({ initial, profileOnly, onSubmit }: {
       <label htmlFor="registration-url">{t("방송 채널 URL")}<b>*</b></label>
       <div className="vd-registration-url"><div><Link2 size={16} /><input id="registration-url" required type="url" value={url} onChange={(event) => changeUrl(event.target.value)} placeholder={t("방송국 또는 라이브 주소를 붙여넣어 주세요.")} maxLength={1000} /></div><button type="button" className="vd-button vd-primary" disabled={!platform || lookup === 'loading'} onClick={() => setLookupAttempt((value) => value + 1)}>{lookup === 'loading' ? <Loader2 size={16} className="vd-loading-icon" /> : <Link2 size={16} />} {t("정보 불러오기")}</button></div>
       <div className="vd-registration-url-note"><span className={platform ? 'is-valid' : ''}>{platform ? <><CheckCircle2 size={13} /> {t("지원하는 방송 채널: {0}", [PORTAL_PLATFORMS.find((item) => item.id === platform)?.label])}</> : t("방송 주소를 입력하면 플랫폼을 자동으로 인식합니다.")}</span><small>{t("활동명과 소개도 함께 불러와요.")}</small></div>
+      {lookup === 'error' && (
+        <div className="vd-registration-url-error mt-2.5 p-3.5 bg-red-50/90 border border-red-200/90 rounded-xl text-xs text-red-700 font-bold flex flex-wrap items-center justify-between gap-2 shadow-2xs" role="alert">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0" />
+            <span>{t(lookupMessage)}</span>
+          </div>
+          {duplicateSlug && (
+            <a
+              href={`/creator/${encodeURIComponent(duplicateSlug)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-blue-600 hover:text-blue-800 underline font-extrabold whitespace-nowrap ml-auto"
+            >
+              {t("등록된 버튜버 소개 보기")} &rarr;
+            </a>
+          )}
+        </div>
+      )}
     </section>
 
     <section className="vd-registration-section">

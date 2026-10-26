@@ -11,7 +11,8 @@ import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { verifyAdminLogin, validateAdminToken } from './adminAuthService';
 import { generateCleanSlug } from '../utils/slugUtils';
-import { PortalProfile, PortalRequest, RequestKind, PORTAL_PLATFORMS, PORTAL_TIMEZONES, REGISTRATION_REGIONS, portalChannelKey, portalChannelUrl, portalWebUrl, portalUtc } from '../../../shared/portal';
+import { PortalPlatform, PortalProfile, PortalRequest, RequestKind, PORTAL_PLATFORMS, PORTAL_TIMEZONES, REGISTRATION_REGIONS, portalChannelKey, portalChannelUrl, portalWebUrl, portalUtc } from '../../../shared/portal';
+import { checkRegisteredChannel } from './portalChannelDuplicateService';
 
 type PortalBindings = { DB: D1Database; PORTAL_ENABLED?: string; DISCORD_BOT_TOKEN?: string };
 // 최대 12개 영상과 소식·팬 안내를 담되 요청 전체 크기는 제한한다.
@@ -140,6 +141,18 @@ portalApi.onError((error, c) => { console.error('[portal]', error.message); retu
 // Content-Length가 없는 요청도 실제 본문 크기를 제한한다.
 portalApi.use('*', bodyLimit({ maxSize: PORTAL_BODY_LIMIT, onError: (c) => c.json({ error: '입력 내용이 너무 깁니다.' }, 413) }));
 
+// 방송 채널 URL 중복 여부 사전 확인 (단일 책임 엔드포인트)
+portalApi.get('/channels/check', async (c) => {
+  c.header('Cache-Control', 'no-store');
+  const platform = (c.req.query('platform') || '').toUpperCase() as PortalPlatform;
+  const url = c.req.query('url') || '';
+  if (!platform || !url) {
+    return c.json({ exists: false });
+  }
+  const result = await checkRegisteredChannel(c.env.DB, url, platform);
+  return c.json(result);
+});
+
 // 공개 프로필은 실제 DB 결과만 반환한다.
 portalApi.get('/profiles', async (c) => {
   // 개인 신청과 분리한 공개 소개만 짧게 재사용한다.
@@ -217,13 +230,10 @@ portalApi.post('/requests', async (c) => {
   }
   const channelKey = registration ? portalChannelKey(String(payload.channelUrl), String(payload.platform)) : '';
   if (registration) {
-    const duplicate = (await readPortalProfiles(c.env.DB)).some((p) => portalChannelKey(p.channelUrl, p.platform) === channelKey);
-    if (duplicate) return c.json({ error: '이미 등록된 채널입니다. 정보 변경은 문의로 알려주세요.' }, 409);
-    const pending = await c.env.DB.prepare('SELECT request_id FROM portal_pending_channels WHERE channel_key=?').bind(channelKey).first();
-    if (pending) return c.json({ error: '이미 검토 중인 채널입니다. 정보 변경은 문의로 알려주세요.' }, 409);
-    // 이전 버전에서 받은 대기 신청도 주소 별칭을 포함해 대조한다.
-    const oldPending = await c.env.DB.prepare("SELECT payload FROM portal_requests WHERE status='PENDING' AND kind IN ('DEBUT','PROFILE')").all<{ payload: string }>();
-    if ((oldPending.results || []).some((row) => { const p = JSON.parse(row.payload); return portalChannelKey(p.channelUrl, p.platform) === channelKey; })) return c.json({ error: '이미 검토 중인 채널입니다. 정보 변경은 문의로 알려주세요.' }, 409);
+    const check = await checkRegisteredChannel(c.env.DB, String(payload.channelUrl), payload.platform as PortalPlatform);
+    if (check.exists) {
+      return c.json({ error: check.error || '이미 등록된 주소입니다.' }, 409);
+    }
   }
   const requester = await portalTokenHash(c.req.header('CF-Connecting-IP') || 'local');
   const count = await c.env.DB.prepare("SELECT COUNT(*) AS count FROM portal_requests WHERE requester_hash=? AND created_at>datetime('now','-1 hour')").bind(requester).first<{ count: number }>();
