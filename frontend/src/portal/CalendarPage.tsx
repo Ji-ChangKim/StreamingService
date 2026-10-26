@@ -42,6 +42,16 @@ export function filterPortalProfiles(profiles: PortalProfile[], platform: string
   return profiles.filter((p) => (platform === 'ALL' || p.platform === platform) && (country === 'ALL' || p.countryCode === country));
 }
 
+// 모바일 아젠다 헤더의 날짜를 다국어와 요일을 고려해 읽기 쉽게 포맷팅한다.
+function formatAgendaDate(day: string, language: string = getPortalLanguage()): string {
+  try {
+    const date = new Date(`${day}T00:00:00Z`);
+    return dateTimeFormatter(language, { timeZone: 'UTC', month: 'long', day: 'numeric', weekday: 'short' }).format(date);
+  } catch {
+    return day;
+  }
+}
+
 // 메인에서는 날짜 탐색을 먼저 제공하고 그다음 가까운 예정자를 소개한다.
 export const CalendarPage = memo(function CalendarPage({ profiles, loading, error, refresh, onNavigate }: { profiles: PortalProfile[]; loading: boolean; error: string; refresh: () => void; onNavigate: (path: string) => void }) {
   usePortalLocale(); // 언어 변경은 화면 상태를 유지한 채 문구만 갱신한다.
@@ -90,7 +100,7 @@ export const CalendarPage = memo(function CalendarPage({ profiles, loading, erro
         {!monthProfiles.length && <div className="vd-empty-inline"><p>{t("선택한 조건의 데뷔 일정이 없어요.")}</p><button type="button" className="vd-text-button" onClick={() => move(1)}>{t("다음")}{state.view === 'month' ? t("달") : t("주")} {t("확인")}<ArrowRight size={15} /></button></div>}
       </>}
     </section>
-    {!loading && !error && <div className="vd-mobile-agenda"><div className="vd-section-heading"><h2>{selected} {t("데뷔 일정")}</h2><button className="vd-text-button" type="button" onClick={() => setInspectedDay(selected)}>{t("전체 보기")}<ArrowRight size={16} /></button></div>{selectedItems.length ? selectedItems.map((profile) => <ScheduleRow key={profile.slug} profile={profile} timezone={state.timezone} onNavigate={onNavigate} />) : <p className="vd-muted">{t("선택한 날짜의 일정이 없어요. 다른 날짜도 살펴보세요.")}</p>}</div>}
+    {!loading && !error && <div className="vd-mobile-agenda"><div className="vd-section-heading"><h2>{t("{0} 데뷔 일정", [formatAgendaDate(selected, getPortalLanguage())])}</h2><button className="vd-text-button" type="button" onClick={() => setInspectedDay(selected)}>{t("전체 보기")}<ArrowRight size={16} /></button></div>{selectedItems.length ? selectedItems.map((profile) => <ScheduleRow key={profile.slug} profile={profile} timezone={state.timezone} onNavigate={onNavigate} />) : <p className="vd-muted">{t("선택한 날짜의 일정이 없어요. 다른 날짜도 살펴보세요.")}</p>}</div>}
     {!loading && !error && <section className="vd-section"><div className="vd-section-heading"><h2>{state.month < today.slice(0, 7) ? t("이달 데뷔자") : t("다가오는 데뷔")}</h2><PortalLink to="/creators" onNavigate={onNavigate} className="vd-text-button">{t("버튜버 둘러보기")}<ArrowRight size={16} /></PortalLink></div>{ordered.length ? <><div className="vd-cards">{ordered.slice(0, expanded ? undefined : 4).map((profile) => <CreatorCard key={profile.slug} profile={profile} onNavigate={onNavigate} timezone={state.timezone} />)}</div>{ordered.length > 4 && <button type="button" className="vd-button vd-show-more" onClick={() => setExpanded(!expanded)}>{expanded ? t("접기") : t("예정자 {0}명 모두 보기", [ordered.length])}</button>}</> : <div className="vd-empty-inline"><p>{t("선택한 조건에 맞는 데뷔 예정자가 없어요.")}</p><button type="button" className="vd-button" onClick={() => update({ month: shiftedMonth(state.month, 1), day: `${shiftedMonth(state.month, 1)}-01` })}>{t("다음 달 살펴보기")}</button></div>}</section>}
     {!loading && !error && undecided.length > 0 && <section className="vd-section"><div className="vd-section-heading"><h2>{t("데뷔 날짜 미정")}<span className="vd-count">{undecided.length}{t("명")}</span></h2></div><div className="vd-cards">{undecided.map((profile) => <CreatorCard key={profile.slug} profile={profile} onNavigate={onNavigate} />)}</div></section>}
     <PortalHomeLearning profiles={profiles} timezone={state.timezone} loading={loading} error={error} onNavigate={onNavigate} />
