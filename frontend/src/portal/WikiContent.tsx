@@ -206,6 +206,27 @@ export function WikiDirectoryContent({ profiles, open, favorites, toggle, now, f
   const [visible, setVisible] = useState(12);
   useEffect(() => setVisible(12), [country, tag, language, onlyFavorites, sortOrder]);
 
+  // 현재 컨텍스트(국가, 관심 버튜버 조건) 내에서 실제 등록된 버튜버가 1명 이상 있는 플랫폼 추출
+  const availablePlatformIds = useMemo(() => {
+    const candidates = profiles.filter(p =>
+      (!(favoritesOnly || onlyFavorites) || favorites.includes(p.slug)) &&
+      (country === 'ALL' || p.countryCode === country)
+    );
+    return new Set(candidates.map(p => p.platform));
+  }, [profiles, favoritesOnly, onlyFavorites, favorites, country]);
+
+  // 실제 버튜버가 존재하는 플랫폼만 노출 (0명인 플랫폼은 버튼 숨김)
+  const visiblePlatforms = useMemo(() => {
+    return platforms.filter(p => availablePlatformIds.has(p.id));
+  }, [availablePlatformIds]);
+
+  // 선택된 플랫폼이 필터 변경으로 가용 목록에서 사라지면 'ALL'로 안전 복귀
+  useEffect(() => {
+    if (platform !== 'ALL' && !availablePlatformIds.has(platform as any)) {
+      setPlatform('ALL');
+    }
+  }, [availablePlatformIds, platform]);
+
   const matches = useMemo(() => {
     return profiles.filter(p =>
       (platform === 'ALL' || p.platform === platform) &&
@@ -264,7 +285,7 @@ export function WikiDirectoryContent({ profiles, open, favorites, toggle, now, f
 
       <div className="directory-toolbar">
         <div className="platform-filters">
-          {[{ id: 'ALL', label: '전체' }, ...platforms].map(item => (
+          {[{ id: 'ALL', label: '전체' }, ...visiblePlatforms].map(item => (
             <button
               key={item.id}
               type="button"
