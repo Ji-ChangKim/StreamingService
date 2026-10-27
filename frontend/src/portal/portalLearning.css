@@ -1,21 +1,41 @@
 /* 안내 콘텐츠는 모바일에서도 본문과 다음 행동을 한 흐름으로 읽게 한다. */
-.vd-learning{min-width:0}.vd-learning-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.vd-learning .vd-panel{padding:24px}.vd-learning h2{font-size:20px;line-height:1.5;margin:0 0 14px}.vd-learning h3{font-size:17px;margin:0 0 12px}.vd-learning p{color:#52647c;line-height:1.85;margin:0 0 16px;overflow-wrap:anywhere}.vd-week-note{margin-bottom:28px}.vd-week-note ul{display:flex;flex-wrap:wrap;gap:10px 24px;padding-left:20px;margin:0 0 16px}.vd-guide-index{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}.vd-guide-index a{padding:9px 14px;background:#edf3ff;color:#2453a5;border-radius:8px;font-size:14px}.vd-guide-article{margin-bottom:22px;scroll-margin-top:100px;max-width:920px}.vd-guide-article .vd-button{margin-top:4px}.vd-home-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:20px 0}.vd-profile-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0 0}.vd-profile-facts dt{font-size:12px;color:#64748b;margin-bottom:6px}.vd-profile-facts dd{margin:0;color:#334155;overflow-wrap:anywhere}.vd-profile-evidence{margin-top:24px;padding:24px}.vd-profile-evidence h2{font-size:18px;margin:0 0 12px}.vd-profile-evidence p{color:#52647c;line-height:1.8}.vd-profile-evidence .vd-text-button{margin-right:18px}.vd-profile-about h2{font-size:18px;margin:0 0 12px}
-@media(max-width:760px){.vd-learning-grid{grid-template-columns:1fr}.vd-learning .vd-panel{padding:20px}.vd-learning h2{font-size:18px}.vd-guide-index{flex-direction:column}.vd-profile-facts{grid-template-columns:1fr}.vd-home-actions .vd-button{font-size:13px}.vd-home-intro p{font-size:13px!important;max-width:540px!important}}
+.vd-learning{min-width:0}
 
-.vd-week-profiles{padding-left:22px;display:grid;gap:12px}.vd-week-profiles li>a{font-weight:700;color:#2453a5}.vd-week-profiles li>span{display:block;color:#52647c;font-size:13px;margin-top:5px}.vd-week-profiles li>p{margin:5px 0 0}
+/* 이번 주 데뷔 소식: 에디토리얼 위클리 보드 */
+.vd-weekly-board{background:#ffffff;border:1px solid #e2e8f0;border-radius:18px;padding:26px 28px;box-shadow:0 4px 20px -2px rgba(15,23,42,0.04);margin-bottom:36px}
+.vd-weekly-header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;border-bottom:1px solid #f1f5f9;padding-bottom:18px;margin-bottom:20px}
+.vd-weekly-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#2563eb;background:#eff6ff;padding:4px 10px;border-radius:999px;margin-bottom:8px}
+.vd-weekly-title-wrap h2{font-size:20px;font-weight:800;color:#0f172a;margin:0 0 4px}
+.vd-weekly-dates{font-size:12px;color:#64748b;margin:0}
+.vd-weekly-platform-chips{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.vd-weekly-chip{display:inline-flex;align-items:center;gap:6px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:999px;padding:5px 12px;font-size:11px;color:#334155}
+.vd-weekly-chip strong{color:#2563eb;font-weight:800;margin-left:2px}
+.vd-weekly-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.vd-weekly-item{display:flex;align-items:flex-start;gap:14px;background:#f8fafc;border:1px solid #f1f5f9;border-radius:14px;padding:14px;transition:all .18s ease}
+.vd-weekly-item:hover{background:#ffffff;border-color:#cbd5e1;box-shadow:0 6px 16px -2px rgba(15,23,42,0.06);transform:translateY(-2px)}
+.vd-weekly-item .vd-avatar{width:56px;height:56px;border-radius:16px;flex-shrink:0}
+.vd-weekly-info{min-width:0;flex:1}
+.vd-weekly-item-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.vd-weekly-time{font-size:11px;font-weight:700;color:#2563eb;font-variant-numeric:tabular-nums}
+.vd-weekly-name h3{font-size:15px;font-weight:750;color:#0f172a;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vd-weekly-name:hover h3{color:#2563eb}
+.vd-weekly-desc{font-size:11px;color:#64748b;line-height:1.6;margin:0;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.vd-weekly-note{font-size:11px;color:#94a3b8;margin:16px 0 0;text-align:right}
+.vd-weekly-empty{font-size:13px;color:#64748b;text-align:center;padding:32px 0;margin:0}
 
-/* 공통 패널 규칙보다 구체적으로 지정해 가이드 문단의 읽기 간격을 보존한다. */
-.vd .vd-learning .vd-guide-article { max-width: 800px; margin-bottom: 24px; }
-.vd .vd-learning:has(> .vd-guide-index) { max-width: 800px; margin-inline: auto; }
-.vd .vd-learning .vd-guide-index { gap: 12px; margin-bottom: 24px; }
-.vd .vd-learning .vd-guide-index a { min-height: 44px; display: inline-flex; align-items: center; padding: 8px 16px; }
-.vd .vd-learning .vd-panel { padding: var(--vd-card-padding,24px); }
-.vd .vd-learning .vd-panel > h2 { margin: 0 0 16px; }
-.vd .vd-learning .vd-panel > p { font-size: 14px; line-height: 1.85; margin: 0 0 16px; }
-.vd .vd-learning .vd-panel > p:last-child { margin-bottom: 0; }
-.vd .vd-learning p { font-size: 14px; }
-.vd .vd-learning .vd-learning-grid { gap: var(--vd-layout-gap,24px); }
-.vd .vd-learning .vd-guide-article .vd-button { margin-top: 8px; }
-.vd .vd-profile-facts { gap: 16px; margin-top: 24px; }
-.vd .vd-profile-facts dd { font-size: 14px; line-height: 1.8; }
-.vd .vd-profile-evidence p { font-size: 14px; line-height: 1.8; }
+/* 가이드 카드 */
+.vd-learning-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.vd-guide-card{background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:24px;display:flex;flex-direction:column;transition:all .18s ease}
+.vd-guide-card:hover{border-color:#93c5fd;box-shadow:0 8px 24px -4px rgba(37,99,235,0.08);transform:translateY(-2px)}
+.vd-guide-card-icon{width:36px;height:36px;border-radius:10px;background:#eff6ff;color:#2563eb;display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px}
+.vd-guide-card h3{font-size:16px;font-weight:750;color:#0f172a;line-height:1.4;margin:0 0 10px}
+.vd-guide-card p{font-size:13px;color:#64748b;line-height:1.75;margin:0 0 18px;flex:1}
+.vd-guide-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#2563eb!important;margin-top:auto}
+.vd-guide-link:hover{text-decoration:underline}
+
+@media(max-width:768px){
+  .vd-weekly-grid{grid-template-columns:1fr}
+  .vd-weekly-board{padding:18px}
+  .vd-learning-grid{grid-template-columns:1fr}
+  .vd-guide-card{padding:18px}
+}

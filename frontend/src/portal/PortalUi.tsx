@@ -3,7 +3,8 @@ import { t, usePortalLocale, getPortalLanguage, portalLanguagePath } from './por
 import { portalCalendarFile } from '../../../shared/portalCalendarFile';
 import { dateTimeFormatter } from '../../../shared/dateTimeFormatter';
 import { ReactNode, useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, CalendarPlus, Heart, Search, X, Check, Copy } from 'lucide-react';
+import { ArrowUpRight, CalendarPlus, Search, X, Check, Copy } from 'lucide-react';
+import { HeartIcon, ArrowUpRightIcon } from '@animateicons/react/lucide';
 import { PortalProfile, PORTAL_PLATFORMS, portalWebUrl } from '../../../shared/portal';
 import { readPortalStorage, savePortalStorage } from './portalApi';
 
@@ -74,7 +75,7 @@ export function FavoriteButton({ slug }: { slug: string }) {
   const [error, setError] = useState(false);
   useEffect(() => { const sync = () => setFavorites(readPortalStorage('favorites', [])); window.addEventListener('vd-favorites', sync); return () => window.removeEventListener('vd-favorites', sync); }, []);
   const active = favorites.includes(slug);
-  return <button type="button" className={`vd-icon-button ${active ? 'is-favorite' : ''}`} aria-pressed={active} aria-label={error ? t("관심 목록 저장 실패 · 다시 시도") : active ? t("관심 목록에서 제거") : t("관심 목록에 저장")} title={error ? t("브라우저 저장을 허용해 주세요.") : active ? t("관심 목록에서 제거") : t("관심 목록에 저장")} onClick={() => { const next = active ? favorites.filter((item) => item !== slug) : [...favorites, slug]; if (savePortalStorage('favorites', next)) { setError(false); setFavorites(next); window.dispatchEvent(new Event('vd-favorites')); } else setError(true); }}><Heart size={18} fill={active ? 'currentColor' : 'none'} /></button>;
+  return <button type="button" className={`vd-icon-button ${active ? 'is-favorite' : ''}`} aria-pressed={active} aria-label={error ? t("관심 목록 저장 실패 · 다시 시도") : active ? t("관심 목록에서 제거") : t("관심 목록에 저장")} title={error ? t("브라우저 저장을 허용해 주세요.") : active ? t("관심 목록에서 제거") : t("관심 목록에 저장")} onClick={() => { const next = active ? favorites.filter((item) => item !== slug) : [...favorites, slug]; if (savePortalStorage('favorites', next)) { setError(false); setFavorites(next); window.dispatchEvent(new Event('vd-favorites')); } else setError(true); }}><HeartIcon size={18} color={active ? '#ed628a' : 'currentColor'} /></button>;
 }
 
 // 프로필과 활동명을 카드 중심에 두고 실제 소개·일정으로 만남을 연결한다.
@@ -90,7 +91,7 @@ export function CreatorCard({ profile, onNavigate, timezone, preview = false }: 
     <p className="vd-card-description">{profileExcerpt(profile) || t("방송 채널에서 소개를 확인해 보세요.")}</p>
     {profile.tags.length > 0 && <div className="vd-tags">{profile.tags.slice(0, 3).map((tag) => <span key={tag}>{tag}</span>)}</div>}
     <p className="vd-card-schedule">{portalSchedule(profile, timezone)}</p>
-    {!preview && <PortalLink to={`/creator/${encodeURIComponent(profile.slug)}`} onNavigate={onNavigate} className="vd-card-link">{t("소개 보기")}<ArrowUpRight size={16} /></PortalLink>}
+    {!preview && <PortalLink to={`/creator/${encodeURIComponent(profile.slug)}`} onNavigate={onNavigate} className="vd-card-link"><span>{t("소개 보기")}</span><ArrowUpRightIcon size={16} /></PortalLink>}
   </article>;
 }
 

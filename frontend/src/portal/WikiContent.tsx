@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react';
-import { Heart } from 'lucide-react';
+import { useEffect, useState, useMemo } from 'react';
+import { Heart, Search, X, RotateCcw } from 'lucide-react';
 import { PORTAL_PLATFORMS, portalWebUrl, type PortalMedia, type PortalProfile } from '../../../shared/portal';
 import type { ProfileDetailResponse } from '../../../shared/profileDetails';
 import { profileMediaSource } from '../../../shared/profileMedia';
-import { PortalLink, portalSchedule, downloadPortalSchedule } from './PortalUi';
+import { portalSchedule, downloadPortalSchedule } from './PortalUi';
 import { t, usePortalLocale, portalLanguagePath, getPortalLanguage } from './portalLocale';
 import { profileDebutPhase } from '../../../shared/profilePresentation';
 import { WikiGuestbook } from './WikiParticipation';
 import { WikiActivity } from './WikiActivity';
+import { WikiCreatorCardSchedule, WikiCreatorCardContent, WikiCreatorCardLore, WikiVariantSelector, type CardVariant } from './WikiCardVariants';
 import './wikiContent.css';
+import './wikiCardVariants.css';
 
 // 상세 본문 메뉴는 추천 영상과 방송·활동 기록으로 구성한다.
 type Tab = 'videos' | 'history';
@@ -39,18 +41,12 @@ function Favorite({ profile, favorites, toggle }: { profile: PortalProfile; favo
   return <button className={`favorite ${saved ? 'saved' : ''}`} aria-label={t(saved ? '{0} 관심 해제' : '{0} 관심 저장', [profile.displayName])} aria-pressed={saved} onClick={() => toggle(profile.slug)}><Heart size={18} fill={saved ? 'currentColor' : 'none'} /></button>;
 }
 
-// 목록 카드에서는 원본 소개문·이메일·날짜 나열을 사용하지 않는다.
-export function WikiCreatorCard({ profile, open, favorites, toggle, now }: { profile: PortalProfile; open: (slug: string) => void; favorites: string[]; toggle: (slug: string) => void; now: number }) {
-  const start = profile.dateState === 'FIXED' ? Date.parse(profile.startAtUtc) : NaN;
-  const days = Number.isFinite(start) ? Math.round((Date.parse(new Date(start + 9 * 3600000).toISOString().slice(0, 10)) - Date.parse(new Date(now + 9 * 3600000).toISOString().slice(0, 10))) / dayMs) : null;
-  const badge = group(profile) || (days === null ? t('데뷔 일정 미정') : days > 0 ? `D-${days}` : days === 0 ? t('오늘 데뷔') : t('데뷔 +{0}일', [-days]));
-  const chips = [profile.details?.species, profile.details?.mbti, profile.tags[0]].filter(Boolean).slice(0, 3);
-  return <article className="creator-card">
-    <div className="card-stage"><span className={`card-badge ${group(profile) ? 'group' : ''}`}>{badge}</span><Favorite profile={profile} favorites={favorites} toggle={toggle} /></div>
-    <div className="card-identity"><div className="card-avatar"><Avatar profile={profile} /><span className="avatar-platform"><img src={platforms.find(item => item.id === profile.platform)?.icon} alt={platforms.find(item => item.id === profile.platform)?.label || profile.platform} /></span></div><h3>{profile.displayName}</h3></div>
-    <div className="card-chips">{chips.length ? chips.map(chip => <span key={chip}>{t("#")}{chip}</span>) : <span>{t("#")}{profile.dateState !== 'NONE' && profile.debutDate ? t('{0}월 데뷔', [Number(profile.debutDate.slice(5, 7))]) : t('새로운 발견')}</span>}</div>
-    <PortalLink className="card-open" to={`/creator/${encodeURIComponent(profile.slug)}`} onNavigate={() => open(profile.slug)}>{t("도감 보러가기")}</PortalLink>
-  </article>;
+// 목록 카드는 사용자가 선택한 시안(A: 일정·타이밍 / B: 콘텐츠·취향 / C: 세계관·크레딧)에 따라 분기 렌더링한다.
+export function WikiCreatorCard(props: { profile: PortalProfile; open: (slug: string) => void; favorites: string[]; toggle: (slug: string) => void; now: number; variant?: CardVariant; index?: number }) {
+  const { variant = 'A' } = props;
+  if (variant === 'B') return <WikiCreatorCardContent {...props} />;
+  if (variant === 'C') return <WikiCreatorCardLore {...props} />;
+  return <WikiCreatorCardSchedule {...props} />;
 }
 
 // 썸네일은 잘라내지 않으며 카드 전체를 원본 영상 링크로 사용한다.
@@ -99,10 +95,48 @@ export function WikiProfileContent({ profile, detail, loading, report, now, favo
   </>;
 }
 
+const POPULAR_QUICK_TAGS = ['종합게임', '노래', '소통', '라디오', 'ASMR', '그림', '저챗'];
+type SortOrder = 'UPCOMING' | 'RECENT' | 'NAME';
+
+function sortProfiles(list: PortalProfile[], order: SortOrder, now: number): PortalProfile[] {
+  return [...list].sort((a, b) => {
+    if (order === 'NAME') {
+      return a.displayName.localeCompare(b.displayName, 'ko');
+    }
+    const aTime = a.dateState === 'FIXED' ? Date.parse(a.startAtUtc) : NaN;
+    const bTime = b.dateState === 'FIXED' ? Date.parse(b.startAtUtc) : NaN;
+    const aValid = Number.isFinite(aTime);
+    const bValid = Number.isFinite(bTime);
+
+    if (order === 'UPCOMING') {
+      const aFuture = aValid && aTime >= now;
+      const bFuture = bValid && bTime >= now;
+      if (aFuture && bFuture) return aTime - bTime;
+      if (aFuture) return -1;
+      if (bFuture) return 1;
+      if (aValid && bValid) return bTime - aTime;
+      if (aValid) return -1;
+      if (bValid) return 1;
+      return a.displayName.localeCompare(b.displayName, 'ko');
+    }
+
+    if (order === 'RECENT') {
+      if (aValid && bValid) return bTime - aTime;
+      if (aValid) return -1;
+      if (bValid) return 1;
+      return a.displayName.localeCompare(b.displayName, 'ko');
+    }
+
+    return 0;
+  });
+}
+
 // 목록은 실제 공개 프로필을 검색·필터링하고 카드 구조만 새 시안으로 보여준다.
 export function WikiDirectoryContent({ profiles, open, favorites, toggle, now, favoritesOnly = false }: { favoritesOnly?: boolean; profiles: PortalProfile[]; open: (slug: string) => void; favorites: string[]; toggle: (slug: string) => void; now: number }) {
   const [query, setQuery] = useState('');
   const [platform, setPlatform] = useState('ALL');
+  const [cardVariant, setCardVariant] = useState<CardVariant>('A');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('UPCOMING');
   usePortalLocale();
   const [onlyFavorites, setOnlyFavorites] = useState(favoritesOnly);
   useEffect(() => { setOnlyFavorites(favoritesOnly); if (favoritesOnly) setCountry('ALL'); }, [favoritesOnly]);
@@ -112,7 +146,220 @@ export function WikiDirectoryContent({ profiles, open, favorites, toggle, now, f
   const tags = [...new Set(profiles.flatMap(profile => profile.tags))].sort();
   const languages = [...new Set(profiles.flatMap(profile => profile.languages))].sort();
   const [visible, setVisible] = useState(12);
-  useEffect(() => setVisible(12), [country, tag, language, onlyFavorites]);
-  const matches = profiles.filter(p => (platform === 'ALL' || p.platform === platform) && (!(favoritesOnly || onlyFavorites) || favorites.includes(p.slug)) && (country === 'ALL' || p.countryCode === country) && (!tag || p.tags.includes(tag)) && (!language || p.languages.includes(language)) && `${p.displayName} ${p.debutGroupName || ''} ${p.details?.species || ''}`.toLowerCase().includes(query.trim().toLowerCase()));
-  return <><section className="directory-intro"><span className="eyebrow">{t("새로운 취향을 발견하는 곳")}</span><h1>{t("당신의 다음 이야기를 만나보세요")}<span>{t(".")}</span></h1><p>{t("첫 인사부터 오래 함께할 순간까지, 버튜버의 이야기를 한곳에.")}</p><div className="directory-search"><input aria-label={t("버튜버 검색")} value={query} onChange={event => { setQuery(event.target.value); setVisible(12); }} placeholder={t("활동명, 공식 그룹, 종족으로 찾아보세요")} /></div></section><div className="directory-toolbar"><div className="platform-filters">{[{ id: 'ALL', label: '전체' }, ...platforms].map(item => <button key={item.id} aria-pressed={platform === item.id} onClick={() => { setPlatform(item.id); setVisible(12); }}>{t(item.label)}</button>)}</div><button className={`favorites-filter ${onlyFavorites ? 'selected' : ''}`} aria-pressed={favoritesOnly || onlyFavorites} onClick={() => favoritesOnly ? open('') : setOnlyFavorites(!onlyFavorites)}>{t("관심 버튜버")}</button></div><details className="wiki-browse-options"><summary>{t('탐색 조건')}</summary><div><label>{t('활동 국가')}<select value={country} onChange={event => setCountry(event.target.value)}><option value="ALL">{t('전체 국가')}</option><option value="KR">{t('한국')}</option><option value="JP">{t('일본')}</option><option value="US">{t('미국')}</option></select></label><label>{t('주요 콘텐츠')}<select value={tag} onChange={event => setTag(event.target.value)}><option value="">{t('전체 콘텐츠')}</option>{tags.map(tag => <option key={tag}>{tag}</option>)}</select></label><label>{t('방송 언어')}<select value={language} onChange={event => setLanguage(event.target.value)}><option value="">{t('전체 방송 언어')}</option>{languages.map(language => <option key={language}>{language}</option>)}</select></label></div></details><div className="results-row"><h2>{t(favoritesOnly || onlyFavorites ? '저장한 이야기' : '전체 버튜버')}<span>{matches.length.toLocaleString()}</span></h2><span>{t("활동명 · 데뷔 기록 · 공식 프로필")}</span></div>{matches.length ? <div className="creator-grid">{matches.slice(0, visible).map(profile => <WikiCreatorCard key={profile.slug} profile={profile} open={open} favorites={favorites} toggle={toggle} now={now} />)}</div> : <div className="big-empty"><h2>{t(favoritesOnly || onlyFavorites ? '마음에 드는 버튜버를 저장해 보세요' : '조건에 맞는 버튜버가 없어요')}</h2><p>{t('검색어나 플랫폼을 바꿔서 찾아보세요.')}</p></div>}{matches.length > visible && <button className="load-more" onClick={() => setVisible(visible + 12)}>{t("더 많은 이야기 만나기")}</button>}</>;
+  useEffect(() => setVisible(12), [country, tag, language, onlyFavorites, sortOrder, cardVariant]);
+
+  const matches = useMemo(() => {
+    return profiles.filter(p =>
+      (platform === 'ALL' || p.platform === platform) &&
+      (!(favoritesOnly || onlyFavorites) || favorites.includes(p.slug)) &&
+      (country === 'ALL' || p.countryCode === country) &&
+      (!tag || p.tags.includes(tag)) &&
+      (!language || p.languages.includes(language)) &&
+      `${p.displayName} ${p.debutGroupName || ''} ${p.details?.species || ''} ${p.tags.join(' ')}`.toLowerCase().includes(query.trim().toLowerCase())
+    );
+  }, [profiles, platform, favoritesOnly, onlyFavorites, favorites, country, tag, language, query]);
+
+  const sortedMatches = useMemo(() => {
+    return sortProfiles(matches, sortOrder, now);
+  }, [matches, sortOrder, now]);
+
+  const resetFilters = () => {
+    setQuery('');
+    setPlatform('ALL');
+    setCountry('ALL');
+    setTag('');
+    setLanguage('');
+    setSortOrder('UPCOMING');
+  };
+
+  return (
+    <>
+      <section className="directory-intro">
+        <span className="eyebrow">{t('새로운 취향을 발견하는 곳')}</span>
+        <h1>
+          {t('당신의 다음 이야기를 만나보세요')}
+          <span>{t('.')}</span>
+        </h1>
+        <p>{t('첫 인사부터 오래 함께할 순간까지, 버튜버의 이야기를 한곳에.')}</p>
+
+        {/* 검색창 & 지우기 버튼 */}
+        <div className="directory-search-wrapper">
+          <div className="directory-search">
+            <Search size={15} style={{ color: '#94a3b8', flexShrink: 0 }} />
+            <input
+              aria-label={t('버튜버 검색')}
+              value={query}
+              onChange={event => {
+                setQuery(event.target.value);
+                setVisible(12);
+              }}
+              placeholder={t('활동명, 공식 그룹, 종족, 해시태그로 찾아보세요')}
+            />
+            {query && (
+              <button
+                type="button"
+                className="search-clear-btn"
+                aria-label={t('검색어 지우기')}
+                onClick={() => setQuery('')}
+              >
+                <X size={15} />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* 퀵 태그 바 */}
+        <div className="wiki-quick-tags" role="toolbar" aria-label={t('추천 태그')}>
+          {POPULAR_QUICK_TAGS.map(pt => (
+            <button
+              key={pt}
+              type="button"
+              className={`wiki-quick-tag ${tag === pt ? 'is-active' : ''}`}
+              onClick={() => {
+                setTag(tag === pt ? '' : pt);
+                setVisible(12);
+              }}
+            >
+              #{pt}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* 상단 시안 선택기 탭 (A/B/C 전환) */}
+      <WikiVariantSelector variant={cardVariant} onChange={setCardVariant} />
+
+      <div className="directory-toolbar">
+        <div className="platform-filters">
+          {[{ id: 'ALL', label: '전체' }, ...platforms].map(item => (
+            <button
+              key={item.id}
+              aria-pressed={platform === item.id}
+              onClick={() => {
+                setPlatform(item.id);
+                setVisible(12);
+              }}
+            >
+              {t(item.label)}
+            </button>
+          ))}
+        </div>
+        <button
+          className={`favorites-filter ${onlyFavorites ? 'selected' : ''}`}
+          aria-pressed={favoritesOnly || onlyFavorites}
+          onClick={() => (favoritesOnly ? open('') : setOnlyFavorites(!onlyFavorites))}
+        >
+          {t('관심 버튜버')}
+        </button>
+      </div>
+
+      <details className="wiki-browse-options">
+        <summary>{t('상세 탐색 조건')}</summary>
+        <div>
+          <label>
+            {t('활동 국가')}
+            <select value={country} onChange={event => setCountry(event.target.value)}>
+              <option value="ALL">{t('전체 국가')}</option>
+              <option value="KR">{t('한국')}</option>
+              <option value="JP">{t('일본')}</option>
+              <option value="US">{t('미국')}</option>
+            </select>
+          </label>
+          <label>
+            {t('주요 콘텐츠')}
+            <select value={tag} onChange={event => setTag(event.target.value)}>
+              <option value="">{t('전체 콘텐츠')}</option>
+              {tags.map(tOption => (
+                <option key={tOption}>{tOption}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            {t('방송 언어')}
+            <select value={language} onChange={event => setLanguage(event.target.value)}>
+              <option value="">{t('전체 방송 언어')}</option>
+              {languages.map(lOption => (
+                <option key={lOption}>{lOption}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+      </details>
+
+      <div className="results-row">
+        <h2>
+          {t(favoritesOnly || onlyFavorites ? '저장한 이야기' : '전체 버튜버')}
+          <span>{sortedMatches.length.toLocaleString()}</span>
+        </h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <select
+            className="wiki-sort-select"
+            value={sortOrder}
+            onChange={e => setSortOrder(e.target.value as SortOrder)}
+            aria-label={t('정렬 기준')}
+          >
+            <option value="UPCOMING">{t('데뷔 임박순')}</option>
+            <option value="RECENT">{t('최근 데뷔순')}</option>
+            <option value="NAME">{t('이름 가나다순')}</option>
+          </select>
+        </div>
+      </div>
+
+      {sortedMatches.length ? (
+        <div className="creator-grid">
+          {sortedMatches.slice(0, visible).map((profile, index) => (
+            <WikiCreatorCard
+              key={profile.slug}
+              profile={profile}
+              open={open}
+              favorites={favorites}
+              toggle={toggle}
+              now={now}
+              variant={cardVariant}
+              index={index + 1}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="big-empty">
+          <h2>{t(favoritesOnly || onlyFavorites ? '마음에 드는 버튜버를 저장해 보세요' : '조건에 맞는 버튜버가 없어요')}</h2>
+          <p>{t('검색어나 탐색 조건을 바꿔서 다시 찾아보세요.')}</p>
+          <button
+            type="button"
+            className="primary"
+            style={{ marginTop: '16px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+            onClick={resetFilters}
+          >
+            <RotateCcw size={14} />
+            <span>{t('모든 조건 초기화')}</span>
+          </button>
+          {profiles.length > 0 && !favoritesOnly && !onlyFavorites && (
+            <div className="empty-recommendation-section">
+              <div className="empty-recommendation-title">{t('🌟 이런 버튜버는 어떠세요?')}</div>
+              <div className="creator-grid">
+                {profiles.slice(0, 4).map((profile, index) => (
+                  <WikiCreatorCard
+                    key={profile.slug}
+                    profile={profile}
+                    open={open}
+                    favorites={favorites}
+                    toggle={toggle}
+                    now={now}
+                    variant={cardVariant}
+                    index={index + 1}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {sortedMatches.length > visible && (
+        <button className="load-more" onClick={() => setVisible(visible + 12)}>
+          {t('더 많은 이야기 만나기')}
+        </button>
+      )}
+    </>
+  );
 }

@@ -1,0 +1,904 @@
+/* ==========================================================================
+   VDébut 버튜버 찾기: 정보 강조 포인트별 카드 시안 3종 스타일
+   - 시안 1: 데뷔 일정 & 타이밍 강조형 (Schedule & Timing First)
+   - 시안 2: 방송 콘텐츠 & 취향 매칭형 (Content & Genre First)
+   - 시안 3: 세계관 페르소나 & 일러레 크레딧형 (Visual Lore & Creator Credits First)
+   - 브랜드 원본 로고 무가공 유지 준수
+   ========================================================================== */
+
+/* 1. 상단 시안 선택 탭 */
+.wiki-variant-selector-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  margin-bottom: 24px;
+}
+
+.wiki-variant-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 750;
+  color: #334155;
+}
+
+.wiki-variant-label svg {
+  color: #2563eb;
+}
+
+.wiki-variant-tabs {
+  display: flex;
+  gap: 6px;
+  background: #edf2f7;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.wiki-variant-tab {
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 650;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  color: #64748b;
+  background: transparent;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.wiki-variant-tab:hover {
+  color: #0f172a;
+}
+
+.wiki-variant-tab.is-active {
+  background: #ffffff;
+  color: #1d4ed8;
+  font-weight: 750;
+  border-color: #cbd5e1;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+/* 2. 퀵 태그 바 */
+.wiki-quick-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 0 14px;
+  margin-top: 4px;
+  scrollbar-width: none;
+}
+.wiki-quick-tags::-webkit-scrollbar {
+  display: none;
+}
+
+.wiki-quick-tag {
+  padding: 6px 13px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .15s ease;
+}
+
+.wiki-quick-tag:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.wiki-quick-tag.is-active {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #bfdbfe;
+  font-weight: 700;
+}
+
+/* 3. 검색창 X(지우기) 버튼 & 정렬 */
+.directory-search-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  margin: 24px auto 0;
+}
+
+.directory-search-wrapper .directory-search {
+  margin: 0;
+  max-width: 100%;
+}
+
+.search-clear-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all .15s;
+}
+
+.search-clear-btn:hover {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.wiki-sort-select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  outline: none;
+}
+
+/* 공통 관심 하트 버튼 */
+.card-fav-btn {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #94a3b8;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.card-fav-btn:hover {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #e11d48;
+}
+
+.card-fav-btn.is-saved {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #e11d48;
+}
+
+/* ==========================================================================
+   시안 1: 【데뷔 일정 & 타이밍 강조형 (Schedule & Timing First)】
+   - 주인공: 거대한 D-Day 타이머 뱃지, 정확한 방송 일시, 캘린더 일정 저장
+   ========================================================================== */
+.creator-card-focus-timing {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+}
+
+.creator-card-focus-timing:hover {
+  border-color: #3b82f6;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -4px rgba(37, 99, 235, 0.1);
+}
+
+.creator-card-focus-timing:focus-visible {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+  border-color: #3b82f6;
+}
+
+/* 1순위: D-Day 타이밍 헤더 바 */
+.timing-hero-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.timing-hero-bar.is-urgent {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.timing-hero-bar.is-today {
+  background: #fee2e2;
+  border-color: #fecaca;
+}
+
+.timing-dday-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #334155;
+}
+
+.timing-hero-bar.is-urgent .timing-dday-badge {
+  color: #1d4ed8;
+}
+
+.timing-hero-bar.is-today .timing-dday-badge {
+  color: #dc2626;
+}
+
+.timing-dday-badge strong {
+  font-size: 14px;
+  font-weight: 850;
+  letter-spacing: -0.01em;
+}
+
+/* 방송 일시 박스 */
+.timing-schedule-box {
+  padding: 10px 12px;
+  background: #f8fafc;
+  border-left: 3px solid #3b82f6;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 14px;
+}
+
+.timing-caption {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.02em;
+  margin-bottom: 3px;
+}
+
+.timing-datetime {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.timing-datetime svg {
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+/* 크리에이터 프로필 정보 행 */
+.timing-creator-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.timing-avatar-wrap {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+}
+
+.timing-avatar-wrap .avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
+}
+
+.timing-platform-icon {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 20px;
+  height: 20px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timing-platform-icon img {
+  width: 13px;
+  height: 13px;
+  object-fit: contain;
+}
+
+.timing-meta-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.timing-name {
+  font-size: 16px;
+  font-weight: 850;
+  color: #0f172a;
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.timing-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.platform-pill {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.agency-pill {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #6366f1;
+  background: #eef2ff;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* 액션 행 (일정 저장 + 상세 보기) */
+.timing-action-row {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.timing-cal-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.timing-cal-btn:hover {
+  background: #dbeafe;
+}
+
+.timing-detail-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 10px;
+  background: #0f172a;
+  color: #ffffff;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 750;
+  text-decoration: none;
+  transition: all .15s;
+}
+
+.timing-detail-btn:hover {
+  background: #1e293b;
+}
+
+/* ==========================================================================
+   시안 2: 【버튜버 프로필 비주얼 & 소개 강조형 (Full-Bleed Visual Hero Focus)】
+   - 주인공: 카드 가로 폭 100%를 꽉 채우는 200px 대형 캐릭터 비주얼 커버
+   - 빈 공간 0% 제거, 일러스트가 시야를 압도하는 포토카드 레이아웃
+   - 카드 전체 선택(클릭) 인터랙션 지원
+   ========================================================================== */
+.creator-card-focus-profile {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  transition: all .25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+}
+
+.creator-card-focus-profile:hover {
+  transform: translateY(-6px);
+  border-color: #93c5fd;
+  box-shadow: 0 20px 35px -8px rgba(37, 99, 235, 0.16), 0 4px 14px rgba(15, 23, 42, 0.04);
+}
+
+.creator-card-focus-profile:focus-visible {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+  border-color: #3b82f6;
+}
+
+/* 1순위: 카드 가로 100% 꽉 찬 200px 대형 프로필 비주얼 커버 */
+.profile-hero-cover {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+.profile-hero-cover .profile-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+  display: block;
+  transition: transform .35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.creator-card-focus-profile:hover .profile-hero-cover .profile-cover-img {
+  transform: scale(1.06);
+}
+
+/* 상하단 가독성 보조 은은한 그라디언트 오버레이 */
+.profile-cover-gradient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0) 45%, rgba(15, 23, 42, 0.55) 100%);
+}
+
+/* 상단 오버레이 바 (소속사/데뷔 뱃지 + 관심 하트) */
+.profile-cover-top {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+.profile-cover-top .profile-agency-badge {
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 750;
+  padding: 4px 9px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  letter-spacing: -0.01em;
+}
+
+.profile-cover-top .profile-debut-badge {
+  background: rgba(15, 23, 42, 0.68);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #f8fafc;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.profile-hero-cover .card-fav-btn {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  width: 32px;
+  height: 32px;
+}
+
+.profile-hero-cover .card-fav-btn:hover,
+.profile-hero-cover .card-fav-btn.is-saved {
+  background: #ffffff;
+  border-color: #fecdd3;
+  color: #e11d48;
+}
+
+/* 플랫폼 공식 브랜드 로고 배지 (우측 하단) */
+.profile-platform-badge {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  height: 26px;
+  padding: 0 8px;
+  background: #ffffff;
+  border-radius: 7px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  border: 1px solid rgba(226, 232, 240, 0.85);
+}
+
+.profile-platform-badge .platform-brand-img {
+  height: 14px;
+  width: auto;
+  max-width: 64px;
+  object-fit: contain;
+  display: block;
+}
+
+.profile-platform-badge .platform-brand-img.is-chzzk {
+  height: 13px;
+}
+
+.profile-platform-badge .platform-brand-img.is-soop {
+  height: 14px;
+}
+
+/* 하단 바디: 밀도 있는 콘텐츠 구성 (빈 여백 0%) */
+.profile-card-body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.profile-card-body .profile-hero-name {
+  font-size: 18px;
+  font-weight: 850;
+  color: #0f172a;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color .2s;
+}
+
+.creator-card-focus-profile:hover .profile-hero-name {
+  color: #2563eb;
+}
+
+/* 핵심 소개문 */
+.profile-card-body .profile-bio-text {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.55;
+  margin: 0 0 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 37px;
+}
+
+/* 캐릭터 키워드 칩 */
+.profile-card-body .profile-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.profile-card-body .profile-chip {
+  font-size: 10px;
+  font-weight: 700;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+
+/* 하단 일시 & 상세 보기 */
+.profile-card-body .profile-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.profile-card-body .profile-date-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.profile-card-body .profile-view-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 750;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 5px 10px;
+  border-radius: 7px;
+  transition: all .2s;
+}
+
+.creator-card-focus-profile:hover .profile-view-link {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+/* ==========================================================================
+   시안 3: 【세계관 페르소나 & 일러레 크레딧형 (Visual Lore & Creator Credits First)】
+   - 주인공: 캐릭터 세계관 인용 카피, 일러스트레이터/리거 크레딧, 오시마크
+   ========================================================================== */
+.creator-card-focus-lore {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+}
+
+.creator-card-focus-lore:hover {
+  border-color: #8b5cf6;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -4px rgba(139, 92, 246, 0.12);
+}
+
+.creator-card-focus-lore:focus-visible {
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.35);
+  border-color: #8b5cf6;
+}
+
+/* 1순위: 세계관 감성 인용 배너 */
+.lore-quote-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #faf5ff;
+  border: 1px solid #f3e8ff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.lore-quote-mark {
+  font-size: 16px;
+  font-weight: 800;
+  color: #a855f7;
+  line-height: 1;
+}
+
+.lore-quote-text {
+  flex: 1;
+  font-size: 11px;
+  font-style: italic;
+  color: #581c87;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 33px;
+}
+
+.lore-fav-wrap {
+  margin-left: 4px;
+}
+
+/* 아바타 & 타이틀 */
+.lore-identity-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.lore-avatar-container {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+}
+
+.lore-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+  box-shadow: 0 3px 10px rgba(88, 28, 135, 0.1);
+}
+
+.lore-platform-mark {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 19px;
+  height: 19px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lore-platform-mark img {
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
+}
+
+.lore-title-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.lore-name {
+  font-size: 16px;
+  font-weight: 850;
+  color: #0f172a;
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lore-pills {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.lore-agency-tag {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #6366f1;
+  background: #eef2ff;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.lore-species-tag {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #7c3aed;
+  background: #f5f3ff;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.lore-oshi-tag {
+  font-size: 11px;
+}
+
+/* 1순위: 공식 크레딧 박스 */
+.lore-credits-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.lore-credit-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lore-credit-item.fandom {
+  grid-column: 1 / -1;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 5px;
+  margin-top: 2px;
+}
+
+.credit-label {
+  font-size: 9.5px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.credit-value {
+  font-size: 11px;
+  color: #1e293b;
+  font-weight: 750;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 하단 일시 & 상세 보기 */
+.lore-footer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.lore-date-note {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.lore-detail-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 750;
+  color: #7c3aed;
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #f5f3ff;
+  transition: all .15s;
+}
+
+.lore-detail-link:hover {
+  background: #7c3aed;
+  color: #ffffff;
+}
+
+/* 4. 추천 크리에이터 (빈 상태 이탈 방지) */
+.empty-recommendation-section {
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.empty-recommendation-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .wiki-variant-selector-wrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

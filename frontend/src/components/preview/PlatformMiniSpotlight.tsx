@@ -304,9 +304,9 @@ export function PlatformMiniSpotlight({
 
                   {/* 중앙 메인 카드 본체 (bg_profile.png 3D 무대 배경 적용) */}
                   <div
-                    className="vd-showcase-card flex flex-col items-center justify-between w-[300px] sm:w-[340px] h-[290px] sm:h-[315px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[24px] border-2 border-blue-400/90 p-5 transition-all relative group scale-100 overflow-hidden"
+                    className="vd-showcase-card flex flex-col items-center justify-between w-[300px] sm:w-[340px] h-[290px] sm:h-[315px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[24px] border border-blue-300/80 p-5 transition-all relative group scale-100 overflow-hidden"
                     style={{
-                      boxShadow: '0 16px 40px -6px rgba(15, 23, 42, 0.45), 0 0 35px -2px rgba(59, 130, 246, 0.35)',
+                      boxShadow: '0 20px 40px -8px rgba(15, 23, 42, 0.2), 0 2px 12px -1px rgba(37, 99, 235, 0.12)',
                     }}
                   >
                     <SpotlightCardContent

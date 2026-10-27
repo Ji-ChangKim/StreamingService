@@ -123,8 +123,8 @@ function ProfileLinks({ profile, compact = false }: { profile: PortalProfile; co
   });
   if (!channels.length && !links.length) return null;
   return <section className={compact ? 'vd-detail-quicklinks' : 'vd-panel vd-profile-channels'} aria-label={t('채널')}>{!compact && <h2>{t('채널')}</h2>}<div className="vd-profile-links">
-    {/* 치지직은 아이콘과 임의 글꼴을 조합하지 않고 공식 국문 기본형 원본을 사용한다. */}
-    {channels.map((channel) => <a className={channel.platform === 'CHZZK' ? 'vd-chzzk-channel-link' : undefined} href={portalWebUrl(channel.channelUrl)} key={`${channel.platform}:${channel.channelUrl}`} target="_blank" rel="noopener noreferrer"><span>{channel.platform === 'CHZZK' ? <span className="vd-chzzk-channel-brand"><img src="/icons/chzzk/chzzklogo_kor(Black).png" alt="치지직" /></span> : <PlatformBadge platform={channel.platform} />}{channels.filter((item) => item.platform === channel.platform).length > 1 && <small>{channel.primary ? t('대표 방송 채널') : t('추가 방송·영상 채널')}</small>}</span></a>)}
+    {/* 치지직과 SOOP은 아이콘과 임의 글꼴을 조합하지 않고 공식 브랜드 로고 원본을 사용한다. */}
+    {channels.map((channel) => <a className={channel.platform === 'CHZZK' ? 'vd-chzzk-channel-link' : channel.platform === 'SOOP' ? 'vd-soop-channel-link' : undefined} href={portalWebUrl(channel.channelUrl)} key={`${channel.platform}:${channel.channelUrl}`} target="_blank" rel="noopener noreferrer"><span>{channel.platform === 'CHZZK' ? <span className="vd-chzzk-channel-brand"><img src="/icons/chzzk/chzzklogo_kor(Black).png" alt="치지직" /></span> : channel.platform === 'SOOP' ? <span className="vd-soop-channel-brand"><img src="/icons/soop/soop_logo_blue.svg" alt="SOOP" /></span> : <PlatformBadge platform={channel.platform} />}{channels.filter((item) => item.platform === channel.platform).length > 1 && <small>{channel.primary ? t('대표 방송 채널') : t('추가 방송·영상 채널')}</small>}</span></a>)}
     {links.map((link) => <a key={link.url} href={portalWebUrl(link.url || '')} target="_blank" rel="noopener noreferrer"><strong>{t(link.label)}</strong></a>)}
   </div></section>;
 }
