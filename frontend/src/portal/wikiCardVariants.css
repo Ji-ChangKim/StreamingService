@@ -173,6 +173,115 @@
   outline: none;
 }
 
+/* ========================================================
+   4. 플랫폼 필터 공식 가이드라인 준수 브랜드 스타일링
+   ======================================================== */
+:is(.wiki-design, .wiki-contribution-dialog) .platform-filters {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+:is(.wiki-design, .wiki-contribution-dialog) .platform-filters button.platform-filter-btn {
+  min-height: 38px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+:is(.wiki-design, .wiki-contribution-dialog) .platform-filters button.platform-filter-btn:hover {
+  background: #f8fafc;
+}
+
+/* 플랫폼 공식 로고 원본 보존 규격 (가이드 7.2 준수) */
+.platform-filter-logo {
+  display: block;
+  width: auto;
+  height: 18px;
+  max-height: 18px;
+  object-fit: contain;
+  filter: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  flex-shrink: 0;
+}
+
+.platform-filter-logo.is-chzzk {
+  height: 17px;
+}
+
+.platform-filter-logo.is-soop {
+  height: 17px;
+}
+
+.platform-filter-logo.is-youtube {
+  height: 16px;
+}
+
+.platform-filter-logo.is-twitch {
+  height: 18px;
+}
+
+/* 선택(Active) 상태: 가이드 5.6 및 7.2 컨테이너 공식 표현 */
+:is(.wiki-design, .wiki-contribution-dialog) .platform-filters button.platform-btn-ALL[aria-pressed="true"] {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
+}
+
+:is(.wiki-design, .wiki-contribution-dialog) .platform-filters button.platform-btn-CHZZK[aria-pressed="true"] {
+  background: #00FFA3;
+  border-color: #00FFA3;
+  box-shadow: 0 2px 10px rgba(0, 255, 163, 0.35);
+}
+
+:is(.wiki-design, .wiki-contribution-dialog) .platform-filters button.platform-btn-SOOP[aria-pressed="true"] {
+  background: #eff6ff;
+  border-color: #0051FF;
+  box-shadow: 0 0 0 1px #0051FF inset, 0 2px 8px rgba(0, 81, 255, 0.15);
+}
+
+:is(.wiki-design, .wiki-contribution-dialog) .platform-filters button.platform-btn-YOUTUBE[aria-pressed="true"] {
+  background: #fff1f2;
+  border-color: #FF0000;
+  box-shadow: 0 0 0 1px #FF0000 inset, 0 2px 8px rgba(255, 0, 0, 0.15);
+}
+
+:is(.wiki-design, .wiki-contribution-dialog) .platform-filters button.platform-btn-TWITCH[aria-pressed="true"] {
+  background: #faf5ff;
+  border-color: #9146FF;
+  box-shadow: 0 0 0 1px #9146FF inset, 0 2px 8px rgba(145, 70, 255, 0.15);
+}
+
+/* 호버 시 테두리 피드백 */
+:is(.wiki-design, .wiki-contribution-dialog) .platform-filters button.platform-btn-CHZZK:hover:not([aria-pressed="true"]) {
+  border-color: #00FFA3;
+}
+:is(.wiki-design, .wiki-contribution-dialog) .platform-filters button.platform-btn-SOOP:hover:not([aria-pressed="true"]) {
+  border-color: #0051FF;
+}
+:is(.wiki-design, .wiki-contribution-dialog) .platform-filters button.platform-btn-YOUTUBE:hover:not([aria-pressed="true"]) {
+  border-color: #FF0000;
+}
+:is(.wiki-design, .wiki-contribution-dialog) .platform-filters button.platform-btn-TWITCH:hover:not([aria-pressed="true"]) {
+  border-color: #9146FF;
+}
+:is(.wiki-design, .wiki-contribution-dialog) .platform-filters button.platform-btn-ALL:hover:not([aria-pressed="true"]) {
+  border-color: #94a3b8;
+}
+
 /* 공통 관심 하트 버튼 */
 .card-fav-btn {
   background: #ffffff;

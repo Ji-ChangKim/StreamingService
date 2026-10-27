@@ -29,6 +29,23 @@ function Platform({ id }: { id: string }) {
   return <span className="platform">{item && <img src={item.icon} alt="" />}<span>{item?.label || id}</span></span>;
 }
 
+// 플랫폼 필터 바: 공식 가이드라인 준수 로고(밝은 배경용 원본) 렌더러
+function PlatformFilterContent({ id, label }: { id: string; label: string }) {
+  if (id === 'CHZZK') {
+    return <img className="platform-filter-logo is-chzzk" src="/icons/chzzk/chzzklogo_kor(Black).png" alt="치지직" />;
+  }
+  if (id === 'SOOP') {
+    return <img className="platform-filter-logo is-soop" src="/icons/soop/soop_logo_blue.svg" alt="SOOP" />;
+  }
+  if (id === 'YOUTUBE') {
+    return <img className="platform-filter-logo is-youtube" src="/icons/logo_youtube.png" alt="YouTube" />;
+  }
+  if (id === 'TWITCH') {
+    return <img className="platform-filter-logo is-twitch" src="/icons/logo_twitch.png" alt="Twitch" />;
+  }
+  return <span>{t(label)}</span>;
+}
+
 // 원본 아바타를 사용하며 누락·로드 실패에만 보유 기본 에셋을 표시한다.
 function Avatar({ profile, className = '' }: { profile: PortalProfile; className?: string }) {
   const [failed, setFailed] = useState(false);
@@ -250,13 +267,16 @@ export function WikiDirectoryContent({ profiles, open, favorites, toggle, now, f
           {[{ id: 'ALL', label: '전체' }, ...platforms].map(item => (
             <button
               key={item.id}
+              type="button"
+              className={`platform-filter-btn platform-btn-${item.id}`}
+              aria-label={t('{0} 플랫폼 필터', [item.label])}
               aria-pressed={platform === item.id}
               onClick={() => {
                 setPlatform(item.id);
                 setVisible(12);
               }}
             >
-              {t(item.label)}
+              <PlatformFilterContent id={item.id} label={item.label} />
             </button>
           ))}
         </div>
