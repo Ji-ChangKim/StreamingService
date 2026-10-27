@@ -29,7 +29,7 @@ const PortalStatistics = lazy(() => import('./PortalStatistics').then((module) =
 const PrivacyPage = lazy(() => import('../components/pages/PrivacyPage').then((module) => ({ default: module.PrivacyPage })));
 const TermsPage = lazy(() => import('../components/pages/TermsPage').then((module) => ({ default: module.TermsPage })));
 
-const NAV = [{ to: '/', label: '데뷔 캘린더', icon: CalendarDays }, { to: '/creators', label: '버튜버 찾기', icon: Search }, { to: '/analytics', label: '방송 통계', icon: BarChart3 }];
+const NAV = [{ to: '/', label: '데뷔 캘린더', icon: CalendarDays }, { to: '/creators', label: '버튜버 탐색', icon: Search }, { to: '/analytics', label: '방송 통계', icon: BarChart3 }];
 
 // 개발 사이트에서 전체 화면을 같은 내비게이션과 실제 데이터로 연결한다.
 export function PortalApp() {

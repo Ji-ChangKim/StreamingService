@@ -216,12 +216,7 @@ export function WikiDirectoryContent({ profiles, open, favorites, toggle, now, f
   return (
     <>
       <section className="directory-intro">
-        <span className="eyebrow">{t('새로운 취향을 발견하는 곳')}</span>
-        <h1>
-          {t('당신의 다음 이야기를 만나보세요')}
-          <span>{t('.')}</span>
-        </h1>
-        <p>{t('첫 인사부터 오래 함께할 순간까지, 버튜버의 이야기를 한곳에.')}</p>
+        <h1>{t('버튜버 조회')}</h1>
 
         {/* 검색창 & 지우기 버튼 */}
         <div className="directory-search-wrapper">

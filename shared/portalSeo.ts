@@ -12,7 +12,7 @@ export function portalPageSeo(url: URL, profile?: { displayName: string; descrip
   const development = url.hostname !== 'vdebut.live';
   const titles: Record<string, string> = {
     '/': '신규 버튜버 데뷔 캘린더 · 데뷔 일정과 소개', '/upload': '데뷔 일정 등록',
-    '/creators': '버튜버 찾기 · 소개와 방송 콘텐츠', '/creators/register': '버튜버 소개 등록',
+    '/creators': '버튜버 탐색 · 소개와 방송 콘텐츠', '/creators/register': '버튜버 소개 등록',
     '/me/favorites': '관심 버튜버', '/about': '버튜버와 팬의 소개팅', '/guide': '이용 가이드',
     '/contact': '문의·정보 정정', '/admin': '등록·문의 검토', '/privacy': '개인정보처리방침', '/terms': '이용약관',
   };

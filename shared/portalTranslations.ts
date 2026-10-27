@@ -619,6 +619,8 @@ VDébut 운영|||VDébut 運営|||VDébut administration
 답변 완료|||回答済みにする|||Complete reply
 검토 후 승인|||確認後に承認|||Approve after review
 데뷔 캘린더|||デビューカレンダー|||Debut calendar
+버튜버 탐색|||VTuberを探す|||Explore VTubers
+버튜버 조회|||VTuber一覧|||Search VTubers
 버튜버 찾기|||VTuberを探す|||Find VTubers
 방송 통계|||配信統計|||Stream statistics
 버튜버 소개 등록|||VTuber紹介登録|||Register a VTuber profile
@@ -792,6 +794,7 @@ X / SNS 주소|||X・SNSのURL|||X / social URL
 신규 버튜버 데뷔 캘린더 · 데뷔 일정과 소개 | VDébut|||新人VTuberデビューカレンダー・予定と紹介 | VDébut|||New VTuber debut calendar · Schedules and profiles | VDébut
 신규 버튜버 데뷔 캘린더 · 데뷔 일정과 소개|||新人VTuberデビューカレンダー・予定と紹介|||New VTuber debut calendar · Schedules and profiles
 나, 데뷔합니다 · 데뷔 등록|||私、デビューします・デビュー登録|||I'm debuting · Submit a debut
+버튜버 탐색 · 소개와 방송 콘텐츠|||VTuberを探す・紹介と配信内容|||Explore VTubers · Profiles and content
 버튜버 찾기 · 소개와 방송 콘텐츠|||VTuberを探す・紹介と配信内容|||Find VTubers · Profiles and content
 {0} | VDébut|||{0} | VDébut|||{0} | VDébut
 {0} · 소개와 데뷔 일정 | VDébut|||{0}・紹介とデビュー予定 | VDébut|||{0} · Profile and debut schedule | VDébut

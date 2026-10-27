@@ -6,7 +6,7 @@ import '../../src/index.css';
 import '../../src/portal/portal.css';
 import '../../src/portal/portalRhythm.css';
 
-const NAV = [{ to: '/', label: '데뷔 캘린더', icon: CalendarDays }, { to: '/creators', label: '버튜버 찾기', icon: Search }, { to: '/analytics', label: '방송 통계', icon: BarChart3 }];
+const NAV = [{ to: '/', label: '데뷔 캘린더', icon: CalendarDays }, { to: '/creators', label: '버튜버 탐색', icon: Search }, { to: '/analytics', label: '방송 통계', icon: BarChart3 }];
 
 // PortalApp의 헤더·푸터 마크업과 공통 스타일을 변경 없이 사용하는 시안 전용 셸이다.
 export function ExistingPortalFrame({ children, path }: { children: ReactNode; path: string }) {

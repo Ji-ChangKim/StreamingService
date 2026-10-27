@@ -104,11 +104,24 @@
 }
 
 /* 3. 검색창 X(지우기) 버튼 & 정렬 */
+:is(.wiki-design, .wiki-contribution-dialog) .directory-intro {
+  text-align: center;
+  padding: 24px 0 16px;
+}
+
+:is(.wiki-design, .wiki-contribution-dialog) .directory-intro h1 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+  margin: 0 0 14px;
+}
+
 .directory-search-wrapper {
   position: relative;
   width: 100%;
   max-width: 540px;
-  margin: 24px auto 0;
+  margin: 0 auto;
 }
 
 .directory-search-wrapper .directory-search {
