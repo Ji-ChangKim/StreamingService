@@ -8,7 +8,7 @@ import { t, usePortalLocale, portalLanguagePath, getPortalLanguage } from './por
 import { profileDebutPhase } from '../../../shared/profilePresentation';
 import { WikiGuestbook } from './WikiParticipation';
 import { WikiActivity } from './WikiActivity';
-import { WikiCreatorCardSchedule, WikiCreatorCardContent, WikiCreatorCardLore, WikiVariantSelector, type CardVariant } from './WikiCardVariants';
+import { WikiCreatorCardContent } from './WikiCardVariants';
 import './wikiContent.css';
 import './wikiCardVariants.css';
 
@@ -41,12 +41,9 @@ function Favorite({ profile, favorites, toggle }: { profile: PortalProfile; favo
   return <button className={`favorite ${saved ? 'saved' : ''}`} aria-label={t(saved ? '{0} 관심 해제' : '{0} 관심 저장', [profile.displayName])} aria-pressed={saved} onClick={() => toggle(profile.slug)}><Heart size={18} fill={saved ? 'currentColor' : 'none'} /></button>;
 }
 
-// 목록 카드는 사용자가 선택한 시안(A: 일정·타이밍 / B: 콘텐츠·취향 / C: 세계관·크레딧)에 따라 분기 렌더링한다.
-export function WikiCreatorCard(props: { profile: PortalProfile; open: (slug: string) => void; favorites: string[]; toggle: (slug: string) => void; now: number; variant?: CardVariant; index?: number }) {
-  const { variant = 'A' } = props;
-  if (variant === 'B') return <WikiCreatorCardContent {...props} />;
-  if (variant === 'C') return <WikiCreatorCardLore {...props} />;
-  return <WikiCreatorCardSchedule {...props} />;
+// 버튜버 목록 카드는 시안 2(Full-Bleed 200px 대형 비주얼 커버형)로 단일 적용한다.
+export function WikiCreatorCard(props: { profile: PortalProfile; open: (slug: string) => void; favorites: string[]; toggle: (slug: string) => void; now: number; index?: number }) {
+  return <WikiCreatorCardContent {...props} />;
 }
 
 // 썸네일은 잘라내지 않으며 카드 전체를 원본 영상 링크로 사용한다.
@@ -95,47 +92,91 @@ export function WikiProfileContent({ profile, detail, loading, report, now, favo
   </>;
 }
 
-const POPULAR_QUICK_TAGS = ['종합게임', '노래', '소통', '라디오', 'ASMR', '그림', '저챗'];
 type SortOrder = 'UPCOMING' | 'RECENT' | 'NAME';
 
+function getKstDateInfo(now: number) {
+  const kst = new Date(now + 9 * 3600000);
+  const iso = kst.toISOString();
+  return {
+    today: iso.slice(0, 10),
+    thisMonth: iso.slice(0, 7),
+  };
+}
+
+// "데뷔 전인 신인들"을 최우선으로 세우는 4단계 위계 판별
+function getDebutTierAndKey(profile: PortalProfile, now: number, today: string, thisMonth: string): { tier: number; key: number | string } {
+  // [1순위] 데뷔 일시 확정된 미래 방송 (D-Day, D-1, D-2...)
+  if (profile.dateState === 'FIXED' && profile.startAtUtc) {
+    const time = Date.parse(profile.startAtUtc);
+    if (Number.isFinite(time)) {
+      if (time >= now) return { tier: 1, key: time };
+      return { tier: 5, key: -time }; // 이미 첫 방송을 마친 데뷔 완료자 (최근순 역순)
+    }
+  }
+
+  // [2순위] 데뷔 날짜 확정된 미래 일정 (시간 미정)
+  if (profile.debutDate) {
+    if (profile.debutDate >= today) return { tier: 2, key: profile.debutDate };
+    const past = Date.parse(profile.debutDate);
+    return { tier: 5, key: Number.isFinite(past) ? -past : 0 };
+  }
+
+  // [3순위] 데뷔 월 확정된 미래 신인 (11월 데뷔, 12월 데뷔 등)
+  if (profile.targetMonth) {
+    if (profile.targetMonth >= thisMonth) return { tier: 3, key: profile.targetMonth };
+    return { tier: 5, key: 0 };
+  }
+
+  // [4순위] 데뷔 준비 중 신인 (일정 조율 중 / 곧 만나요)
+  if (profile.dateState === 'NONE' || !profile.debutDate) {
+    return { tier: 4, key: profile.slug };
+  }
+
+  return { tier: 5, key: 0 };
+}
+
 function sortProfiles(list: PortalProfile[], order: SortOrder, now: number): PortalProfile[] {
+  const { today, thisMonth } = getKstDateInfo(now);
+
   return [...list].sort((a, b) => {
     if (order === 'NAME') {
       return a.displayName.localeCompare(b.displayName, 'ko');
     }
-    const aTime = a.dateState === 'FIXED' ? Date.parse(a.startAtUtc) : NaN;
-    const bTime = b.dateState === 'FIXED' ? Date.parse(b.startAtUtc) : NaN;
-    const aValid = Number.isFinite(aTime);
-    const bValid = Number.isFinite(bTime);
-
-    if (order === 'UPCOMING') {
-      const aFuture = aValid && aTime >= now;
-      const bFuture = bValid && bTime >= now;
-      if (aFuture && bFuture) return aTime - bTime;
-      if (aFuture) return -1;
-      if (bFuture) return 1;
-      if (aValid && bValid) return bTime - aTime;
-      if (aValid) return -1;
-      if (bValid) return 1;
-      return a.displayName.localeCompare(b.displayName, 'ko');
-    }
 
     if (order === 'RECENT') {
+      const aTime = a.dateState === 'FIXED' ? Date.parse(a.startAtUtc) : Date.parse(a.debutDate);
+      const bTime = b.dateState === 'FIXED' ? Date.parse(b.startAtUtc) : Date.parse(b.debutDate);
+      const aValid = Number.isFinite(aTime);
+      const bValid = Number.isFinite(bTime);
       if (aValid && bValid) return bTime - aTime;
       if (aValid) return -1;
       if (bValid) return 1;
       return a.displayName.localeCompare(b.displayName, 'ko');
     }
 
-    return 0;
+    // 기본값: 'UPCOMING' (데뷔 전 신인 최우선 정렬)
+    const aInfo = getDebutTierAndKey(a, now, today, thisMonth);
+    const bInfo = getDebutTierAndKey(b, now, today, thisMonth);
+
+    if (aInfo.tier !== bInfo.tier) {
+      return aInfo.tier - bInfo.tier;
+    }
+
+    if (typeof aInfo.key === 'number' && typeof bInfo.key === 'number') {
+      if (aInfo.key !== bInfo.key) return aInfo.key - bInfo.key;
+    } else if (typeof aInfo.key === 'string' && typeof bInfo.key === 'string') {
+      const comp = aInfo.key.localeCompare(bInfo.key);
+      if (comp !== 0) return comp;
+    }
+
+    return a.displayName.localeCompare(b.displayName, 'ko');
   });
 }
 
-// 목록은 실제 공개 프로필을 검색·필터링하고 카드 구조만 새 시안으로 보여준다.
+// 목록은 실제 공개 프로필을 검색·필터링하고 시안 2 카드로 깔끔하게 렌더링한다.
 export function WikiDirectoryContent({ profiles, open, favorites, toggle, now, favoritesOnly = false }: { favoritesOnly?: boolean; profiles: PortalProfile[]; open: (slug: string) => void; favorites: string[]; toggle: (slug: string) => void; now: number }) {
   const [query, setQuery] = useState('');
   const [platform, setPlatform] = useState('ALL');
-  const [cardVariant, setCardVariant] = useState<CardVariant>('A');
   const [sortOrder, setSortOrder] = useState<SortOrder>('UPCOMING');
   usePortalLocale();
   const [onlyFavorites, setOnlyFavorites] = useState(favoritesOnly);
@@ -146,7 +187,7 @@ export function WikiDirectoryContent({ profiles, open, favorites, toggle, now, f
   const tags = [...new Set(profiles.flatMap(profile => profile.tags))].sort();
   const languages = [...new Set(profiles.flatMap(profile => profile.languages))].sort();
   const [visible, setVisible] = useState(12);
-  useEffect(() => setVisible(12), [country, tag, language, onlyFavorites, sortOrder, cardVariant]);
+  useEffect(() => setVisible(12), [country, tag, language, onlyFavorites, sortOrder]);
 
   const matches = useMemo(() => {
     return profiles.filter(p =>
@@ -207,27 +248,7 @@ export function WikiDirectoryContent({ profiles, open, favorites, toggle, now, f
             )}
           </div>
         </div>
-
-        {/* 퀵 태그 바 */}
-        <div className="wiki-quick-tags" role="toolbar" aria-label={t('추천 태그')}>
-          {POPULAR_QUICK_TAGS.map(pt => (
-            <button
-              key={pt}
-              type="button"
-              className={`wiki-quick-tag ${tag === pt ? 'is-active' : ''}`}
-              onClick={() => {
-                setTag(tag === pt ? '' : pt);
-                setVisible(12);
-              }}
-            >
-              #{pt}
-            </button>
-          ))}
-        </div>
       </section>
-
-      {/* 상단 시안 선택기 탭 (A/B/C 전환) */}
-      <WikiVariantSelector variant={cardVariant} onChange={setCardVariant} />
 
       <div className="directory-toolbar">
         <div className="platform-filters">
@@ -287,10 +308,10 @@ export function WikiDirectoryContent({ profiles, open, favorites, toggle, now, f
       </details>
 
       <div className="results-row">
-        <h2>
-          {t(favoritesOnly || onlyFavorites ? '저장한 이야기' : '전체 버튜버')}
-          <span>{sortedMatches.length.toLocaleString()}</span>
-        </h2>
+        <span className="directory-count-text">
+          {t(favoritesOnly || onlyFavorites ? '저장한 버튜버' : query ? '검색 결과' : '전체 버튜버')}{' '}
+          <strong>{sortedMatches.length.toLocaleString()}{t('명')}</strong>
+        </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <select
             className="wiki-sort-select"
@@ -298,7 +319,7 @@ export function WikiDirectoryContent({ profiles, open, favorites, toggle, now, f
             onChange={e => setSortOrder(e.target.value as SortOrder)}
             aria-label={t('정렬 기준')}
           >
-            <option value="UPCOMING">{t('데뷔 임박순')}</option>
+            <option value="UPCOMING">{t('데뷔 임박순 (신인 우선)')}</option>
             <option value="RECENT">{t('최근 데뷔순')}</option>
             <option value="NAME">{t('이름 가나다순')}</option>
           </select>
@@ -315,7 +336,6 @@ export function WikiDirectoryContent({ profiles, open, favorites, toggle, now, f
               favorites={favorites}
               toggle={toggle}
               now={now}
-              variant={cardVariant}
               index={index + 1}
             />
           ))}
@@ -345,7 +365,6 @@ export function WikiDirectoryContent({ profiles, open, favorites, toggle, now, f
                     favorites={favorites}
                     toggle={toggle}
                     now={now}
-                    variant={cardVariant}
                     index={index + 1}
                   />
                 ))}

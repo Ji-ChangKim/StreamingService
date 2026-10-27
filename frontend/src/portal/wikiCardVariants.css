@@ -134,6 +134,20 @@
   color: #334155;
 }
 
+.directory-count-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.directory-count-text strong {
+  color: #0f172a;
+  font-weight: 800;
+}
+
 .wiki-sort-select {
   padding: 8px 12px;
   border-radius: 8px;
