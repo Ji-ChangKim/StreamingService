@@ -1,5 +1,4 @@
 import { applyPageSeo } from '../../utils/applyPageSeo';
-import { ActivityReadingGuide } from './ActivityReadingGuide';
 import { t, usePortalLocale } from '../../portal/portalLocale';
 // 외부 제목의 의심 표현을 공개 화면에서 제외한다.
 import { publicBroadcastTitle } from '../../../../shared/contentReview';
@@ -307,7 +306,11 @@ export function ActivityDashboard({ currentSubPath, onNavigate }: { currentSubPa
     applyPageSeo({ ...seo, robots: loading || error || activityNoindex(new URL(window.location.href), data) ? 'noindex,follow' : 'index,follow' });
   }, [filters, data, streamer?.name, search, loading, error, selection]);
   return <div className="bs-dashboard ad-dashboard">
-    <header className="ad-heading"><div><span className="ad-eyebrow">VDébut STATISTICS</span><h1>방송 통계</h1></div>
+    <header className="ad-heading">
+      <div>
+        <span className="ad-eyebrow">치지직 · SOOP 스트리밍 인텔리전스</span>
+        <h1>방송 현황 대시보드</h1>
+      </div>
       <ActivityStreamerSearch initialQuery={search} onSearch={(query) => navigate({ ...filters, channel: '', category: '' }, query)} onOpen={openStreamer} />
     </header>
     {!searching && <nav className="ad-view-nav" aria-label="통계 화면"><button type="button" aria-current={!personal ? 'page' : undefined} onClick={() => navigate({ ...filters, channel: '', category: '' }, '')}><BarChart3 size={16} /> 전체 통계</button>
@@ -339,9 +342,8 @@ export function ActivityDashboard({ currentSubPath, onNavigate }: { currentSubPa
         : error ? <div className="ad-state" role="alert"><h2>통계를 불러오지 못했습니다.</h2><p>{error}</p><button className="bs-button bs-primary" type="button" onClick={refresh}>다시 시도</button></div>
         : data && <>
           {personal && <ActivityNarrativeReport streamer={streamer} data={data} />}
-          <div className="ad-data-meta"><span>{data.meta.from} — {data.meta.to}{data.meta.partialRuns > 0 && <span className="ad-partial-badge">일부 기록 누락</span>}</span><span>{data.meta.lastRecordedAt ? `${statisticsTime(data.meta.lastRecordedAt, true)} 기준` : '방송 기록 없음'}</span></div>
+          <div className="ad-data-meta"><span>{data.meta.from} — {data.meta.to}</span><span>{data.meta.lastRecordedAt ? `${statisticsTime(data.meta.lastRecordedAt, true)} 기준` : '방송 기록 없음'}</span></div>
           {!data.summary.broadcasts && <div className="ad-new-streamer-banner"><div><strong>{t('선택한 기간과 조건에 맞는 방송 기록이 없어요.')}</strong><p>{t('다른 기간을 선택하거나 카테고리 조건을 넓혀 보세요.')}</p></div></div>}
-          <ActivityReadingGuide />
           <ActivitySummary data={data} personal={personal} />
           <div className="ad-main-grid"><ActivityHeatmap key={filters.channel} data={data} personal={personal} selection={selection} onSelect={selectHistory} /><ActivityCategories data={data} selected={filters.category} onSelect={(category) => navigate({ ...filters, category })} /></div>
           <ActivityDaily data={data} personal={personal} selection={selection} onSelect={selectHistory} />

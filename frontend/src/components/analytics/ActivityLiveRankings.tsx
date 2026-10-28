@@ -64,30 +64,184 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
   const broadcasts = rows.filter((row) => !filters.category || categoryKey(row) === filters.category).sort((a, b) => b.viewers - a.viewers || a.id.localeCompare(b.id));
   const selected = categories.find((category) => category.key === filters.category);
   const max = Math.max(1, ...categories.map((category) => category[sort]));
-  const missing = sources.filter((source) => !platforms.has(source.platform));
   const stamp = current.map((source) => source.observedAt!).sort()[0];
-  return <section className="ad-realtime" aria-label="실시간 방송 현황">
-    <div className="ad-live-toolbar"><div className="ad-platforms" aria-label="실시간 플랫폼">{(['ALL', 'CHZZK', 'SOOP'] as const).map((platform) => <button className="bs-button" type="button" key={platform} aria-pressed={filters.platform === platform}
-      onClick={() => navigate({ platform, category: '' })}>{platform === 'ALL' ? '전체 플랫폼' : <StatisticsBrand platform={platform} />}</button>)}</div>
-      <div className="ad-live-update">{stamp && !error && <span>{statisticsTime(stamp)} 기준</span>}<button className="ad-refresh" type="button" disabled={loading} onClick={refresh} aria-label="실시간 순위 새로고침"><RefreshCw size={13} className={loading ? 'bs-spinning' : ''} />새로고침</button></div>
-    </div>
-    {error ? <div className="ad-live-state" role="alert"><p>실시간 순위를 불러오지 못했습니다.</p><button type="button" className="bs-button" onClick={refresh}>실시간 순위 다시 시도</button></div>
-      : !data ? <p className="ad-live-state" role="status">실시간 순위를 불러오는 중…</p> : <>
-        <div className="ad-live-status">{missing.map((source) => <span className="ad-partial-badge" key={source.platform}>{source.platform === 'CHZZK' ? '치지직' : 'SOOP'} {source.observedAt && source.state !== 'unavailable' ? '갱신 지연' : '확인 불가'}</span>)}{current.some((source) => source.state === 'partial') && <span className="ad-partial-badge">일부 기록 누락</span>}</div>
+
+  // 실시간 플랫폼 전체 집계 (소프트콘 뷰어십 매크로 지표)
+  const chzzkLives = rows.filter((r) => r.platform === 'CHZZK');
+  const soopLives = rows.filter((r) => r.platform === 'SOOP');
+  const chzzkViewers = chzzkLives.reduce((sum, r) => sum + (r.viewers || 0), 0);
+  const soopViewers = soopLives.reduce((sum, r) => sum + (r.viewers || 0), 0);
+  const totalViewers = chzzkViewers + soopViewers;
+  const chzzkLiveCount = chzzkLives.length;
+  const soopLiveCount = soopLives.length;
+  const totalLiveCount = chzzkLiveCount + soopLiveCount;
+  const chzzkShare = totalViewers > 0 ? Math.round((chzzkViewers / totalViewers) * 100) : 50;
+  const soopShare = 100 - chzzkShare;
+
+  return (
+    <section className="ad-realtime" aria-label="실시간 방송 현황">
+      {/* 1. 실시간 플랫폼 매크로 지표 (소프트콘형 현황 카드) */}
+      <div className="ad-platform-macro-grid">
+        <div className="ad-macro-card ad-macro-chzzk">
+          <div className="ad-macro-header">
+            <span className="ad-live-indicator" />
+            <StatisticsBrand platform="CHZZK" />
+            <span className="ad-macro-share">{chzzkShare}%</span>
+          </div>
+          <div className="ad-macro-body">
+            <div>
+              <span className="ad-macro-label">실시간 시청자</span>
+              <strong className="ad-macro-value">{countFormat(chzzkViewers)}<small>명</small></strong>
+            </div>
+            <div>
+              <span className="ad-macro-label">라이브 채널</span>
+              <strong className="ad-macro-subvalue">{countFormat(chzzkLiveCount)}<small>개</small></strong>
+            </div>
+          </div>
+        </div>
+
+        <div className="ad-macro-card ad-macro-soop">
+          <div className="ad-macro-header">
+            <span className="ad-live-indicator" />
+            <StatisticsBrand platform="SOOP" />
+            <span className="ad-macro-share">{soopShare}%</span>
+          </div>
+          <div className="ad-macro-body">
+            <div>
+              <span className="ad-macro-label">실시간 시청자</span>
+              <strong className="ad-macro-value">{countFormat(soopViewers)}<small>명</small></strong>
+            </div>
+            <div>
+              <span className="ad-macro-label">라이브 채널</span>
+              <strong className="ad-macro-subvalue">{countFormat(soopLiveCount)}<small>개</small></strong>
+            </div>
+          </div>
+        </div>
+
+        <div className="ad-macro-card ad-macro-total">
+          <div className="ad-macro-header">
+            <span className="ad-macro-label">양대 플랫폼 합산 점유율</span>
+            {stamp && <span className="ad-macro-time">{statisticsTime(stamp)} 기준</span>}
+          </div>
+          <div className="ad-macro-body ad-macro-body-total">
+            <div className="ad-total-stats">
+              <span>총 <strong>{countFormat(totalViewers)}명</strong> 시청</span>
+              <span>총 <strong>{countFormat(totalLiveCount)}개</strong> 채널</span>
+            </div>
+            <div className="ad-share-bar" role="progressbar" aria-label="플랫폼 시청자 점유율" aria-valuenow={chzzkShare} aria-valuemin={0} aria-valuemax={100}>
+              <span className="ad-share-chzzk" style={{ width: `${chzzkShare}%` }} title={`치지직 ${chzzkShare}%`} />
+              <span className="ad-share-soop" style={{ width: `${soopShare}%` }} title={`SOOP ${soopShare}%`} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="ad-live-toolbar">
+        <div className="ad-platforms" aria-label="실시간 플랫폼 필터">
+          {(['ALL', 'CHZZK', 'SOOP'] as const).map((platform) => (
+            <button
+              className="bs-button"
+              type="button"
+              key={platform}
+              aria-pressed={filters.platform === platform}
+              onClick={() => navigate({ platform, category: '' })}
+            >
+              {platform === 'ALL' ? '전체 플랫폼' : <StatisticsBrand platform={platform} />}
+            </button>
+          ))}
+        </div>
+        <div className="ad-live-update">
+          <button className="ad-refresh" type="button" disabled={loading} onClick={refresh} aria-label="실시간 순위 새로고침">
+            <RefreshCw size={13} className={loading ? 'bs-spinning' : ''} />
+            새로고침
+          </button>
+        </div>
+      </div>
+
+      {error ? (
+        <div className="ad-live-state" role="alert">
+          <p>실시간 순위를 불러오지 못했습니다.</p>
+          <button type="button" className="bs-button" onClick={refresh}>실시간 순위 다시 시도</button>
+        </div>
+      ) : !data ? (
+        <p className="ad-live-state" role="status">실시간 순위를 불러오는 중…</p>
+      ) : (
         <div className="ad-live-grid">
-          <section className="bs-panel ad-live-panel"><div className="ad-panel-heading"><div><h2>실시간 방송 랭킹</h2><p>현재 시청자 수{selected ? ` · ${selected.name}` : ''}</p></div>{filters.category && <button className="bs-button" type="button" onClick={() => navigate({ ...filters, category: '' })}>카테고리 선택 해제</button>}</div>
-            {broadcasts.length ? <ol className="ad-live-list">{broadcasts.slice(0, broadcastLimit).map((row, index) => <LiveBroadcastRow key={row.id} row={row} rank={index + 1} onOpen={onOpen} />)}</ol>
-              : <p className="ad-empty">{!current.length ? '현재 방송 정보를 확인할 수 없습니다.' : '현재 조건의 방송이 없습니다.'}</p>}
-            {broadcasts.length > broadcastLimit && <button className="ad-more" type="button" onClick={() => setBroadcastLimit(broadcastLimit + 10)}>방송 랭킹 더 보기</button>}
+          <section className="bs-panel ad-live-panel">
+            <div className="ad-panel-heading">
+              <div>
+                <h2>실시간 방송 랭킹 (Top {broadcastLimit})</h2>
+                <p>현재 시청자 수{selected ? ` · ${selected.name}` : ''}</p>
+              </div>
+              {filters.category && (
+                <button className="bs-button" type="button" onClick={() => navigate({ ...filters, category: '' })}>
+                  카테고리 선택 해제
+                </button>
+              )}
+            </div>
+            {broadcasts.length ? (
+              <ol className="ad-live-list">
+                {broadcasts.slice(0, broadcastLimit).map((row, index) => (
+                  <LiveBroadcastRow key={row.id} row={row} rank={index + 1} onOpen={onOpen} />
+                ))}
+              </ol>
+            ) : (
+              <p className="ad-empty">{!current.length ? '현재 방송 정보를 확인할 수 없습니다.' : '현재 조건의 방송이 없습니다.'}</p>
+            )}
+            {broadcasts.length > broadcastLimit && (
+              <button className="ad-more" type="button" onClick={() => setBroadcastLimit(broadcastLimit + 10)}>
+                방송 랭킹 더 보기
+              </button>
+            )}
           </section>
-          <section className="bs-panel ad-live-panel"><div className="ad-panel-heading"><div><h2>실시간 카테고리 순위</h2></div><div className="bs-segment" aria-label="실시간 카테고리 정렬"><button type="button" aria-pressed={sort === 'viewers'} onClick={() => setSort('viewers')}>시청자 수</button><button type="button" aria-pressed={sort === 'channels'} onClick={() => setSort('channels')}>방송 채널 수</button></div></div>
-            {categories.length ? <ol className="ad-live-categories">{categories.slice(0, categoryLimit).map((category, index) => <li key={category.key}><button type="button" className="ad-live-category" aria-pressed={filters.category === category.key}
-              style={{ '--ad-category-color': activityCategoryColor(category.key) } as CSSProperties} onClick={() => navigate({ ...filters, category: filters.category === category.key ? '' : category.key })}>
-              <span className={`ad-rank ${index < 3 ? 'ad-rank-top' : ''}`}>{index + 1}</span><span className="ad-live-category-info"><strong><i />{category.name}</strong><span>{category.platform === 'CHZZK' ? '치지직' : 'SOOP'} · {sort === 'viewers' ? `${countFormat(category.channels)}개 채널` : `${countFormat(category.viewers)}명`}</span><span className="ad-track"><span style={{ width: `${category[sort] / max * 100}%`, background: 'var(--ad-category-color)' }} /></span></span><span className="ad-live-count"><strong>{countFormat(category[sort])}<small>{sort === 'viewers' ? '명' : '개 채널'}</small></strong></span>
-            </button></li>)}</ol> : <p className="ad-empty">{!current.length ? '현재 카테고리 정보를 확인할 수 없습니다.' : '현재 방송 중인 카테고리가 없습니다.'}</p>}
-            {categories.length > categoryLimit && <button className="ad-more" type="button" onClick={() => setCategoryLimit(categoryLimit + 10)}>카테고리 순위 더 보기</button>}
+
+          <section className="bs-panel ad-live-panel">
+            <div className="ad-panel-heading">
+              <div>
+                <h2>실시간 인기 카테고리 순위</h2>
+              </div>
+              <div className="bs-segment" aria-label="실시간 카테고리 정렬">
+                <button type="button" aria-pressed={sort === 'viewers'} onClick={() => setSort('viewers')}>시청자 수</button>
+                <button type="button" aria-pressed={sort === 'channels'} onClick={() => setSort('channels')}>방송 채널 수</button>
+              </div>
+            </div>
+            {categories.length ? (
+              <ol className="ad-live-categories">
+                {categories.slice(0, categoryLimit).map((category, index) => (
+                  <li key={category.key}>
+                    <button
+                      type="button"
+                      className="ad-live-category"
+                      aria-pressed={filters.category === category.key}
+                      style={{ '--ad-category-color': activityCategoryColor(category.key) } as CSSProperties}
+                      onClick={() => navigate({ ...filters, category: filters.category === category.key ? '' : category.key })}
+                    >
+                      <span className={`ad-rank ${index < 3 ? 'ad-rank-top' : ''}`}>{index + 1}</span>
+                      <span className="ad-live-category-info">
+                        <strong><i />{category.name}</strong>
+                        <span>{category.platform === 'CHZZK' ? '치지직' : 'SOOP'} · {sort === 'viewers' ? `${countFormat(category.channels)}개 채널` : `${countFormat(category.viewers)}명`}</span>
+                        <span className="ad-track">
+                          <span style={{ width: `${category[sort] / max * 100}%`, background: 'var(--ad-category-color)' }} />
+                        </span>
+                      </span>
+                      <span className="ad-live-count">
+                        <strong>{countFormat(category[sort])}<small>{sort === 'viewers' ? '명' : '개 채널'}</small></strong>
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className="ad-empty">{!current.length ? '현재 카테고리 정보를 확인할 수 없습니다.' : '현재 방송 중인 카테고리가 없습니다.'}</p>
+            )}
+            {categories.length > categoryLimit && (
+              <button className="ad-more" type="button" onClick={() => setCategoryLimit(categoryLimit + 10)}>
+                카테고리 순위 더 보기
+              </button>
+            )}
           </section>
         </div>
-      </>}
-  </section>;
+      )}
+    </section>
+  );
 }
