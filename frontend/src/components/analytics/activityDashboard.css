@@ -169,35 +169,436 @@
 .ad-calendar-day[aria-pressed=true]{background:#eff6ff;color:#1d4ed8;outline-color:#2563eb}
 .ad-dashboard [role=alert]{color:#b42318}
 .ad-partial-badge{display:inline-block;margin-left:8px;padding:2px 7px;background:#fff7ed;border:1px solid #fed7aa;border-radius:5px;color:#9a3412;font-size:10px;font-weight:600}
-/* 실시간 순위는 기간별 통계 앞에 배치하고 현재 시청자 수를 우측에 모은다. */
-.ad-realtime{margin-bottom:26px}
-.ad-live-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-.ad-live-update{display:flex;align-items:center;gap:12px;color:#718198;font-size:11px}
-.ad-live-update .ad-refresh{margin-left:0;min-height:30px}
-.ad-live-status{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px}
-.ad-live-status:empty{display:none}.ad-live-status .ad-partial-badge{margin-left:0}
-.ad-live-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px;align-items:start}
-.ad-live-panel{overflow:hidden}
-.ad-live-list,.ad-live-categories{list-style:none;padding:0 22px;margin:0}
-.ad-live-row{display:flex;align-items:center;gap:11px;padding:13px 0;border-top:1px solid #edf1f6}
-.ad-rank{flex-shrink:0;width:20px;text-align:center;font-size:13px;font-weight:750;color:#7b8ba2;font-variant-numeric:tabular-nums}
-.ad-rank-top{color:#6d28d9}
-.ad-live-avatar{width:38px;height:38px;flex-shrink:0;border-radius:50%;overflow:hidden;background:#f5f3ff;display:flex;align-items:center;justify-content:center;color:#8b5cf6}
-.ad-live-avatar img{width:100%;height:100%;object-fit:cover}
-.ad-live-identity{min-width:0;flex:1}.ad-live-identity .ad-channel-link{max-width:100%;overflow:hidden;text-overflow:ellipsis;display:block;text-align:left}
-.ad-live-identity>strong{font-size:12px}.ad-live-identity>p{font-size:11px;color:#64748b;margin-top:4px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ad-live-tags{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:10px;color:#94a3b8;min-width:0}.ad-live-tags>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ad-live-tags .bs-brand-clearspace{padding:0}.ad-live-tags .bs-brand img{height:14px}
-.ad-live-count{flex-shrink:0;text-align:right}.ad-live-count>strong{display:block;font-size:15px;font-weight:750;color:#17243b;font-variant-numeric:tabular-nums}.ad-live-count small{font-size:10px;font-weight:500;color:#718198;margin-left:3px}
-.ad-live-count>a{display:inline-flex;align-items:center;gap:2px;font-size:10px;color:#2563eb;margin-top:6px}
-.ad-live-category{display:flex;width:100%;align-items:center;gap:11px;padding:16px 0;border:0;border-top:1px solid #edf1f6;background:transparent;text-align:left}
-.ad-live-category[aria-pressed=true]{background:#eff6ff;box-shadow:inset 3px 0 #2563eb}
-.ad-live-category-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}.ad-live-category-info>strong{font-size:12px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ad-live-category-info>strong>i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ad-category-color);margin-right:7px}
-.ad-live-category-info>span:not(.ad-track){font-size:10px;color:#718198}.ad-live-category-info .ad-track{max-width:100%;margin-top:2px}
-.ad-live-state{padding:24px;border:0;border-top:1px solid #dce4ee;border-radius:0;background:transparent;text-align:center;font-size:12px;color:#64748b}.ad-live-state .bs-button{margin-top:12px}
+/* ==========================================================================
+   실시간 스트리밍 인텔리전스 (소프트콘 뷰어십 모던 대시보드 시스템)
+   ========================================================================== */
+.ad-realtime {
+  margin-bottom: 32px;
+}
+
+/* 1. 알약형(Pill) 세그먼트 토글러 */
+.ad-live-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.ad-pill-segment {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 9999px;
+  gap: 4px;
+  border: 1px solid #e2e8f0;
+}
+.ad-pill-tab {
+  border: 0;
+  background: transparent;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ad-pill-tab:hover {
+  color: #0f172a;
+}
+.ad-pill-tab.is-active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  font-weight: 800;
+}
+.ad-pill-tab .bs-brand-clearspace {
+  padding: 0;
+}
+.ad-pill-tab .bs-brand img {
+  height: 15px;
+}
+
+.ad-refresh-pill {
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.ad-refresh-pill:hover {
+  border-color: #cbd5e1;
+  color: #0f172a;
+  background: #f8fafc;
+}
+.ad-refresh-pill:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 2. 2열 고밀도 인텔리전스 그리드 */
+.ad-live-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.ad-live-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 22px 24px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+  overflow: hidden;
+}
+.ad-live-panel .ad-panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 0 18px 0;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 12px;
+}
+.ad-live-panel .ad-panel-heading h2 {
+  font-size: 17px!important;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.4px;
+  margin: 0!important;
+}
+.ad-live-panel .ad-panel-heading p {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px!important;
+}
+
+/* 3. 스트리머 랭킹 리스트 (소프트콘형 하이엔드 카드 리스트) */
+.ad-live-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.ad-live-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 10px;
+  border-radius: 10px;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid #f8fafc;
+}
+.ad-live-row:hover {
+  background: #f8fafc;
+}
+
+/* 순위 뱃지 (1, 2, 3위 프리미엄) */
+.ad-rank {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  border-radius: 8px;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+  background: #f1f5f9;
+}
+.ad-rank-1 {
+  background: linear-gradient(135deg, #fef08a, #eab308);
+  color: #713f12;
+  box-shadow: 0 2px 6px rgba(234, 179, 8, 0.3);
+  font-weight: 900;
+}
+.ad-rank-2 {
+  background: linear-gradient(135deg, #f1f5f9, #cbd5e1);
+  color: #334155;
+  box-shadow: 0 2px 6px rgba(148, 163, 184, 0.25);
+  font-weight: 850;
+}
+.ad-rank-3 {
+  background: linear-gradient(135deg, #fed7aa, #f97316);
+  color: #7c2d12;
+  box-shadow: 0 2px 6px rgba(249, 115, 22, 0.25);
+  font-weight: 850;
+}
+
+/* 아바타 */
+.ad-live-avatar {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f1f5f9;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+}
+.ad-live-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 스트리머 정보 */
+.ad-live-identity {
+  min-width: 0;
+  flex: 1;
+}
+.ad-live-name-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.ad-channel-link {
+  font-size: 14px;
+  font-weight: 750;
+  color: #0f172a;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ad-channel-link:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+.ad-live-category-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.ad-live-stream-title {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0 0 5px 0!important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 340px;
+}
+.ad-live-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ad-live-tags .bs-brand-clearspace {
+  padding: 0;
+}
+.ad-live-tags .bs-brand img {
+  height: 14px;
+}
+.ad-viewers-bar-track {
+  flex: 1;
+  max-width: 120px;
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.ad-viewers-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+/* 시청자 수 & 링크 */
+.ad-live-count {
+  flex-shrink: 0;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.ad-live-count strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 850;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.4px;
+}
+.ad-live-count small {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  margin-left: 2px;
+}
+.ad-watch-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #2563eb;
+  text-decoration: none;
+  background: #eff6ff;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-top: 4px;
+  transition: all 0.15s ease;
+}
+.ad-watch-link:hover {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+/* 4. 카테고리 랭킹 */
+.ad-pill-segment-small {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 9999px;
+  gap: 2px;
+  border: 1px solid #e2e8f0;
+}
+.ad-pill-tab-small {
+  border: 0;
+  background: transparent;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.ad-pill-tab-small.is-active {
+  background: #ffffff;
+  color: #0f172a;
+  font-weight: 800;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+.ad-live-categories {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.ad-live-category {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 10px;
+  border: 0;
+  border-bottom: 1px solid #f8fafc;
+  border-radius: 8px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.ad-live-category:hover {
+  background: #f8fafc;
+}
+.ad-live-category[aria-pressed=true] {
+  background: #eff6ff;
+}
+.ad-live-category-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ad-live-category-info strong {
+  font-size: 13px;
+  font-weight: 750;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ad-live-category-info strong i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ad-category-color);
+  margin-right: 7px;
+}
+.ad-live-category-info span:not(.ad-track) {
+  font-size: 11px;
+  color: #64748b;
+}
+.ad-live-category .ad-track {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: 3px;
+}
+.ad-live-category .ad-track span {
+  display: block;
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+/* 5. 더보기 버튼 및 필터 해제 칩 */
+.ad-more-modern {
+  width: 100%;
+  border: 1px dashed #cbd5e1;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 750;
+  padding: 11px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 14px;
+  transition: all 0.2s ease;
+}
+.ad-more-modern:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #2563eb;
+}
+.ad-chip-clear {
+  border: 0;
+  background: #fee2e2;
+  color: #dc2626;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.ad-chip-clear:hover {
+  background: #fecaca;
+}
+
 @media(max-width:1000px){.ad-live-grid{grid-template-columns:1fr}}
-@media(max-width:390px){.ad-live-list,.ad-live-categories{padding:0 12px}.ad-live-row,.ad-live-category{gap:7px}.ad-live-avatar{width:28px;height:28px}.ad-rank{width:15px}.ad-live-count>strong{font-size:13px}.ad-live-toolbar{gap:4px}.ad-live-update{width:100%;justify-content:space-between}}
+@media(max-width:390px){.ad-live-row,.ad-live-category{gap:7px}.ad-live-avatar{width:32px;height:32px}.ad-rank{width:22px;height:22px;font-size:11px}.ad-live-count strong{font-size:14px}.ad-live-toolbar{gap:8px}}
+
 @media(max-width:760px){.ad-table-scroll{display:none}.ad-broadcast-cards{display:block}.ad-calendar-month{padding-left:16px}.ad-date-form select{max-width:190px}}
 /* 작은 화면에서는 검색·필터를 먼저 보여주고 각 차트를 한 열로 배치한다. */
 @media(max-width:1100px){.ad-main-grid{grid-template-columns:1fr}.ad-heading{align-items:flex-start}.ad-summary-card{padding:17px}.ad-summary-card>strong{font-size:22px}.ad-results-grid{grid-template-columns:1fr}}

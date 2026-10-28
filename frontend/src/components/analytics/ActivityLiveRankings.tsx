@@ -26,16 +26,63 @@ function liveStreamer(row: StatisticsBroadcast): StatisticsStreamer | null {
 }
 
 // 방송 순위의 이름·제목·시청자 수를 작은 화면에서도 한 행에서 읽게 한다.
-function LiveBroadcastRow({ row, rank, onOpen }: { row: StatisticsBroadcast; rank: number; onOpen: (streamer: StatisticsStreamer) => void }) {
+function LiveBroadcastRow({ row, rank, maxViewers, onOpen }: { row: StatisticsBroadcast; rank: number; maxViewers: number; onOpen: (streamer: StatisticsStreamer) => void }) {
   const image = safeStatisticsUrl(row.imageUrl);
   const streamer = liveStreamer(row);
   const liveUrl = safeStatisticsUrl(row.liveUrl);
-  return <li className="ad-live-row"><span className={`ad-rank ${rank <= 3 ? 'ad-rank-top' : ''}`}>{rank}</span>
-    <span className="ad-live-avatar">{image ? <img src={image} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} /> : <Users size={18} />}</span>
-    <div className="ad-live-identity">{streamer ? <a href={`${activityStreamerPath(streamer.channelKey!)}?name=${encodeURIComponent(streamer.name)}`} className="ad-channel-link" onClick={(event) => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); onOpen(streamer); }}>{streamer.name}</a> : <strong>{row.channelName || '채널 정보 없음'}</strong>}
-      <p title={publicBroadcastTitle(row.title)}>{publicBroadcastTitle(row.title)}</p><div className="ad-live-tags"><StatisticsBrand platform={row.platform} label={false} /><span>{row.categoryName}</span></div></div>
-    <div className="ad-live-count"><strong>{countFormat(row.viewers)}<small>명</small></strong>{liveUrl && <a href={liveUrl} target="_blank" rel="noopener noreferrer" aria-label={`${row.channelName || '방송'} 방송 보기 (새 창)`}>방송 보기 <ArrowUpRight size={11} /></a>}</div>
-  </li>;
+  const ratio = maxViewers > 0 ? Math.min(100, Math.round((row.viewers / maxViewers) * 100)) : 0;
+
+  return (
+    <li className="ad-live-row">
+      <span className={`ad-rank ${rank === 1 ? 'ad-rank-1' : rank === 2 ? 'ad-rank-2' : rank === 3 ? 'ad-rank-3' : ''}`}>
+        {rank}
+      </span>
+      <span className="ad-live-avatar">
+        {image ? (
+          <img src={image} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
+        ) : (
+          <Users size={18} />
+        )}
+      </span>
+      <div className="ad-live-identity">
+        <div className="ad-live-name-line">
+          {streamer ? (
+            <a
+              href={`${activityStreamerPath(streamer.channelKey!)}?name=${encodeURIComponent(streamer.name)}`}
+              className="ad-channel-link"
+              onClick={(event) => {
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                event.preventDefault();
+                onOpen(streamer);
+              }}
+            >
+              {streamer.name}
+            </a>
+          ) : (
+            <strong>{row.channelName || '채널 정보 없음'}</strong>
+          )}
+          <span className="ad-live-category-badge">{row.categoryName}</span>
+        </div>
+        <p className="ad-live-stream-title" title={publicBroadcastTitle(row.title)}>
+          {publicBroadcastTitle(row.title)}
+        </p>
+        <div className="ad-live-tags">
+          <StatisticsBrand platform={row.platform} label={false} />
+          <div className="ad-viewers-bar-track">
+            <div className="ad-viewers-bar-fill" style={{ width: `${ratio}%` }} />
+          </div>
+        </div>
+      </div>
+      <div className="ad-live-count">
+        <strong>{countFormat(row.viewers)}<small>명</small></strong>
+        {liveUrl && (
+          <a href={liveUrl} target="_blank" rel="noopener noreferrer" className="ad-watch-link" aria-label={`${row.channelName || '방송'} 방송 보기 (새 창)`}>
+            방송 보기 <ArrowUpRight size={12} />
+          </a>
+        )}
+      </div>
+    </li>
+  );
 }
 
 // 현재 방송만 순위를 매기고 누락·지연·실패는 빈 방송으로 대체하지 않는다.
@@ -62,6 +109,7 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
   const broadcasts = rows.filter((row) => !filters.category || categoryKey(row) === filters.category).sort((a, b) => b.viewers - a.viewers || a.id.localeCompare(b.id));
   const selected = categories.find((category) => category.key === filters.category);
   const max = Math.max(1, ...categories.map((category) => category[sort]));
+  const maxBroadcastViewers = Math.max(1, ...broadcasts.map((b) => b.viewers));
   const stamp = (data?.sources || []).map((s) => s.observedAt).filter((t): t is string => Boolean(t)).sort().reverse()[0] || data?.meta?.generatedAt;
 
   // 실시간 플랫폼 전체 집계 (치지직 / SOOP)
@@ -117,11 +165,12 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
         </div>
       </div>
 
+      {/* 2. 세련된 알약형(Pill) 플랫폼 세그먼트 & 업데이트 상태 */}
       <div className="ad-live-toolbar">
-        <div className="ad-platforms" aria-label="실시간 플랫폼 필터">
+        <div className="ad-pill-segment" role="group" aria-label="실시간 플랫폼 필터">
           {(['ALL', 'CHZZK', 'SOOP'] as const).map((platform) => (
             <button
-              className="bs-button"
+              className={`ad-pill-tab ${filters.platform === platform ? 'is-active' : ''}`}
               type="button"
               key={platform}
               aria-pressed={filters.platform === platform}
@@ -133,7 +182,7 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
         </div>
         <div className="ad-live-update">
           {stamp && <span className="ad-macro-time">{statisticsTime(stamp)} 기준</span>}
-          <button className="ad-refresh" type="button" disabled={loading} onClick={refresh} aria-label="실시간 순위 새로고침">
+          <button className="ad-refresh-pill" type="button" disabled={loading} onClick={refresh} aria-label="실시간 순위 새로고침">
             <RefreshCw size={13} className={loading ? 'bs-spinning' : ''} />
             새로고침
           </button>
@@ -156,23 +205,23 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
                 <p>현재 시청자 수{selected ? ` · ${selected.name}` : ''}</p>
               </div>
               {filters.category && (
-                <button className="bs-button" type="button" onClick={() => navigate({ ...filters, category: '' })}>
-                  카테고리 선택 해제
+                <button className="ad-chip-clear" type="button" onClick={() => navigate({ ...filters, category: '' })}>
+                  {selected?.name || filters.category} 필터 해제 ×
                 </button>
               )}
             </div>
             {broadcasts.length ? (
               <ol className="ad-live-list">
                 {broadcasts.slice(0, broadcastLimit).map((row, index) => (
-                  <LiveBroadcastRow key={row.id} row={row} rank={index + 1} onOpen={onOpen} />
+                  <LiveBroadcastRow key={row.id} row={row} rank={index + 1} maxViewers={maxBroadcastViewers} onOpen={onOpen} />
                 ))}
               </ol>
             ) : (
               <p className="ad-empty">{!rows.length ? '현재 방송 정보를 확인할 수 없습니다.' : '현재 조건의 방송이 없습니다.'}</p>
             )}
             {broadcasts.length > broadcastLimit && (
-              <button className="ad-more" type="button" onClick={() => setBroadcastLimit(broadcastLimit + 10)}>
-                방송 랭킹 더 보기
+              <button className="ad-more-modern" type="button" onClick={() => setBroadcastLimit(broadcastLimit + 10)}>
+                스트리머 순위 더 보기 (+10)
               </button>
             )}
           </section>
@@ -182,9 +231,9 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
               <div>
                 <h2>실시간 인기 카테고리 순위</h2>
               </div>
-              <div className="bs-segment" aria-label="실시간 카테고리 정렬">
-                <button type="button" aria-pressed={sort === 'viewers'} onClick={() => setSort('viewers')}>시청자 수</button>
-                <button type="button" aria-pressed={sort === 'channels'} onClick={() => setSort('channels')}>방송 채널 수</button>
+              <div className="ad-pill-segment-small" aria-label="실시간 카테고리 정렬">
+                <button type="button" className={`ad-pill-tab-small ${sort === 'viewers' ? 'is-active' : ''}`} aria-pressed={sort === 'viewers'} onClick={() => setSort('viewers')}>시청자 수 순</button>
+                <button type="button" className={`ad-pill-tab-small ${sort === 'channels' ? 'is-active' : ''}`} aria-pressed={sort === 'channels'} onClick={() => setSort('channels')}>방송 채널 수 순</button>
               </div>
             </div>
             {categories.length ? (
@@ -217,8 +266,8 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
               <p className="ad-empty">{!rows.length ? '현재 카테고리 정보를 확인할 수 없습니다.' : '현재 방송 중인 카테고리가 없습니다.'}</p>
             )}
             {categories.length > categoryLimit && (
-              <button className="ad-more" type="button" onClick={() => setCategoryLimit(categoryLimit + 10)}>
-                카테고리 순위 더 보기
+              <button className="ad-more-modern" type="button" onClick={() => setCategoryLimit(categoryLimit + 10)}>
+                카테고리 순위 더 보기 (+10)
               </button>
             )}
           </section>

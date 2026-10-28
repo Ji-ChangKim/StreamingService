@@ -320,38 +320,49 @@ export function ActivityDashboard({ currentSubPath, onNavigate }: { currentSubPa
       </nav>
     )}
     {searching ? <ActivitySearchResults query={search} onOpen={openStreamer} onBack={() => navigate(filters, '')} /> : <>
-      {personal && <section className="ad-profile">
-        <button type="button" className="ad-back" onClick={goBack}><ArrowLeft size={16} /> {validReturn && returnTo.startsWith('/creator/') ? '프로필' : search ? '검색 결과' : '전체 통계'}</button>
-        <div className="ad-profile-content"><div className="ad-avatar ad-avatar-large">{image ? <img src={image} alt="" /> : <Users size={25} />}</div><div><h2>{streamer?.name || (loading ? '불러오는 중…' : filters.channel.split(':')[1])} 방송 통계</h2>{streamer && <StatisticsBrand platform={streamer.platform} />}</div>
-          <div className="ad-profile-actions">{channelUrl && <a className="bs-button" href={channelUrl} target="_blank" rel="noopener noreferrer">채널 바로가기 <ArrowUpRight size={14} /></a>}{streamer?.profileSlug && <a className="bs-button" href={`/creator/${encodeURIComponent(streamer.profileSlug)}`}>VDébut 프로필</a>}<ActivityShare /></div></div>
-      </section>}
+      {/* 개인 스트리머 프로필 모드 */}
+      {personal && (
+        <>
+          <section className="ad-profile">
+            <button type="button" className="ad-back" onClick={goBack}>
+              <ArrowLeft size={16} /> {validReturn && returnTo.startsWith('/creator/') ? '프로필' : search ? '검색 결과' : '전체 통계'}
+            </button>
+            <div className="ad-profile-content">
+              <div className="ad-avatar ad-avatar-large">{image ? <img src={image} alt="" /> : <Users size={25} />}</div>
+              <div>
+                <h2>{streamer?.name || (loading ? '불러오는 중…' : filters.channel.split(':')[1])} 방송 통계</h2>
+                {streamer && <StatisticsBrand platform={streamer.platform} />}
+              </div>
+              <div className="ad-profile-actions">
+                {channelUrl && <a className="bs-button" href={channelUrl} target="_blank" rel="noopener noreferrer">채널 바로가기 <ArrowUpRight size={14} /></a>}
+                {streamer?.profileSlug && <a className="bs-button" href={`/creator/${encodeURIComponent(streamer.profileSlug)}`}>VDébut 프로필</a>}
+                <ActivityShare />
+              </div>
+            </div>
+          </section>
+
+          {loading ? (
+            <div className="ad-state ad-loading" role="status"><RefreshCw size={24} className="bs-spinning" /><h2>방송 통계를 불러오는 중입니다.</h2></div>
+          ) : error ? (
+            <div className="ad-state" role="alert"><h2>통계를 불러오지 못했습니다.</h2><p>{error}</p><button className="bs-button bs-primary" type="button" onClick={refresh}>다시 시도</button></div>
+          ) : data && (
+            <>
+              <ActivityNarrativeReport streamer={streamer} data={data} />
+              <ActivitySummary data={data} personal={personal} />
+              <div className="ad-main-grid">
+                <ActivityHeatmap key={filters.channel} data={data} personal={personal} selection={selection} onSelect={selectHistory} />
+                <ActivityCategories data={data} selected={filters.category} onSelect={(category) => navigate({ ...filters, category })} />
+              </div>
+              <ActivityDaily data={data} personal={personal} selection={selection} onSelect={selectHistory} />
+              <ActivityBroadcasts data={data} filters={filters} selection={selection} personal={personal} onOpen={openStreamer} onClear={() => selectHistory(EMPTY_SELECTION, false)} />
+            </>
+          )}
+        </>
+      )}
+
+      {/* 모드 A: 실시간 플랫폼 & 랭킹 현황판 (소프트콘 뷰어십 완벽 벤치마크) */}
       {!personal && <ActivityLiveRankings onOpen={openStreamer} />}
-      <section className="ad-filters" aria-label="통계 조회 조건">
-        <div className="ad-filter-top">
-          <div className="ad-periods" aria-label="조회 기간">{[7, 30, 90].map((days) => {
-            const range = activityPeriod(days); return <button className="bs-button" type="button" key={days} aria-pressed={range.from === filters.from && range.to === filters.to} onClick={() => navigate({ ...filters, ...range })}>최근 {days}일</button>;
-          })}</div>
-          {!personal && <div className="ad-platforms" aria-label="플랫폼">{(['ALL', 'CHZZK', 'SOOP'] as const).map((platform) => <button className="bs-button" type="button" key={platform} aria-pressed={filters.platform === platform} onClick={() => navigate({ ...filters, platform, category: '' })}>{platform === 'ALL' ? '전체' : <StatisticsBrand platform={platform} />}</button>)}</div>}
-          <div className="ad-filter-actions">
-            <select className="ad-category-select" aria-label="카테고리 선택" value={filters.category} onChange={(event) => navigate({ ...filters, category: event.target.value })}>
-              <option value="">모든 카테고리</option>
-              {data?.categoryOptions.map((item) => <option value={item.key} key={item.key}>{item.name} ({item.platform === 'CHZZK' ? '치지직' : 'SOOP'})</option>)}
-            </select>
-            {filters.category && <button className="ad-filter-chip" type="button" onClick={() => navigate({ ...filters, category: '' })}>{data?.categoryOptions.find((item) => item.key === filters.category)?.name || filters.category} ×</button>}
-            <button className="ad-refresh" type="button" disabled={loading} onClick={refresh} aria-label="통계 새로고침"><RefreshCw size={13} className={loading ? 'bs-spinning' : ''} /> 새로고침</button>
-          </div>
-        </div>
-      </section>
-      {loading ? <div className="ad-state ad-loading" role="status"><RefreshCw size={24} className="bs-spinning" /><h2>방송 통계를 불러오는 중입니다.</h2></div>
-        : error ? <div className="ad-state" role="alert"><h2>통계를 불러오지 못했습니다.</h2><p>{error}</p><button className="bs-button bs-primary" type="button" onClick={refresh}>다시 시도</button></div>
-        : data && <>
-          {personal && <ActivityNarrativeReport streamer={streamer} data={data} />}
-          {personal && <ActivitySummary data={data} personal={personal} />}
-          <div className="ad-main-grid"><ActivityHeatmap key={filters.channel} data={data} personal={personal} selection={selection} onSelect={selectHistory} /><ActivityCategories data={data} selected={filters.category} onSelect={(category) => navigate({ ...filters, category })} /></div>
-          <ActivityDaily data={data} personal={personal} selection={selection} onSelect={selectHistory} />
-          <ActivityBroadcasts data={data} filters={filters} selection={selection} personal={personal} onOpen={openStreamer} onClear={() => selectHistory(EMPTY_SELECTION, false)} />
-        </>}
     </>}
-    <footer className="ad-footer">VDébut · 방송 통계</footer>
+    <footer className="ad-footer">VDébut · 실시간 스트리밍 인텔리전스</footer>
   </div>;
 }
