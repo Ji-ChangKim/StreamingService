@@ -42,11 +42,11 @@ function LiveBroadcastRow({ row, rank, onOpen }: { row: StatisticsBroadcast; ran
 export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: StatisticsStreamer) => void }) {
   const { data, loading, error, refresh } = useBroadcastStatistics();
   const [filters, setFilters] = useState(readLiveLocation);
-  const [broadcastLimit, setBroadcastLimit] = useState(5);
-  const [categoryLimit, setCategoryLimit] = useState(5);
+  const [broadcastLimit, setBroadcastLimit] = useState(10);
+  const [categoryLimit, setCategoryLimit] = useState(10);
   const [sort, setSort] = useState<'viewers' | 'channels'>('viewers');
   useEffect(() => { const sync = () => setFilters(readLiveLocation()); window.addEventListener('popstate', sync); return () => window.removeEventListener('popstate', sync); }, []);
-  useEffect(() => { setBroadcastLimit(5); setCategoryLimit(5); }, [filters.platform, filters.category]);
+  useEffect(() => { setBroadcastLimit(10); setCategoryLimit(10); }, [filters.platform, filters.category]);
   const navigate = (next: typeof filters) => {
     const params = new URLSearchParams(window.location.search);
     params.delete('livePlatform'); params.delete('liveCategory');
@@ -55,20 +55,18 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
     window.history.pushState(window.history.state, '', `${window.location.pathname}?${params}`);
     setFilters(next);
   };
-  const sources = (data?.sources || []).filter((source) => filters.platform === 'ALL' || source.platform === filters.platform);
-  const current = sources.filter((source) => (source.state === 'available' || source.state === 'partial') && source.observedAt
-    && Date.now() - Date.parse(source.observedAt) >= -60000 && Date.now() - Date.parse(source.observedAt) <= 15 * 60000);
-  const platforms = new Set(current.map((source) => source.platform));
-  const rows = (data?.lives || []).filter((row) => platforms.has(row.platform));
+  // 유효한 실시간 방송 목록
+  const allLives = data?.lives || [];
+  const rows = allLives.filter((row) => filters.platform === 'ALL' || row.platform === filters.platform);
   const categories = aggregateStatisticsCategories(rows).sort((a, b) => b[sort] - a[sort] || a.key.localeCompare(b.key));
   const broadcasts = rows.filter((row) => !filters.category || categoryKey(row) === filters.category).sort((a, b) => b.viewers - a.viewers || a.id.localeCompare(b.id));
   const selected = categories.find((category) => category.key === filters.category);
   const max = Math.max(1, ...categories.map((category) => category[sort]));
-  const stamp = current.map((source) => source.observedAt!).sort()[0];
+  const stamp = (data?.sources || []).map((s) => s.observedAt).filter((t): t is string => Boolean(t)).sort().reverse()[0] || data?.meta?.generatedAt;
 
   // 실시간 플랫폼 전체 집계 (치지직 / SOOP)
-  const chzzkLives = rows.filter((r) => r.platform === 'CHZZK');
-  const soopLives = rows.filter((r) => r.platform === 'SOOP');
+  const chzzkLives = allLives.filter((r) => r.platform === 'CHZZK');
+  const soopLives = allLives.filter((r) => r.platform === 'SOOP');
   const chzzkViewers = chzzkLives.reduce((sum, r) => sum + (r.viewers || 0), 0);
   const soopViewers = soopLives.reduce((sum, r) => sum + (r.viewers || 0), 0);
   const chzzkLiveCount = chzzkLives.length;
@@ -170,7 +168,7 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
                 ))}
               </ol>
             ) : (
-              <p className="ad-empty">{!current.length ? '현재 방송 정보를 확인할 수 없습니다.' : '현재 조건의 방송이 없습니다.'}</p>
+              <p className="ad-empty">{!rows.length ? '현재 방송 정보를 확인할 수 없습니다.' : '현재 조건의 방송이 없습니다.'}</p>
             )}
             {broadcasts.length > broadcastLimit && (
               <button className="ad-more" type="button" onClick={() => setBroadcastLimit(broadcastLimit + 10)}>
@@ -216,7 +214,7 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
                 ))}
               </ol>
             ) : (
-              <p className="ad-empty">{!current.length ? '현재 카테고리 정보를 확인할 수 없습니다.' : '현재 방송 중인 카테고리가 없습니다.'}</p>
+              <p className="ad-empty">{!rows.length ? '현재 카테고리 정보를 확인할 수 없습니다.' : '현재 방송 중인 카테고리가 없습니다.'}</p>
             )}
             {categories.length > categoryLimit && (
               <button className="ad-more" type="button" onClick={() => setCategoryLimit(categoryLimit + 10)}>
