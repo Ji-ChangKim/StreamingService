@@ -1,5 +1,4 @@
 // 외부 제목의 의심 표현을 공개 화면에서 제외한다.
-import { publicBroadcastTitle } from '../../../../shared/contentReview';
 import { useEffect, useState, useMemo } from 'react';
 import { ArrowUpRight, Clock, RefreshCw, Users } from 'lucide-react';
 import type { StatisticsBroadcast, StatisticsPlatform } from '../../../../shared/broadcastStatistics';
@@ -31,6 +30,27 @@ function formatUptime(startedAt: string | null): string {
   const hours = Math.floor(mins / 60);
   const remMins = mins % 60;
   return `${hours}시간 ${remMins}분`;
+}
+
+// 0~100% 점유율을 10% 단위로 나누는 10단계 테마 색상 팔레트
+const SHARE_STEP_COLORS = [
+  '#38bdf8', // 1단계 (0~10%): 스카이블루
+  '#06b6d4', // 2단계 (10~20%): 오션 시안
+  '#14b8a6', // 3단계 (20~30%): 틸
+  '#10b981', // 4단계 (30~40%): 에메랄드
+  '#84cc16', // 5단계 (40~50%): 라임 그린
+  '#eab308', // 6단계 (50~60%): 앰버 옐로우
+  '#f97316', // 7단계 (60~70%): 웜 오렌지
+  '#ea580c', // 8단계 (70~80%): 딥 오렌지
+  '#f43f5e', // 9단계 (80~90%): 비비드 로즈
+  '#8b5cf6', // 10단계 (90~100%): 프리미엄 바이올렛
+] as const;
+
+function getShareTier(relativePct: number): { filledCount: number; activeColor: string } {
+  // 1위 대비 비율 기준: 0보다 크면 1칸 이상 채워 0.N%도 선명하게 노출
+  const filledCount = relativePct <= 0 ? 0 : Math.max(1, Math.min(10, Math.ceil(relativePct / 10)));
+  const activeColor = filledCount > 0 ? SHARE_STEP_COLORS[filledCount - 1] : '#94a3b8';
+  return { filledCount, activeColor };
 }
 
 // 방송의 공개 채널 정보로 개인 통계의 조회 대상을 만든다.
@@ -282,7 +302,7 @@ function LiveCategoryTiles({
   );
 }
 
-// 3. [하단] 와이드 고밀도 데이터 테이블 행 (시안 2: 전문 통계 그리드)
+// 3. [하단] 와이드 고밀도 데이터 테이블 행 (방안 1: 방송 제목 제거 및 10% 단위 컬러 프로세스 바)
 function LiveStreamerTableRow({
   row,
   rank,
@@ -301,10 +321,13 @@ function LiveStreamerTableRow({
   const image = safeStatisticsUrl(row.imageUrl);
   const streamer = liveStreamer(row);
   const liveUrl = safeStatisticsUrl(row.liveUrl);
-  const ratio = maxViewers > 0 ? Math.min(100, Math.max(4, Math.round((row.viewers / maxViewers) * 100))) : 0;
+  // 1위 대비 상대 볼륨 (0~100%)
+  const relativeRatio = maxViewers > 0 ? Math.min(100, Math.round((row.viewers / maxViewers) * 100)) : 0;
+  // 전체 대비 실제 점유율 수치 (%)
   const share = totalViewers > 0 ? ((row.viewers / totalViewers) * 100).toFixed(1) : '0';
-  const isChzzk = row.platform === 'CHZZK';
   const uptime = formatUptime(row.startedAt);
+  // 10% 단위 10단계 세그먼트 블록 정보
+  const { filledCount, activeColor } = getShareTier(relativeRatio);
 
   return (
     <tr className="sc-table-row">
@@ -373,14 +396,7 @@ function LiveStreamerTableRow({
         </button>
       </td>
 
-      {/* 5. 방송 제목 */}
-      <td className="sc-td-title">
-        <span className="sc-table-broadcast-title" title={publicBroadcastTitle(row.title)}>
-          {publicBroadcastTitle(row.title)}
-        </span>
-      </td>
-
-      {/* 6. 방송 시작 시간 */}
+      {/* 5. 방송 시작 시간 */}
       <td className="sc-td-uptime">
         <span className="sc-table-uptime">
           <Clock size={12} />
@@ -388,20 +404,37 @@ function LiveStreamerTableRow({
         </span>
       </td>
 
-      {/* 7. 시청자 점유율 게이지 */}
+      {/* 6. 시청자 점유율: 10% 단위 10칸 블록 프로세스 바 + 점유율 % */}
       <td className="sc-td-share">
         <div className="sc-table-share-cell">
-          <div className="sc-table-gauge-track">
-            <div
-              className={`sc-table-gauge-fill ${isChzzk ? 'fill-chzzk' : 'fill-soop'}`}
-              style={{ width: `${ratio}%` }}
-            />
+          <div
+            className="sc-segment-track"
+            role="progressbar"
+            aria-valuenow={relativeRatio}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            title={`1위 대비 볼륨: ${relativeRatio}% (${filledCount}/10칸) · 전체 점유율: ${share}%`}
+          >
+            {Array.from({ length: 10 }).map((_, idx) => {
+              const isFilled = idx < filledCount;
+              return (
+                <span
+                  key={idx}
+                  className={`sc-segment-block ${isFilled ? 'is-filled' : ''}`}
+                  style={{
+                    backgroundColor: isFilled ? SHARE_STEP_COLORS[idx] : undefined,
+                  }}
+                />
+              );
+            })}
           </div>
-          <span className="sc-table-share-pct">{share}%</span>
+          <span className="sc-table-share-pct" style={{ color: activeColor }}>
+            {share}%
+          </span>
         </div>
       </td>
 
-      {/* 8. 실시간 시청자 */}
+      {/* 7. 실시간 시청자 */}
       <td className="sc-td-viewers">
         <strong className="sc-table-viewers-count">
           {countFormat(row.viewers)}
@@ -409,7 +442,7 @@ function LiveStreamerTableRow({
         </strong>
       </td>
 
-      {/* 9. 방송 보기 */}
+      {/* 8. 방송 보기 */}
       <td className="sc-td-action">
         {liveUrl && (
           <a
@@ -576,7 +609,7 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
       />
 
       {/* ====================================================================
-          3. [하단] 실시간 스트리머 랭킹 (시안 2: 와이드 고밀도 데이터 그리드)
+          3. [하단] 실시간 스트리머 랭킹 (방안 1: 방송 제목 제외 8개 핵심 컬럼 그리드)
           ==================================================================== */}
       <div className="sc-streamer-section">
         <div className="sc-section-heading">
@@ -633,7 +666,6 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
                       <th className="sc-th-streamer">스트리머</th>
                       <th className="sc-th-platform">플랫폼</th>
                       <th className="sc-th-category">카테고리</th>
-                      <th className="sc-th-title">방송 제목</th>
                       <th className="sc-th-uptime">방송 시작</th>
                       <th className="sc-th-share">시청자 점유율</th>
                       <th className="sc-th-viewers">실시간 시청자</th>

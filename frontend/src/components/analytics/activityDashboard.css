@@ -1367,34 +1367,31 @@
   white-space: nowrap;
 }
 .sc-streamer-table th.sc-th-rank {
-  width: 5%;
+  width: 6%;
   text-align: center;
 }
 .sc-streamer-table th.sc-th-streamer {
-  width: 16%;
+  width: 22%;
 }
 .sc-streamer-table th.sc-th-platform {
-  width: 8%;
+  width: 10%;
   text-align: center;
 }
 .sc-streamer-table th.sc-th-category {
-  width: 11%;
-}
-.sc-streamer-table th.sc-th-title {
-  width: 25%;
+  width: 16%;
 }
 .sc-streamer-table th.sc-th-uptime {
-  width: 10%;
+  width: 13%;
 }
 .sc-streamer-table th.sc-th-share {
-  width: 11%;
+  width: 16%;
 }
 .sc-streamer-table th.sc-th-viewers {
-  width: 9%;
+  width: 11%;
   text-align: right;
 }
 .sc-streamer-table th.sc-th-action {
-  width: 5%;
+  width: 6%;
   text-align: center;
 }
 .sc-streamer-table tbody tr.sc-table-row {
@@ -1451,7 +1448,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 140px;
+  max-width: 190px;
   display: inline-block;
 }
 .sc-table-streamer-name:hover {
@@ -1479,21 +1476,11 @@
   background: #e2e8f0;
   color: #0f172a;
 }
-.sc-table-broadcast-title {
-  font-size: 12.5px;
-  color: #475569;
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-  line-height: 1.4;
-}
 .sc-table-uptime {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
+  font-size: 11.5px;
   color: #64748b;
   font-weight: 600;
   white-space: nowrap;
@@ -1506,26 +1493,37 @@
   align-items: center;
   gap: 8px;
 }
-.sc-table-gauge-track {
-  flex: 1;
-  height: 5px;
+/* 10% 단위 10칸 분할 블록 프로세스 바 */
+.sc-segment-track {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  width: 84px;
+  height: 9px;
+  padding: 1.5px;
   background: #f1f5f9;
-  border-radius: 9999px;
-  overflow: hidden;
-  min-width: 50px;
-  max-width: 75px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
-.sc-table-gauge-fill {
+.sc-segment-block {
+  flex: 1;
   height: 100%;
-  border-radius: 9999px;
-  transition: width 0.3s ease;
+  border-radius: 1px;
+  background: #cbd5e1;
+  opacity: 0.35;
+  transition: all 0.2s ease;
+}
+.sc-segment-block.is-filled {
+  opacity: 1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 .sc-table-share-pct {
-  font-size: 11px;
-  font-weight: 750;
-  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
   font-variant-numeric: tabular-nums;
-  min-width: 32px;
+  min-width: 36px;
+  letter-spacing: -0.2px;
 }
 .sc-table-viewers-count {
   font-size: 16px;
