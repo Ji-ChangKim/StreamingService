@@ -39,3 +39,495 @@
   .vd-learning-grid{grid-template-columns:1fr}
   .vd-guide-card{padding:18px}
 }
+
+.vd-guide-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 0 48px;
+}
+
+/* 상단 퀵 앵커 내비게이션 (2열/3열 반응형 그리드 칩) */
+.vd-guide-index-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 32px;
+}
+
+.vd-guide-index-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px 16px;
+  text-decoration: none;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 0;
+}
+
+.vd-guide-index-card:hover {
+  background: #f8fafc;
+  border-color: #3b82f6;
+  box-shadow: 0 6px 16px -2px rgba(37, 99, 235, 0.1);
+  transform: translateY(-2px);
+}
+
+.vd-guide-index-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #2563eb;
+  background: #eff6ff;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.vd-guide-index-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.vd-guide-index-arrow {
+  color: #94a3b8;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.vd-guide-index-card:hover .vd-guide-index-arrow {
+  color: #2563eb;
+  transform: translateX(3px);
+}
+
+/* 6대 가이드 아티클 카드 목록 */
+.vd-guide-list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.vd-guide-article {
+  scroll-margin-top: 88px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 32px 36px;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.03);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vd-guide-article:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.06);
+}
+
+/* 카드 상단 헤더: 뱃지 + 제목 + 리드문 */
+.vd-guide-card-head {
+  margin-bottom: 24px;
+}
+
+.vd-guide-category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.vd-guide-card-head h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 10px;
+  letter-spacing: -0.025em;
+  line-height: 1.35;
+}
+
+.vd-guide-lead {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #475569;
+  line-height: 1.7;
+  margin: 0;
+  word-break: keep-all;
+}
+
+/* [섹션 1] 조사 방법 전용: 4대 플랫폼 서치 매트릭스 */
+.vd-search-platform-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0 24px;
+}
+
+.vd-search-platform-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+  transition: all 0.2s ease;
+}
+
+.vd-search-platform-card:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05);
+}
+
+.vd-search-platform-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.vd-platform-icon-pure {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.vd-search-platform-header h3 {
+  font-size: 15px;
+  font-weight: 750;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.vd-search-platform-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vd-search-field-label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.vd-search-tag-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.vd-search-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #1e40af;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.vd-search-inner-wrap {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.vd-search-inner-text {
+  font-size: 12.5px;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+  word-break: keep-all;
+}
+
+/* [섹션 2] 등록 방법 전용: 자동 등록 vs 수동 제보 2-Branch 대조 */
+.vd-registration-branches {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0 24px;
+}
+
+.vd-branch-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.vd-branch-card.highlight {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.vd-branch-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.vd-branch-pill {
+  font-size: 11px;
+  font-weight: 800;
+  color: #475569;
+  background: #e2e8f0;
+  padding: 2px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.vd-branch-pill.accent {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.vd-branch-header h3 {
+  font-size: 15px;
+  font-weight: 750;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.vd-branch-desc {
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.65;
+  margin: 0;
+  word-break: keep-all;
+}
+
+/* 규격화된 1-2-3 단계별 리스트 UI */
+.vd-step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vd-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13.5px;
+  color: #334155;
+  line-height: 1.65;
+  word-break: keep-all;
+}
+
+.vd-step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #475569;
+  font-size: 11.5px;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.vd-step-badge.highlight {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+/* 일반 섹션 전용 스텝 블록 스타일 */
+.vd-guide-steps-wrap {
+  margin: 18px 0 20px;
+}
+
+.vd-standard-steps .vd-step-item {
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  transition: all 0.15s ease;
+}
+
+.vd-standard-steps .vd-step-item:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.vd-step-text {
+  flex: 1;
+}
+
+/* 실제 서비스 화면 스크린샷 래퍼 & 캡션 */
+.vd-guide-media-wrap {
+  margin: 20px 0 24px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+}
+
+.vd-guide-figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.vd-guide-screenshot {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  background: #ffffff;
+}
+
+.vd-guide-caption {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #475569;
+  margin-top: 10px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* 실전 팁 & 운영진 검증 원칙 박스 (Anti-slop 탈AI 모던 스타일) */
+.vd-tip-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #2563eb;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 13px;
+  color: #1e293b;
+  line-height: 1.65;
+  margin: 18px 0 22px;
+  word-break: keep-all;
+}
+
+.vd-tip-box strong {
+  color: #0f172a;
+  font-weight: 750;
+  margin-right: 4px;
+}
+
+/* 카드 하단 액션 버튼 푸터 */
+.vd-guide-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: 18px;
+  margin-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.vd-guide-card-footer .vd-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 9px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.18s ease;
+}
+
+/* 페이지 최하단 안내 푸터 */
+.vd-guide-page-footer {
+  text-align: center;
+  padding: 32px 16px 16px;
+  margin-top: 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.vd-guide-page-footer p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.vd-guide-page-footer .vd-text-button {
+  color: #2563eb;
+  font-weight: 700;
+  text-decoration: underline;
+  margin-left: 4px;
+}
+
+/* 모바일 & 태블릿 반응형 브레이크포인트 */
+@media (max-width: 900px) {
+  .vd-guide-index-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .vd-guide-container {
+    padding: 0 0 36px;
+  }
+  .vd-guide-index-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .vd-guide-article {
+    padding: 22px 18px;
+    border-radius: 16px;
+  }
+  .vd-guide-card-head h2 {
+    font-size: 18px;
+  }
+  .vd-search-platform-grid,
+  .vd-registration-branches {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .vd-standard-steps .vd-step-item {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  .vd-guide-card-footer {
+    justify-content: stretch;
+  }
+  .vd-guide-card-footer .vd-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
