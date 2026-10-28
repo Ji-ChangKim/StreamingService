@@ -66,34 +66,32 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
   const max = Math.max(1, ...categories.map((category) => category[sort]));
   const stamp = current.map((source) => source.observedAt!).sort()[0];
 
-  // 실시간 플랫폼 전체 집계 (소프트콘 뷰어십 매크로 지표)
+  // 실시간 플랫폼 전체 집계 (치지직 / SOOP)
   const chzzkLives = rows.filter((r) => r.platform === 'CHZZK');
   const soopLives = rows.filter((r) => r.platform === 'SOOP');
   const chzzkViewers = chzzkLives.reduce((sum, r) => sum + (r.viewers || 0), 0);
   const soopViewers = soopLives.reduce((sum, r) => sum + (r.viewers || 0), 0);
-  const totalViewers = chzzkViewers + soopViewers;
   const chzzkLiveCount = chzzkLives.length;
   const soopLiveCount = soopLives.length;
-  const totalLiveCount = chzzkLiveCount + soopLiveCount;
-  const chzzkShare = totalViewers > 0 ? Math.round((chzzkViewers / totalViewers) * 100) : 50;
-  const soopShare = 100 - chzzkShare;
 
   return (
     <section className="ad-realtime" aria-label="실시간 방송 현황">
-      {/* 1. 실시간 플랫폼 매크로 지표 (소프트콘형 현황 카드) */}
+      {/* 1. 실시간 플랫폼 매크로 지표 (2열 모던 현황 카드) */}
       <div className="ad-platform-macro-grid">
         <div className="ad-macro-card ad-macro-chzzk">
           <div className="ad-macro-header">
-            <span className="ad-live-indicator" />
-            <StatisticsBrand platform="CHZZK" />
-            <span className="ad-macro-share">{chzzkShare}%</span>
+            <div className="ad-macro-brand">
+              <span className="ad-live-indicator" />
+              <StatisticsBrand platform="CHZZK" />
+            </div>
+            <span className="ad-macro-badge">LIVE</span>
           </div>
           <div className="ad-macro-body">
-            <div>
+            <div className="ad-macro-stat-main">
               <span className="ad-macro-label">실시간 시청자</span>
               <strong className="ad-macro-value">{countFormat(chzzkViewers)}<small>명</small></strong>
             </div>
-            <div>
+            <div className="ad-macro-stat-sub">
               <span className="ad-macro-label">라이브 채널</span>
               <strong className="ad-macro-subvalue">{countFormat(chzzkLiveCount)}<small>개</small></strong>
             </div>
@@ -102,35 +100,20 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
 
         <div className="ad-macro-card ad-macro-soop">
           <div className="ad-macro-header">
-            <span className="ad-live-indicator" />
-            <StatisticsBrand platform="SOOP" />
-            <span className="ad-macro-share">{soopShare}%</span>
+            <div className="ad-macro-brand">
+              <span className="ad-live-indicator" />
+              <StatisticsBrand platform="SOOP" />
+            </div>
+            <span className="ad-macro-badge">LIVE</span>
           </div>
           <div className="ad-macro-body">
-            <div>
+            <div className="ad-macro-stat-main">
               <span className="ad-macro-label">실시간 시청자</span>
               <strong className="ad-macro-value">{countFormat(soopViewers)}<small>명</small></strong>
             </div>
-            <div>
+            <div className="ad-macro-stat-sub">
               <span className="ad-macro-label">라이브 채널</span>
               <strong className="ad-macro-subvalue">{countFormat(soopLiveCount)}<small>개</small></strong>
-            </div>
-          </div>
-        </div>
-
-        <div className="ad-macro-card ad-macro-total">
-          <div className="ad-macro-header">
-            <span className="ad-macro-label">양대 플랫폼 합산 점유율</span>
-            {stamp && <span className="ad-macro-time">{statisticsTime(stamp)} 기준</span>}
-          </div>
-          <div className="ad-macro-body ad-macro-body-total">
-            <div className="ad-total-stats">
-              <span>총 <strong>{countFormat(totalViewers)}명</strong> 시청</span>
-              <span>총 <strong>{countFormat(totalLiveCount)}개</strong> 채널</span>
-            </div>
-            <div className="ad-share-bar" role="progressbar" aria-label="플랫폼 시청자 점유율" aria-valuenow={chzzkShare} aria-valuemin={0} aria-valuemax={100}>
-              <span className="ad-share-chzzk" style={{ width: `${chzzkShare}%` }} title={`치지직 ${chzzkShare}%`} />
-              <span className="ad-share-soop" style={{ width: `${soopShare}%` }} title={`SOOP ${soopShare}%`} />
             </div>
           </div>
         </div>
@@ -151,6 +134,7 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
           ))}
         </div>
         <div className="ad-live-update">
+          {stamp && <span className="ad-macro-time">{statisticsTime(stamp)} 기준</span>}
           <button className="ad-refresh" type="button" disabled={loading} onClick={refresh} aria-label="실시간 순위 새로고침">
             <RefreshCw size={13} className={loading ? 'bs-spinning' : ''} />
             새로고침

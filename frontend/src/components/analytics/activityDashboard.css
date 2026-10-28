@@ -304,10 +304,10 @@
   .vd-analytics .ad-heading h1 { font-size: 24px!important; }
 }
 
-/* 소프트콘형 실시간 플랫폼 매크로 그리드 & 점유율 바 (WCAG 2.1 고대비 규격) */
+/* 실시간 플랫폼 매크로 그리드 (모던 2열 핀테크 스타일 & WCAG 2.1 AA 고대비) */
 .ad-platform-macro-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -315,26 +315,35 @@
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  padding: 18px 20px;
+  padding: 22px 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 2px 8px rgba(15, 23, 42, 0.02);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.ad-macro-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
 }
 .ad-macro-chzzk {
-  border-left: 4px solid #10b981;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.03) 0%, #ffffff 100%);
 }
 .ad-macro-soop {
-  border-left: 4px solid #2563eb;
-}
-.ad-macro-total {
-  border-left: 4px solid #6366f1;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, #ffffff 100%);
 }
 .ad-macro-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+}
+.ad-macro-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .ad-live-indicator {
   width: 8px;
@@ -342,26 +351,26 @@
   border-radius: 50%;
   background: #ef4444;
   display: inline-block;
-  margin-right: 6px;
   animation: ad-pulse 2s infinite;
 }
 @keyframes ad-pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  50% { opacity: 0.35; }
 }
-.ad-macro-share {
-  font-size: 13px;
+.ad-macro-badge {
+  font-size: 10px;
   font-weight: 800;
-  color: #0f172a;
-  background: #f1f5f9;
-  padding: 2px 8px;
-  border-radius: 6px;
+  color: #dc2626;
+  background: #fee2e2;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
 }
 .ad-macro-body {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 16px;
+  gap: 20px;
 }
 .ad-macro-label {
   display: block;
@@ -369,71 +378,61 @@
   color: #64748b;
   font-weight: 700;
   margin-bottom: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
 }
 .ad-macro-value {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 850;
   color: #0f172a;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.8px;
   font-variant-numeric: tabular-nums;
+  line-height: 1.1;
 }
 .ad-macro-value small,
 .ad-macro-subvalue small {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: #64748b;
-  margin-left: 2px;
+  margin-left: 3px;
 }
 .ad-macro-subvalue {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 750;
   color: #334155;
   font-variant-numeric: tabular-nums;
+  line-height: 1.1;
 }
-.ad-macro-time {
-  font-size: 11px;
-  color: #64748b;
-  font-weight: 600;
-}
-.ad-macro-body-total {
-  flex-direction: column;
-  gap: 10px;
-}
-.ad-total-stats {
+.ad-filter-actions {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.ad-category-select {
+  border: 1px solid #dce4ee;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #334155;
   font-size: 12px;
-  color: #475569;
-  width: 100%;
+  padding: 6px 10px;
+  min-height: 34px;
+  font-weight: 600;
+  cursor: pointer;
 }
-.ad-total-stats strong {
-  color: #0f172a;
-  font-weight: 750;
-}
-.ad-share-bar {
-  width: 100%;
-  height: 10px;
-  border-radius: 5px;
-  background: #e2e8f0;
-  overflow: hidden;
-  display: flex;
-}
-.ad-share-chzzk {
-  background-color: #10b981;
-  height: 100%;
-  transition: width 0.3s ease;
-}
-.ad-share-soop {
-  background-color: #2563eb;
-  height: 100%;
-  transition: width 0.3s ease;
+.ad-category-select:focus {
+  border-color: #2563eb;
+  outline: none;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 768px) {
   .ad-platform-macro-grid {
     grid-template-columns: 1fr;
     gap: 12px;
   }
+  .ad-filter-actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+  }
 }
+
