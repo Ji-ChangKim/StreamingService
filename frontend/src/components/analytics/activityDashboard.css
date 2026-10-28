@@ -1332,10 +1332,232 @@
 }
 
 /* ==========================================================================
-   3. 하단 실시간 스트리머 랭킹
+   3. 하단 실시간 스트리머 랭킹 (시안 2: 와이드 고밀도 데이터 그리드)
    ========================================================================== */
 .sc-streamer-section {
   margin-bottom: 32px;
+}
+.sc-table-container {
+  width: 100%;
+}
+.sc-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+}
+.sc-streamer-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+  min-width: 960px;
+}
+.sc-streamer-table thead th {
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 12px 10px;
+  font-size: 11px;
+  font-weight: 750;
+  color: #64748b;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+}
+.sc-streamer-table th.sc-th-rank {
+  width: 5%;
+  text-align: center;
+}
+.sc-streamer-table th.sc-th-streamer {
+  width: 16%;
+}
+.sc-streamer-table th.sc-th-platform {
+  width: 8%;
+  text-align: center;
+}
+.sc-streamer-table th.sc-th-category {
+  width: 11%;
+}
+.sc-streamer-table th.sc-th-title {
+  width: 25%;
+}
+.sc-streamer-table th.sc-th-uptime {
+  width: 10%;
+}
+.sc-streamer-table th.sc-th-share {
+  width: 11%;
+}
+.sc-streamer-table th.sc-th-viewers {
+  width: 9%;
+  text-align: right;
+}
+.sc-streamer-table th.sc-th-action {
+  width: 5%;
+  text-align: center;
+}
+.sc-streamer-table tbody tr.sc-table-row {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.15s ease;
+}
+.sc-streamer-table tbody tr.sc-table-row:hover {
+  background: #f8fafc;
+}
+.sc-streamer-table tbody tr.sc-table-row:last-child {
+  border-bottom: none;
+}
+.sc-streamer-table td {
+  padding: 11px 10px;
+  vertical-align: middle;
+}
+.sc-streamer-table td.sc-td-rank {
+  text-align: center;
+}
+.sc-streamer-table td.sc-td-platform {
+  text-align: center;
+}
+.sc-streamer-table td.sc-td-action {
+  text-align: center;
+}
+.sc-table-streamer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sc-table-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+.sc-table-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sc-table-streamer-name {
+  font-size: 13.5px;
+  font-weight: 750;
+  color: #0f172a;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
+  display: inline-block;
+}
+.sc-table-streamer-name:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+.sc-table-category-badge {
+  border: 0;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  vertical-align: middle;
+  transition: all 0.15s ease;
+}
+.sc-table-category-badge:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+.sc-table-broadcast-title {
+  font-size: 12.5px;
+  color: #475569;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  line-height: 1.4;
+}
+.sc-table-uptime {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.sc-table-uptime svg {
+  color: #94a3b8;
+}
+.sc-table-share-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sc-table-gauge-track {
+  flex: 1;
+  height: 5px;
+  background: #f1f5f9;
+  border-radius: 9999px;
+  overflow: hidden;
+  min-width: 50px;
+  max-width: 75px;
+}
+.sc-table-gauge-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+.sc-table-share-pct {
+  font-size: 11px;
+  font-weight: 750;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+  min-width: 32px;
+}
+.sc-table-viewers-count {
+  font-size: 16px;
+  font-weight: 850;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.4px;
+  display: block;
+}
+.sc-table-viewers-count small {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  margin-left: 2px;
+}
+.sc-table-watch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 750;
+  color: #2563eb;
+  text-decoration: none;
+  background: #eff6ff;
+  padding: 4px 9px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.sc-table-watch-btn:hover {
+  background: #dbeafe;
+  color: #1d4ed8;
 }
 
 /* 반응형 미디어 쿼리 */

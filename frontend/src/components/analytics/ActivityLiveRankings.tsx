@@ -1,7 +1,7 @@
 // 외부 제목의 의심 표현을 공개 화면에서 제외한다.
 import { publicBroadcastTitle } from '../../../../shared/contentReview';
 import { useEffect, useState, useMemo } from 'react';
-import { ArrowUpRight, RefreshCw, Users } from 'lucide-react';
+import { ArrowUpRight, Clock, RefreshCw, Users } from 'lucide-react';
 import type { StatisticsBroadcast, StatisticsPlatform } from '../../../../shared/broadcastStatistics';
 import type { StatisticsStreamer } from '../../../../shared/statisticsStreamerSearch';
 import { activityChannelKey } from '../../../../shared/broadcastActivity';
@@ -19,6 +19,18 @@ function readLiveLocation() {
     platform: platform === 'CHZZK' || platform === 'SOOP' ? platform : 'ALL',
     category: params.get('liveCategory') || '',
   } as { platform: 'ALL' | 'CHZZK' | 'SOOP'; category: string };
+}
+
+// 방송 시작 시점으로부터 경과 시간을 계산한다.
+function formatUptime(startedAt: string | null): string {
+  if (!startedAt) return '—';
+  const diffMs = Date.now() - Date.parse(startedAt);
+  if (isNaN(diffMs) || diffMs < 0) return '—';
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 60) return `${mins}분 전`;
+  const hours = Math.floor(mins / 60);
+  const remMins = mins % 60;
+  return `${hours}시간 ${remMins}분`;
 }
 
 // 방송의 공개 채널 정보로 개인 통계의 조회 대상을 만든다.
@@ -270,54 +282,66 @@ function LiveCategoryTiles({
   );
 }
 
-// 3. [하단] 실시간 스트리머 랭킹 행
-function LiveBroadcastRow({
+// 3. [하단] 와이드 고밀도 데이터 테이블 행 (시안 2: 전문 통계 그리드)
+function LiveStreamerTableRow({
   row,
   rank,
   maxViewers,
+  totalViewers,
   onOpen,
+  onSelectCategory,
 }: {
   row: StatisticsBroadcast;
   rank: number;
   maxViewers: number;
+  totalViewers: number;
   onOpen: (streamer: StatisticsStreamer) => void;
+  onSelectCategory: (categoryKey: string) => void;
 }) {
   const image = safeStatisticsUrl(row.imageUrl);
   const streamer = liveStreamer(row);
   const liveUrl = safeStatisticsUrl(row.liveUrl);
-  const ratio = maxViewers > 0 ? Math.min(100, Math.round((row.viewers / maxViewers) * 100)) : 0;
+  const ratio = maxViewers > 0 ? Math.min(100, Math.max(4, Math.round((row.viewers / maxViewers) * 100))) : 0;
+  const share = totalViewers > 0 ? ((row.viewers / totalViewers) * 100).toFixed(1) : '0';
+  const isChzzk = row.platform === 'CHZZK';
+  const uptime = formatUptime(row.startedAt);
 
   return (
-    <li className="ad-live-row">
-      <span
-        className={`ad-rank ${
-          rank === 1 ? 'ad-rank-1' : rank === 2 ? 'ad-rank-2' : rank === 3 ? 'ad-rank-3' : ''
-        }`}
-      >
-        {rank}
-      </span>
-      <span className="ad-live-avatar">
-        {image ? (
-          <img
-            src={image}
-            alt=""
-            loading="lazy"
-            onError={(event) => {
-              event.currentTarget.style.display = 'none';
-            }}
-          />
-        ) : (
-          <Users size={18} />
-        )}
-      </span>
-      <div className="ad-live-identity">
-        <div className="ad-live-name-line">
+    <tr className="sc-table-row">
+      {/* 1. 순위 */}
+      <td className="sc-td-rank">
+        <span
+          className={`ad-rank ${
+            rank === 1 ? 'ad-rank-1' : rank === 2 ? 'ad-rank-2' : rank === 3 ? 'ad-rank-3' : ''
+          }`}
+        >
+          {rank}
+        </span>
+      </td>
+
+      {/* 2. 스트리머 */}
+      <td className="sc-td-streamer">
+        <div className="sc-table-streamer">
+          <span className="sc-table-avatar">
+            {image ? (
+              <img
+                src={image}
+                alt=""
+                loading="lazy"
+                onError={(event) => {
+                  event.currentTarget.style.display = 'none';
+                }}
+              />
+            ) : (
+              <Users size={16} />
+            )}
+          </span>
           {streamer ? (
             <a
               href={`${activityStreamerPath(streamer.channelKey!)}?name=${encodeURIComponent(
                 streamer.name,
               )}`}
-              className="ad-channel-link"
+              className="sc-table-streamer-name"
               onClick={(event) => {
                 if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
                 event.preventDefault();
@@ -327,42 +351,83 @@ function LiveBroadcastRow({
               {streamer.name}
             </a>
           ) : (
-            <strong>{row.channelName || '채널 정보 없음'}</strong>
+            <strong className="sc-table-streamer-name">{row.channelName || '채널 정보 없음'}</strong>
           )}
-          <span className="ad-live-category-badge">{row.categoryName}</span>
         </div>
-        <p className="ad-live-stream-title" title={publicBroadcastTitle(row.title)}>
+      </td>
+
+      {/* 3. 플랫폼 */}
+      <td className="sc-td-platform">
+        <StatisticsBrand platform={row.platform} />
+      </td>
+
+      {/* 4. 카테고리 */}
+      <td className="sc-td-category">
+        <button
+          type="button"
+          className="sc-table-category-badge"
+          onClick={() => onSelectCategory(categoryKey(row))}
+          title={`${row.categoryName} 카테고리 필터 적용`}
+        >
+          {row.categoryName}
+        </button>
+      </td>
+
+      {/* 5. 방송 제목 */}
+      <td className="sc-td-title">
+        <span className="sc-table-broadcast-title" title={publicBroadcastTitle(row.title)}>
           {publicBroadcastTitle(row.title)}
-        </p>
-        <div className="ad-live-tags">
-          <StatisticsBrand platform={row.platform} label={false} />
-          <div className="ad-viewers-bar-track">
-            <div className="ad-viewers-bar-fill" style={{ width: `${ratio}%` }} />
+        </span>
+      </td>
+
+      {/* 6. 방송 시작 시간 */}
+      <td className="sc-td-uptime">
+        <span className="sc-table-uptime">
+          <Clock size={12} />
+          {uptime}
+        </span>
+      </td>
+
+      {/* 7. 시청자 점유율 게이지 */}
+      <td className="sc-td-share">
+        <div className="sc-table-share-cell">
+          <div className="sc-table-gauge-track">
+            <div
+              className={`sc-table-gauge-fill ${isChzzk ? 'fill-chzzk' : 'fill-soop'}`}
+              style={{ width: `${ratio}%` }}
+            />
           </div>
+          <span className="sc-table-share-pct">{share}%</span>
         </div>
-      </div>
-      <div className="ad-live-count">
-        <strong>
+      </td>
+
+      {/* 8. 실시간 시청자 */}
+      <td className="sc-td-viewers">
+        <strong className="sc-table-viewers-count">
           {countFormat(row.viewers)}
           <small>명</small>
         </strong>
+      </td>
+
+      {/* 9. 방송 보기 */}
+      <td className="sc-td-action">
         {liveUrl && (
           <a
             href={liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="ad-watch-link"
+            className="sc-table-watch-btn"
             aria-label={`${row.channelName || '방송'} 방송 보기 (새 창)`}
           >
             방송 보기 <ArrowUpRight size={12} />
           </a>
         )}
-      </div>
-    </li>
+      </td>
+    </tr>
   );
 }
 
-// 메인 실시간 현황 컴포넌트 (모드 A: 소프트콘 뷰어십 완벽 벤치마크)
+// 메인 실시간 현황 컴포넌트
 export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: StatisticsStreamer) => void }) {
   const { data, loading, error, refresh } = useBroadcastStatistics();
   const [filters, setFilters] = useState(readLiveLocation);
@@ -511,12 +576,13 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
       />
 
       {/* ====================================================================
-          3. [하단] 실시간 스트리머 랭킹 (Top 15~100 고밀도 리스트)
+          3. [하단] 실시간 스트리머 랭킹 (시안 2: 와이드 고밀도 데이터 그리드)
           ==================================================================== */}
       <div className="sc-streamer-section">
         <div className="sc-section-heading">
           <div className="sc-heading-left">
             <h2>실시간 스트리머 랭킹</h2>
+            <span className="sc-heading-badge">TOP {filteredBroadcasts.length}</span>
             {selectedCategoryObj && (
               <span className="sc-filter-tag">
                 {selectedCategoryObj.name} 필터링 적용 중
@@ -557,19 +623,43 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
             실시간 순위를 불러오는 중…
           </p>
         ) : (
-          <div className="bs-panel ad-live-panel">
+          <div className="sc-table-container">
             {filteredBroadcasts.length ? (
-              <ol className="ad-live-list">
-                {filteredBroadcasts.slice(0, broadcastLimit).map((row, index) => (
-                  <LiveBroadcastRow
-                    key={row.id}
-                    row={row}
-                    rank={index + 1}
-                    maxViewers={maxBroadcastViewers}
-                    onOpen={onOpen}
-                  />
-                ))}
-              </ol>
+              <div className="sc-table-wrapper">
+                <table className="sc-streamer-table">
+                  <thead>
+                    <tr>
+                      <th className="sc-th-rank">순위</th>
+                      <th className="sc-th-streamer">스트리머</th>
+                      <th className="sc-th-platform">플랫폼</th>
+                      <th className="sc-th-category">카테고리</th>
+                      <th className="sc-th-title">방송 제목</th>
+                      <th className="sc-th-uptime">방송 시작</th>
+                      <th className="sc-th-share">시청자 점유율</th>
+                      <th className="sc-th-viewers">실시간 시청자</th>
+                      <th className="sc-th-action"><span className="bs-sr-only">방송 보기</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredBroadcasts.slice(0, broadcastLimit).map((row, index) => (
+                      <LiveStreamerTableRow
+                        key={row.id}
+                        row={row}
+                        rank={index + 1}
+                        maxViewers={maxBroadcastViewers}
+                        totalViewers={platformSummary.totalViewers}
+                        onOpen={onOpen}
+                        onSelectCategory={(catKey) =>
+                          navigate({
+                            ...filters,
+                            category: filters.category === catKey ? '' : catKey,
+                          })
+                        }
+                      />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
               <p className="ad-empty">
                 {!allLives.length
