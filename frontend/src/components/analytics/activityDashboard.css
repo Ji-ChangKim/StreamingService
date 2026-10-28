@@ -837,3 +837,526 @@
   }
 }
 
+/* ==========================================================================
+   소프트콘 뷰어십 완벽 벤치마크 레이아웃 (Softcone Viewership Pro Dashboard)
+   ========================================================================== */
+
+/* 1. 상단 2열 스플릿 레이아웃 (차트 약 62% : 플랫폼 랭킹 약 38%) */
+.sc-top-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: 20px;
+  margin-bottom: 28px;
+  align-items: stretch;
+}
+.sc-chart-column,
+.sc-platform-column {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 차트 카드 */
+.sc-chart-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.sc-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.sc-chart-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sc-chart-icon {
+  font-size: 20px;
+}
+.sc-chart-title h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.4px;
+  margin: 0;
+}
+.sc-chart-title p {
+  font-size: 11px;
+  color: #64748b;
+  margin: 2px 0 0 0;
+}
+.sc-chart-wrapper {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 240px;
+}
+.sc-chart-svg {
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  display: block;
+}
+.sc-chart-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  z-index: 30;
+  white-space: nowrap;
+}
+.sc-tooltip-time {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.sc-tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.sc-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.sc-dot.chzzk { background: #10b981; }
+.sc-dot.soop { background: #2563eb; }
+.sc-chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+}
+.sc-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.sc-legend-item.chzzk i {
+  display: inline-block;
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+  background: #10b981;
+}
+.sc-legend-item.soop i {
+  display: inline-block;
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+  background: #2563eb;
+}
+
+/* 플랫폼 종합 랭킹 카드 */
+.sc-platform-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.sc-platform-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.sc-platform-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.4px;
+  margin: 0;
+}
+.sc-platform-time {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+  display: block;
+}
+
+/* 한국어 전체 시청자 수 배너 */
+.sc-total-banner {
+  background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+.sc-total-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sc-total-label {
+  font-size: 11px;
+  color: #475569;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+.sc-total-number strong {
+  font-size: 26px;
+  font-weight: 900;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.6px;
+}
+.sc-total-number small {
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  margin-left: 3px;
+}
+.sc-total-channels {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sc-total-sublabel {
+  font-size: 10px;
+  color: #64748b;
+  font-weight: 600;
+}
+.sc-total-channels strong {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1e293b;
+  font-variant-numeric: tabular-nums;
+}
+.sc-total-channels small {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  margin-left: 2px;
+}
+
+/* 플랫폼 랭킹 카드 (1위, 2위) */
+.sc-rank-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+.sc-rank-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+.sc-rank-card.is-first {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+.sc-rank-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.sc-rank-identity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sc-rank-badge {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+.sc-rank-badge.rank-1 {
+  background: #fef08a;
+  color: #854d0e;
+}
+.sc-rank-badge.rank-2 {
+  background: #f1f5f9;
+  color: #475569;
+}
+.sc-rank-share {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  background: #f8fafc;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.sc-rank-metrics {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 6px;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+.sc-metric-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sc-metric-label {
+  font-size: 10px;
+  color: #64748b;
+  font-weight: 600;
+}
+.sc-metric-val {
+  font-size: 18px;
+  font-weight: 850;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.4px;
+}
+.sc-metric-val small {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  margin-left: 2px;
+}
+.sc-metric-sub {
+  font-size: 14px;
+  font-weight: 750;
+  color: #334155;
+  font-variant-numeric: tabular-nums;
+}
+.sc-metric-sub small {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  margin-left: 2px;
+}
+.sc-rank-gauge-track {
+  height: 4px;
+  background: #f1f5f9;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.sc-rank-gauge-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+.sc-rank-gauge-fill.fill-chzzk {
+  background: #10b981;
+}
+.sc-rank-gauge-fill.fill-soop {
+  background: #2563eb;
+}
+
+/* ==========================================================================
+   2. 중단 실시간 카테고리 랭킹 (8열 타일 그리드)
+   ========================================================================== */
+.sc-category-section {
+  margin-bottom: 28px;
+}
+.sc-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.sc-heading-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sc-heading-left h2 {
+  font-size: 17px!important;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.4px;
+  margin: 0!important;
+}
+.sc-heading-badge {
+  font-size: 10px;
+  font-weight: 800;
+  color: #2563eb;
+  background: #eff6ff;
+  padding: 2px 7px;
+  border-radius: 9999px;
+}
+.sc-filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 750;
+  color: #dc2626;
+  background: #fee2e2;
+  padding: 3px 8px;
+  border-radius: 9999px;
+}
+.sc-filter-tag button {
+  border: 0;
+  background: transparent;
+  color: #dc2626;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1;
+}
+
+/* 8열 타일 그리드 */
+.sc-category-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 10px;
+}
+.sc-category-tile {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 10px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 104px;
+  position: relative;
+  overflow: hidden;
+}
+.sc-category-tile:hover {
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+.sc-category-tile.is-selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+  box-shadow: 0 0 0 2px #2563eb;
+}
+.sc-tile-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.sc-tile-rank {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+}
+.sc-tile-rank.top-1 {
+  color: #d97706;
+  font-weight: 900;
+}
+.sc-tile-rank.top-2 {
+  color: #475569;
+  font-weight: 900;
+}
+.sc-tile-rank.top-3 {
+  color: #ea580c;
+  font-weight: 900;
+}
+.sc-tile-platform .bs-brand-clearspace {
+  padding: 0;
+}
+.sc-tile-platform img {
+  height: 11px;
+}
+.sc-tile-body {
+  margin-bottom: 8px;
+}
+.sc-tile-name {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 750;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+.sc-tile-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 6px;
+}
+.sc-tile-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 10px;
+  color: #64748b;
+}
+.sc-tile-stat strong {
+  font-size: 11px;
+  font-weight: 800;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+}
+.sc-tile-stat strong.sub {
+  font-weight: 650;
+  color: #475569;
+}
+
+/* ==========================================================================
+   3. 하단 실시간 스트리머 랭킹
+   ========================================================================== */
+.sc-streamer-section {
+  margin-bottom: 32px;
+}
+
+/* 반응형 미디어 쿼리 */
+@media (max-width: 1200px) {
+  .sc-top-section {
+    grid-template-columns: 1fr;
+  }
+  .sc-category-tile-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 768px) {
+  .sc-category-tile-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sc-chart-header,
+  .sc-platform-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+
