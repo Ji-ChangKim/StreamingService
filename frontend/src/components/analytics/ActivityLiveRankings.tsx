@@ -7,7 +7,6 @@ import { activityChannelKey } from '../../../../shared/broadcastActivity';
 import { useBroadcastStatistics } from './useBroadcastStatistics';
 import { aggregateStatisticsCategories, categoryKey, countFormat, safeStatisticsUrl, statisticsTime } from './statisticsModel';
 import { StatisticsBrand } from './StatisticsBrand';
-import { activityStreamerPath } from '../../../../shared/activitySeo';
 import { LiveViewerChart } from './LiveViewerChart';
 
 // 실시간 순위의 조회 조건은 기간별 통계와 독립적으로 복원한다.
@@ -345,7 +344,12 @@ function LiveStreamerTableRow({
       {/* 2. 스트리머 */}
       <td className="sc-td-streamer">
         <div className="sc-table-streamer">
-          <span className="sc-table-avatar">
+          <span
+            className="sc-table-avatar"
+            style={{ cursor: streamer ? 'pointer' : 'default' }}
+            onClick={() => streamer && onOpen(streamer)}
+            title={streamer ? `${streamer.name} 상세 통계 보기` : undefined}
+          >
             {image ? (
               <img
                 src={image}
@@ -359,20 +363,19 @@ function LiveStreamerTableRow({
               <Users size={16} />
             )}
           </span>
-          {streamer ? (
+          {liveUrl ? (
             <a
-              href={`${activityStreamerPath(streamer.channelKey!)}?name=${encodeURIComponent(
-                streamer.name,
-              )}`}
+              href={liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="sc-table-streamer-name"
-              onClick={(event) => {
-                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-                event.preventDefault();
-                onOpen(streamer);
-              }}
+              title={`${row.channelName || streamer?.name || '방송국'} 방송국 바로가기 (새 창)`}
             >
-              {streamer.name}
+              <span>{row.channelName || streamer?.name}</span>
+              <ArrowUpRight size={12} className="sc-table-external-icon" />
             </a>
+          ) : streamer ? (
+            <span className="sc-table-streamer-name">{streamer.name}</span>
           ) : (
             <strong className="sc-table-streamer-name">{row.channelName || '채널 정보 없음'}</strong>
           )}
@@ -440,21 +443,6 @@ function LiveStreamerTableRow({
           {countFormat(row.viewers)}
           <small>명</small>
         </strong>
-      </td>
-
-      {/* 8. 방송 보기 */}
-      <td className="sc-td-action">
-        {liveUrl && (
-          <a
-            href={liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="sc-table-watch-btn"
-            aria-label={`${row.channelName || '방송'} 방송 보기 (새 창)`}
-          >
-            방송 보기 <ArrowUpRight size={12} />
-          </a>
-        )}
       </td>
     </tr>
   );
@@ -669,7 +657,6 @@ export function ActivityLiveRankings({ onOpen }: { onOpen: (streamer: Statistics
                       <th className="sc-th-uptime">방송 시작</th>
                       <th className="sc-th-share">시청자 점유율</th>
                       <th className="sc-th-viewers">실시간 시청자</th>
-                      <th className="sc-th-action"><span className="bs-sr-only">방송 보기</span></th>
                     </tr>
                   </thead>
                   <tbody>

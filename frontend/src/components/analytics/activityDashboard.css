@@ -1354,7 +1354,7 @@
   border-collapse: collapse;
   text-align: left;
   font-size: 13px;
-  min-width: 960px;
+  min-width: 0;
 }
 .sc-streamer-table thead th {
   background: #f8fafc;
@@ -1367,32 +1367,28 @@
   white-space: nowrap;
 }
 .sc-streamer-table th.sc-th-rank {
-  width: 6%;
+  width: 7%;
   text-align: center;
 }
 .sc-streamer-table th.sc-th-streamer {
-  width: 22%;
+  width: 27%;
 }
 .sc-streamer-table th.sc-th-platform {
-  width: 10%;
+  width: 12%;
   text-align: center;
 }
 .sc-streamer-table th.sc-th-category {
   width: 16%;
 }
 .sc-streamer-table th.sc-th-uptime {
-  width: 13%;
+  width: 12%;
 }
 .sc-streamer-table th.sc-th-share {
-  width: 16%;
+  width: 14%;
 }
 .sc-streamer-table th.sc-th-viewers {
-  width: 11%;
+  width: 12%;
   text-align: right;
-}
-.sc-streamer-table th.sc-th-action {
-  width: 6%;
-  text-align: center;
 }
 .sc-streamer-table tbody tr.sc-table-row {
   border-bottom: 1px solid #f1f5f9;
@@ -1412,9 +1408,6 @@
   text-align: center;
 }
 .sc-streamer-table td.sc-td-platform {
-  text-align: center;
-}
-.sc-streamer-table td.sc-td-action {
   text-align: center;
 }
 .sc-table-streamer {
@@ -1441,6 +1434,9 @@
   object-fit: cover;
 }
 .sc-table-streamer-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 13.5px;
   font-weight: 750;
   color: #0f172a;
@@ -1448,12 +1444,26 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 190px;
-  display: inline-block;
+  max-width: 220px;
+  transition: color 0.15s ease;
+}
+.sc-table-streamer-name span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sc-table-external-icon {
+  color: #94a3b8;
+  flex-shrink: 0;
+  transition: color 0.15s ease, transform 0.15s ease;
 }
 .sc-table-streamer-name:hover {
   color: #2563eb;
   text-decoration: underline;
+}
+.sc-table-streamer-name:hover .sc-table-external-icon {
+  color: #2563eb;
+  transform: translate(1px, -1px);
 }
 .sc-table-category-badge {
   border: 0;
@@ -1491,20 +1501,21 @@
 .sc-table-share-cell {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
-/* 10% 단위 10칸 분할 블록 프로세스 바 */
+/* 10% 단위 10칸 분할 블록 프로세스 바 (가로 스크롤 방지 최적화 너비) */
 .sc-segment-track {
   display: flex;
   align-items: center;
   gap: 2px;
-  width: 84px;
+  width: 76px;
   height: 9px;
   padding: 1.5px;
   background: #f1f5f9;
   border: 1px solid #e2e8f0;
   border-radius: 4px;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 .sc-segment-block {
   flex: 1;
@@ -1522,7 +1533,7 @@
   font-size: 12px;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
-  min-width: 36px;
+  min-width: 34px;
   letter-spacing: -0.2px;
 }
 .sc-table-viewers-count {
@@ -1538,24 +1549,6 @@
   font-weight: 600;
   color: #64748b;
   margin-left: 2px;
-}
-.sc-table-watch-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 11px;
-  font-weight: 750;
-  color: #2563eb;
-  text-decoration: none;
-  background: #eff6ff;
-  padding: 4px 9px;
-  border-radius: 6px;
-  white-space: nowrap;
-  transition: all 0.15s ease;
-}
-.sc-table-watch-btn:hover {
-  background: #dbeafe;
-  color: #1d4ed8;
 }
 
 /* 반응형 미디어 쿼리 */
