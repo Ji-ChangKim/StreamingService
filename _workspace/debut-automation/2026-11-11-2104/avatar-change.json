@@ -1,0 +1,66 @@
+{
+  "slug": "amyang-chzzk",
+  "field": "avatarUrl",
+  "before": "https://nng-phinf.pstatic.net/MjAyNjEwMTNfMjgx/MDAxNzkxODk5ODA3MjEw.AkWezu34ygGgo0poX8cabczBz1jVZKse9aSmIlpVAN0g.LCV7gFC2shDGCrcarjxOCS_-bTtyUN1-Mp69rDK4MBgg.JPEG/image.jpg",
+  "after": "https://nng-phinf.pstatic.net/MjAyNjExMDlfNjUg/MDAxNzk0MjIwOTg5MjM4.rDEzWox8g6_H9tc0itGnnZaj-lpYr4_GNjI58Rgjrx0g.gEDnJlMrqOcOWg3kfe8wuCJ2WQ2KUe_QOjXS9e23uSwg.JPEG/image.jpg",
+  "beforeProfile": {
+    "slug": "amyang-chzzk",
+    "displayName": "아먕",
+    "description": "11월 14일 오후 1시🔮🐑",
+    "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMTNfMjgx/MDAxNzkxODk5ODA3MjEw.AkWezu34ygGgo0poX8cabczBz1jVZKse9aSmIlpVAN0g.LCV7gFC2shDGCrcarjxOCS_-bTtyUN1-Mp69rDK4MBgg.JPEG/image.jpg",
+    "platform": "CHZZK",
+    "channelUrl": "https://chzzk.naver.com/037d7ba305538de29dbf2789071dbb82",
+    "countryCode": "KR",
+    "languages": [],
+    "tags": [],
+    "agency": "",
+    "xUrl": "https://x.com/_amyangyang",
+    "dateState": "FIXED",
+    "debutDate": "2026-11-14",
+    "debutTime": "13:00",
+    "timezone": "Asia/Seoul",
+    "startAtUtc": "2026-11-14T04:00:00.000Z",
+    "targetMonth": "2026-11",
+    "ownerVerified": false,
+    "source": "REGISTERED",
+    "details": {
+      "오시마크": "🔮🐑",
+      "oshiMark": "🔮🐑"
+    },
+    "contentReview": {
+      "state": "APPROVED",
+      "snapshot": "{\"agency\":\"\",\"avatarUrl\":\"https://nng-phinf.pstatic.net/MjAyNjEwMTNfMjgx/MDAxNzkxODk5ODA3MjEw.AkWezu34ygGgo0poX8cabczBz1jVZKse9aSmIlpVAN0g.LCV7gFC2shDGCrcarjxOCS_-bTtyUN1-Mp69rDK4MBgg.JPEG/image.jpg\",\"channelUrl\":\"https://chzzk.naver.com/037d7ba305538de29dbf2789071dbb82\",\"countryCode\":\"KR\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-14\",\"debutTime\":\"13:00\",\"description\":\"11월 14일 오후 1시🔮🐑\",\"details\":{\"오시마크\":\"🔮🐑\",\"oshiMark\":\"🔮🐑\"},\"displayName\":\"아먕\",\"languages\":[],\"platform\":\"CHZZK\",\"slug\":\"amyang-chzzk\",\"startAtUtc\":\"2026-11-14T04:00:00.000Z\",\"tags\":[],\"targetMonth\":\"2026-11\",\"timezone\":\"Asia/Seoul\",\"xUrl\":\"https://x.com/_amyangyang\"}",
+      "reviewedAt": "2026-11-11T08:42:56.832Z"
+    }
+  },
+  "afterProfile": {
+    "slug": "amyang-chzzk",
+    "displayName": "아먕",
+    "description": "11월 14일 오후 1시🔮🐑",
+    "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjExMDlfNjUg/MDAxNzk0MjIwOTg5MjM4.rDEzWox8g6_H9tc0itGnnZaj-lpYr4_GNjI58Rgjrx0g.gEDnJlMrqOcOWg3kfe8wuCJ2WQ2KUe_QOjXS9e23uSwg.JPEG/image.jpg",
+    "platform": "CHZZK",
+    "channelUrl": "https://chzzk.naver.com/037d7ba305538de29dbf2789071dbb82",
+    "countryCode": "KR",
+    "languages": [],
+    "tags": [],
+    "agency": "",
+    "xUrl": "https://x.com/_amyangyang",
+    "dateState": "FIXED",
+    "debutDate": "2026-11-14",
+    "debutTime": "13:00",
+    "timezone": "Asia/Seoul",
+    "startAtUtc": "2026-11-14T04:00:00.000Z",
+    "targetMonth": "2026-11",
+    "ownerVerified": false,
+    "source": "REGISTERED",
+    "details": {
+      "오시마크": "🔮🐑",
+      "oshiMark": "🔮🐑"
+    },
+    "contentReview": {
+      "state": "APPROVED",
+      "snapshot": "{\"agency\":\"\",\"avatarUrl\":\"https://nng-phinf.pstatic.net/MjAyNjExMDlfNjUg/MDAxNzk0MjIwOTg5MjM4.rDEzWox8g6_H9tc0itGnnZaj-lpYr4_GNjI58Rgjrx0g.gEDnJlMrqOcOWg3kfe8wuCJ2WQ2KUe_QOjXS9e23uSwg.JPEG/image.jpg\",\"channelUrl\":\"https://chzzk.naver.com/037d7ba305538de29dbf2789071dbb82\",\"countryCode\":\"KR\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-14\",\"debutTime\":\"13:00\",\"description\":\"11월 14일 오후 1시🔮🐑\",\"details\":{\"오시마크\":\"🔮🐑\",\"oshiMark\":\"🔮🐑\"},\"displayName\":\"아먕\",\"languages\":[],\"platform\":\"CHZZK\",\"slug\":\"amyang-chzzk\",\"startAtUtc\":\"2026-11-14T04:00:00.000Z\",\"tags\":[],\"targetMonth\":\"2026-11\",\"timezone\":\"Asia/Seoul\",\"xUrl\":\"https://x.com/_amyangyang\"}",
+      "reviewedAt": "2026-11-11T12:14:59.744Z"
+    }
+  }
+}

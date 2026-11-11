@@ -1,0 +1,170 @@
+[
+  {
+    "results": [
+      {
+        "slug": "sharuru-soop",
+        "channel_url": "https://www.sooplive.com/station/ire1113",
+        "data": "{\"slug\":\"sharuru-soop\",\"displayName\":\"샤루루\",\"description\":\"오전 7시~ 키라키랏 샤루루입니다-☆ SOOP 웰컴 버추얼 데뷔 방송입니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ir/ire1113/ire1113.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/ire1113\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-07\",\"debutTime\":\"12:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-07T03:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"오시마크\":\"☆\",\"oshiMark\":\"☆\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ir/ire1113/ire1113.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/ire1113\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-07\\\",\\\"debutTime\\\":\\\"12:00\\\",\\\"description\\\":\\\"오전 7시~ 키라키랏 샤루루입니다-☆ SOOP 웰컴 버추얼 데뷔 방송입니다.\\\",\\\"details\\\":{\\\"오시마크\\\":\\\"☆\\\",\\\"oshiMark\\\":\\\"☆\\\"},\\\"displayName\\\":\\\"샤루루\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"sharuru-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-07T03:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-02T06:35:00.000Z\"}}"
+      },
+      {
+        "slug": "esnya-retrona",
+        "channel_url": "https://www.sooplive.com/station/retrona",
+        "data": "{\"slug\":\"esnya-retrona\",\"displayName\":\"에스냐\",\"description\":\"향수가득한 과거로 안내하는 추억열차의 차장, 에스냐의 SOOP 웰컴 버추얼 데뷔 방송입니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/re/retrona/retrona.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/retrona\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"https://x.com/esnya_soop\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-10\",\"debutTime\":\"13:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-10T04:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"종족\":\"여성형 안드로이드\",\"생일\":\"6월 19일\",\"별자리\":\"쌍둥이자리\",\"팬덤명\":\"승객\",\"오시마크\":\"🩵\",\"mbti\":\"INFP\",\"species\":\"여성형 안드로이드\",\"birthday\":\"6월 19일\",\"zodiac\":\"쌍둥이자리\",\"fandomName\":\"승객\",\"oshiMark\":\"🩵\",\"MBTI\":\"INFP\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/re/retrona/retrona.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/retrona\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-10\\\",\\\"debutTime\\\":\\\"13:00\\\",\\\"description\\\":\\\"향수가득한 과거로 안내하는 추억열차의 차장, 에스냐의 SOOP 웰컴 버추얼 데뷔 방송입니다.\\\",\\\"details\\\":{\\\"종족\\\":\\\"여성형 안드로이드\\\",\\\"생일\\\":\\\"6월 19일\\\",\\\"별자리\\\":\\\"쌍둥이자리\\\",\\\"팬덤명\\\":\\\"승객\\\",\\\"오시마크\\\":\\\"🩵\\\",\\\"mbti\\\":\\\"INFP\\\",\\\"species\\\":\\\"여성형 안드로이드\\\",\\\"birthday\\\":\\\"6월 19일\\\",\\\"zodiac\\\":\\\"쌍둥이자리\\\",\\\"fandomName\\\":\\\"승객\\\",\\\"oshiMark\\\":\\\"🩵\\\",\\\"MBTI\\\":\\\"INFP\\\"},\\\"displayName\\\":\\\"에스냐\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"esnya-retrona\\\",\\\"startAtUtc\\\":\\\"2026-11-10T04:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"https://x.com/esnya_soop\\\"}\",\"reviewedAt\":\"2026-11-02T06:35:00.000Z\"}}"
+      },
+      {
+        "slug": "hyesung-soop",
+        "channel_url": "https://www.sooplive.com/station/hyesung0410",
+        "data": "{\"slug\":\"hyesung-soop\",\"displayName\":\"혜성²\",\"description\":\"11월 8일 오후 10시 웰컴 버추얼로 찾아오는 조근조근 소통·게임 스트리머 혜성²입니다!(≡・x・≡)\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/hy/hyesung0410/hyesung0410.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/hyesung0410\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-08\",\"debutTime\":\"22:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-08T13:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/hy/hyesung0410/hyesung0410.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/hyesung0410\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-08\\\",\\\"debutTime\\\":\\\"22:00\\\",\\\"description\\\":\\\"11월 8일 오후 10시 웰컴 버추얼로 찾아오는 조근조근 소통·게임 스트리머 혜성²입니다!(≡・x・≡)\\\",\\\"details\\\":{\\\"mbti\\\":\\\"INFP\\\",\\\"MBTI\\\":\\\"INFP\\\"},\\\"displayName\\\":\\\"혜성²\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"hyesung-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-08T13:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-02T06:35:00.000Z\"},\"details\":{\"mbti\":\"INFP\",\"MBTI\":\"INFP\"}}"
+      },
+      {
+        "slug": "amyang-chzzk",
+        "channel_url": "https://chzzk.naver.com/037d7ba305538de29dbf2789071dbb82",
+        "data": "{\"slug\":\"amyang-chzzk\",\"displayName\":\"아먕\",\"description\":\"11월 14일 오후 1시🔮🐑\",\"avatarUrl\":\"https://nng-phinf.pstatic.net/MjAyNjEwMTNfMjgx/MDAxNzkxODk5ODA3MjEw.AkWezu34ygGgo0poX8cabczBz1jVZKse9aSmIlpVAN0g.LCV7gFC2shDGCrcarjxOCS_-bTtyUN1-Mp69rDK4MBgg.JPEG/image.jpg\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/037d7ba305538de29dbf2789071dbb82\",\"countryCode\":\"KR\",\"languages\":[],\"tags\":[],\"agency\":\"\",\"xUrl\":\"https://x.com/_amyangyang\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-14\",\"debutTime\":\"13:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-14T04:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"details\":{\"오시마크\":\"🔮🐑\",\"oshiMark\":\"🔮🐑\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://nng-phinf.pstatic.net/MjAyNjEwMTNfMjgx/MDAxNzkxODk5ODA3MjEw.AkWezu34ygGgo0poX8cabczBz1jVZKse9aSmIlpVAN0g.LCV7gFC2shDGCrcarjxOCS_-bTtyUN1-Mp69rDK4MBgg.JPEG/image.jpg\\\",\\\"channelUrl\\\":\\\"https://chzzk.naver.com/037d7ba305538de29dbf2789071dbb82\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-14\\\",\\\"debutTime\\\":\\\"13:00\\\",\\\"description\\\":\\\"11월 14일 오후 1시🔮🐑\\\",\\\"details\\\":{\\\"오시마크\\\":\\\"🔮🐑\\\",\\\"oshiMark\\\":\\\"🔮🐑\\\"},\\\"displayName\\\":\\\"아먕\\\",\\\"languages\\\":[],\\\"platform\\\":\\\"CHZZK\\\",\\\"slug\\\":\\\"amyang-chzzk\\\",\\\"startAtUtc\\\":\\\"2026-11-14T04:00:00.000Z\\\",\\\"tags\\\":[],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"https://x.com/_amyangyang\\\"}\",\"reviewedAt\":\"2026-11-11T08:42:56.832Z\"}}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.8172
+      },
+      "duration": 0.8172,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 897748992,
+      "rows_read": 190,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.3749
+      },
+      "duration": 0.3749,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 897748992,
+      "rows_read": 0,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1946
+      },
+      "duration": 0.1946,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 897748992,
+      "rows_read": 0,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1654
+      },
+      "duration": 0.1654,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 897748992,
+      "rows_read": 0,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 1.1118
+      },
+      "duration": 1.1118,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 897748992,
+      "rows_read": 2432,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1396
+      },
+      "duration": 0.1396,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 897748992,
+      "rows_read": 190,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.0578
+      },
+      "duration": 0.0578,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 897748992,
+      "rows_read": 0,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

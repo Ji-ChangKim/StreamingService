@@ -45,3 +45,11 @@ https://x.com/huto00q/status/2118989751785226662",2026-11-07,2026-11-11T17:46:30
 https://chzzk.naver.com/7795f5c37a5941cc20f44f5ee2744cd8
 https://api.chzzk.naver.com/service/v1/channels/7795f5c37a5941cc20f44f5ee2744cd8
 https://x.com/leopyaco/status/2117611502249312379",2026-11-03,2026-11-11T17:46:30+09:00,운영 반영·공개 API 확인,한국어 본인 공지·KST 일정에 따른 활동권역. 국적 정보 아님. 기본 한국 캘린더 필터 누락 해소. 기존 방송국·이미지·데뷔 일시는 유지.,T
+2026-11-11,esnya-retrona,SOOP,https://www.sooplive.com/station/retrona,에스냐~,displayName,에스냐,에스냐~,"https://chapi.sooplive.co.kr/api/retrona/station
+https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-04&endDate=2026-12-11",,2026-11-11T21:22:35+09:00,공식 방송국·캘린더 일치 / 운영 반영 보류,운영자가 정한 표시명을 자동 덮어쓰지 않음. # 등 표기 변형 포함.,F
+2026-11-11,hyesung-soop,SOOP,https://www.sooplive.com/station/hyesung0410,여농이오른팔,displayName,혜성²,여농이오른팔,"https://chapi.sooplive.co.kr/api/hyesung0410/station
+https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-04&endDate=2026-12-11",,2026-11-11T21:22:35+09:00,공식 방송국·캘린더 일치 / 운영 반영 보류,운영자가 정한 표시명을 자동 덮어쓰지 않음. # 등 표기 변형 포함.,F
+2026-11-11,sharuru-soop,SOOP,https://www.sooplive.com/station/ire1113,#샤루루,displayName,샤루루,#샤루루,"https://chapi.sooplive.co.kr/api/ire1113/station
+https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-04&endDate=2026-12-11",,2026-11-11T21:22:35+09:00,공식 방송국·캘린더 일치 / 운영 반영 보류,운영자가 정한 표시명을 자동 덮어쓰지 않음. # 등 표기 변형 포함.,F
+2026-11-11,amyang-chzzk,CHZZK,https://chzzk.naver.com/037d7ba305538de29dbf2789071dbb82,아먕,avatarUrl,https://nng-phinf.pstatic.net/MjAyNjEwMTNfMjgx/MDAxNzkxODk5ODA3MjEw.AkWezu34ygGgo0poX8cabczBz1jVZKse9aSmIlpVAN0g.LCV7gFC2shDGCrcarjxOCS_-bTtyUN1-Mp69rDK4MBgg.JPEG/image.jpg,https://nng-phinf.pstatic.net/MjAyNjExMDlfNjUg/MDAxNzk0MjIwOTg5MjM4.rDEzWox8g6_H9tc0itGnnZaj-lpYr4_GNjI58Rgjrx0g.gEDnJlMrqOcOWg3kfe8wuCJ2WQ2KUe_QOjXS9e23uSwg.JPEG/image.jpg,"https://api.chzzk.naver.com/service/v1/channels/037d7ba305538de29dbf2789071dbb82
+https://x.com/_amyangyang",,2026-11-11T21:22:35+09:00,공식 이미지 검토·운영 반영·공개 프로필 및 캘린더 일치,기존 채널·일정·활동권역·이름·기타 내용 유지. 수정 전 원문과 최근 승인 내용 동일 확인.,T

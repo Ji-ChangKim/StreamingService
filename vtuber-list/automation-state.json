@@ -1,0 +1,65 @@
+{
+  "automationId": "automation",
+  "lastRunId": "2026-11-11-2104",
+  "lastRunAt": "2026-11-11T21:22:35+09:00",
+  "lastRunStatus": "PARTIAL",
+  "lastSoopSourceSuccessAt": "2026-11-11T21:22:35+09:00",
+  "lastPublicSiteSuccessAt": "2026-11-11T21:22:35+09:00",
+  "lastCommunitySheetSuccessAt": "2026-11-11T21:22:35+09:00",
+  "lastRunSummary": "_workspace/debut-automation/2026-11-11-2104/run-summary.json",
+  "nextDateSearchCursor": "2026-11-21",
+  "pendingCandidateIds": [
+    "521f1defbdd5576d",
+    "7d439b842c0a829c",
+    "6d8fae22a87cd402",
+    "e20dd623ae962456",
+    "43e5eaa95a86c89b",
+    "a8090ed9ace9699f",
+    "614ebf7250851a24",
+    "4995a3c53e20bb15"
+  ],
+  "existingPendingCandidatesReverified": [
+    "f7ad8e9b7ceb0dd5"
+  ],
+  "pendingProfileNames": [
+    "esnya-retrona",
+    "hyesung-soop",
+    "sharuru-soop"
+  ],
+  "primaryScheduleRecheckNeeded": [
+    "mai-chzzk"
+  ],
+  "blockingModelGap": "플랫폼 데뷔·이적을 FIRST_DEBUT와 구분하는 공개 데이터 모델 필요",
+  "deferredLeads": [
+    {
+      "name": "시라나미 우유루",
+      "dateHint": "2026-12-12",
+      "reason": "범위 밖. 재게시 단서만 확인",
+      "source": "https://teapaw.org/vvw_kr"
+    },
+    {
+      "name": "쿠로세 유우",
+      "monthHint": "2026-12",
+      "reason": "일시·본인 원문·채널 미확인",
+      "source": "https://instalker.org/Gnomb_"
+    },
+    {
+      "name": "강지은",
+      "monthHint": "2026-12",
+      "reason": "3D 공개 단서. 정확한 일시·행사 범위 원문 미확인",
+      "source": "https://xitter.cf/zdmss_"
+    },
+    {
+      "name": "옥토",
+      "dateHint": "11/22 14:00",
+      "reason": "재게시만 확인. 본인·연도·채널 미확인",
+      "source": "https://mobile.twstalker.com/VtuberDebutBot"
+    },
+    {
+      "name": null,
+      "dateHint": "11/25 19:00",
+      "reason": "재게시 단서의 주체·연도·채널 미확인",
+      "source": "https://instalker.org/VtuberDebutBot"
+    }
+  ]
+}

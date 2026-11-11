@@ -1,0 +1,67 @@
+[
+  {
+    "slug": "mai-chzzk",
+    "id": "767f9cfb72885ff1c2979e5b2a1b6066",
+    "source": "https://api.chzzk.naver.com/service/v1/channels/767f9cfb72885ff1c2979e5b2a1b6066",
+    "code": 200,
+    "displayName": "마이 Mai",
+    "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjA5MDdfMzAw/MDAxNzg4NzE5MDM3MjY1.SAEW6owF1X3BYxsaHBJgVt1SsV_D8M6yaKKEhrawQzsg.-dKfryXzqDbRwn-1qgfj3lQ-aFc2jdO-DrkFBcsnG4wg.JPEG/image.jpg",
+    "description": "🤍 [공개 연락처 제외] 🤍🐢",
+    "imageSize": [
+      800,
+      800
+    ]
+  },
+  {
+    "slug": "amyang-chzzk",
+    "id": "037d7ba305538de29dbf2789071dbb82",
+    "source": "https://api.chzzk.naver.com/service/v1/channels/037d7ba305538de29dbf2789071dbb82",
+    "code": 200,
+    "displayName": "아먕 Amyang",
+    "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjExMDlfNjUg/MDAxNzk0MjIwOTg5MjM4.rDEzWox8g6_H9tc0itGnnZaj-lpYr4_GNjI58Rgjrx0g.gEDnJlMrqOcOWg3kfe8wuCJ2WQ2KUe_QOjXS9e23uSwg.JPEG/image.jpg",
+    "description": "11월 14일 오후 1시🔮🐑",
+    "imageSize": [
+      1000,
+      1000
+    ]
+  },
+  {
+    "slug": "leopyaco-chzzk",
+    "id": "7795f5c37a5941cc20f44f5ee2744cd8",
+    "source": "https://api.chzzk.naver.com/service/v1/channels/7795f5c37a5941cc20f44f5ee2744cd8",
+    "code": 200,
+    "displayName": "레오 퍄코",
+    "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjExMDNfMjY3/MDAxNzkzNzEwMDEyMzc1.OwFhlq83y2YRXqc5C-ytLczNBtXvsAL87j1dHo1G-Lwg.wuolhV8v6Ar-kgUD2uDHIpFoo3IHN96coJ5n8H1ZPfQg.PNG/image.png",
+    "description": "버추얼 아이돌 그룹 'VENOMICA'의 첫번째 멤버, [레오 퍄코]입니다!\n",
+    "imageSize": [
+      2000,
+      2000
+    ]
+  },
+  {
+    "slug": "kobayashi-huto-chzzk",
+    "id": "bce5bac086baed274db13a2c9aacd41b",
+    "source": "https://api.chzzk.naver.com/service/v1/channels/bce5bac086baed274db13a2c9aacd41b",
+    "code": 200,
+    "displayName": "코바야시 후토",
+    "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMTVfOTgg/MDAxNzkyMDcyNTcwNzQ3.vc3axUJCEsoI9_vc32rk8j8R5EzNHgdOWk3xTpYjqt0g.nLI_ZIpOunYrobI7kwX_jaxM9vIQpYhIt2aLQr-woKAg.PNG/image.png",
+    "description": "",
+    "imageSize": [
+      2249,
+      2217
+    ]
+  },
+  {
+    "slug": "meibella-candidate",
+    "id": "c70a5ee8abd3db9f79a683ab4548b5f0",
+    "source": "https://api.chzzk.naver.com/service/v1/channels/c70a5ee8abd3db9f79a683ab4548b5f0",
+    "code": 200,
+    "displayName": "Meibella",
+    "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjExMDhfMTA2/MDAxNzk0MTQ4OTAxMDQ3.bsOrbEWej0t5bZ67u_28nXehCphU54DBF9JTP2HLamkg.hdSytMlMKJGTcZ0-xguYKB5v0qkUowurKk6dRAYzyR4g.JPEG/image.jpg",
+    "description": "메이 (Meibella) 🩵 버튜버 데뷔 준비중 >.<\n시차 한 시간, 해외 거주 물 요정 🪼\n✨️노래 잘하는 취미 성악러 • 저챗 • 게임✨️\n🎙늘 햅삐한 오시를 찾는다면 바로 여기🎙",
+    "imageSize": [
+      632,
+      540
+    ]
+  }
+]

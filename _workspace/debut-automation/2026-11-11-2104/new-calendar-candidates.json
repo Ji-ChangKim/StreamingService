@@ -1,0 +1,86 @@
+[
+  {
+    "idx": "761",
+    "expose_yn": "Y",
+    "schedule_dtm": "2026-12-06 18:00:00",
+    "schedule_type": "debut",
+    "strm_id": "ham2ko",
+    "strm_img_path": "welcomevirtual/schedule/2026/11/11/39106af3c8b4b7186.png",
+    "strm_img_link_path": "https://www.sooplive.com/station/ham2ko",
+    "reg_dtm": "2026-11-11 10:45:26",
+    "upd_dtm": null,
+    "strm_nick": "은재_"
+  },
+  {
+    "idx": "755",
+    "expose_yn": "Y",
+    "schedule_dtm": "2026-11-29 17:00:00",
+    "schedule_type": "debut",
+    "strm_id": "kyrie01234",
+    "strm_img_path": "welcomevirtual/schedule/2026/11/03/41146ae98dbd75e50.png",
+    "strm_img_link_path": "https://www.sooplive.com/station/kyrie01234",
+    "reg_dtm": "2026-11-03 16:31:16",
+    "upd_dtm": null,
+    "strm_nick": "키리에♥"
+  },
+  {
+    "idx": "757",
+    "expose_yn": "Y",
+    "schedule_dtm": "2026-11-25 15:00:00",
+    "schedule_type": "debut",
+    "strm_id": "onbi22",
+    "strm_img_path": "welcomevirtual/schedule/2026/11/05/10176aec09f619350.png",
+    "strm_img_link_path": "https://www.sooplive.com/station/onbi22",
+    "reg_dtm": "2026-11-05 13:45:53",
+    "upd_dtm": null,
+    "strm_nick": "온비"
+  },
+  {
+    "idx": "753",
+    "expose_yn": "Y",
+    "schedule_dtm": "2026-11-23 17:00:00",
+    "schedule_type": "debut",
+    "strm_id": "seizes",
+    "strm_img_path": "welcomevirtual/schedule/2026/11/03/82686ae98da64e89f.png",
+    "strm_img_link_path": "https://www.sooplive.com/station/seizes",
+    "reg_dtm": "2026-11-03 16:30:54",
+    "upd_dtm": null,
+    "strm_nick": "시즈즈"
+  },
+  {
+    "idx": "759",
+    "expose_yn": "Y",
+    "schedule_dtm": "2026-11-19 16:00:00",
+    "schedule_type": "debut",
+    "strm_id": "ssohan",
+    "strm_img_path": "welcomevirtual/schedule/2026/11/09/46966af11f03c7468.png",
+    "strm_img_link_path": "https://www.sooplive.com/station/ssohan",
+    "reg_dtm": "2026-11-09 10:17:07",
+    "upd_dtm": null,
+    "strm_nick": "묘해¸"
+  },
+  {
+    "idx": "751",
+    "expose_yn": "Y",
+    "schedule_dtm": "2026-11-15 12:00:00",
+    "schedule_type": "debut",
+    "strm_id": "02yeon",
+    "strm_img_path": "welcomevirtual/schedule/2026/11/03/88996ae98d8f2b9ee.png",
+    "strm_img_link_path": "https://www.sooplive.com/station/02yeon",
+    "reg_dtm": "2026-11-03 16:30:30",
+    "upd_dtm": null,
+    "strm_nick": "공이연"
+  },
+  {
+    "idx": "735",
+    "expose_yn": "Y",
+    "schedule_dtm": "2026-11-06 13:00:00",
+    "schedule_type": "debut",
+    "strm_id": "dbrlshd123",
+    "strm_img_path": "welcomevirtual/schedule/2026/11/03/26886ae947396ba6e.png",
+    "strm_img_link_path": "https://www.sooplive.com/station/dbrlshd123",
+    "reg_dtm": "2026-11-03 11:30:41",
+    "upd_dtm": null,
+    "strm_nick": "까망까맹"
+  }
+]
