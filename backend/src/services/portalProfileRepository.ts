@@ -3,10 +3,16 @@ import { isPublicProfile } from '../../../shared/contentReview';
 
 type LegacyRow = { slug: string; display_name: string; description: string; profile_image_url: string; agency_name: string; platform: PortalProfile['platform']; channel_url: string; country_code: string; x_url: string; debut_date: string; debut_time: string; timezone: string; start_at_utc: string };
 
+// 외부 채널 검색·통계 조회로 자동 등록된 행은 데뷔 소개가 아니라 채널 등록 기록이다.
+// 등록 시 채운 기본 소개 문구와 00:00 시각으로 구분한다.
+export function isAnalyticsAutoRegisteredRow(row: { description?: string | null; display_name?: string | null; debut_time?: string | null }): boolean {
+  return row.description === `${row.display_name} 스트리머의 채널입니다.` && row.debut_time === '00:00';
+}
+
 // 기존 정보는 확인되지 않은 언어나 국가를 추측하지 않고 변환한다.
 function legacyProfile(row: LegacyRow): PortalProfile {
   // 외부 채널 검색 등록 시 채운 저장 시각을 실제 데뷔 일정으로 오인하지 않는다.
-  const registrationOnly = row.description === `${row.display_name} 스트리머의 채널입니다.` && row.debut_time === '00:00';
+  const registrationOnly = isAnalyticsAutoRegisteredRow(row);
   const dateUnknown = /\[일정 미정\]|\[날짜 미정\]|\[미정\]/.test(row.description || '') || !row.start_at_utc;
   const timeUnknown = /\[시간 미정\]/.test(row.description || '');
   return { slug: row.slug, displayName: row.display_name, description: row.description || '', avatarUrl: portalWebUrl(row.profile_image_url || ''),
