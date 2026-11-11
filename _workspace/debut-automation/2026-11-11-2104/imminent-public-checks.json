@@ -1,0 +1,106 @@
+[
+  {
+    "slug": "hasinyang-soop",
+    "name": "꾼구마",
+    "date": "2026-11-11",
+    "time": "13:00",
+    "channelAndCalendarMatch": true,
+    "koreaFilterEligible": true
+  },
+  {
+    "slug": "sujiai-soop",
+    "name": "수지AI",
+    "date": "2026-11-11",
+    "time": "13:00",
+    "channelAndCalendarMatch": true,
+    "koreaFilterEligible": true
+  },
+  {
+    "slug": "mai-chzzk",
+    "name": "마이 Mai",
+    "date": "2026-11-11",
+    "time": "20:00",
+    "channelAndCalendarMatch": true,
+    "koreaFilterEligible": true
+  },
+  {
+    "slug": "gingmallang-soop",
+    "name": "깅말랑",
+    "date": "2026-11-13",
+    "time": "20:00",
+    "channelAndCalendarMatch": true,
+    "koreaFilterEligible": true
+  },
+  {
+    "slug": "ghostwitch-soop",
+    "name": "유령마녀",
+    "date": "2026-11-14",
+    "time": "17:00",
+    "channelAndCalendarMatch": true,
+    "koreaFilterEligible": true
+  },
+  {
+    "slug": "amyang-chzzk",
+    "name": "아먕",
+    "date": "2026-11-14",
+    "time": "13:00",
+    "channelAndCalendarMatch": true,
+    "koreaFilterEligible": true
+  },
+  {
+    "slug": "leopyaco-chzzk",
+    "name": "레오 퍄코",
+    "date": "2026-11-14",
+    "time": "20:00",
+    "channelAndCalendarMatch": true,
+    "koreaFilterEligible": true
+  },
+  {
+    "slug": "kobayashi-huto-chzzk",
+    "name": "코바야시 후토",
+    "date": "2026-11-14",
+    "time": "21:00",
+    "channelAndCalendarMatch": true,
+    "koreaFilterEligible": true
+  },
+  {
+    "slug": "di6ixx-soop",
+    "name": "우디디디",
+    "date": "2026-11-11",
+    "time": "11:00",
+    "channelAndCalendarMatch": true,
+    "koreaFilterEligible": true
+  },
+  {
+    "slug": "d00328-soop",
+    "name": "단온",
+    "date": "2026-11-11",
+    "time": "17:00",
+    "channelAndCalendarMatch": true,
+    "koreaFilterEligible": true
+  },
+  {
+    "slug": "nju123-soop",
+    "name": "아오이로하쿠",
+    "date": "2026-11-12",
+    "time": "20:00",
+    "channelAndCalendarMatch": true,
+    "koreaFilterEligible": true
+  },
+  {
+    "slug": "kyykys12-soop",
+    "name": "에이루나",
+    "date": "2026-11-12",
+    "time": "21:00",
+    "channelAndCalendarMatch": true,
+    "koreaFilterEligible": true
+  },
+  {
+    "slug": "hue1115-soop",
+    "name": "휴이~",
+    "date": "2026-11-14",
+    "time": "11:00",
+    "channelAndCalendarMatch": true,
+    "koreaFilterEligible": true
+  }
+]

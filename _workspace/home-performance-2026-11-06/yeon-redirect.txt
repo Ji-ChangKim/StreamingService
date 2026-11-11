@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <title>치지직 CHZZK</title>
+    <meta charset="utf-8" />
+    <style>
+      html.chzzk_overlay_page body {
+        background: transparent;
+      }
+    </style>
+    <script>
+      (function () {
+        try {
+          var path = window.location.pathname
+          var root = document.documentElement
+          var studioIframePattern = /^\/iframe\/live\/[^/]+\/(chat|emoticon)$/
+          var themedPopupPattern = /^\/iframe\/live\/[^/]+\/(chat|emoticon)$|^\/live\/[^/]+\/chat$/
+          // OBS 오버레이 라우트: src/components/app.tsx 의 CommonModule 내부 Route 목록과 동기화 필요
+          var overlayPattern =
+            /^\/(chat|donation|video-donation|mission-donation|party-donation\/(ticker|amount)|gift-effect|product-purchase)(\/[^/]+)?$/
+          var isStudioIframe = studioIframePattern.test(path)
+          var isThemedPopup = themedPopupPattern.test(path)
+          var isOverlay = overlayPattern.test(path)
+          if (isOverlay) {
+            root.classList.add('chzzk_overlay_page')
+          }
+          if (!isThemedPopup) return
+          // 스튜디오 iframe(chatIframe.tsx/EmoticonInput.tsx)은 defaultTheme="light",
+          // 시청자 채팅 팝업(chat.tsx)은 CustomThemeProvider defaultTheme="dark" — fallback을 경로별로 맞춘다.
+          var params = new URLSearchParams(window.location.search)
+          var forced = params.get('theme')
+          var theme = forced === 'light' || forced === 'dark' ? forced : null
+          if (!theme) {
+            var stored = null
+            try {
+              stored = window.localStorage.getItem('theme')
+            } catch (storageError) {
+              stored = null
+            }
+            theme = stored === 'light' || stored === 'dark' ? stored : isStudioIframe ? 'light' : 'dark'
+          }
+          root.classList.remove('light', 'theme_dark')
+          root.classList.add(theme === 'dark' ? 'theme_dark' : 'light')
+          root.setAttribute('data-theme', theme)
+          root.style.colorScheme = theme
+        } catch (error) {
+          console.error(error)
+        }
+      })()
+    </script>
+    <meta name="theme-color" content="#000000" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="description" content="지금, 스트리밍이 시작됩니다. 치지직-" />
+    <meta name="google-site-verification" content="OvOP4NQVqAPW2eY_7qUf1IqV7NXhfWlLi_nHStH19Is" />
+
+    <link rel="shortcut icon" href="https://ssl.pstatic.net/static/nng/glive/icon/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="https://ssl.pstatic.net/static/nng/glive/icon/favicon.png">
+    <link rel="apple-touch-icon" href="https://ssl.pstatic.net/static/nng/glive/icon/favicon.png">
+
+    <link rel="stylesheet" href="https://ssl.pstatic.net/static/nng/resource/p/static/css/desktop-media-viewer.css" />
+    <script type="module" crossorigin src="https://ssl.pstatic.net/static/nng/glive/resource/p/static/js/index-BcgE118t.js"></script>
+    <link rel="modulepreload" crossorigin href="https://ssl.pstatic.net/static/nng/glive/resource/p/static/js/rolldown-runtime-CJJwijRH.js">
+    <link rel="modulepreload" crossorigin href="https://ssl.pstatic.net/static/nng/glive/resource/p/static/js/common-vendor-D1TGm9am.js">
+    <link rel="modulepreload" crossorigin href="https://ssl.pstatic.net/static/nng/glive/resource/p/static/js/player-vendor-BCVMdcei.js">
+    <link rel="modulepreload" crossorigin href="https://ssl.pstatic.net/static/nng/glive/resource/p/static/js/vendor--HSbxqQP.js">
+    <link rel="modulepreload" crossorigin href="https://ssl.pstatic.net/static/nng/glive/resource/p/static/js/date-vendor-DhkCJ9xZ.js">
+    <link rel="stylesheet" crossorigin href="https://ssl.pstatic.net/static/nng/glive/resource/p/static/css/common-vendor-Xm3YENXW.css">
+    <link rel="stylesheet" crossorigin href="https://ssl.pstatic.net/static/nng/glive/resource/p/static/css/player-vendor-BDJ3c8a1.css">
+    <link rel="stylesheet" crossorigin href="https://ssl.pstatic.net/static/nng/glive/resource/p/static/css/vendor-JDVjTL6M.css">
+    <link rel="stylesheet" crossorigin href="https://ssl.pstatic.net/static/nng/glive/resource/p/static/css/index-BBGwzDvs.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="portal"></div>
+    <script id="scriptHolder"></script>
+    <script src="https://ssl.pstatic.net/static/nng/resource/p/static/js/desktop-media-viewer.min.js" defer></script>
+    <script src="https://ssl.pstatic.net/static/nng/sdk/refresh-detector-obfuscated.js" defer></script>
+    <script>
+      (function () {
+        try {
+          if (window.navigator.userAgent.indexOf('Edg/140.0') !== -1) {
+            window.addEventListener('load', () => {
+              setTimeout(() => {
+                const elementCount = document.getElementById('root').childElementCount
+                if (elementCount === 0) {
+                  window.alert('긴급 점검 안내\n\n현재 엣지 브라우저 일부 버전에서 치지직과 네이버 게임 서비스에 접속되지 않는 현상이 확인되어 긴급 점검 중입니다.\n\n※ 임시 해결방법\nEdge 브라우저 설정 - 개인정보 - 추적방지 - "엄격" 설정을 "기본 or 밸런스"로 변경시 정상 접속 가능\n또는\n엣지 브라우저 외 다른 브라우저(크롬, 웨일 등) 사용\n\n최대한 빨리 정상화 될 수 있도록 최선을 다하겠습니다.\n서비스 이용에 불편을 드려 죄송합니다.')
+                }
+              }, 1000)
+            })
+          }
+        } catch (error) {
+          console.error(error)
+        }
+      })()
+    </script>
+  </body>
+</html>

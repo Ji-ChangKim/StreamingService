@@ -1,0 +1,98 @@
+[
+  {
+    "id": "di6ixx",
+    "url": "https://chapi.sooplive.co.kr/api/di6ixx/station",
+    "user_id": "di6ixx",
+    "user_nick": "우디디디",
+    "station_name": "우디디디",
+    "joint_title": null,
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/di/di6ixx/di6ixx.jpg",
+    "sourceSha256": "4bbc004f3ad58409db64d96bb0f8104aea774875fcfb9354e50d6ddadc152e22",
+    "imageSize": [
+      420,
+      420
+    ],
+    "imageFormat": "PNG",
+    "imageContentType": "image/jpeg"
+  },
+  {
+    "id": "d00328",
+    "url": "https://chapi.sooplive.co.kr/api/d00328/station",
+    "user_id": "d00328",
+    "user_nick": "단온",
+    "station_name": "단온",
+    "joint_title": null,
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/d0/d00328/d00328.jpg",
+    "sourceSha256": "d870e88ad5c89a79966d8ec196be8970794dc83d6ad631123610a110276eb77b",
+    "imageSize": [
+      210,
+      210
+    ],
+    "imageFormat": "GIF",
+    "imageContentType": "image/jpeg"
+  },
+  {
+    "id": "nju123",
+    "url": "https://chapi.sooplive.co.kr/api/nju123/station",
+    "user_id": "nju123",
+    "user_nick": "아오이로하쿠",
+    "station_name": "묵묵희",
+    "joint_title": null,
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/nj/nju123/nju123.jpg",
+    "sourceSha256": "1a13d18ce60cfddadde91f27c38deb3cde756dd3560270b17149ce99ab60b060",
+    "imageSize": [
+      419,
+      382
+    ],
+    "imageFormat": "PNG",
+    "imageContentType": "image/jpeg"
+  },
+  {
+    "id": "kyykys12",
+    "url": "https://chapi.sooplive.co.kr/api/kyykys12/station",
+    "user_id": "kyykys12",
+    "user_nick": "에이루나",
+    "station_name": "에이루나",
+    "joint_title": null,
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/ky/kyykys12/kyykys12.jpg",
+    "sourceSha256": "9cbde88c50ed3500604560d397e19af31cead9cd869a37c32696ace836046922",
+    "imageSize": [
+      420,
+      420
+    ],
+    "imageFormat": "PNG",
+    "imageContentType": "image/jpeg"
+  },
+  {
+    "id": "hue1115",
+    "url": "https://chapi.sooplive.co.kr/api/hue1115/station",
+    "user_id": "hue1115",
+    "user_nick": "휴이~",
+    "station_name": "휴이~",
+    "joint_title": null,
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/hu/hue1115/hue1115.jpg",
+    "sourceSha256": "b961794a9759e3036316a9e4d766e636f74245c4457f29f389508b91ee92cd48",
+    "imageSize": [
+      420,
+      420
+    ],
+    "imageFormat": "GIF",
+    "imageContentType": "image/jpeg"
+  },
+  {
+    "id": "hasinyang",
+    "url": "https://chapi.sooplive.co.kr/api/hasinyang/station",
+    "user_id": "hasinyang",
+    "user_nick": "꾼구마",
+    "station_name": "하시냥:",
+    "joint_title": null,
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/ha/hasinyang/hasinyang.jpg",
+    "sourceSha256": "c4fffce28620f390c06e93e47118f11a222be92a9b827d7798a1dd401a6662f1",
+    "imageSize": [
+      165,
+      165
+    ],
+    "imageFormat": "GIF",
+    "imageContentType": "image/jpeg"
+  }
+]

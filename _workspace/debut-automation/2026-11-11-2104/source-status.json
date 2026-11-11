@@ -1,0 +1,23 @@
+[
+  {
+    "source": "soop-calendar",
+    "status": "OK",
+    "count": 39,
+    "sha256": "f5234d4494699ddf4719fbecfc58e0da3e35ca9caedfc1977201bbbde810465c",
+    "url": "https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-04&endDate=2026-12-11"
+  },
+  {
+    "source": "profiles",
+    "status": "OK",
+    "count": 428,
+    "sha256": "df20487776f5f7f9805efc3ed69866b39cdf3ac962a166a1b94c1ef143bc49ef",
+    "url": "https://vdebut.live/api/v1/portal/profiles?audit=202611112104"
+  },
+  {
+    "source": "events",
+    "status": "OK",
+    "count": 428,
+    "sha256": "2b2151f13eb3e0febe88d5b49110bddcf946eaf6e9c269d4d4a9451f96931aee",
+    "url": "https://vdebut.live/api/v1/events?audit=202611112104"
+  }
+]

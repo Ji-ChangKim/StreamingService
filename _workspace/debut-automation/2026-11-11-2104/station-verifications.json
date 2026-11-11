@@ -1,0 +1,230 @@
+[
+  {
+    "id": "ham2ko",
+    "source": "https://chapi.sooplive.co.kr/api/ham2ko/station",
+    "sourceSha256": "8fb27fb11301c5c8c613dcf47bc9c8597ecc5256de07a4e44545dafc3e0a4fb9",
+    "channelId": "ham2ko",
+    "displayName": "은재_",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/ha/ham2ko/ham2ko.jpg",
+    "imageSize": [
+      420,
+      420
+    ]
+  },
+  {
+    "id": "kyrie01234",
+    "source": "https://chapi.sooplive.co.kr/api/kyrie01234/station",
+    "sourceSha256": "ea4d63787933f4f6ab92383706bb638b7cc2f62f9fe9b8879ee997316f32d39a",
+    "channelId": "kyrie01234",
+    "displayName": "키리에♥",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/ky/kyrie01234/kyrie01234.jpg",
+    "imageSize": [
+      333,
+      331
+    ]
+  },
+  {
+    "id": "onbi22",
+    "source": "https://chapi.sooplive.co.kr/api/onbi22/station",
+    "sourceSha256": "66b3fdf30f1ba180a008f6ac7755999aa877b44ac2d26c79aff827d22735eaed",
+    "channelId": "onbi22",
+    "displayName": "온비",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/on/onbi22/onbi22.jpg",
+    "imageSize": [
+      210,
+      210
+    ]
+  },
+  {
+    "id": "seizes",
+    "source": "https://chapi.sooplive.co.kr/api/seizes/station",
+    "sourceSha256": "25094c660327ce5df408b85efa7c2f5b608acfa9a585a346af4255f5971e73c1",
+    "channelId": "seizes",
+    "displayName": "시즈즈",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/se/seizes/seizes.jpg",
+    "imageSize": [
+      200,
+      200
+    ]
+  },
+  {
+    "id": "ssohan",
+    "source": "https://chapi.sooplive.co.kr/api/ssohan/station",
+    "sourceSha256": "68c9767e35cb05ebf57c8a65d949d28b1a4e7c82166ce2975ba36e34b11e294c",
+    "channelId": "ssohan",
+    "displayName": "묘해¸",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/ss/ssohan/ssohan.jpg",
+    "imageSize": [
+      210,
+      210
+    ]
+  },
+  {
+    "id": "02yeon",
+    "source": "https://chapi.sooplive.co.kr/api/02yeon/station",
+    "sourceSha256": "e1f68a00e923c201727532a61ea5368ca95c78e9d04d32371d643fb1ab53bed1",
+    "channelId": "02yeon",
+    "displayName": "공이연",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/02/02yeon/02yeon.jpg",
+    "imageSize": [
+      355,
+      419
+    ]
+  },
+  {
+    "id": "dbrlshd123",
+    "source": "https://chapi.sooplive.co.kr/api/dbrlshd123/station",
+    "sourceSha256": "0f93492161114444a1f514ceb88a1fcf1e7787ca4259cccccf1513c33b766e01",
+    "channelId": "dbrlshd123",
+    "displayName": "까망까맹",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/db/dbrlshd123/dbrlshd123.jpg",
+    "imageSize": [
+      420,
+      420
+    ]
+  },
+  {
+    "id": "hasinyang",
+    "source": "https://chapi.sooplive.co.kr/api/hasinyang/station",
+    "sourceSha256": "48e573e84da41fcb7f2d3c5d9fc3c5c6622acb9392b4fcd117149aa21b52032b",
+    "channelId": "hasinyang",
+    "displayName": "꾼구마",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/ha/hasinyang/hasinyang.jpg",
+    "imageSize": [
+      165,
+      165
+    ]
+  },
+  {
+    "id": "mentos1",
+    "source": "https://chapi.sooplive.co.kr/api/mentos1/station",
+    "sourceSha256": "bbd7fe31bff8a21dd16a32cb2c8958cf8e94fc6a0b625b118b7b328b924d5cae",
+    "channelId": "mentos1",
+    "displayName": "수지AI",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/me/mentos1/mentos1.jpg",
+    "imageSize": [
+      420,
+      420
+    ]
+  },
+  {
+    "id": "gingmallang",
+    "source": "https://chapi.sooplive.co.kr/api/gingmallang/station",
+    "sourceSha256": "38f3596b7f344dc9e864d5783b461b613b990d0a7c380deaf2bb8de495b9447e",
+    "channelId": "gingmallang",
+    "displayName": "깅말랑",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/gi/gingmallang/gingmallang.jpg",
+    "imageSize": [
+      420,
+      236
+    ]
+  },
+  {
+    "id": "candle06",
+    "source": "https://chapi.sooplive.co.kr/api/candle06/station",
+    "sourceSha256": "15a55bdb0246ee1c390ee1771f5b3887e98e1f8b099154450812821a43b3cb40",
+    "channelId": "candle06",
+    "displayName": "유령마녀",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/ca/candle06/candle06.jpg",
+    "imageSize": [
+      420,
+      385
+    ]
+  },
+  {
+    "id": "di6ixx",
+    "source": "https://chapi.sooplive.co.kr/api/di6ixx/station",
+    "sourceSha256": "8af54fdf93a5a8650467145180eb4b81e5c121c65c715af58df16db060901ed6",
+    "channelId": "di6ixx",
+    "displayName": "우디디디",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/di/di6ixx/di6ixx.jpg",
+    "imageSize": [
+      420,
+      420
+    ]
+  },
+  {
+    "id": "d00328",
+    "source": "https://chapi.sooplive.co.kr/api/d00328/station",
+    "sourceSha256": "920cfc70a609122b6cd88e36d5b850f81fcf0dabe4819eecd1d4fd108d646e5d",
+    "channelId": "d00328",
+    "displayName": "단온",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/d0/d00328/d00328.jpg",
+    "imageSize": [
+      210,
+      210
+    ]
+  },
+  {
+    "id": "nju123",
+    "source": "https://chapi.sooplive.co.kr/api/nju123/station",
+    "sourceSha256": "bbe7b346061cc4163cbaf6fa1195f0b96b59138d295b68a199135853d688ec87",
+    "channelId": "nju123",
+    "displayName": "아오이로하쿠",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/nj/nju123/nju123.jpg",
+    "imageSize": [
+      419,
+      382
+    ]
+  },
+  {
+    "id": "kyykys12",
+    "source": "https://chapi.sooplive.co.kr/api/kyykys12/station",
+    "sourceSha256": "f287f7e67afdc7eb4d8caa9c3cc9dc5280e2289a07542af0e52b7961d73a1b45",
+    "channelId": "kyykys12",
+    "displayName": "에이루나",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/ky/kyykys12/kyykys12.jpg",
+    "imageSize": [
+      420,
+      420
+    ]
+  },
+  {
+    "id": "hue1115",
+    "source": "https://chapi.sooplive.co.kr/api/hue1115/station",
+    "sourceSha256": "5add217ed78bb884fc471cd147c36dbbbefb0e67b81bb82222d4e53fe4274283",
+    "channelId": "hue1115",
+    "displayName": "휴이~",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/hu/hue1115/hue1115.jpg",
+    "imageSize": [
+      420,
+      420
+    ]
+  },
+  {
+    "id": "hyesung0410",
+    "source": "https://chapi.sooplive.co.kr/api/hyesung0410/station",
+    "sourceSha256": "a5574bca53aab46839c86de6c4b08c11f819869f51bc5bc0d766e6abb1d68641",
+    "channelId": "hyesung0410",
+    "displayName": "여농이오른팔",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/hy/hyesung0410/hyesung0410.jpg",
+    "imageSize": [
+      420,
+      420
+    ]
+  },
+  {
+    "id": "ire1113",
+    "source": "https://chapi.sooplive.co.kr/api/ire1113/station",
+    "sourceSha256": "a22ef21db67d44cfaa5190e676be17652aeb5645bc9d106d1642d66c8a55396e",
+    "channelId": "ire1113",
+    "displayName": "#샤루루",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/ir/ire1113/ire1113.jpg",
+    "imageSize": [
+      370,
+      370
+    ]
+  },
+  {
+    "id": "retrona",
+    "source": "https://chapi.sooplive.co.kr/api/retrona/station",
+    "sourceSha256": "e43036ddd1deefdfb50122ae6dea488b57ad7a89fef9f9dfd01df7c9aa4620b9",
+    "channelId": "retrona",
+    "displayName": "에스냐~",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/re/retrona/retrona.jpg",
+    "imageSize": [
+      420,
+      408
+    ]
+  }
+]

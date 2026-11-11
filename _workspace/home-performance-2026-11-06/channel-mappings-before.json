@@ -1,0 +1,68 @@
+[
+  {
+    "results": [
+      {
+        "id": 62366,
+        "platform": "YOUTUBE",
+        "channel_url": "https://www.youtube.com/channel/UCpQje3p1s3BiPEp3MVm76hQ",
+        "slug": "kumicho"
+      },
+      {
+        "id": 64071,
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/e4ae5646d01063022591e26bb81106cf",
+        "slug": "maliboo--chzzk"
+      },
+      {
+        "id": 64580,
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/767f9cfb72885ff1c2979e5b2a1b6066",
+        "slug": "mai-chzzk"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 2.4956
+      },
+      "duration": 2.4956,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 827383808,
+      "rows_read": 2435,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "channel_key": "CHZZK:767f9cfb72885ff1c2979e5b2a1b6066",
+        "slug": "mai-chzzk"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.5123
+      },
+      "duration": 0.5123,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 827383808,
+      "rows_read": 20,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

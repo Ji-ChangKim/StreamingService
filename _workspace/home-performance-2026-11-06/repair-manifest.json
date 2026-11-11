@@ -1,0 +1,110 @@
+{
+  "preparedAt": "2026-11-05T16:47:16.130Z",
+  "rows": [
+    {
+      "slug": "kagarimiya-kikyo",
+      "name": "篝宮桔梗",
+      "source": "https://twitcasting.tv/kagarimiyasan",
+      "beforeAvatar": "",
+      "avatarUrl": "https://yt3.googleusercontent.com/DPBJ5zY3zUaqiVHOm8VRpCcEMvUUDVpqD0l0lWWtVbnDq4m8UQ-dGpwCNpVILWlZXFrEHepr=s900-c-k-c0x00ffffff-no-rj",
+      "beforeChannel": "https://www.youtube.com/@kagarimiyasan",
+      "channelUrl": "https://www.youtube.com/channel/UCYqc4sOohUJvpq8eckXjQjQ",
+      "storedJson": false
+    },
+    {
+      "slug": "aldonza-kambayashi",
+      "name": "Aldonza Kambayashi",
+      "source": "https://www.youtube.com/@AldonzaKambayashi",
+      "beforeAvatar": "https://yt3.googleusercontent.com/zyqnJsBKpKAPt2UZM9TcEhct5baB40Mzdm8iUqlqL6J9SxVaPFnUt88e6sKS0SCePFZSji77=s900-c-k-c0x00ffffff-no-rj",
+      "avatarUrl": "https://yt3.googleusercontent.com/fsr2xylityjr-Jp4qjhDyuQgxNZV6nAPAsuO-JMUivF2ksDpFir1h1SAFCzfgLeGlJevZ9Q=s900-c-k-c0x00ffffff-no-rj",
+      "beforeChannel": "https://www.youtube.com/@AldonzaKambayashi",
+      "channelUrl": "https://www.youtube.com/channel/UCGPazdbPeftXPTa4ZVANwuA",
+      "storedJson": false
+    },
+    {
+      "slug": "kumicho",
+      "name": "ガチ経営者VTuber組長",
+      "source": "https://www.youtube.com/channel/UCpQje3p1s3BiPEp3MVm76hQ",
+      "beforeAvatar": "https://yt3.googleusercontent.com/mUDgI890xnDrw2rh8hJvgXDqy1KDw-rWMDOjU8I74dfot9aH25MxnXZxT4crcLIeE5_SURo1=s900-c-k-c0x00ffffff-no-rj",
+      "avatarUrl": "https://yt3.googleusercontent.com/obynWlFuwMeQSPXlePBYBf2pIduvEhOjsytBzV9C2MNMnSSPySBq-QysJtMeQqedWJZbejb4Ug=s900-c-k-c0x00ffffff-no-rj",
+      "beforeChannel": "https://www.youtube.com/channel/UCpQje3p1s3BiPEp3MVm76hQ",
+      "channelUrl": "https://www.youtube.com/channel/UCpQje3p1s3BiPEp3MVm76hQ",
+      "storedJson": false
+    },
+    {
+      "slug": "nemurai-ramune",
+      "name": "眠来らむね",
+      "source": "https://www.youtube.com/@nemurairamune",
+      "beforeAvatar": "https://yt3.googleusercontent.com/ytc",
+      "avatarUrl": "https://yt3.googleusercontent.com/0DyW4z4vswkLmu1YLaarM1lpbPdKBsNtpWlBUdDL3rPzqkmG4Jyevd7Fu_JZ2vt5JE_vN_YGzA=s900-c-k-c0x00ffffff-no-rj",
+      "beforeChannel": "https://www.youtube.com/@nemurairamune",
+      "channelUrl": "https://www.youtube.com/channel/UCRy05wP48OkGLOcciK1GkdA",
+      "storedJson": false
+    },
+    {
+      "slug": "baekhoyang",
+      "name": "백호양",
+      "source": "https://api.chzzk.naver.com/service/v1/channels/8c14ab2e0f180f3be5f64b7b421d152f",
+      "beforeAvatar": "",
+      "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMjlfNSAg/MDAxNzkzMjgzMjYzODAx.qFZrDJb95s1TzMGiV5rANE1ekzsMIH_zMGdyn3EMqfYg.AAC1g2PlSfzi13-2TZyzMfI2p8V5QFaaWxZ7gjcY8Z4g.PNG/image.png",
+      "beforeChannel": "",
+      "channelUrl": "https://chzzk.naver.com/8c14ab2e0f180f3be5f64b7b421d152f",
+      "storedJson": true
+    },
+    {
+      "slug": "baekhoyang-2",
+      "name": "백호양",
+      "source": "https://api.chzzk.naver.com/service/v1/channels/8c14ab2e0f180f3be5f64b7b421d152f",
+      "beforeAvatar": "",
+      "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMjlfNSAg/MDAxNzkzMjgzMjYzODAx.qFZrDJb95s1TzMGiV5rANE1ekzsMIH_zMGdyn3EMqfYg.AAC1g2PlSfzi13-2TZyzMfI2p8V5QFaaWxZ7gjcY8Z4g.PNG/image.png",
+      "beforeChannel": "",
+      "channelUrl": "https://chzzk.naver.com/8c14ab2e0f180f3be5f64b7b421d152f",
+      "storedJson": false
+    },
+    {
+      "slug": "yeonsaeneul",
+      "name": "연새늘",
+      "source": "https://api.chzzk.naver.com/service/v1/channels/db8c2f4b478e9aaca4a42a45e5e89b7f",
+      "beforeAvatar": "",
+      "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMDVfMjA2/MDAxNzkxMTcxMjA1ODgw.2IUUQkJfGM1jVqzZtob-MMkJDw1Nvwvq895l0C7jjpQg.jWSlbW5PBrwx3PDCw_2wnQ-tkuMxH-gqShEpZqYnhaQg.PNG/image.png",
+      "beforeChannel": "",
+      "channelUrl": "https://chzzk.naver.com/db8c2f4b478e9aaca4a42a45e5e89b7f",
+      "storedJson": false
+    },
+    {
+      "slug": "yeonsaeneul-2",
+      "name": "연새늘",
+      "source": "https://api.chzzk.naver.com/service/v1/channels/db8c2f4b478e9aaca4a42a45e5e89b7f",
+      "beforeAvatar": "",
+      "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMDVfMjA2/MDAxNzkxMTcxMjA1ODgw.2IUUQkJfGM1jVqzZtob-MMkJDw1Nvwvq895l0C7jjpQg.jWSlbW5PBrwx3PDCw_2wnQ-tkuMxH-gqShEpZqYnhaQg.PNG/image.png",
+      "beforeChannel": "",
+      "channelUrl": "https://chzzk.naver.com/db8c2f4b478e9aaca4a42a45e5e89b7f",
+      "storedJson": false
+    },
+    {
+      "slug": "malribu-2",
+      "name": "말리부",
+      "source": "https://api.chzzk.naver.com/service/v1/channels/e4ae5646d01063022591e26bb81106cf",
+      "beforeAvatar": "",
+      "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNTExMTRfMTUg/MDAxNzYzMTE4MTIxNDEx.SLh_FEkWG1lnMDVfr891rl-hQNb94LoEimNBCkHKiUIg.LzoT_PSao5COCNlrk0yuMP6cIX7-soI8fwJJ6H-DD_Ag.JPEG/image.jpg",
+      "beforeChannel": "https://chzzk.naver.com/e4ae5646d01063022591e26bb81106cf/community",
+      "channelUrl": "https://chzzk.naver.com/e4ae5646d01063022591e26bb81106cf",
+      "storedJson": false
+    },
+    {
+      "slug": "mai-chzzk",
+      "name": "마이 Mai",
+      "source": "https://api.chzzk.naver.com/service/v1/channels/767f9cfb72885ff1c2979e5b2a1b6066",
+      "beforeAvatar": "https://nng-phinf.pstatic.net/MjAyNjA3MjdfMTc2/MDAxNzg1MTI5Nzk2ODAz.nA-9vA1I-U-fL1P_8gM1y_3H6qP4M0zX7-h9E6R1yZcg.vX5e6W0S2A-8k7C5_7L4y2B1W0Q8N6P5M4J2H1G0F9Eg.PNG/image.png",
+      "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjA5MDdfMzAw/MDAxNzg4NzE5MDM3MjY1.SAEW6owF1X3BYxsaHBJgVt1SsV_D8M6yaKKEhrawQzsg.-dKfryXzqDbRwn-1qgfj3lQ-aFc2jdO-DrkFBcsnG4wg.JPEG/image.jpg",
+      "beforeChannel": "https://chzzk.naver.com/767f9cfb72885ff1c2979e5b2a1b6066",
+      "channelUrl": "https://chzzk.naver.com/767f9cfb72885ff1c2979e5b2a1b6066",
+      "storedJson": true
+    }
+  ],
+  "unresolved": [
+    "beria",
+    "mahoya-kina",
+    "jikii-vt"
+  ]
+}

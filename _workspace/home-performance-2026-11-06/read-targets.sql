@@ -1,0 +1,3 @@
+SELECT i.id,i.slug,i.channel_id,i.profile_image_url,c.platform,c.channel_url,c.channel_name FROM streamerChannel_info i LEFT JOIN streamerChannel c ON c.id=i.channel_id WHERE i.slug IN ('beria','kagarimiya-kikyo','aldonza-kambayashi','jikii-vt','mahoya-kina','kumicho','nemurai-ramune','baekhoyang','baekhoyang-2','yeonsaeneul','yeonsaeneul-2','malribu-2','mai-chzzk');
+SELECT slug,channel_url,data FROM portal_profiles WHERE slug IN ('beria','kagarimiya-kikyo','aldonza-kambayashi','jikii-vt','mahoya-kina','kumicho','nemurai-ramune','baekhoyang','baekhoyang-2','yeonsaeneul','yeonsaeneul-2','malribu-2','mai-chzzk');
+SELECT name,sql FROM sqlite_master WHERE name IN ('portal_profile_history','portal_profile_channels','streamerChannel','streamerChannel_info');

@@ -1,0 +1,1 @@
+const esbuild=require("J:\\개인 프로젝트\\WEB\\StreamingService\\frontend\\node_modules\\esbuild"); const original=esbuild.buildSync; esbuild.buildSync=(options)=>original({...options,alias:{'./PortalUi':"J:\\개인 프로젝트\\WEB\\StreamingService\\_workspace\\home-performance-2026-11-06\\original-PortalUi.tsx"}});

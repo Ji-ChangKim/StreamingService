@@ -1,0 +1,1 @@
+PASS: actual schema / 5 inserts / 1 correction / 6 histories / idempotence / pending guard / stale value guard

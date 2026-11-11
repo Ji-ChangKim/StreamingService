@@ -1,0 +1,269 @@
+{
+  "results": [
+    {
+      "variant": "before",
+      "width": 1440,
+      "cells": 35,
+      "lcp": 1728,
+      "cls": 0.0785537523509838,
+      "ready": 4219.799999982119,
+      "resources": [
+        {
+          "name": "spotlight_stage_bg.png",
+          "start": 1294.5999999940395,
+          "end": 3657.699999988079,
+          "bytes": 810283,
+          "initiator": "css"
+        },
+        {
+          "name": "profiles?version=3",
+          "start": 1472.5999999940395,
+          "end": 3452.5999999940395,
+          "bytes": 389508,
+          "initiator": "fetch"
+        }
+      ],
+      "appearance": {
+        ".vd-header": {
+          "width": 1440,
+          "height": 77,
+          "color": "rgb(25, 38, 59)",
+          "backgroundColor": "rgba(255, 255, 255, 0.97)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "0px",
+          "borderRadius": "0px"
+        },
+        ".vd-footer": {
+          "width": 1440,
+          "height": 81,
+          "color": "rgb(129, 144, 166)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "18px 112px",
+          "borderRadius": "0px"
+        },
+        ".vd-home-stage": {
+          "width": 1280,
+          "height": 810.890625,
+          "color": "rgb(25, 38, 59)",
+          "backgroundColor": "rgb(247, 249, 252)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "24px 32px 0px",
+          "borderRadius": "0px"
+        },
+        ".vd-calendar-panel": {
+          "width": 1216,
+          "height": 892.578125,
+          "color": "rgb(25, 38, 59)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "0px",
+          "borderRadius": "20px"
+        }
+      }
+    },
+    {
+      "variant": "after",
+      "width": 1440,
+      "cells": 35,
+      "lcp": 1512,
+      "cls": 0.0785537523509838,
+      "ready": 3185.9000000059605,
+      "resources": [
+        {
+          "name": "profiles?version=3",
+          "start": 138.2000000178814,
+          "end": 2667.9000000059605,
+          "bytes": 389508,
+          "initiator": "link"
+        },
+        {
+          "name": "spotlight_stage_bg.webp",
+          "start": 138.40000000596046,
+          "end": 2590.800000011921,
+          "bytes": 379304,
+          "initiator": "link"
+        }
+      ],
+      "appearance": {
+        ".vd-header": {
+          "width": 1440,
+          "height": 77,
+          "color": "rgb(25, 38, 59)",
+          "backgroundColor": "rgba(255, 255, 255, 0.97)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "0px",
+          "borderRadius": "0px"
+        },
+        ".vd-footer": {
+          "width": 1440,
+          "height": 81,
+          "color": "rgb(129, 144, 166)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "18px 112px",
+          "borderRadius": "0px"
+        },
+        ".vd-home-stage": {
+          "width": 1280,
+          "height": 810.890625,
+          "color": "rgb(25, 38, 59)",
+          "backgroundColor": "rgb(247, 249, 252)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "24px 32px 0px",
+          "borderRadius": "0px"
+        },
+        ".vd-calendar-panel": {
+          "width": 1216,
+          "height": 892.578125,
+          "color": "rgb(25, 38, 59)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "0px",
+          "borderRadius": "20px"
+        }
+      }
+    },
+    {
+      "variant": "before",
+      "width": 390,
+      "cells": 7,
+      "lcp": 3672,
+      "cls": 0.11043609375,
+      "ready": 4105.4000000059605,
+      "resources": [
+        {
+          "name": "spotlight_stage_bg.png",
+          "start": 1263.7999999821186,
+          "end": 3625.199999988079,
+          "bytes": 810283,
+          "initiator": "css"
+        },
+        {
+          "name": "profiles?version=3",
+          "start": 1410.699999988079,
+          "end": 3435.2999999821186,
+          "bytes": 389508,
+          "initiator": "fetch"
+        }
+      ],
+      "appearance": {
+        ".vd-header": {
+          "width": 390,
+          "height": 65,
+          "color": "rgb(25, 38, 59)",
+          "backgroundColor": "rgba(255, 255, 255, 0.97)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "0px",
+          "borderRadius": "0px"
+        },
+        ".vd-footer": {
+          "width": 390,
+          "height": 200.796875,
+          "color": "rgb(129, 144, 166)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "16px 20px",
+          "borderRadius": "0px"
+        },
+        ".vd-home-stage": {
+          "width": 390,
+          "height": 776.875,
+          "color": "rgb(25, 38, 59)",
+          "backgroundColor": "rgb(247, 249, 252)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "16px 16px 0px",
+          "borderRadius": "0px"
+        },
+        ".vd-calendar-panel": {
+          "width": 358,
+          "height": 459.796875,
+          "color": "rgb(25, 38, 59)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "0px",
+          "borderRadius": "12px"
+        }
+      }
+    },
+    {
+      "variant": "after",
+      "width": 390,
+      "cells": 7,
+      "lcp": 2640,
+      "cls": 0.11043609375,
+      "ready": 3185,
+      "resources": [
+        {
+          "name": "profiles?version=3",
+          "start": 150.30000001192093,
+          "end": 2686.5,
+          "bytes": 389508,
+          "initiator": "link"
+        },
+        {
+          "name": "spotlight_stage_bg.webp",
+          "start": 150.40000000596046,
+          "end": 2608.800000011921,
+          "bytes": 379304,
+          "initiator": "link"
+        }
+      ],
+      "appearance": {
+        ".vd-header": {
+          "width": 390,
+          "height": 65,
+          "color": "rgb(25, 38, 59)",
+          "backgroundColor": "rgba(255, 255, 255, 0.97)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "0px",
+          "borderRadius": "0px"
+        },
+        ".vd-footer": {
+          "width": 390,
+          "height": 200.796875,
+          "color": "rgb(129, 144, 166)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "16px 20px",
+          "borderRadius": "0px"
+        },
+        ".vd-home-stage": {
+          "width": 390,
+          "height": 776.875,
+          "color": "rgb(25, 38, 59)",
+          "backgroundColor": "rgb(247, 249, 252)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "16px 16px 0px",
+          "borderRadius": "0px"
+        },
+        ".vd-calendar-panel": {
+          "width": 358,
+          "height": 459.796875,
+          "color": "rgb(25, 38, 59)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "fontFamily": "Inter, \"Noto Sans KR\", sans-serif",
+          "fontSize": "14px",
+          "padding": "0px",
+          "borderRadius": "12px"
+        }
+      }
+    }
+  ],
+  "avatarRecovery": "passed"
+}

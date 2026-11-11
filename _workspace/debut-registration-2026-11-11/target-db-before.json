@@ -1,0 +1,127 @@
+[
+  {
+    "results": [
+      {
+        "slug": "hasinyang-soop",
+        "channel_url": "https://www.sooplive.com/station/hasinyang",
+        "data": "{\"slug\":\"hasinyang-soop\",\"displayName\":\"하시냥:\",\"description\":\"반인반냥 천재 고양이 하시냥의 11월 11일 오후 1시 SOOP 웰컴 버추얼 데뷔 방송입니다🐈\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ha/hasinyang/hasinyang.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/hasinyang\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-11\",\"debutTime\":\"13:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-11T04:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"종족\":\"반인반냥 고양이\",\"생일\":\"3월 8일\",\"별자리\":\"물고기자리\",\"팬덤명\":\"츄르단\",\"오시마크\":\"🐈\",\"species\":\"반인반냥 고양이\",\"birthday\":\"3월 8일\",\"zodiac\":\"물고기자리\",\"fandomName\":\"츄르단\",\"oshiMark\":\"🐈\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ha/hasinyang/hasinyang.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/hasinyang\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-11\\\",\\\"debutTime\\\":\\\"13:00\\\",\\\"description\\\":\\\"반인반냥 천재 고양이 하시냥의 11월 11일 오후 1시 SOOP 웰컴 버추얼 데뷔 방송입니다🐈\\\",\\\"details\\\":{\\\"종족\\\":\\\"반인반냥 고양이\\\",\\\"생일\\\":\\\"3월 8일\\\",\\\"별자리\\\":\\\"물고기자리\\\",\\\"팬덤명\\\":\\\"츄르단\\\",\\\"오시마크\\\":\\\"🐈\\\",\\\"species\\\":\\\"반인반냥 고양이\\\",\\\"birthday\\\":\\\"3월 8일\\\",\\\"zodiac\\\":\\\"물고기자리\\\",\\\"fandomName\\\":\\\"츄르단\\\",\\\"oshiMark\\\":\\\"🐈\\\"},\\\"displayName\\\":\\\"하시냥:\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"hasinyang-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-11T04:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-02T06:35:00.000Z\"}}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.6725
+      },
+      "duration": 0.6725,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 895651840,
+      "rows_read": 185,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "channel_key": "SOOP:hasinyang",
+        "slug": "hasinyang-soop"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.5534
+      },
+      "duration": 0.5534,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 895651840,
+      "rows_read": 7,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1789
+      },
+      "duration": 0.1789,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 895651840,
+      "rows_read": 6,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "id": 64578,
+        "platform": "SOOP",
+        "channel_url": "https://www.sooplive.com/station/hasinyang",
+        "slug": "hasinyang-soop",
+        "display_name": "하시냥:",
+        "description": "반인반냥 천재 고양이 하시냥의 11월 11일 오후 1시 SOOP 웰컴 버추얼 데뷔 방송입니다🐈"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 1.1336
+      },
+      "duration": 1.1336,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 895651840,
+      "rows_read": 2433,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.2904
+      },
+      "duration": 0.2904,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 895651840,
+      "rows_read": 0,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "results": [
+      {
+        "slug": "amyang-chzzk",
+        "channel_url": "https://chzzk.naver.com/037d7ba305538de29dbf2789071dbb82",
+        "data": "{\"slug\":\"amyang-chzzk\",\"displayName\":\"아먕\",\"description\":\"11월 14일 오후 1시🔮🐑\",\"avatarUrl\":\"https://nng-phinf.pstatic.net/MjAyNjEwMTNfMjgx/MDAxNzkxODk5ODA3MjEw.AkWezu34ygGgo0poX8cabczBz1jVZKse9aSmIlpVAN0g.LCV7gFC2shDGCrcarjxOCS_-bTtyUN1-Mp69rDK4MBgg.JPEG/image.jpg\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/037d7ba305538de29dbf2789071dbb82\",\"countryCode\":\"\",\"languages\":[],\"tags\":[],\"agency\":\"\",\"xUrl\":\"https://x.com/_amyangyang\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-14\",\"debutTime\":\"13:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-14T04:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"details\":{\"오시마크\":\"🔮🐑\",\"oshiMark\":\"🔮🐑\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://nng-phinf.pstatic.net/MjAyNjEwMTNfMjgx/MDAxNzkxODk5ODA3MjEw.AkWezu34ygGgo0poX8cabczBz1jVZKse9aSmIlpVAN0g.LCV7gFC2shDGCrcarjxOCS_-bTtyUN1-Mp69rDK4MBgg.JPEG/image.jpg\\\",\\\"channelUrl\\\":\\\"https://chzzk.naver.com/037d7ba305538de29dbf2789071dbb82\\\",\\\"countryCode\\\":\\\"\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-14\\\",\\\"debutTime\\\":\\\"13:00\\\",\\\"description\\\":\\\"11월 14일 오후 1시🔮🐑\\\",\\\"details\\\":{\\\"오시마크\\\":\\\"🔮🐑\\\",\\\"oshiMark\\\":\\\"🔮🐑\\\"},\\\"displayName\\\":\\\"아먕\\\",\\\"languages\\\":[],\\\"platform\\\":\\\"CHZZK\\\",\\\"slug\\\":\\\"amyang-chzzk\\\",\\\"startAtUtc\\\":\\\"2026-11-14T04:00:00.000Z\\\",\\\"tags\\\":[],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"https://x.com/_amyangyang\\\"}\",\"reviewedAt\":\"2026-11-09T02:45:00.000Z\"}}"
+      },
+      {
+        "slug": "kobayashi-huto-chzzk",
+        "channel_url": "https://chzzk.naver.com/bce5bac086baed274db13a2c9aacd41b",
+        "data": "{\"slug\":\"kobayashi-huto-chzzk\",\"displayName\":\"코바야시 후토\",\"description\":\"코바야시 후토의 데뷔 방송은 2026-11-14 21:00 (한국시간) 예정입니다.\",\"avatarUrl\":\"https://nng-phinf.pstatic.net/MjAyNjEwMTVfOTgg/MDAxNzkyMDcyNTcwNzQ3.vc3axUJCEsoI9_vc32rk8j8R5EzNHgdOWk3xTpYjqt0g.nLI_ZIpOunYrobI7kwX_jaxM9vIQpYhIt2aLQr-woKAg.PNG/image.png\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/bce5bac086baed274db13a2c9aacd41b\",\"countryCode\":\"\",\"languages\":[],\"tags\":[],\"agency\":\"\",\"xUrl\":\"https://x.com/huto00q\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-14\",\"debutTime\":\"21:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-14T12:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://nng-phinf.pstatic.net/MjAyNjEwMTVfOTgg/MDAxNzkyMDcyNTcwNzQ3.vc3axUJCEsoI9_vc32rk8j8R5EzNHgdOWk3xTpYjqt0g.nLI_ZIpOunYrobI7kwX_jaxM9vIQpYhIt2aLQr-woKAg.PNG/image.png\\\",\\\"channelUrl\\\":\\\"https://chzzk.naver.com/bce5bac086baed274db13a2c9aacd41b\\\",\\\"countryCode\\\":\\\"\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-14\\\",\\\"debutTime\\\":\\\"21:00\\\",\\\"description\\\":\\\"코바야시 후토의 데뷔 방송은 2026-11-14 21:00 (한국시간) 예정입니다.\\\",\\\"displayName\\\":\\\"코바야시 후토\\\",\\\"languages\\\":[],\\\"platform\\\":\\\"CHZZK\\\",\\\"slug\\\":\\\"kobayashi-huto-chzzk\\\",\\\"startAtUtc\\\":\\\"2026-11-14T12:00:00.000Z\\\",\\\"tags\\\":[],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"https://x.com/huto00q\\\"}\",\"reviewedAt\":\"2026-11-09T02:45:00.000Z\"}}"
+      },
+      {
+        "slug": "leopyaco-chzzk",
+        "channel_url": "https://chzzk.naver.com/7795f5c37a5941cc20f44f5ee2744cd8",
+        "data": "{\"slug\":\"leopyaco-chzzk\",\"displayName\":\"레오 퍄코\",\"description\":\"버추얼 아이돌 그룹 'VENOMICA'의 첫번째 멤버, [레오 퍄코]입니다!\",\"avatarUrl\":\"https://nng-phinf.pstatic.net/MjAyNjExMDNfMjY3/MDAxNzkzNzEwMDEyMzc1.OwFhlq83y2YRXqc5C-ytLczNBtXvsAL87j1dHo1G-Lwg.wuolhV8v6Ar-kgUD2uDHIpFoo3IHN96coJ5n8H1ZPfQg.PNG/image.png\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/7795f5c37a5941cc20f44f5ee2744cd8\",\"countryCode\":\"\",\"languages\":[],\"tags\":[],\"agency\":\"VENOMICA\",\"xUrl\":\"https://x.com/leopyaco\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-14\",\"debutTime\":\"20:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-14T11:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"VENOMICA\\\",\\\"avatarUrl\\\":\\\"https://nng-phinf.pstatic.net/MjAyNjExMDNfMjY3/MDAxNzkzNzEwMDEyMzc1.OwFhlq83y2YRXqc5C-ytLczNBtXvsAL87j1dHo1G-Lwg.wuolhV8v6Ar-kgUD2uDHIpFoo3IHN96coJ5n8H1ZPfQg.PNG/image.png\\\",\\\"channelUrl\\\":\\\"https://chzzk.naver.com/7795f5c37a5941cc20f44f5ee2744cd8\\\",\\\"countryCode\\\":\\\"\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-14\\\",\\\"debutTime\\\":\\\"20:00\\\",\\\"description\\\":\\\"버추얼 아이돌 그룹 'VENOMICA'의 첫번째 멤버, [레오 퍄코]입니다!\\\",\\\"displayName\\\":\\\"레오 퍄코\\\",\\\"languages\\\":[],\\\"platform\\\":\\\"CHZZK\\\",\\\"slug\\\":\\\"leopyaco-chzzk\\\",\\\"startAtUtc\\\":\\\"2026-11-14T11:00:00.000Z\\\",\\\"tags\\\":[],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"https://x.com/leopyaco\\\"}\",\"reviewedAt\":\"2026-11-09T02:45:00.000Z\"}}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.4044
+      },
+      "duration": 0.4044,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 895754240,
+      "rows_read": 6,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

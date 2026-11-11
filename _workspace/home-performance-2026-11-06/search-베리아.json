@@ -1,0 +1,153 @@
+{
+  "code": 200,
+  "message": null,
+  "content": {
+    "size": 10,
+    "page": {
+      "next": {
+        "offset": 10
+      },
+      "prev": null
+    },
+    "data": [
+      {
+        "channel": {
+          "channelId": "e3fe1588a379d39e25432051b81f5663",
+          "channelName": "베리아루",
+          "channelImageUrl": "https://nng-phinf.pstatic.net/MjAyNDExMjBfMjk4/MDAxNzMyMTA5NTgzMzcz.zWsWnEEFLgqmkG9ED2fWSd4KuNkIwxNNMtXytJRrM8Yg.Qy4K4oLbD0bPZKlzj9ZzzzCehUDP1cYDX-4uTiGlQyEg.JPEG/%E3%85%87%E3%85%85%E3%85%87.jpg",
+          "verifiedMark": false,
+          "verifiedMarkType": null,
+          "officialChannel": false,
+          "channelDescription": "베리? 아루? 벨? 리알? 베루리? 아루우? ",
+          "followerCount": 10,
+          "openLive": false,
+          "activatedChannelBadgeIds": [],
+          "firstBroadcastDate": "2024-11-20 23:42:06"
+        }
+      },
+      {
+        "channel": {
+          "channelId": "db9eb13c964ecc3cd4c7c0e915f0cff4",
+          "channelName": "이 베리아",
+          "channelImageUrl": "https://nng-phinf.pstatic.net/MjAyMzEyMjNfNjgg/MDAxNzAzMzMzNjg0NjIy.kF59o2GMqE_IFWr9sGnLd2CbEgG3GvmTixxpx37SFOQg.hiOBmMOyQB_mWA45cV5rVx_DQfZloydVAjEINlOoHTEg.JPEG/tXtfK69X_400x400.jpg",
+          "verifiedMark": false,
+          "verifiedMarkType": null,
+          "officialChannel": false,
+          "channelDescription": "",
+          "followerCount": 3,
+          "openLive": false
+        }
+      },
+      {
+        "channel": {
+          "channelId": "c6c1c95fb059f174162e2d8901b86669",
+          "channelName": "산세베리아",
+          "channelImageUrl": "https://nng-phinf.pstatic.net/MjAyNjA0MTBfMTMw/MDAxNzc1ODI0OTczOTg5.JK3sKZP7OtO4utBkbF-M6-6DQ3pBWXrrlhUI5iwGAkYg.ieLJSUB9opl0mu7e_8qWkN-xaYh-mrQUs-N6xkLQHiEg.JPEG/image.jpg",
+          "verifiedMark": false,
+          "verifiedMarkType": null,
+          "officialChannel": false,
+          "channelDescription": "",
+          "followerCount": 2,
+          "openLive": false,
+          "activatedChannelBadgeIds": [],
+          "firstBroadcastDate": "2025-11-05 17:11:47"
+        }
+      },
+      {
+        "channel": {
+          "channelId": "b7a2b1224a8057606cb4e4077597893b",
+          "channelName": "벨베리아",
+          "channelImageUrl": "",
+          "verifiedMark": false,
+          "verifiedMarkType": null,
+          "officialChannel": false,
+          "channelDescription": "",
+          "followerCount": 1,
+          "openLive": false
+        }
+      },
+      {
+        "channel": {
+          "channelId": "eba1dbf6eeca1c5777f3e82ef6898c77",
+          "channelName": "스타베리아",
+          "channelImageUrl": "https://nng-phinf.pstatic.net/MjAyNTA3MThfMTI2/MDAxNzUyODQ0MDk2MjY3.ax6rsoS7ptzd5PZ0lGUX3DkAQFCu1qHWRrCVVHebOXwg.CRYbQK6sLkQCNPdHVWVqycfPCtBXaft92HYcAnLG8Fkg.PNG/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%2810%29.png",
+          "verifiedMark": false,
+          "verifiedMarkType": null,
+          "officialChannel": false,
+          "channelDescription": "",
+          "followerCount": 1,
+          "openLive": false,
+          "activatedChannelBadgeIds": [],
+          "firstBroadcastDate": "2025-05-12 20:03:02"
+        }
+      },
+      {
+        "channel": {
+          "channelId": "784ecd1c6477ff9c257852cb18ae4db9",
+          "channelName": "이베리아나",
+          "channelImageUrl": "https://nng-phinf.pstatic.net/MjAyNDAzMTZfMTg3/MDAxNzEwNTIyMTkwODE3.2G8p_Pn0jzeivlxBi7fPfxuYH2DUUA62154mKTJNOMog.sT-UXQ8NAvUwFbckI2PBFRYHNOVYYcPcloU40pX67QQg.JPEG/aaa%EC%83%A4%EB%8B%A4_%EC%9D%B4%EB%B2%A0%EB%A6%AC%EC%95%84%EB%82%98%EC%A0%84%EC%9A%A9.jpg",
+          "verifiedMark": false,
+          "verifiedMarkType": null,
+          "officialChannel": false,
+          "channelDescription": "",
+          "followerCount": 1,
+          "openLive": false
+        }
+      },
+      {
+        "channel": {
+          "channelId": "38d90fd1d6b8e5be14c21eaa25faad2d",
+          "channelName": "이베리아까치",
+          "channelImageUrl": "https://nng-phinf.pstatic.net/MjAyNTAyMTJfNzEg/MDAxNzM5Mjg4MjU2NDA5.u8tlW-_5or1MfWA_StjOqb52qKF94gVGe7lbKY3zfrYg.076YlpCvu9yH3sdKwrLkTETqucFHvEGJntNUyozgUoUg.JPEG/P%C3%AAga-azul%2C_Iberian_Azure-winged_Magpie_%2851148440351%29_%28cropped%29.jpg",
+          "verifiedMark": false,
+          "verifiedMarkType": null,
+          "officialChannel": false,
+          "channelDescription": "",
+          "followerCount": 1,
+          "openLive": false
+        }
+      },
+      {
+        "channel": {
+          "channelId": "8bb662f9b496292b8726dcc1ab454aaf",
+          "channelName": "강한시베리아호랑이",
+          "channelImageUrl": "",
+          "verifiedMark": false,
+          "verifiedMarkType": null,
+          "officialChannel": false,
+          "channelDescription": "",
+          "followerCount": 0,
+          "openLive": false,
+          "firstBroadcastDate": "2024-07-16 00:37:24"
+        }
+      },
+      {
+        "channel": {
+          "channelId": "289eda3b50de67a9c1fb422194204f5d",
+          "channelName": "더빙하는라이베리아",
+          "channelImageUrl": "https://nng-phinf.pstatic.net/MjAyNDAzMjVfMTAg/MDAxNzExMzcyODYzNTU2.pKjEqd7FszZW7wBWj2Sh5T_netnXkApUbOF1oyPovykg.3NzZMd1-y_HnptctRgeD8ADJpPPXCiu_Gxi3nTxRt4og.JPEG/NNG-1711372863105327552810062977367.jpg",
+          "verifiedMark": false,
+          "verifiedMarkType": null,
+          "officialChannel": false,
+          "channelDescription": "",
+          "followerCount": 1,
+          "openLive": false,
+          "activatedChannelBadgeIds": []
+        }
+      },
+      {
+        "channel": {
+          "channelId": "cc9f03bc9fe702f650d73c03c72c2ff2",
+          "channelName": "로즈베리아빠",
+          "channelImageUrl": "",
+          "verifiedMark": false,
+          "verifiedMarkType": null,
+          "officialChannel": false,
+          "channelDescription": "",
+          "followerCount": 0,
+          "openLive": false
+        }
+      }
+    ]
+  }
+}

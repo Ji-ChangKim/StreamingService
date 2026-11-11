@@ -1,0 +1,52 @@
+[
+  {
+    "results": [
+      {
+        "name": "streamerChannel",
+        "sql": "CREATE TABLE streamerChannel (\n  id INTEGER PRIMARY KEY AUTOINCREMENT,\n  platform TEXT NOT NULL,             \n  channel_url TEXT NOT NULL,          \n  channel_name TEXT,                  \n  created_at TEXT DEFAULT CURRENT_TIMESTAMP\n)"
+      },
+      {
+        "name": "streamerChannel_info",
+        "sql": "CREATE TABLE streamerChannel_info (\n  id INTEGER PRIMARY KEY AUTOINCREMENT,\n  channel_id INTEGER NOT NULL UNIQUE, \n  slug TEXT NOT NULL UNIQUE,\n  display_name TEXT NOT NULL,\n  profile_image_url TEXT,\n  description TEXT,\n  agency_name TEXT DEFAULT '개인세',\n  debut_date TEXT NOT NULL,           \n  debut_time TEXT NOT NULL,           \n  timezone TEXT DEFAULT 'Asia/Seoul',  \n  start_at_utc TEXT NOT NULL,         \n  created_at TEXT DEFAULT CURRENT_TIMESTAMP,\n  updated_at TEXT DEFAULT CURRENT_TIMESTAMP, country_code TEXT\nCHECK (country_code IN ('KR', 'JP', 'US') OR country_code IS NULL), x_url TEXT, group_name TEXT, video_url TEXT, website_url TEXT, event_type TEXT NOT NULL DEFAULT 'DEBUT' CHECK (event_type IN ('DEBUT', 'NEW_OUTFIT', '3D_DEBUT', 'ANNIVERSARY')), total_cheers INTEGER NOT NULL DEFAULT 0, weekly_cheers INTEGER NOT NULL DEFAULT 0, is_verified INTEGER NOT NULL DEFAULT 0,\n  FOREIGN KEY (channel_id) REFERENCES streamerChannel(id) ON DELETE CASCADE\n)"
+      },
+      {
+        "name": "debut_submissions",
+        "sql": "CREATE TABLE debut_submissions (\n  id INTEGER PRIMARY KEY AUTOINCREMENT,\n  display_name TEXT NOT NULL,\n  platform TEXT NOT NULL,\n  channel_url TEXT NOT NULL,\n  avatar_url TEXT,\n  description TEXT,\n  agency_name TEXT DEFAULT '개인세',\n  country_code TEXT DEFAULT 'KR',\n  debut_date TEXT NOT NULL,\n  debut_time TEXT NOT NULL,\n  timezone TEXT DEFAULT 'Asia/Seoul',\n  start_at_utc TEXT NOT NULL,\n  x_url TEXT,\n  contact_email TEXT,\n  status TEXT DEFAULT 'PENDING' CHECK(status IN ('PENDING', 'APPROVED', 'REJECTED')),\n  admin_note TEXT,\n  created_at TEXT DEFAULT CURRENT_TIMESTAMP,\n  processed_at TEXT\n, group_name TEXT, video_url TEXT, website_url TEXT)"
+      },
+      {
+        "name": "portal_profiles",
+        "sql": "CREATE TABLE portal_profiles (\n  slug TEXT PRIMARY KEY,\n  channel_url TEXT NOT NULL UNIQUE,\n  data TEXT NOT NULL,\n  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP\n)"
+      },
+      {
+        "name": "portal_pending_channels",
+        "sql": "CREATE TABLE portal_pending_channels (\n  channel_key TEXT PRIMARY KEY,\n  request_id TEXT NOT NULL UNIQUE\n)"
+      },
+      {
+        "name": "portal_profile_channels",
+        "sql": "CREATE TABLE portal_profile_channels (\n  channel_key TEXT PRIMARY KEY,\n  slug TEXT NOT NULL UNIQUE\n)"
+      },
+      {
+        "name": "portal_profile_history",
+        "sql": "CREATE TABLE portal_profile_history (\n  id TEXT PRIMARY KEY,\n  slug TEXT NOT NULL,\n  before_data TEXT NOT NULL,\n  after_data TEXT NOT NULL,\n  reason TEXT NOT NULL,\n  admin_hash TEXT NOT NULL,\n  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP\n)"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.3202
+      },
+      "duration": 0.3202,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 895651840,
+      "rows_read": 77,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]
