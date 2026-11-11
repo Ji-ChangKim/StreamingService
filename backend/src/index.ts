@@ -135,11 +135,16 @@ app.use('*', async (c, next) => {
       try { profile = (await readPublicPortalProfileBySlug(c.env.DB, slug)) || undefined; }
       catch { c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex, nofollow'); return c.html(publicErrorPage(url, '소개를 불러오지 못했어요', 503), 503); }
     }
+    // 소개 목록의 초기 HTML에도 공개 소개 링크를 제공한다. 실패하면 기존 화면 로딩으로 이어간다.
+    let profiles: Awaited<ReturnType<typeof readPublicPortalProfiles>> = [];
+    if (sitePath(path) === '/creators') {
+      try { profiles = await readPublicPortalProfiles(c.env.DB); } catch (error) { console.error('[Portal] Initial creator list failed', String(error)); }
+    }
     const missing = (!seo.known && !isActivityPath(path)) || (path.startsWith('/creator/') && !profile);
     const response = await getAssetFromKV({ request: new Request(new URL(seo.development ? '/dev.html' : '/portal.html', c.req.url), c.req.raw), waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, { ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}') });
     if (seo.privatePage || missing) c.header('X-Robots-Tag', 'noindex, nofollow');
     c.header('Cache-Control', seo.privatePage || missing ? 'no-store' : 'public, max-age=0, must-revalidate');
-    const html = renderPortalPage(await response.text(), url, profile);
+    const html = renderPortalPage(await response.text(), url, profile, profiles);
     return c.html(missing ? html.replace(/content="index, follow"/g, 'content="noindex, nofollow"') : html, missing ? 404 : 200);
   }
   await next();

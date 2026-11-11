@@ -314,7 +314,13 @@ Google Analytics|||Google Analytics|||Google Analytics
 운영 사이트에는 Google Analytics 방문 분석 태그가 포함되어 있습니다. Google은 이용 현황 분석을 위해 쿠키, IP 주소, 기기 및 브라우저 정보 등을 처리할 수 있습니다.|||運用サイトにはGoogle Analyticsタグが含まれています。Googleは利用状況分析のためCookie、IPアドレス、端末・ブラウザ情報などを処理する場合があります。|||The production site includes Google Analytics tags. Google may process cookies, IP addresses and device or browser information to analyze usage.
 Google의 파트너 사이트 데이터 사용 안내|||Googleのパートナーサイトにおけるデータ利用|||How Google uses data from partner sites
 광고 서비스|||広告サービス|||Advertising services
-Google 광고 서비스를 도입할 경우 광고 제공에 필요한 데이터 사용과 이용자의 선택 방법을 안내합니다.|||Google広告サービスを導入する場合は、広告に必要なデータ利用と利用者の選択方法を案内します。|||If Google advertising services are introduced, we will explain related data use and your choices.
+VDébut은 서비스 운영을 위해 Google AdSense 등 제3자 광고 서비스를 이용해 광고를 게재할 수 있습니다.|||VDébutはサービス運営のため、Google AdSenseなどの第三者広告サービスを利用して広告を掲載する場合があります。|||VDébut may display ads through third-party advertising services such as Google AdSense to support the service.
+Google을 포함한 제3자 광고 사업자는 쿠키를 사용해 이용자의 이 사이트 및 다른 웹사이트 방문 기록을 바탕으로 광고를 제공할 수 있습니다. Google은 광고 쿠키를 사용해 이용자에게 이 사이트와 다른 사이트 방문 정보를 바탕으로 한 광고를 표시할 수 있습니다.|||Googleを含む第三者配信事業者は、Cookieを使用して、このサイトや他のウェブサイトへの過去のアクセス情報に基づいて広告を配信することがあります。Googleは広告Cookieを使用して、このサイトや他のサイトへのアクセス情報に基づく広告を表示することがあります。|||Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this website or other websites. Google's use of advertising cookies enables it to serve ads based on your visits to this site and other sites.
+Google 광고 설정에서 맞춤 광고를 사용 중지할 수 있으며, aboutads.info에서 제3자 광고 사업자의 맞춤 광고 쿠키 사용을 거부할 수 있습니다.|||Googleの広告設定でパーソナライズ広告を無効にできます。また、aboutads.infoで第三者配信事業者によるパーソナライズ広告用Cookieの使用を無効にできます。|||You can opt out of personalized advertising in Google Ads Settings, and opt out of third-party vendors' use of cookies for personalized advertising at aboutads.info.
+Google 광고 설정|||Googleの広告設定|||Google Ads Settings
+공개된 버튜버 소개 {0}명|||公開中のVTuber紹介 {0}人|||{0} published VTuber profiles
+Google의 광고 쿠키 사용 안내|||Googleによる広告Cookieの使用について|||How Google uses advertising cookies
+제3자 맞춤 광고 거부(aboutads.info)|||第三者パーソナライズ広告の無効化（aboutads.info）|||Opt out of third-party personalized ads (aboutads.info)
 정보 열람·정정·삭제 문의|||情報の閲覧・訂正・削除|||Access, correction and deletion requests
 정보의 열람·정정·삭제 요청은 문의 화면 또는 아래 이메일로 접수할 수 있습니다.|||情報の閲覧・訂正・削除はお問い合わせ画面または下記メールでご連絡ください。|||Request access, corrections or deletion through Contact or the email below.
 서비스 이용 목적|||サービスの目的|||Purpose of the service

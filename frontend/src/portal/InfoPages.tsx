@@ -3,6 +3,7 @@ import { FormEvent, useState } from 'react';
 import { ArrowRight, CalendarDays, Megaphone, Search, Send } from 'lucide-react';
 import { PortalHeading, PortalLink } from './PortalUi';
 import { ReceiptSuccess, SavedReceipt, submitPortalRequest } from './RequestPages';
+import { ABOUT_CARDS, ABOUT_INTRO } from '../../../shared/portalPolicyContent';
 
 // 서비스가 제공하는 기능을 소개하고 자세한 절차는 이용 가이드로 연결한다.
 export function PortalAbout({ onNavigate }: { onNavigate: (path: string) => void }) {
@@ -16,16 +17,12 @@ export function PortalAbout({ onNavigate }: { onNavigate: (path: string) => void
       />
 
       <section className="vd-about-intro vd-panel">
-        <h2>{t("누가 데뷔하는지, 어떤 방송을 하는지.")}</h2>
-        <p>{t("여러 나라와 방송 플랫폼에서 새로운 버튜버가 첫 방송을 시작합니다. VDébut에서는 데뷔 일정과 소개를 함께 살펴보고, 마음이 가는 버튜버의 방송 채널로 찾아갈 수 있어요.")}</p>
+        <h2>{t(ABOUT_INTRO.heading)}</h2>
+        <p>{t(ABOUT_INTRO.text)}</p>
       </section>
 
       <div className="vd-info-cards">
-        {[
-          { icon: <CalendarDays />, title: t("언제 만날까요?"), text: t("달력에서 데뷔 날짜와 시간, 방송 플랫폼을 확인하세요."), to: '/', link: t("데뷔 일정 보기") },
-          { icon: <Search />, title: t("어떤 버튜버일까요?"), text: t("소개와 주요 콘텐츠를 살펴보며 내 취향의 방송을 찾아보세요."), to: '/creators', link: t("버튜버 둘러보기") },
-          { icon: <Megaphone />, title: t("나를 소개하고 싶어요"), text: t("신규 데뷔 소식이나 활동 중인 나의 소개를 직접 등록하세요."), to: '/upload', link: t("데뷔 소식 등록") }
-        ].map((card) => (
+        {ABOUT_CARDS.map((source, index) => ({ icon: [<CalendarDays />, <Search />, <Megaphone />][index], title: t(source.title), text: t(source.text), to: source.to, link: t(source.link) })).map((card) => (
           <section className="vd-panel" key={card.title}>
             {card.icon}
             <h2>{card.title}</h2>
