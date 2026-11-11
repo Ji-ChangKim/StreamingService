@@ -1,0 +1,137 @@
+[
+  {
+    "slug": "di6ixx-soop",
+    "displayName": "우디디디",
+    "description": "우디디디의 SOOP 데뷔 일정은 2026-11-11 11:00 (한국시간)입니다.",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/di/di6ixx/di6ixx.jpg",
+    "platform": "SOOP",
+    "channelUrl": "https://www.sooplive.com/station/di6ixx",
+    "countryCode": "KR",
+    "languages": [
+      "한국어"
+    ],
+    "tags": [
+      "버튜버",
+      "SOOP 데뷔"
+    ],
+    "agency": "",
+    "xUrl": "",
+    "dateState": "FIXED",
+    "debutDate": "2026-11-11",
+    "debutTime": "11:00",
+    "timezone": "Asia/Seoul",
+    "startAtUtc": "2026-11-11T02:00:00.000Z",
+    "targetMonth": "2026-11",
+    "ownerVerified": false,
+    "source": "REGISTERED",
+    "noticeUrl": "https://www.sooplive.com/station/di6ixx/post/211698419"
+  },
+  {
+    "slug": "d00328-soop",
+    "displayName": "단온",
+    "description": "단온의 SOOP 데뷔 일정은 2026-11-11 17:00 (한국시간)입니다.",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/d0/d00328/d00328.jpg",
+    "platform": "SOOP",
+    "channelUrl": "https://www.sooplive.com/station/d00328",
+    "countryCode": "KR",
+    "languages": [
+      "한국어"
+    ],
+    "tags": [
+      "버튜버",
+      "SOOP 데뷔"
+    ],
+    "agency": "",
+    "xUrl": "",
+    "dateState": "FIXED",
+    "debutDate": "2026-11-11",
+    "debutTime": "17:00",
+    "timezone": "Asia/Seoul",
+    "startAtUtc": "2026-11-11T08:00:00.000Z",
+    "targetMonth": "2026-11",
+    "ownerVerified": false,
+    "source": "REGISTERED",
+    "noticeUrl": "https://welcomevirtual.sooplive.com/"
+  },
+  {
+    "slug": "nju123-soop",
+    "displayName": "아오이로하쿠",
+    "description": "아오이로하쿠의 SOOP 데뷔 일정은 2026-11-12 20:00 (한국시간)입니다.",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/nj/nju123/nju123.jpg",
+    "platform": "SOOP",
+    "channelUrl": "https://www.sooplive.com/station/nju123",
+    "countryCode": "KR",
+    "languages": [
+      "한국어"
+    ],
+    "tags": [
+      "버튜버",
+      "SOOP 데뷔"
+    ],
+    "agency": "",
+    "xUrl": "",
+    "dateState": "FIXED",
+    "debutDate": "2026-11-12",
+    "debutTime": "20:00",
+    "timezone": "Asia/Seoul",
+    "startAtUtc": "2026-11-12T11:00:00.000Z",
+    "targetMonth": "2026-11",
+    "ownerVerified": false,
+    "source": "REGISTERED",
+    "noticeUrl": "https://www.sooplive.com/station/nju123/post/211739633"
+  },
+  {
+    "slug": "kyykys12-soop",
+    "displayName": "에이루나",
+    "description": "에이루나의 SOOP 데뷔 일정은 2026-11-12 21:00 (한국시간)입니다.",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/ky/kyykys12/kyykys12.jpg",
+    "platform": "SOOP",
+    "channelUrl": "https://www.sooplive.com/station/kyykys12",
+    "countryCode": "KR",
+    "languages": [
+      "한국어"
+    ],
+    "tags": [
+      "버튜버",
+      "SOOP 데뷔"
+    ],
+    "agency": "",
+    "xUrl": "",
+    "dateState": "FIXED",
+    "debutDate": "2026-11-12",
+    "debutTime": "21:00",
+    "timezone": "Asia/Seoul",
+    "startAtUtc": "2026-11-12T12:00:00.000Z",
+    "targetMonth": "2026-11",
+    "ownerVerified": false,
+    "source": "REGISTERED",
+    "noticeUrl": "https://www.sooplive.com/station/kyykys12/post/211695999"
+  },
+  {
+    "slug": "hue1115-soop",
+    "displayName": "휴이~",
+    "description": "휴이~의 SOOP 데뷔 일정은 2026-11-14 11:00 (한국시간)입니다.",
+    "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/hu/hue1115/hue1115.jpg",
+    "platform": "SOOP",
+    "channelUrl": "https://www.sooplive.com/station/hue1115",
+    "countryCode": "KR",
+    "languages": [
+      "한국어"
+    ],
+    "tags": [
+      "버튜버",
+      "SOOP 데뷔"
+    ],
+    "agency": "",
+    "xUrl": "",
+    "dateState": "FIXED",
+    "debutDate": "2026-11-14",
+    "debutTime": "11:00",
+    "timezone": "Asia/Seoul",
+    "startAtUtc": "2026-11-14T02:00:00.000Z",
+    "targetMonth": "2026-11",
+    "ownerVerified": false,
+    "source": "REGISTERED",
+    "noticeUrl": "https://www.sooplive.com/station/hue1115/post/211357779"
+  }
+]

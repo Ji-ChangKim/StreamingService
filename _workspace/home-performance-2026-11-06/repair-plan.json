@@ -1,0 +1,132 @@
+{
+  "preparedAt": "2026-11-05T16:45:15.332Z",
+  "repairs": [
+    {
+      "slug": "kagarimiya-kikyo",
+      "avatarUrl": "https://yt3.googleusercontent.com/DPBJ5zY3zUaqiVHOm8VRpCcEMvUUDVpqD0l0lWWtVbnDq4m8UQ-dGpwCNpVILWlZXFrEHepr=s900-c-k-c0x00ffffff-no-rj",
+      "channelUrl": "https://www.youtube.com/channel/UCYqc4sOohUJvpq8eckXjQjQ",
+      "source": "https://twitcasting.tv/kagarimiyasan",
+      "secondarySource": "https://www.youtube.com/watch?v=P3IdtaHDLk0",
+      "imageCheck": {
+        "state": "ok",
+        "status": 200,
+        "contentType": "image/jpeg",
+        "format": "jpeg"
+      }
+    },
+    {
+      "slug": "aldonza-kambayashi",
+      "avatarUrl": "https://yt3.googleusercontent.com/fsr2xylityjr-Jp4qjhDyuQgxNZV6nAPAsuO-JMUivF2ksDpFir1h1SAFCzfgLeGlJevZ9Q=s900-c-k-c0x00ffffff-no-rj",
+      "channelUrl": "https://www.youtube.com/channel/UCGPazdbPeftXPTa4ZVANwuA",
+      "source": "https://www.youtube.com/@AldonzaKambayashi",
+      "imageCheck": {
+        "state": "ok",
+        "status": 200,
+        "contentType": "image/jpeg",
+        "format": "jpeg"
+      }
+    },
+    {
+      "slug": "kumicho",
+      "avatarUrl": "https://yt3.googleusercontent.com/obynWlFuwMeQSPXlePBYBf2pIduvEhOjsytBzV9C2MNMnSSPySBq-QysJtMeQqedWJZbejb4Ug=s900-c-k-c0x00ffffff-no-rj",
+      "channelUrl": "https://www.youtube.com/channel/UCpQje3p1s3BiPEp3MVm76hQ",
+      "source": "https://www.youtube.com/channel/UCpQje3p1s3BiPEp3MVm76hQ",
+      "note": "같은 채널의 데뷔 영상으로 소유 채널 일치 확인. 현재 채널명은 변경됨.",
+      "imageCheck": {
+        "state": "ok",
+        "status": 200,
+        "contentType": "image/jpeg",
+        "format": "jpeg"
+      }
+    },
+    {
+      "slug": "nemurai-ramune",
+      "avatarUrl": "https://yt3.googleusercontent.com/0DyW4z4vswkLmu1YLaarM1lpbPdKBsNtpWlBUdDL3rPzqkmG4Jyevd7Fu_JZ2vt5JE_vN_YGzA=s900-c-k-c0x00ffffff-no-rj",
+      "channelUrl": "https://www.youtube.com/channel/UCRy05wP48OkGLOcciK1GkdA",
+      "source": "https://www.youtube.com/@nemurairamune",
+      "imageCheck": {
+        "state": "ok",
+        "status": 200,
+        "contentType": "image/jpeg",
+        "format": "jpeg"
+      }
+    },
+    {
+      "slug": "baekhoyang",
+      "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMjlfNSAg/MDAxNzkzMjgzMjYzODAx.qFZrDJb95s1TzMGiV5rANE1ekzsMIH_zMGdyn3EMqfYg.AAC1g2PlSfzi13-2TZyzMfI2p8V5QFaaWxZ7gjcY8Z4g.PNG/image.png",
+      "channelUrl": "https://chzzk.naver.com/8c14ab2e0f180f3be5f64b7b421d152f",
+      "source": "https://api.chzzk.naver.com/service/v1/channels/8c14ab2e0f180f3be5f64b7b421d152f",
+      "imageCheck": {
+        "state": "ok",
+        "status": 200,
+        "contentType": "image/png",
+        "format": "png"
+      }
+    },
+    {
+      "slug": "baekhoyang-2",
+      "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMjlfNSAg/MDAxNzkzMjgzMjYzODAx.qFZrDJb95s1TzMGiV5rANE1ekzsMIH_zMGdyn3EMqfYg.AAC1g2PlSfzi13-2TZyzMfI2p8V5QFaaWxZ7gjcY8Z4g.PNG/image.png",
+      "channelUrl": "https://chzzk.naver.com/8c14ab2e0f180f3be5f64b7b421d152f",
+      "source": "https://api.chzzk.naver.com/service/v1/channels/8c14ab2e0f180f3be5f64b7b421d152f",
+      "imageCheck": {
+        "state": "ok",
+        "status": 200,
+        "contentType": "image/png",
+        "format": "png"
+      }
+    },
+    {
+      "slug": "yeonsaeneul",
+      "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMDVfMjA2/MDAxNzkxMTcxMjA1ODgw.2IUUQkJfGM1jVqzZtob-MMkJDw1Nvwvq895l0C7jjpQg.jWSlbW5PBrwx3PDCw_2wnQ-tkuMxH-gqShEpZqYnhaQg.PNG/image.png",
+      "channelUrl": "https://chzzk.naver.com/db8c2f4b478e9aaca4a42a45e5e89b7f",
+      "source": "https://api.chzzk.naver.com/service/v1/channels/db8c2f4b478e9aaca4a42a45e5e89b7f",
+      "imageCheck": {
+        "state": "ok",
+        "status": 200,
+        "contentType": "image/png",
+        "format": "png"
+      }
+    },
+    {
+      "slug": "yeonsaeneul-2",
+      "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMDVfMjA2/MDAxNzkxMTcxMjA1ODgw.2IUUQkJfGM1jVqzZtob-MMkJDw1Nvwvq895l0C7jjpQg.jWSlbW5PBrwx3PDCw_2wnQ-tkuMxH-gqShEpZqYnhaQg.PNG/image.png",
+      "channelUrl": "https://chzzk.naver.com/db8c2f4b478e9aaca4a42a45e5e89b7f",
+      "source": "https://api.chzzk.naver.com/service/v1/channels/db8c2f4b478e9aaca4a42a45e5e89b7f",
+      "imageCheck": {
+        "state": "ok",
+        "status": 200,
+        "contentType": "image/png",
+        "format": "png"
+      }
+    },
+    {
+      "slug": "malribu-2",
+      "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNTExMTRfMTUg/MDAxNzYzMTE4MTIxNDEx.SLh_FEkWG1lnMDVfr891rl-hQNb94LoEimNBCkHKiUIg.LzoT_PSao5COCNlrk0yuMP6cIX7-soI8fwJJ6H-DD_Ag.JPEG/image.jpg",
+      "channelUrl": "https://chzzk.naver.com/e4ae5646d01063022591e26bb81106cf",
+      "source": "https://api.chzzk.naver.com/service/v1/channels/e4ae5646d01063022591e26bb81106cf",
+      "imageCheck": {
+        "state": "ok",
+        "status": 200,
+        "contentType": "image/jpeg",
+        "format": "jpeg"
+      }
+    },
+    {
+      "slug": "mai-chzzk",
+      "avatarUrl": "https://nng-phinf.pstatic.net/MjAyNjA5MDdfMzAw/MDAxNzg4NzE5MDM3MjY1.SAEW6owF1X3BYxsaHBJgVt1SsV_D8M6yaKKEhrawQzsg.-dKfryXzqDbRwn-1qgfj3lQ-aFc2jdO-DrkFBcsnG4wg.JPEG/image.jpg",
+      "channelUrl": "https://chzzk.naver.com/767f9cfb72885ff1c2979e5b2a1b6066",
+      "source": "https://api.chzzk.naver.com/service/v1/channels/767f9cfb72885ff1c2979e5b2a1b6066",
+      "imageCheck": {
+        "state": "ok",
+        "status": 200,
+        "contentType": "image/jpeg",
+        "format": "jpeg"
+      }
+    }
+  ],
+  "unresolved": [
+    "beria",
+    "mahoya-kina",
+    "jikii-vt"
+  ]
+}

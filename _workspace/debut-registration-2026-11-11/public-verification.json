@@ -1,0 +1,47 @@
+[
+  {
+    "name": "우디디디",
+    "slug": "di6ixx-soop",
+    "channel": "https://www.sooplive.com/station/di6ixx",
+    "schedule": "2026-11-11 11:00",
+    "profilePublic": true,
+    "calendarPublic": true,
+    "imageUrlMatches": true
+  },
+  {
+    "name": "단온",
+    "slug": "d00328-soop",
+    "channel": "https://www.sooplive.com/station/d00328",
+    "schedule": "2026-11-11 17:00",
+    "profilePublic": true,
+    "calendarPublic": true,
+    "imageUrlMatches": true
+  },
+  {
+    "name": "아오이로하쿠",
+    "slug": "nju123-soop",
+    "channel": "https://www.sooplive.com/station/nju123",
+    "schedule": "2026-11-12 20:00",
+    "profilePublic": true,
+    "calendarPublic": true,
+    "imageUrlMatches": true
+  },
+  {
+    "name": "에이루나",
+    "slug": "kyykys12-soop",
+    "channel": "https://www.sooplive.com/station/kyykys12",
+    "schedule": "2026-11-12 21:00",
+    "profilePublic": true,
+    "calendarPublic": true,
+    "imageUrlMatches": true
+  },
+  {
+    "name": "휴이~",
+    "slug": "hue1115-soop",
+    "channel": "https://www.sooplive.com/station/hue1115",
+    "schedule": "2026-11-14 11:00",
+    "profilePublic": true,
+    "calendarPublic": true,
+    "imageUrlMatches": true
+  }
+]

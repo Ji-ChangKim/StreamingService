@@ -1,0 +1,149 @@
+
+ ⛅️ wrangler 4.151.0 (update available 4.158.0)
+───────────────────────────────────────────────
+Resource location: remote 
+
+🌀 Executing on remote database vdebut-db (888a8c04-5657-4bff-9b50-5002a47ac7c7):
+🌀 To execute on your local development database, remove the --remote flag from your wrangler command.
+🚣 Executed 1 command in 0.96ms
+[
+  {
+    "results": [
+      {
+        "id": 150,
+        "slug": "aldonza-kambayashi",
+        "channel_id": 163,
+        "profile_image_url": "https://yt3.googleusercontent.com/zyqnJsBKpKAPt2UZM9TcEhct5baB40Mzdm8iUqlqL6J9SxVaPFnUt88e6sKS0SCePFZSji77=s900-c-k-c0x00ffffff-no-rj",
+        "platform": "YOUTUBE",
+        "channel_url": "https://www.youtube.com/@AldonzaKambayashi",
+        "channel_name": "Aldonza Kambayashi"
+      },
+      {
+        "id": 52594,
+        "slug": "baekhoyang",
+        "channel_id": 63748,
+        "profile_image_url": "",
+        "platform": "CHZZK",
+        "channel_url": "chzzk.id/hoyang",
+        "channel_name": "백호양"
+      },
+      {
+        "id": 52595,
+        "slug": "baekhoyang-2",
+        "channel_id": 63749,
+        "profile_image_url": "",
+        "platform": "CHZZK",
+        "channel_url": "chzzk.id/hoyang",
+        "channel_name": "백호양"
+      },
+      {
+        "id": 24,
+        "slug": "beria",
+        "channel_id": 24,
+        "profile_image_url": "https://nng-phinf.pstatic.net/MjAyNjA3MjVfMzQg/MDAxNzg0OTExMjA1NTAz.C63ERhIpcyWFL4yD7pXQ4OFPHS5oe9dD_Dv6af1XFpEg.ClGgokCcUV8Z2GK8ImBOu_fh3y55Ns2q3wsAzbUvgokg.PNG/image.png",
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/adb3e4f6057d77c0547327cf076de6bf",
+        "channel_name": "베리아"
+      },
+      {
+        "id": 156,
+        "slug": "jikii-vt",
+        "channel_id": 169,
+        "profile_image_url": "",
+        "platform": "TWITCH",
+        "channel_url": "https://www.twitch.tv/jikiivt",
+        "channel_name": "jikiivt"
+      },
+      {
+        "id": 138,
+        "slug": "kagarimiya-kikyo",
+        "channel_id": 151,
+        "profile_image_url": "",
+        "platform": "YOUTUBE",
+        "channel_url": "https://www.youtube.com/@kagarimiyasan",
+        "channel_name": "篝宮桔梗"
+      },
+      {
+        "id": 52461,
+        "slug": "kumicho",
+        "channel_id": 62366,
+        "profile_image_url": "https://yt3.googleusercontent.com/mUDgI890xnDrw2rh8hJvgXDqy1KDw-rWMDOjU8I74dfot9aH25MxnXZxT4crcLIeE5_SURo1=s900-c-k-c0x00ffffff-no-rj",
+        "platform": "YOUTUBE",
+        "channel_url": "https://www.youtube.com/channel/UCpQje3p1s3BiPEp3MVm76hQ",
+        "channel_name": "ガチ経営者VTuber組長"
+      },
+      {
+        "id": 157,
+        "slug": "mahoya-kina",
+        "channel_id": 170,
+        "profile_image_url": "https://nng-phinf.pstatic.net/MjAyNjA4MDRfMTMx/MDAxNzg1NzgyNTcwMzIz.7iSW6R1nXMxlcskMOBzqSRgOAzBacM8m8JUB6GcEgUMg.yaygSrmQBOaXBUdlbQYQhFbDnwhp856cLJ3bUnCG1yIg.PNG/image.png",
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/18792fc66d61e2d69a53ec00577b116f",
+        "channel_name": "마호야 키나"
+      },
+      {
+        "id": 53426,
+        "slug": "mai-chzzk",
+        "channel_id": 64580,
+        "profile_image_url": "https://nng-phinf.pstatic.net/MjAyNjA3MjdfMTc2/MDAxNzg1MTI5Nzk2ODAz.nA-9vA1I-U-fL1P_8gM1y_3H6qP4M0zX7-h9E6R1yZcg.vX5e6W0S2A-8k7C5_7L4y2B1W0Q8N6P5M4J2H1G0F9Eg.PNG/image.png",
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/767f9cfb72885ff1c2979e5b2a1b6066",
+        "channel_name": "마이 Mai"
+      },
+      {
+        "id": 52605,
+        "slug": "malribu-2",
+        "channel_id": 63759,
+        "profile_image_url": "",
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/e4ae5646d01063022591e26bb81106cf/community",
+        "channel_name": "말리부"
+      },
+      {
+        "id": 52535,
+        "slug": "nemurai-ramune",
+        "channel_id": 62462,
+        "profile_image_url": "https://yt3.googleusercontent.com/ytc",
+        "platform": "YOUTUBE",
+        "channel_url": "https://www.youtube.com/@nemurairamune",
+        "channel_name": "眠来らむね"
+      },
+      {
+        "id": 52599,
+        "slug": "yeonsaeneul",
+        "channel_id": 63753,
+        "profile_image_url": "",
+        "platform": "CHZZK",
+        "channel_url": "http://chzzk.me/JEPlL",
+        "channel_name": "연새늘"
+      },
+      {
+        "id": 52602,
+        "slug": "yeonsaeneul-2",
+        "channel_id": 63756,
+        "profile_image_url": "",
+        "platform": "CHZZK",
+        "channel_url": "http://chzzk.me/JEPlL",
+        "channel_name": "연새늘"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.9579
+      },
+      "duration": 0.9579,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 827383808,
+      "rows_read": 39,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

@@ -1,0 +1,178 @@
+[
+  {
+    "results": [
+      {
+        "id": 150,
+        "slug": "aldonza-kambayashi",
+        "channel_id": 163,
+        "profile_image_url": "https://yt3.googleusercontent.com/fsr2xylityjr-Jp4qjhDyuQgxNZV6nAPAsuO-JMUivF2ksDpFir1h1SAFCzfgLeGlJevZ9Q=s900-c-k-c0x00ffffff-no-rj",
+        "platform": "YOUTUBE",
+        "channel_url": "https://www.youtube.com/channel/UCGPazdbPeftXPTa4ZVANwuA",
+        "channel_name": "Aldonza Kambayashi"
+      },
+      {
+        "id": 52594,
+        "slug": "baekhoyang",
+        "channel_id": 63748,
+        "profile_image_url": "https://nng-phinf.pstatic.net/MjAyNjEwMjlfNSAg/MDAxNzkzMjgzMjYzODAx.qFZrDJb95s1TzMGiV5rANE1ekzsMIH_zMGdyn3EMqfYg.AAC1g2PlSfzi13-2TZyzMfI2p8V5QFaaWxZ7gjcY8Z4g.PNG/image.png",
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/8c14ab2e0f180f3be5f64b7b421d152f",
+        "channel_name": "백호양"
+      },
+      {
+        "id": 52595,
+        "slug": "baekhoyang-2",
+        "channel_id": 63749,
+        "profile_image_url": "https://nng-phinf.pstatic.net/MjAyNjEwMjlfNSAg/MDAxNzkzMjgzMjYzODAx.qFZrDJb95s1TzMGiV5rANE1ekzsMIH_zMGdyn3EMqfYg.AAC1g2PlSfzi13-2TZyzMfI2p8V5QFaaWxZ7gjcY8Z4g.PNG/image.png",
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/8c14ab2e0f180f3be5f64b7b421d152f",
+        "channel_name": "백호양"
+      },
+      {
+        "id": 24,
+        "slug": "beria",
+        "channel_id": 24,
+        "profile_image_url": "https://nng-phinf.pstatic.net/MjAyNjA3MjVfMzQg/MDAxNzg0OTExMjA1NTAz.C63ERhIpcyWFL4yD7pXQ4OFPHS5oe9dD_Dv6af1XFpEg.ClGgokCcUV8Z2GK8ImBOu_fh3y55Ns2q3wsAzbUvgokg.PNG/image.png",
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/adb3e4f6057d77c0547327cf076de6bf",
+        "channel_name": "베리아"
+      },
+      {
+        "id": 156,
+        "slug": "jikii-vt",
+        "channel_id": 169,
+        "profile_image_url": "",
+        "platform": "TWITCH",
+        "channel_url": "https://www.twitch.tv/jikiivt",
+        "channel_name": "jikiivt"
+      },
+      {
+        "id": 138,
+        "slug": "kagarimiya-kikyo",
+        "channel_id": 151,
+        "profile_image_url": "https://yt3.googleusercontent.com/DPBJ5zY3zUaqiVHOm8VRpCcEMvUUDVpqD0l0lWWtVbnDq4m8UQ-dGpwCNpVILWlZXFrEHepr=s900-c-k-c0x00ffffff-no-rj",
+        "platform": "YOUTUBE",
+        "channel_url": "https://www.youtube.com/channel/UCYqc4sOohUJvpq8eckXjQjQ",
+        "channel_name": "篝宮桔梗"
+      },
+      {
+        "id": 52461,
+        "slug": "kumicho",
+        "channel_id": 62366,
+        "profile_image_url": "https://yt3.googleusercontent.com/obynWlFuwMeQSPXlePBYBf2pIduvEhOjsytBzV9C2MNMnSSPySBq-QysJtMeQqedWJZbejb4Ug=s900-c-k-c0x00ffffff-no-rj",
+        "platform": "YOUTUBE",
+        "channel_url": "https://www.youtube.com/channel/UCpQje3p1s3BiPEp3MVm76hQ",
+        "channel_name": "ガチ経営者VTuber組長"
+      },
+      {
+        "id": 157,
+        "slug": "mahoya-kina",
+        "channel_id": 170,
+        "profile_image_url": "https://nng-phinf.pstatic.net/MjAyNjA4MDRfMTMx/MDAxNzg1NzgyNTcwMzIz.7iSW6R1nXMxlcskMOBzqSRgOAzBacM8m8JUB6GcEgUMg.yaygSrmQBOaXBUdlbQYQhFbDnwhp856cLJ3bUnCG1yIg.PNG/image.png",
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/18792fc66d61e2d69a53ec00577b116f",
+        "channel_name": "마호야 키나"
+      },
+      {
+        "id": 53426,
+        "slug": "mai-chzzk",
+        "channel_id": 64580,
+        "profile_image_url": "https://nng-phinf.pstatic.net/MjAyNjA5MDdfMzAw/MDAxNzg4NzE5MDM3MjY1.SAEW6owF1X3BYxsaHBJgVt1SsV_D8M6yaKKEhrawQzsg.-dKfryXzqDbRwn-1qgfj3lQ-aFc2jdO-DrkFBcsnG4wg.JPEG/image.jpg",
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/767f9cfb72885ff1c2979e5b2a1b6066",
+        "channel_name": "마이 Mai"
+      },
+      {
+        "id": 52605,
+        "slug": "malribu-2",
+        "channel_id": 63759,
+        "profile_image_url": "https://nng-phinf.pstatic.net/MjAyNTExMTRfMTUg/MDAxNzYzMTE4MTIxNDEx.SLh_FEkWG1lnMDVfr891rl-hQNb94LoEimNBCkHKiUIg.LzoT_PSao5COCNlrk0yuMP6cIX7-soI8fwJJ6H-DD_Ag.JPEG/image.jpg",
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/e4ae5646d01063022591e26bb81106cf",
+        "channel_name": "말리부"
+      },
+      {
+        "id": 52535,
+        "slug": "nemurai-ramune",
+        "channel_id": 62462,
+        "profile_image_url": "https://yt3.googleusercontent.com/0DyW4z4vswkLmu1YLaarM1lpbPdKBsNtpWlBUdDL3rPzqkmG4Jyevd7Fu_JZ2vt5JE_vN_YGzA=s900-c-k-c0x00ffffff-no-rj",
+        "platform": "YOUTUBE",
+        "channel_url": "https://www.youtube.com/channel/UCRy05wP48OkGLOcciK1GkdA",
+        "channel_name": "眠来らむね"
+      },
+      {
+        "id": 52599,
+        "slug": "yeonsaeneul",
+        "channel_id": 63753,
+        "profile_image_url": "https://nng-phinf.pstatic.net/MjAyNjEwMDVfMjA2/MDAxNzkxMTcxMjA1ODgw.2IUUQkJfGM1jVqzZtob-MMkJDw1Nvwvq895l0C7jjpQg.jWSlbW5PBrwx3PDCw_2wnQ-tkuMxH-gqShEpZqYnhaQg.PNG/image.png",
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/db8c2f4b478e9aaca4a42a45e5e89b7f",
+        "channel_name": "연새늘"
+      },
+      {
+        "id": 52602,
+        "slug": "yeonsaeneul-2",
+        "channel_id": 63756,
+        "profile_image_url": "https://nng-phinf.pstatic.net/MjAyNjEwMDVfMjA2/MDAxNzkxMTcxMjA1ODgw.2IUUQkJfGM1jVqzZtob-MMkJDw1Nvwvq895l0C7jjpQg.jWSlbW5PBrwx3PDCw_2wnQ-tkuMxH-gqShEpZqYnhaQg.PNG/image.png",
+        "platform": "CHZZK",
+        "channel_url": "https://chzzk.naver.com/db8c2f4b478e9aaca4a42a45e5e89b7f",
+        "channel_name": "연새늘"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.3722
+      },
+      "duration": 0.3722,
+      "changes": 0,
+      "last_row_id": 307,
+      "changed_db": false,
+      "size_after": 827420672,
+      "rows_read": 39,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "slug": "baekhoyang",
+        "channel_url": "https://chzzk.naver.com/8c14ab2e0f180f3be5f64b7b421d152f",
+        "data": "{\"slug\":\"baekhoyang\",\"displayName\":\"백호양\",\"description\":\"백호양의 데뷔 방송입니다.\",\"avatarUrl\":\"https://nng-phinf.pstatic.net/MjAyNjEwMjlfNSAg/MDAxNzkzMjgzMjYzODAx.qFZrDJb95s1TzMGiV5rANE1ekzsMIH_zMGdyn3EMqfYg.AAC1g2PlSfzi13-2TZyzMfI2p8V5QFaaWxZ7gjcY8Z4g.PNG/image.png\",\"agency\":\"개인세\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/8c14ab2e0f180f3be5f64b7b421d152f\",\"countryCode\":\"KR\",\"languages\":[],\"tags\":[],\"xUrl\":\"https://x.com/baeghoyang0506\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-08-26\",\"debutTime\":\"17:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-08-26T08:00:00.000Z\",\"targetMonth\":\"2026-08\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"species\":\"백호\",\"종족\":\"백호\"}}"
+      },
+      {
+        "slug": "beria",
+        "channel_url": "https://chzzk.naver.com/adb3e4f6057d77c0547327cf076de6bf",
+        "data": "{\"slug\":\"beria\",\"displayName\":\"베리아\",\"description\":\"2026.07.28 치지직 데뷔 버튜버\",\"avatarUrl\":\"https://nng-phinf.pstatic.net/MjAyNjA3MjVfMzQg/MDAxNzg0OTExMjA1NTAz.C63ERhIpcyWFL4yD7pXQ4OFPHS5oe9dD_Dv6af1XFpEg.ClGgokCcUV8Z2GK8ImBOu_fh3y55Ns2q3wsAzbUvgokg.PNG/image.png\",\"agency\":\"개인세\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/adb3e4f6057d77c0547327cf076de6bf\",\"countryCode\":\"KR\",\"languages\":[],\"tags\":[],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-07-28\",\"debutTime\":\"21:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-07-28T12:00:00.000Z\",\"targetMonth\":\"2026-07\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"species\":\"고양이\",\"종족\":\"고양이\"}}"
+      },
+      {
+        "slug": "mai-chzzk",
+        "channel_url": "https://chzzk.naver.com/767f9cfb72885ff1c2979e5b2a1b6066",
+        "data": "{\"slug\":\"mai-chzzk\",\"displayName\":\"마이 Mai\",\"description\":\"11월 11일 오후 8시 치지직에서 데뷔하는 버추얼 스트리머 마이 Mai입니다🤍🐢\",\"avatarUrl\":\"https://nng-phinf.pstatic.net/MjAyNjA5MDdfMzAw/MDAxNzg4NzE5MDM3MjY1.SAEW6owF1X3BYxsaHBJgVt1SsV_D8M6yaKKEhrawQzsg.-dKfryXzqDbRwn-1qgfj3lQ-aFc2jdO-DrkFBcsnG4wg.JPEG/image.jpg\",\"agency\":\"개인세\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/767f9cfb72885ff1c2979e5b2a1b6066\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-11\",\"debutTime\":\"20:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-11T11:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"팬덤명\":\"부기\",\"오시마크\":\"🤍🐢\",\"fandomName\":\"부기\",\"oshiMark\":\"🤍🐢\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://nng-phinf.pstatic.net/MjAyNjA5MDdfMzAw/MDAxNzg4NzE5MDM3MjY1.SAEW6owF1X3BYxsaHBJgVt1SsV_D8M6yaKKEhrawQzsg.-dKfryXzqDbRwn-1qgfj3lQ-aFc2jdO-DrkFBcsnG4wg.JPEG/image.jpg\\\",\\\"channelUrl\\\":\\\"https://chzzk.naver.com/767f9cfb72885ff1c2979e5b2a1b6066\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-11\\\",\\\"debutTime\\\":\\\"20:00\\\",\\\"description\\\":\\\"11월 11일 오후 8시 치지직에서 데뷔하는 버추얼 스트리머 마이 Mai입니다🤍🐢\\\",\\\"details\\\":{\\\"팬덤명\\\":\\\"부기\\\",\\\"오시마크\\\":\\\"🤍🐢\\\",\\\"fandomName\\\":\\\"부기\\\",\\\"oshiMark\\\":\\\"🤍🐢\\\"},\\\"displayName\\\":\\\"마이 Mai\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"CHZZK\\\",\\\"slug\\\":\\\"mai-chzzk\\\",\\\"startAtUtc\\\":\\\"2026-11-11T11:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-05T16:47:16.130Z\"}}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.2356
+      },
+      "duration": 0.2356,
+      "changes": 0,
+      "last_row_id": 307,
+      "changed_db": false,
+      "size_after": 827420672,
+      "rows_read": 16,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]
