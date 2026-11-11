@@ -25,9 +25,9 @@ Cloudflare Observatory(Lighthouse) 결과의 빨간 항목(이미지 전달, 메
 
 ### 1. Google Analytics를 Zaraz로 옮기기 (3rd parties·메인 스레드 개선, 무료)
 1. Cloudflare 대시보드 → `vdebut.live` → **Zaraz** → **Tools configuration** → **Add new tool** → **Google Analytics 4** 선택
-2. 측정 ID에 `G-LS6E68YC5K` 입력 후 저장
+2. 측정 ID에 `G-LS6E68YC5K` 입력 후 저장 (설정 완료, 2026-11-11)
 3. Zaraz에서 페이지뷰가 들어오는지 GA 실시간 보고서로 확인
-4. 확인되면 `frontend/portal.html`과 `frontend/index.html`의 gtag 스크립트 두 줄을 삭제하고 배포 (중복 집계 방지. 코드 삭제는 Zaraz 확인 후 진행)
+4. gtag 스크립트는 `frontend/portal.html`·`frontend/index.html`에서 삭제 완료(2026-11-11). Zaraz 활동이 확인된 뒤 이 변경을 배포한다. 배포 전에는 기존 gtag와 Zaraz가 함께 집계해 방문 수가 일시적으로 2배로 보일 수 있다.
 
 ### 2. 외부 아바타 크기 조정 (선택, 유료 기능)
 치지직·SOOP 서버의 원본 아바타를 표시 크기(80~360px)에 맞춰 받는 기능을 코드에 넣어 두었다. 기본은 꺼져 있다.
