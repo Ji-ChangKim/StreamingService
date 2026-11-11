@@ -4,5 +4,10 @@ Disallow: /admin
 Disallow: /me/
 Disallow: /submissions/
 Disallow: /api/
+Allow: /api/v1/portal/profiles
+Allow: /api/v1/events
+Allow: /api/analytics/
+Allow: /api/discovery/
+Disallow: /api/v1/portal/profiles/*/access
 
 Sitemap: https://vdebut.live/sitemap.xml
