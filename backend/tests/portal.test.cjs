@@ -145,10 +145,10 @@ test('관리자 정정·이전 내용 복구·동시 수정 차단과 비공개 
 });
 
 // 보류 직후에도 캐시된 공개 원문을 반환하지 않는다.
-test('공개 목록·관리자·조회 실패는 저장하지 않는다', async () => {
+test('공개 목록은 60초만 재사용하고 관리자·조회 실패는 저장하지 않는다', async () => {
   const db = database();
   const response = await portalApi.request('/profiles', {}, { DB: db, PORTAL_ENABLED: 'true' });
-  assert.equal(response.headers.get('Cache-Control'), 'no-store');
+  assert.equal(response.headers.get('Cache-Control'), 'public, max-age=60');
   assert.deepEqual(await response.json(), { profiles: [] });
   const admin = await portalApi.request('/admin/requests', {}, { DB: db, PORTAL_ENABLED: 'true' });
   assert.equal(admin.status, 401); assert.equal(admin.headers.get('Cache-Control'), 'no-store');

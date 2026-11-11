@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import { translatePortalText } from '../../../shared/portalTranslations';
+import { hasPortalTranslations, translatePortalText } from '../../../shared/portalTranslations';
 
 export type PortalLanguage = 'ko' | 'ja' | 'en';
 
@@ -27,8 +27,20 @@ export function getPortalLanguage(): PortalLanguage { return language; }
 export function usePortalLocale(): PortalLanguage { return useSyncExternalStore(subscribe, getPortalLanguage, () => 'ko'); }
 export function t(source: string, values: unknown[] = []): string { return translatePortalText(source, language, values); }
 
-// 언어를 바꿔도 필터와 폼 값, 현재 경로는 유지한다.
+// 일본어·영어 사전은 해당 언어를 쓸 때만 받는다. 한국어 화면은 사전을 내려받지 않는다.
+let loading: Promise<void> | null = null;
+export function loadPortalTranslations(next: PortalLanguage = language): Promise<void> {
+  if (next === 'ko' || hasPortalTranslations()) return Promise.resolve();
+  loading ??= import('../../../shared/portalTranslationData').then(() => undefined).catch((error) => { loading = null; throw error; });
+  return loading;
+}
+
+// 언어를 바꿔도 필터와 폼 값, 현재 경로는 유지한다. 사전을 받은 뒤 화면 문구를 한 번에 바꾼다.
 export function setPortalLanguage(next: PortalLanguage): void {
+  void loadPortalTranslations(next).catch(() => undefined).then(() => applyPortalLanguage(next));
+}
+
+function applyPortalLanguage(next: PortalLanguage): void {
   language = next;
   document.documentElement.lang = next;
   const url = new URL(window.location.href); url.searchParams.set('lang', next);

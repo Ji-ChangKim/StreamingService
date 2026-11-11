@@ -2,6 +2,7 @@ import { pageStructuredData } from '../../../shared/siteSeo';
 import { sitemapEntry } from './sitemapEntry';
 import { STATISTICS_GUIDE } from '../../../shared/portalEditorial';
 import { translatePortalText } from '../../../shared/portalTranslations';
+import '../../../shared/portalTranslationData'; // 서버 초기 HTML은 세 언어 사전을 항상 사용한다.
 import type { ActivityFilters, BroadcastActivity } from '../../../shared/broadcastActivity';
 import { activitySeo, activityStreamerPath, activityNoindex } from '../../../shared/activitySeo';
 import { INITIAL_PAGE_LOADING_HEAD, initialPageRoot } from './initialPageLoading';

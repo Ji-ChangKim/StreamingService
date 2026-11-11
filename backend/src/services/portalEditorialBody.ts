@@ -2,6 +2,7 @@ import { type PortalProfile, PORTAL_PLATFORMS, portalWebUrl } from '../../../sha
 import { ABOUT_CARDS, ABOUT_INTRO, POLICY_CONTACT_EMAIL, PRIVACY_INTRO, PRIVACY_SECTIONS, TERMS_SECTIONS, type PolicySection } from '../../../shared/portalPolicyContent';
 import { PORTAL_GUIDES } from '../../../shared/portalEditorial';
 import { translatePortalText } from '../../../shared/portalTranslations';
+import '../../../shared/portalTranslationData'; // 서버 초기 HTML은 세 언어 사전을 항상 사용한다.
 import { escapeActivityHtml } from './activityPageService';
 import { profileMediaItems } from '../../../shared/profileMedia';
 

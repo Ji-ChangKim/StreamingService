@@ -68,7 +68,7 @@ export const PORTAL_GUIDES: readonly PortalGuideItem[] = [
       '운영진 육안 교차 검증 및 정식 발행: 자동 등록이든 수동 제보든 검증되지 않은 일정은 캘린더에 바로 노출되지 않으며, 운영진이 첨부된 출처 공지 원문을 직접 육안으로 확인하여 사칭과 허위 정보를 걸러낸 후 최종 승인 발행합니다.'
     ],
     tip: '날짜나 시작 시간이 아직 정해지지 않은 상태라도 등록 폼에서 [날짜/시간 미정] 상태를 선택해 사전 제보할 수 있습니다.',
-    image: '/assets/guide/guide_upload.png',
+    image: '/assets/guide/guide_upload.webp',
     imageCaption: '데뷔 일정 등록 화면에서 플랫폼과 방송 시작 일시, 공지 링크를 입력하는 실제 화면',
     paragraphs: [
       '경로 A. 운영 서치 기반 자동 등록: 정밀 서치로 확인된 공식 데뷔 일정을 큐에 적재하여 일정을 신속히 편성합니다.',
@@ -90,7 +90,7 @@ export const PORTAL_GUIDES: readonly PortalGuideItem[] = [
       '티저 영상 및 대표 클립 연결: 첫 방송 전에 시청자가 목소리와 Live2D/3D 비주얼을 미리 볼 수 있도록 유튜브 쇼케이스 영상 및 티저 클립 URL을 연동합니다.'
     ],
     tip: '프로필 사진과 영상은 반드시 본인에게 사용 권한이 있는 자료로 준비해 주세요. 아직 확정되지 않은 세부 계획은 무리하게 작성하지 않아도 괜찮습니다.',
-    image: '/assets/guide/guide_register.png',
+    image: '/assets/guide/guide_register.webp',
     imageCaption: '버튜버 소개 등록 폼에서 채널 링크와 활동명, 프로필 정보를 입력하는 실제 등록 화면',
     paragraphs: [
       '공식 소개 등록 페이지 접속: 소개 등록 메뉴를 통해 나만의 프로필 페이지를 개설할 수 있습니다.',
@@ -131,7 +131,7 @@ export const PORTAL_GUIDES: readonly PortalGuideItem[] = [
       '글로벌 타임존 자동 변환: 해외 거주 시청자 및 글로벌 버튜버 방송을 시청자의 PC/스마트폰 현지 시각으로 자동 변환하며, 캘린더 상단 시간대 드롭다운을 통해 자유롭게 기준 시각을 변경할 수 있습니다.'
     ],
     tip: '관심 목록은 현재 사용하는 웹 브라우저의 로컬 스토리지에 안전하게 보관되므로, 다른 기기나 브라우저에서는 별도로 저장해 주셔야 합니다.',
-    image: '/assets/guide/guide_save_card.png',
+    image: '/assets/guide/guide_save_card.webp',
     imageCaption: '실제 데뷔 카드에서 하트를 눌러 관심 목록에 보관하고 캘린더 알림 일정을 다운로드하는 화면',
     paragraphs: [
       '관심 버튜버 보관: 좋아하는 신입 스트리머를 관심 목록에 담아 첫 방송 소식을 지속적으로 챙길 수 있습니다.',
@@ -152,7 +152,7 @@ export const PORTAL_GUIDES: readonly PortalGuideItem[] = [
       '나만의 지속 가능한 방송 루틴 설계: 단순히 경쟁이 적은 시간대만 고르기보다, 스트리머 본인의 컨디션과 콘텐츠 준비 시간에 맞춰 꾸준히 이어갈 수 있는 정기 방송 루틴을 수립합니다.'
     ],
     tip: '방송 통계의 모든 지표는 한국 시간(KST)을 기준으로 집계되며, 시간대별 그리드 칸을 클릭하면 세부 방송 이력을 확인할 수 있습니다.',
-    image: '/assets/guide/guide_analytics.png',
+    image: '/assets/guide/guide_analytics.webp',
     imageCaption: '플랫폼별 실시간 순위와 요일·시간대별 방송 데이터를 조회하는 실제 방송 통계 화면',
     paragraphs: [
       '조회 기간 및 플랫폼 필터 설정: 플랫폼과 기간별 트렌드를 명확히 비교합니다.',

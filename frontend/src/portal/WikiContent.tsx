@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Heart, Search, X, RotateCcw } from 'lucide-react';
+import { sizedImageUrl } from './imageDelivery';
 import { PORTAL_PLATFORMS, portalWebUrl, type PortalMedia, type PortalProfile } from '../../../shared/portal';
 import type { ProfileDetailResponse } from '../../../shared/profileDetails';
 import { profileMediaSource } from '../../../shared/profileMedia';
@@ -47,9 +48,10 @@ function PlatformFilterContent({ id, label }: { id: string; label: string }) {
 }
 
 // 원본 아바타를 사용하며 누락·로드 실패에만 보유 기본 에셋을 표시한다.
-function Avatar({ profile, className = '' }: { profile: PortalProfile; className?: string }) {
+// 상세 상단 아바타는 바로 받고, 목록 아바타는 화면에 가까워질 때 받는다.
+function Avatar({ profile, className = '', eager = false }: { profile: PortalProfile; className?: string; eager?: boolean }) {
   const [failed, setFailed] = useState(false);
-  return <img className={`avatar ${className}`} src={!failed && profile.avatarUrl ? profile.avatarUrl : '/images/bg_profile.png'} alt={profile.displayName} onError={() => setFailed(true)} />;
+  return <img className={`avatar ${className}`} src={!failed && profile.avatarUrl ? sizedImageUrl(profile.avatarUrl, 122) : '/images/bg_profile.webp'} alt={profile.displayName} width={122} height={122} loading={eager ? 'eager' : 'lazy'} decoding="async" onError={() => setFailed(true)} />;
 }
 
 // 관심 목록 버튼은 기존 브라우저 저장 기능에 연결한다.
@@ -94,8 +96,8 @@ export function WikiProfileContent({ profile, detail, loading, report, now, favo
   const facts = [['데뷔일', dateLabel(profile)], ['공식 그룹', group(profile)], ['종족', details?.species], ['생일 / 별자리', [details?.birthday, details?.zodiac].filter(Boolean).join(' / ')], ['신장 / 혈액형', [details?.height, details?.bloodType].filter(Boolean).join(' / ')], ['MBTI', details?.mbti]];
   return <>
     <div className="breadcrumb"><button onClick={back}>{t("전체 버튜버")}</button><span>{t("/")}</span><span>{profile.displayName}</span></div>
-    <article className="wiki-header"><div className="wiki-cover" style={{ backgroundImage: `url("${profile.bannerUrl || '/images/spotlight_stage_bg.png'}")` }}><span className="cover-label">{t("버튜버 도감")}</span><div className="cover-actions"><Favorite profile={profile} favorites={favorites} toggle={toggle} /><button onClick={async () => { try { await navigator.clipboard.writeText(`https://vdebut.live${portalLanguagePath(`/creator/${profile.slug}`)}`); toast(t('공유할 주소를 복사했어요.')); } catch { toast(t('주소를 복사하지 못했어요.')); } }}>{t("주소 공유")}</button></div></div>
-      <div className="wiki-identity"><div className={`wiki-avatar ${live ? 'is-live' : ''}`}><Avatar profile={profile} />{live && <b>{t("● LIVE")}</b>}</div><div className="identity-copy"><div className="name-row"><h1>{profile.displayName}</h1>{group(profile) && <span className="group-pill">{group(profile)}</span>}</div>{(details?.contentSummary || (profile.headline && !group(profile))) && <p>{details?.contentSummary || profile.headline}</p>}<div className="credit-row">{details?.illustrator && <span>{t("일러스트")}<b>{details.illustrator}</b></span>}{details?.rigger && <span>{t("리깅")}<b>{details.rigger}</b></span>}{!details?.illustrator && !details?.rigger && <span className="debut-meta">{dateLabel(profile)}{t("데뷔")}</span>}</div></div></div>
+    <article className="wiki-header"><div className="wiki-cover" style={{ backgroundImage: `url("${profile.bannerUrl || '/images/spotlight_stage_bg.webp'}")` }}><span className="cover-label">{t("버튜버 도감")}</span><div className="cover-actions"><Favorite profile={profile} favorites={favorites} toggle={toggle} /><button onClick={async () => { try { await navigator.clipboard.writeText(`https://vdebut.live${portalLanguagePath(`/creator/${profile.slug}`)}`); toast(t('공유할 주소를 복사했어요.')); } catch { toast(t('주소를 복사하지 못했어요.')); } }}>{t("주소 공유")}</button></div></div>
+      <div className="wiki-identity"><div className={`wiki-avatar ${live ? 'is-live' : ''}`}><Avatar profile={profile} eager />{live && <b>{t("● LIVE")}</b>}</div><div className="identity-copy"><div className="name-row"><h1>{profile.displayName}</h1>{group(profile) && <span className="group-pill">{group(profile)}</span>}</div>{(details?.contentSummary || (profile.headline && !group(profile))) && <p>{details?.contentSummary || profile.headline}</p>}<div className="credit-row">{details?.illustrator && <span>{t("일러스트")}<b>{details.illustrator}</b></span>}{details?.rigger && <span>{t("리깅")}<b>{details.rigger}</b></span>}{!details?.illustrator && !details?.rigger && <span className="debut-meta">{dateLabel(profile)}{t("데뷔")}</span>}</div></div></div>
       <Channels profile={profile} />
     </article>
     <div className="wiki-columns"><div className="wiki-main"><nav className="wiki-tabs" aria-label={t("도감 메뉴")}>{([{ id: 'videos', label: '추천 영상' }, { id: 'history', label: '방송 · 활동 기록' }] as const).map(item => <button key={item.id} aria-pressed={tab === item.id} onClick={() => setTab(item.id)}>{t(item.label)}</button>)}</nav>

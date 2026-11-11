@@ -298,7 +298,7 @@ export function App() {
         {!isCreatorPage && !isAnalyticsPath && isKnownRoute && (currentPath === '/' || isUpdatePath) && (
           <section
             aria-label="Stage Showcase"
-            className="w-full relative bg-[url('/images/spotlight_stage_bg.png')] bg-cover bg-center sm:bg-bottom bg-no-repeat overflow-hidden"
+            className="w-full relative bg-[url('/images/spotlight_stage_bg.webp')] bg-cover bg-center sm:bg-bottom bg-no-repeat overflow-hidden"
           >
             {/* DEV 환경 전용 안내 바 (dev.vdebut.live 접속 시에만 표시) */}
             {isDevHost && (

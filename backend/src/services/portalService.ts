@@ -1,4 +1,5 @@
 import { readPortalProfiles, readPortalProfileBySlug, readPublicPortalProfiles, readPublicPortalProfileBySlug } from './portalProfileRepository';
+import { publicResponseCache } from './publicResponseCache';
 import { isPublicProfile, reviewedProfile } from '../../../shared/contentReview';
 import { cleanProfilePresentation } from '../../../shared/profilePresentation';
 import { readProfileBroadcast } from './portalProfileDetail';
@@ -154,11 +155,15 @@ portalApi.get('/channels/check', async (c) => {
 });
 
 // 공개 프로필은 실제 DB 결과만 반환한다.
+export const PUBLIC_PROFILE_LIST_CACHE_SECONDS = 60;
 portalApi.get('/profiles', async (c) => {
-  // 개인 신청과 분리한 공개 소개만 짧게 재사용한다.
-  c.header('Cache-Control', 'no-store');
+  // 개인 신청과 분리한 공개 소개만 60초 동안 엣지·브라우저에서 재사용한다.
+  // 관리자 변경 직후 화면은 no-cache 요청으로 캐시를 갱신한다.
+  // 공통 미들웨어의 no-store를 이 공개 목록에서만 바꾼다.
+  c.header('Cache-Control', `public, max-age=${PUBLIC_PROFILE_LIST_CACHE_SECONDS}`);
   try {
-    return c.json({ profiles: await readPublicPortalProfiles(c.env.DB) });
+    const key = new URL(c.req.url); key.search = ''; key.searchParams.set('version', c.req.query('version') || '');
+    return await publicResponseCache(c.req.raw, key, PUBLIC_PROFILE_LIST_CACHE_SECONDS, async () => c.json({ profiles: await readPublicPortalProfiles(c.env.DB) }), (promise) => c.executionCtx.waitUntil(promise));
   } catch {
     c.header('Cache-Control', 'no-store');
     return c.json({ error: '소개를 불러오지 못했습니다. 다시 시도해 주세요.' }, 503);

@@ -24,7 +24,7 @@ export function Footer({ currentLang = 'ko', onNavigate }: FooterProps) {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 border-b border-[#F1F5F9]">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="VDébut Logo" className="h-7 w-auto object-contain" />
+              <img src="/logo.webp" alt="VDébut Logo" className="h-7 w-auto object-contain" />
               <span className="text-[11px] text-[#94A3B8]">|</span>
               <span className="text-xs font-bold text-[#0F172A]">신입 버튜버 데뷔 일정 통합 캘린더</span>
             </div>
