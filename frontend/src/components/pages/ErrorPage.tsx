@@ -29,7 +29,7 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
       {/* 배경 무대 및 은은한 방사형 글로우 효과 */}
       <div 
         className="absolute inset-0 bg-cover bg-center sm:bg-bottom bg-no-repeat opacity-40 pointer-events-none"
-        style={{ backgroundImage: "url('/images/spotlight_stage_bg.png')" }}
+        style={{ backgroundImage: "url('/images/spotlight_stage_bg.webp')" }}
       />
       <div className="absolute inset-0 bg-radial from-blue-500/10 via-transparent to-transparent pointer-events-none" />
 

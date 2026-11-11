@@ -1,5 +1,6 @@
 import { siteCanonical } from '../../../shared/siteSeo';
 import { translatePortalText } from '../../../shared/portalTranslations';
+import '../../../shared/portalTranslationData'; // 서버 초기 HTML은 세 언어 사전을 항상 사용한다.
 import { escapeActivityHtml } from './activityPageService';
 
 // 초기 데이터 조회에 실패해도 상태 코드를 유지하며 재시도와 탐색 경로를 제공한다.

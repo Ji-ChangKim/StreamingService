@@ -259,7 +259,7 @@ export function PlatformMiniSpotlight({
                 {farLeftItem && (
                   <div
                     onClick={handleFarPrev}
-                    className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[20px] border border-blue-200/70 p-3 opacity-70 scale-85 cursor-pointer hover:opacity-95 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -mr-6 lg:-mr-8 overflow-hidden"
+                    className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[url('/images/bg_profile.webp')] bg-cover bg-center rounded-[20px] border border-blue-200/70 p-3 opacity-70 scale-85 cursor-pointer hover:opacity-95 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -mr-6 lg:-mr-8 overflow-hidden"
                   >
                     <SpotlightCardContent
                       currentLang={currentLang}
@@ -274,7 +274,7 @@ export function PlatformMiniSpotlight({
                 {prevItem && (
                   <div
                     onClick={handlePrev}
-                    className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[22px] border border-blue-300/80 p-4 opacity-90 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -mr-7 lg:-mr-10 overflow-hidden"
+                    className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[url('/images/bg_profile.webp')] bg-cover bg-center rounded-[22px] border border-blue-300/80 p-4 opacity-90 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -mr-7 lg:-mr-10 overflow-hidden"
                   >
                     <SpotlightCardContent
                       currentLang={currentLang}
@@ -302,9 +302,9 @@ export function PlatformMiniSpotlight({
                     </button>
                   )}
 
-                  {/* 중앙 메인 카드 본체 (bg_profile.png 3D 무대 배경 적용) */}
+                  {/* 중앙 메인 카드 본체 (bg_profile.webp 3D 무대 배경 적용) */}
                   <div
-                    className="vd-showcase-card flex flex-col items-center justify-between w-[300px] sm:w-[340px] h-[290px] sm:h-[315px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[24px] border border-blue-300/80 p-5 transition-all relative group scale-100 overflow-hidden"
+                    className="vd-showcase-card flex flex-col items-center justify-between w-[300px] sm:w-[340px] h-[290px] sm:h-[315px] bg-[url('/images/bg_profile.webp')] bg-cover bg-center rounded-[24px] border border-blue-300/80 p-5 transition-all relative group scale-100 overflow-hidden"
                     style={{
                       boxShadow: '0 20px 40px -8px rgba(15, 23, 42, 0.2), 0 2px 12px -1px rgba(37, 99, 235, 0.12)',
                     }}
@@ -338,7 +338,7 @@ export function PlatformMiniSpotlight({
                 {nextItem && (
                   <div
                     onClick={handleNext}
-                    className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[22px] border border-blue-300/80 p-4 opacity-90 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -ml-7 lg:-ml-10 overflow-hidden"
+                    className="hidden md:flex flex-col items-center justify-between w-[220px] lg:w-[240px] h-[255px] bg-[url('/images/bg_profile.webp')] bg-cover bg-center rounded-[22px] border border-blue-300/80 p-4 opacity-90 scale-92 cursor-pointer hover:opacity-100 hover:z-25 transition-all select-none shadow-xl shrink-0 z-20 -ml-7 lg:-ml-10 overflow-hidden"
                   >
                     <SpotlightCardContent
                       currentLang={currentLang}
@@ -353,7 +353,7 @@ export function PlatformMiniSpotlight({
                 {farRightItem && (
                   <div
                     onClick={handleFarNext}
-                    className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[url('/images/bg_profile.png')] bg-cover bg-center rounded-[20px] border border-blue-200/70 p-3 opacity-70 scale-85 cursor-pointer hover:opacity-95 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -ml-6 lg:-ml-8 overflow-hidden"
+                    className="hidden xl:flex flex-col items-center justify-between w-[185px] lg:w-[200px] h-[220px] bg-[url('/images/bg_profile.webp')] bg-cover bg-center rounded-[20px] border border-blue-200/70 p-3 opacity-70 scale-85 cursor-pointer hover:opacity-95 hover:z-25 transition-all select-none shadow-md shrink-0 z-10 -ml-6 lg:-ml-8 overflow-hidden"
                   >
                     <SpotlightCardContent
                       currentLang={currentLang}

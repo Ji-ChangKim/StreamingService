@@ -2,6 +2,7 @@ import { isActivityPath } from '../../shared/activitySeo';
 import { publicErrorPage } from './services/publicErrorPage';
 import { sitePath, siteRobots } from '../../shared/siteSeo';
 import { publicResponseCache } from './services/publicResponseCache';
+const STATIC_IMAGE_CACHE_CONTROL = 'public, max-age=2592000, stale-while-revalidate=86400';
 import { Hono } from 'hono';
 import { portalApi, readPublicPortalProfiles, readPublicPortalProfileBySlug, portalAdminStreamers, deletePortalProfile } from './services/portalService';
 import { renderPortalPage, portalSitemap } from './services/portalPageService';
@@ -150,7 +151,8 @@ app.use('*', async (c, next) => {
   await next();
   if (c.req.method === 'GET' && c.res.status === 200 && !path.startsWith('/api/')) {
     if (/^\/assets\/.+-[\w-]+\.(js|css)$/.test(path)) c.header('Cache-Control', 'public, max-age=31536000, immutable');
-    else if (/\.(png|jpg|jpeg|webp|svg|ico|woff2)$/i.test(path)) c.header('Cache-Control', 'public, max-age=86400');
+    // 해시 없는 이미지·아이콘도 30일 동안 재사용한다. 같은 이름으로 교체할 때는 파일명을 바꿔 배포한다.
+    else if (/\.(png|jpg|jpeg|webp|avif|svg|ico|woff2)$/i.test(path)) c.header('Cache-Control', STATIC_IMAGE_CACHE_CONTROL);
   }
 });
 app.route('/api/v1/portal', portalApi);

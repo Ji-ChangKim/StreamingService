@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 // 도메인에 필요한 화면 묶음만 불러온다.
-const App = React.lazy(() => import('./App.tsx').then((module) => ({ default: module.App })));
-const PortalApp = React.lazy(() => import('./portal/PortalApp').then((module) => ({ default: module.PortalApp })));
+// 이전 화면은 자체 언어 상태를 써서 사전을 함께 받고, 새 화면은 선택 언어의 사전만 먼저 받는다.
+const App = React.lazy(() => Promise.all([import('./App.tsx'), import('../../shared/portalTranslationData')]).then(([module]) => ({ default: module.App })));
+const PortalApp = React.lazy(() => import('./portal/portalLocale').then((locale) => locale.loadPortalTranslations().catch(() => undefined)).then(() => import('./portal/PortalApp')).then((module) => ({ default: module.PortalApp })));
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

@@ -187,3 +187,14 @@ test('기존 원문은 보존하되 미검토 소개는 공개 API·직접 주�
     assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS count FROM portal_requests').get().count, 0);
   } finally { db.sqlite.close(); }
 });
+
+test('공개 소개 목록은 60초 캐시, 정적 이미지는 30일 캐시를 사용한다', async () => {
+  const { db, call } = await setup();
+  try {
+    const list = await call('/api/v1/portal/profiles?version=3');
+    assert.equal(list.status, 200);
+    assert.equal(list.headers.get('cache-control'), 'public, max-age=60');
+    const image = await call('/images/spotlight_stage_bg.webp');
+    assert.match(image.headers.get('cache-control') || '', /max-age=2592000/);
+  } finally { db.sqlite.close(); }
+});

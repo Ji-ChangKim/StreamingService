@@ -4,6 +4,7 @@ import { portalEditorialBody } from './portalEditorialBody';
 import { PortalProfile } from '../../../shared/portal';
 import { portalPageSeo } from '../../../shared/portalSeo';
 import { translatePortalText } from '../../../shared/portalTranslations';
+import '../../../shared/portalTranslationData'; // 서버 초기 HTML은 세 언어 사전을 항상 사용한다.
 import { escapeActivityHtml, activityJson } from './activityPageService';
 import { INITIAL_PAGE_LOADING_HEAD, initialPageRoot } from './initialPageLoading';
 import { isPublicProfile } from '../../../shared/contentReview';

@@ -279,7 +279,7 @@ export function CreatorProfilePage({ slug, onNavigateHome }: CreatorProfilePageP
 
       {/* 1. 상단 프로필 카드 (3D 무대 스포트라이트 배경 적용) */}
       <section
-        className="relative overflow-hidden rounded-[20px] border border-blue-200/70 shadow-md bg-[url('/images/bg_profile.png')] bg-cover bg-center p-5 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6"
+        className="relative overflow-hidden rounded-[20px] border border-blue-200/70 shadow-md bg-[url('/images/bg_profile.webp')] bg-cover bg-center p-5 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6"
       >
         <div className="absolute inset-0 bg-white/20 backdrop-blur-[2px] pointer-events-none" />
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />

@@ -62,3 +62,21 @@ test('성인용 태그 안내가 있는 소개는 검토 전 공개하지 않는
   assert.equal(isPublicProfile(profile('b', '이름', 'ファンアートタグ NSFW')), false);
   assert.equal(isPublicProfile(profile('c', '이름', '노래 방송 R-180 프로젝트')), true);
 });
+
+test('번역 사전은 데이터 모듈을 불러온 뒤에만 등록된다', () => {
+  const registry = load('../../shared/portalTranslations.ts');
+  assert.equal(registry.hasPortalTranslations(), false);
+  assert.equal(registry.translatePortalText('이용약관', 'en'), '이용약관');
+  const data = load('../../shared/portalTranslationData.ts');
+  assert.ok(Object.keys(data.PORTAL_TRANSLATIONS).length > 500);
+  assert.equal(data.PORTAL_TRANSLATIONS['이용약관'][1], 'Terms of use');
+});
+
+test('화면 코드는 원본 대용량 이미지 대신 WebP를 사용한다', () => {
+  const root = path.resolve(__dirname, '../../frontend');
+  for (const file of ['src/portal/PortalApp.tsx', 'src/portal/portal.css', 'src/portal/wikiContent.css', 'src/portal/WikiContent.tsx']) {
+    const source = fs.readFileSync(path.join(root, file), 'utf8');
+    assert.doesNotMatch(source, /\/logo\.png|spotlight_stage_bg\.png|bg_profile\.png/, file);
+  }
+  for (const file of ['public/logo.webp', 'public/images/spotlight_stage_bg.webp', 'public/images/bg_profile.webp']) assert.ok(fs.statSync(path.join(root, file)).size < 40 * 1024, file);
+});

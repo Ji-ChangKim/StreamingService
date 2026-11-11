@@ -46,7 +46,7 @@ export function Navbar({
         {/* Left: Brand Logo & Left-aligned Nav Links */}
         <div className="flex items-center justify-between sm:justify-start gap-3 sm:gap-8 h-10 sm:h-full w-full sm:w-auto">
           <div className="flex items-center cursor-pointer py-1" onClick={() => setActiveNav('schedule')}>
-            <img src="/logo.png" alt="VDébut Logo" className="h-7 sm:h-9 w-auto object-contain" />
+            <img src="/logo.webp" alt="VDébut Logo" className="h-7 sm:h-9 w-auto object-contain" />
           </div>
 
           {/* 좌측 로고 옆 GNB: 데뷔 일정 & 방송 인사이트 */}

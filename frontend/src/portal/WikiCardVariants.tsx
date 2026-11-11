@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { HeartIcon, ArrowUpRightIcon, CalendarDaysIcon, CalendarPlusIcon } from '@animateicons/react/lucide';
+import { sizedImageUrl } from './imageDelivery';
 import { Sparkles, Clock } from 'lucide-react';
 import { PORTAL_PLATFORMS, type PortalProfile } from '../../../shared/portal';
 import { portalSchedule, downloadPortalSchedule } from './PortalUi';
@@ -34,13 +35,18 @@ function dateLabel(profile: PortalProfile): string {
     : portalSchedule(profile);
 }
 
-function CardAvatar({ profile, className = '' }: { profile: PortalProfile; className?: string }) {
+// 카드 크기는 CSS가 정하며, size는 변환 이미지의 기준 너비로만 사용한다.
+function CardAvatar({ profile, className = '', size = 80 }: { profile: PortalProfile; className?: string; size?: number }) {
   const [failed, setFailed] = useState(false);
   return (
     <img
       className={`avatar ${className}`}
-      src={!failed && profile.avatarUrl ? profile.avatarUrl : '/images/bg_profile.png'}
+      src={!failed && profile.avatarUrl ? sizedImageUrl(profile.avatarUrl, size) : '/images/bg_profile.webp'}
       alt={profile.displayName}
+      width={size}
+      height={size}
+      loading="lazy"
+      decoding="async"
       onError={() => setFailed(true)}
     />
   );
@@ -238,7 +244,7 @@ export function WikiCreatorCardContent({
     >
       {/* 1순위: 카드 가로 100%를 꽉 채우는 대형 프로필 비주얼 커버 (Full-Bleed 200px) */}
       <div className="profile-hero-cover">
-        <CardAvatar profile={profile} className="profile-cover-img" />
+        <CardAvatar profile={profile} className="profile-cover-img" size={360} />
         <div className="profile-cover-gradient" />
 
         {/* 상단 오버레이: 소속사/데뷔 뱃지 + 관심 하트 버튼 */}
