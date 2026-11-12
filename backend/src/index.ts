@@ -1076,7 +1076,8 @@ app.get('/api/analytics/broadcast-statistics', async (c) => {
   const cacheKey = new Request(cacheUrl);
   if (!forceFresh) {
     const cached = await caches.default.match(cacheKey);
-    if (cached) return cached;
+    // 저장본에 붙는 브라우저 캐시 기본값(4시간)을 덮어써 1분 갱신 화면이 오래된 자료에 묶이지 않게 한다.
+    if (cached) { const response = new Response(cached.body, cached); response.headers.set('Cache-Control', isPastDate ? 'public, max-age=86400' : 'public, max-age=30'); response.headers.set('X-VD-Cache', 'HIT'); return response; }
   }
   try {
     const result = await getBroadcastStatistics(c.env.DB, date, forceFresh);
@@ -1354,12 +1355,13 @@ const activityPageHandler = async (c: any) => {
   const bypass = /no-cache|no-store/i.test(c.req.header('Cache-Control') || '');
   if (cache && !bypass && c.req.method === 'GET') {
     const hit = await cache.match(cacheKey).catch(() => undefined);
-    if (hit) { const response = new Response(hit.body, hit); response.headers.set('X-VD-Cache', 'HIT'); return response; }
+    // Cloudflare가 저장본에 붙이는 브라우저 캐시 기본값(4시간)을 덮어써, 브라우저는 매번 최신 화면을 확인하게 한다.
+    if (hit) { const response = new Response(hit.body, hit); response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate'); response.headers.set('X-VD-Cache', 'HIT'); return response; }
   }
   const response: Response = await renderActivityPageResponse(c);
   if (cache && c.req.method === 'GET' && response.status === 200) {
     const stored = new Response(response.clone().body, response);
-    stored.headers.set('Cache-Control', `public, max-age=60, s-maxage=${ACTIVITY_PAGE_EDGE_SECONDS}`);
+    stored.headers.set('Cache-Control', `public, max-age=0, s-maxage=${ACTIVITY_PAGE_EDGE_SECONDS}`);
     c.executionCtx.waitUntil(cache.put(cacheKey, stored).catch(() => undefined));
   }
   return response;
