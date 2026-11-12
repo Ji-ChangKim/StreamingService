@@ -139,6 +139,13 @@ app.use('*', async (c, next) => {
     }
     // 소개 목록의 초기 HTML에도 공개 소개 링크를 제공한다. 실패하면 기존 화면 로딩으로 이어간다.
     let profiles: Awaited<ReturnType<typeof readPublicPortalProfiles>> = [];
+    // 목록 첫 HTML은 전체 소개를 읽어 만들므로 정상 응답을 엣지에 1분 저장한다(목록 API와 같은 주기).
+    const creatorsCache = sitePath(path) === '/creators' && !seo.development && typeof caches !== 'undefined' ? (caches as any).default as Cache : undefined;
+    const creatorsKey = new Request(url.toString(), { method: 'GET' });
+    if (creatorsCache && !/no-cache|no-store/i.test(c.req.header('Cache-Control') || '')) {
+      const hit = await creatorsCache.match(creatorsKey).catch(() => undefined);
+      if (hit) { const cached = new Response(hit.body, hit); cached.headers.set('Cache-Control', 'public, max-age=0, must-revalidate'); cached.headers.set('X-VD-Cache', 'HIT'); return cached; }
+    }
     if (sitePath(path) === '/creators') {
       try { profiles = await readPublicPortalProfiles(c.env.DB); } catch (error) { console.error('[Portal] Initial creator list failed', String(error)); }
     }
@@ -150,7 +157,12 @@ app.use('*', async (c, next) => {
     if (seo.privatePage || missing) c.header('X-Robots-Tag', 'noindex, nofollow');
     c.header('Cache-Control', seo.privatePage || missing ? 'no-store' : 'public, max-age=0, must-revalidate');
     const html = renderPortalPage(await response.text(), url, profile, profiles);
-    return c.html(missing ? html.replace(/content="index, follow"/g, 'content="noindex, nofollow"') : autoChannel ? html.replace(/content="index, follow"/g, 'content="noindex, follow"') : html, missing ? 404 : 200);
+    const page: Response = c.html(missing ? html.replace(/content="index, follow"/g, 'content="noindex, nofollow"') : autoChannel ? html.replace(/content="index, follow"/g, 'content="noindex, follow"') : html, missing ? 404 : 200);
+    if (creatorsCache && page.status === 200 && profiles.length) {
+      const stored = new Response(page.clone().body, page); stored.headers.set('Cache-Control', 'public, s-maxage=60');
+      c.executionCtx.waitUntil(creatorsCache.put(creatorsKey, stored).catch(() => undefined));
+    }
+    return page;
   }
   await next();
   if (c.req.method === 'GET' && c.res.status === 200 && !path.startsWith('/api/')) {

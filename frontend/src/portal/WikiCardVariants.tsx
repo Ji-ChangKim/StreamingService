@@ -36,7 +36,7 @@ function dateLabel(profile: PortalProfile): string {
 }
 
 // 카드 크기는 CSS가 정하며, size는 변환 이미지의 기준 너비로만 사용한다.
-function CardAvatar({ profile, className = '', size = 80 }: { profile: PortalProfile; className?: string; size?: number }) {
+function CardAvatar({ profile, className = '', size = 80, eager = false }: { profile: PortalProfile; className?: string; size?: number; eager?: boolean }) {
   const [failed, setFailed] = useState(false);
   return (
     <img
@@ -45,7 +45,8 @@ function CardAvatar({ profile, className = '', size = 80 }: { profile: PortalPro
       alt={profile.displayName}
       width={size}
       height={size}
-      loading="lazy"
+      loading={eager ? 'eager' : 'lazy'}
+      {...(eager ? { fetchpriority: 'high' } : {})}
       decoding="async"
       onError={() => setFailed(true)}
     />
@@ -209,11 +210,13 @@ export function WikiCreatorCardContent({
   open,
   favorites,
   toggle,
+  index = 99,
 }: {
   profile: PortalProfile;
   open: (slug: string) => void;
   favorites: string[];
   toggle: (slug: string) => void;
+  index?: number;
   now: number;
 }) {
   const platform = platforms.find((item) => item.id === profile.platform);
@@ -244,7 +247,8 @@ export function WikiCreatorCardContent({
     >
       {/* 1순위: 카드 가로 100%를 꽉 채우는 대형 프로필 비주얼 커버 (Full-Bleed 200px) */}
       <div className="profile-hero-cover">
-        <CardAvatar profile={profile} className="profile-cover-img" size={360} />
+        {/* 첫 줄 카드는 화면에 바로 보이므로 이미지를 먼저 받는다. */}
+        <CardAvatar profile={profile} className="profile-cover-img" size={360} eager={index <= 4} />
         <div className="profile-cover-gradient" />
 
         {/* 상단 오버레이: 소속사/데뷔 뱃지 + 관심 하트 버튼 */}
