@@ -168,6 +168,23 @@ export async function deleteSubmission(id: number): Promise<boolean> {
 }
 
 /**
+ * 공식 방송 채널의 이름·프로필 이미지·소개를 조회한다.
+ * 서버 응답(creatorName·profileImageUrl·description)을 관리 화면에서 쓰는 이름으로 바꿔 돌려준다.
+ */
+export async function fetchExternalPlatformProfile(platform: string, channelUrl: string): Promise<{
+  success: boolean; channelName?: string; channelImageUrl?: string; channelDescription?: string; error?: string;
+}> {
+  try {
+    const res = await fetch(`${getApiHost()}/api/v1/platform/profile?platform=${encodeURIComponent(platform)}&url=${encodeURIComponent(channelUrl)}`);
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success) return { success: false, error: data.error || '프로필 정보를 찾을 수 없습니다.' };
+    return { success: true, channelName: data.creatorName || '', channelImageUrl: data.profileImageUrl || '', channelDescription: data.description || '' };
+  } catch {
+    return { success: false, error: '프로필 조회 중 통신 오류가 발생했습니다.' };
+  }
+}
+
+/**
  * 6. 등록된 버튜버 전체 목록 조회 (CMS 관리용)
  */
 export async function fetchAdminStreamers(): Promise<any[]> {

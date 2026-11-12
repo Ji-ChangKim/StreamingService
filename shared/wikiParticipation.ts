@@ -31,3 +31,21 @@ export function cleanWikiParticipation(body: Record<string, unknown>): Record<st
 }
 
 export interface WikiSupportMessage { id: string; message: string; createdAt: string }
+
+// 도감 자동 갱신 전후의 공개 값 차이를 항목별로 계산한다. 검토 기록·소유 정보는 비교하지 않는다.
+// 제원(details)은 세부 항목 단위로 비교해 실제로 바뀐 칸만 기록한다.
+export interface WikiDiff { field: string; before: unknown; after: unknown }
+const WIKI_DIFF_IGNORED = new Set(['contentReview', 'ownerVerified', 'requesterRole', 'source']);
+export function computeWikiDiffs(before: object, after: object): WikiDiff[] {
+  const a = before as Record<string, unknown>, b = after as Record<string, unknown>;
+  const same = (x: unknown, y: unknown) => JSON.stringify(x ?? null) === JSON.stringify(y ?? null);
+  const diffs: WikiDiff[] = [];
+  for (const key of [...new Set([...Object.keys(a), ...Object.keys(b)])].sort()) {
+    if (WIKI_DIFF_IGNORED.has(key)) continue;
+    if (key === 'details') {
+      const da = (a.details || {}) as Record<string, unknown>, db = (b.details || {}) as Record<string, unknown>;
+      for (const sub of [...new Set([...Object.keys(da), ...Object.keys(db)])].sort()) if (!same(da[sub], db[sub])) diffs.push({ field: `details.${sub}`, before: da[sub], after: db[sub] });
+    } else if (!same(a[key], b[key])) diffs.push({ field: key, before: a[key], after: b[key] });
+  }
+  return diffs;
+}

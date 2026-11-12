@@ -3,8 +3,9 @@ import { isPublicProfile } from '../../../shared/contentReview';
 
 type LegacyRow = { slug: string; display_name: string; description: string; profile_image_url: string; agency_name: string; platform: PortalProfile['platform']; channel_url: string; country_code: string; x_url: string; debut_date: string; debut_time: string; timezone: string; start_at_utc: string };
 
-// 운영 중인 저장 시각용 통계 레코드를 데뷔 프로필로 오인하지 않는다.
-export function isAnalyticsAutoRegisteredRow(row: {description:string;display_name:string;debut_time:string}):boolean {
+// 외부 채널 검색·통계 조회로 자동 등록된 행은 데뷔 소개가 아니라 채널 등록 기록이다.
+// 등록 시 채운 기본 소개 문구와 00:00 시각으로 구분한다.
+export function isAnalyticsAutoRegisteredRow(row: { description?: string | null; display_name?: string | null; debut_time?: string | null }): boolean {
   return row.description === `${row.display_name} 스트리머의 채널입니다.` && row.debut_time === '00:00';
 }
 
