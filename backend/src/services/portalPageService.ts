@@ -7,7 +7,7 @@ import { translatePortalText } from '../../../shared/portalTranslations';
 import '../../../shared/portalTranslationData'; // 서버 초기 HTML은 세 언어 사전을 항상 사용한다.
 import { escapeActivityHtml, activityJson } from './activityPageService';
 import { INITIAL_PAGE_LOADING_HEAD, initialPageRoot } from './initialPageLoading';
-import { isPublicProfile } from '../../../shared/contentReview';
+import { isPublicProfile, publicProfileView } from '../../../shared/contentReview';
 
 // 운영 셸의 메타데이터와 최초 본문을 공개 주소에 맞추고 외부 문자열을 이스케이프한다.
 export function renderPortalPage(html: string, url: URL, profile?: PortalProfile, profiles: PortalProfile[] = []): string {
@@ -25,7 +25,9 @@ export function renderPortalPage(html: string, url: URL, profile?: PortalProfile
   html = html.replace('</head>', `${alternates}${INITIAL_PAGE_LOADING_HEAD}</head>`);
   const languageQuery = seo.language === 'ko' ? '' : `?lang=${seo.language}`;
   const body = `<main><h1>${esc(profile?.displayName || seo.title.split(' | ')[0])}</h1>${profile ? '' : `<p>${esc(seo.description)}</p>`}<nav><a href="/${languageQuery}">${text('데뷔 캘린더')}</a> · <a href="/creators${languageQuery}">${text('버튜버 찾기')}</a> · <a href="/analytics${languageQuery}">${text('방송 통계')}</a> · <a href="/guide${languageQuery}">${text('이용 가이드')}</a></nav>${profile?.channelUrl ? `<p><a href="${esc(profile.channelUrl)}" rel="noopener noreferrer">${text('공식 방송 채널')}</a></p>` : ''}${portalEditorialBody(seo.path, seo.language, profile, profiles.filter(isPublicProfile))}</main>`;
-  return html.replace(/<div id="root">[\s\S]*?<\/div>/, initialPageRoot(body, text('화면을 불러오고 있어요')));
+  html = html.replace(/<div id="root">[\s\S]*?<\/div>/, initialPageRoot(body, text('화면을 불러오고 있어요')));
+  // 소개 상세는 전체 목록을 기다리지 않도록 이 버튜버의 공개 정보를 첫 HTML에 함께 보낸다.
+  return profile ? html.replace('</body>', `<script type="application/json" id="vd-initial-profile">${activityJson(publicProfileView(profile))}</script></body>`) : html;
 }
 
 // 운영 공개 목록에 승인된 신규 소개도 포함하고 비공개 주소는 제외한다.

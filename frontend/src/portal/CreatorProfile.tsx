@@ -7,7 +7,6 @@ import { dateTimeFormatter } from '../../../shared/dateTimeFormatter';
 import { CopyButton, FavoriteButton, PlatformBadge, PortalAvatar, PortalLink, PortalState, downloadPortalSchedule, portalSchedule } from './PortalUi';
 import { ProfileCover } from './ProfileCover';
 import { getPortalLanguage, t, usePortalLocale } from './portalLocale';
-import { isPublicProfile } from '../../../shared/contentReview';
 import { ProfileArchiveOverview } from './ProfileArchiveOverview';
 import type { ProfileBroadcast, ProfileChannelMedia } from '../../../shared/profileDetails';
 import { useProfileDetail } from './useProfileDetail';
@@ -186,7 +185,8 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
   // 저장된 개인 활동 구분값을 소속명처럼 표시하지 않는다.
   const agency = profileAgencyName(profile.agency);
   // 기존 소개에 검토 기록이 없으면 검토일을 만들거나 접근하지 않는다.
-  const reviewedAt = isPublicProfile(profile) ? profile.contentReview?.reviewedAt : undefined;
+  // 공개 목록은 서버가 공개 기준을 통과한 소개만 보내며, 검토 사본은 응답에서 제외된다.
+  const reviewedAt = profile.contentReview?.state === 'APPROVED' ? profile.contentReview.reviewedAt : undefined;
   const IdentityHeading = preview ? 'h2' : 'h1';
 
   // 팀·크루 정보 계산

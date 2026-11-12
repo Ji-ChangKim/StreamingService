@@ -1288,7 +1288,7 @@ app.get('/api/discovery/history/creator', async (c) => {
 });
 
 // 통계 주소는 검색로봇과 사용자에게 같은 초기 본문과 메타데이터를 제공한다.
-const activityPageHandler = async (c: any) => {
+const renderActivityPageResponse = async (c: any) => {
   const url = new URL(c.req.url);
   let channel = '';
   if (url.pathname.startsWith('/analytics/streamer/')) {
@@ -1326,6 +1326,25 @@ const activityPageHandler = async (c: any) => {
     c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex');
     return c.html(publicErrorPage(url, '방송 통계를 불러오지 못했어요', 503), 503);
   }
+};
+// 통계 첫 화면은 집계 계산이 무거워 정상 응답만 엣지에 2분 저장한다(수집 주기 10분).
+// 새로고침 요청(no-cache)은 저장본을 건너뛰고 다시 계산한다.
+const ACTIVITY_PAGE_EDGE_SECONDS = 120;
+const activityPageHandler = async (c: any) => {
+  const cache = typeof caches === 'undefined' ? undefined : (caches as any).default as Cache | undefined;
+  const cacheKey = new Request(new URL(c.req.url).toString(), { method: 'GET' });
+  const bypass = /no-cache|no-store/i.test(c.req.header('Cache-Control') || '');
+  if (cache && !bypass && c.req.method === 'GET') {
+    const hit = await cache.match(cacheKey).catch(() => undefined);
+    if (hit) { const response = new Response(hit.body, hit); response.headers.set('X-VD-Cache', 'HIT'); return response; }
+  }
+  const response: Response = await renderActivityPageResponse(c);
+  if (cache && c.req.method === 'GET' && response.status === 200) {
+    const stored = new Response(response.clone().body, response);
+    stored.headers.set('Cache-Control', `public, max-age=60, s-maxage=${ACTIVITY_PAGE_EDGE_SECONDS}`);
+    c.executionCtx.waitUntil(cache.put(cacheKey, stored).catch(() => undefined));
+  }
+  return response;
 };
 app.get('/analytics', activityPageHandler);
 app.get('/analytics/*', activityPageHandler);

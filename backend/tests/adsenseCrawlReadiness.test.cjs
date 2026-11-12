@@ -80,3 +80,17 @@ test('화면 코드는 원본 대용량 이미지 대신 WebP를 사용한다', 
   }
   for (const file of ['public/logo.webp', 'public/images/spotlight_stage_bg.webp', 'public/images/bg_profile.webp']) assert.ok(fs.statSync(path.join(root, file)).size < 40 * 1024, file);
 });
+
+test('소개 상세 첫 HTML에 공개 프로필을 넣고 검토 사본은 내려보내지 않는다', () => {
+  const reviewed = { ...profile('veko', '베코', '노래 방송을 합니다.'), contentReview: { state: 'APPROVED', snapshot: '', reviewedAt: '2026-11-01T00:00:00Z' } };
+  const { reviewSnapshot } = load('../../shared/contentReview.ts');
+  reviewed.contentReview.snapshot = reviewSnapshot(reviewed);
+  const html = renderPortalPage(template, new URL('https://vdebut.live/creator/veko'), reviewed);
+  const json = html.match(/<script type="application\/json" id="vd-initial-profile">([\s\S]*?)<\/script>/);
+  assert.ok(json, 'initial profile script');
+  const embedded = JSON.parse(json[1]);
+  assert.equal(embedded.slug, 'veko');
+  assert.equal(embedded.contentReview.snapshot, '');
+  assert.equal(embedded.contentReview.reviewedAt, '2026-11-01T00:00:00Z');
+  assert.doesNotMatch(renderPortalPage(template, new URL('https://vdebut.live/creators')), /vd-initial-profile/);
+});

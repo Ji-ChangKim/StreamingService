@@ -53,3 +53,13 @@ export function readPortalStorage<T>(key: string, fallback: T): T {
 export function savePortalStorage(key: string, value: unknown): boolean {
   try { localStorage.setItem(`vd:${key}`, JSON.stringify(value)); return true; } catch { return false; }
 }
+
+// 서버가 소개 상세 첫 HTML에 넣어 준 공개 정보를 읽는다. 다른 소개로 이동하면 사용하지 않는다.
+export function readInitialProfile(slug: string): PortalProfile | undefined {
+  if (!slug || typeof document === 'undefined') return undefined;
+  try {
+    const element = document.getElementById('vd-initial-profile');
+    const profile = element?.textContent ? JSON.parse(element.textContent) as PortalProfile : undefined;
+    return profile?.slug === slug ? profile : undefined;
+  } catch { return undefined; }
+}

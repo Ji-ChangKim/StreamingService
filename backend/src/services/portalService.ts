@@ -1,6 +1,6 @@
 import { readPortalProfiles, readPortalProfileBySlug, readPublicPortalProfiles, readPublicPortalProfileBySlug } from './portalProfileRepository';
 import { publicResponseCache } from './publicResponseCache';
-import { isPublicProfile, reviewedProfile } from '../../../shared/contentReview';
+import { isPublicProfile, reviewedProfile, publicProfileView } from '../../../shared/contentReview';
 import { cleanProfilePresentation } from '../../../shared/profilePresentation';
 import { readProfileBroadcast } from './portalProfileDetail';
 import { readProfileChannelMedia } from './portalChannelMedia';
@@ -163,7 +163,7 @@ portalApi.get('/profiles', async (c) => {
   c.header('Cache-Control', `public, max-age=${PUBLIC_PROFILE_LIST_CACHE_SECONDS}`);
   try {
     const key = new URL(c.req.url); key.search = ''; key.searchParams.set('version', c.req.query('version') || '');
-    return await publicResponseCache(c.req.raw, key, PUBLIC_PROFILE_LIST_CACHE_SECONDS, async () => c.json({ profiles: await readPublicPortalProfiles(c.env.DB) }), (promise) => c.executionCtx.waitUntil(promise));
+    return await publicResponseCache(c.req.raw, key, PUBLIC_PROFILE_LIST_CACHE_SECONDS, async () => c.json({ profiles: (await readPublicPortalProfiles(c.env.DB)).map(publicProfileView) }), (promise) => c.executionCtx.waitUntil(promise));
   } catch {
     c.header('Cache-Control', 'no-store');
     return c.json({ error: '소개를 불러오지 못했습니다. 다시 시도해 주세요.' }, 503);
@@ -178,7 +178,7 @@ portalApi.get('/profiles/:slug/detail', async (c) => {
     const profile = await readPublicPortalProfileBySlug(c.env.DB, c.req.param('slug'));
     if (!profile) return c.json({ error: '소개를 찾을 수 없습니다.' }, 404);
     const [broadcast, channelMedia] = await Promise.all([readProfileBroadcast(profile), readProfileChannelMedia(profile)]);
-    return c.json({ profile, broadcast, channelMedia });
+    return c.json({ profile: publicProfileView(profile), broadcast, channelMedia });
   } catch {
     return c.json({ error: '소개를 불러오지 못했습니다. 다시 시도해 주세요.' }, 503);
   }

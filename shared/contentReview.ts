@@ -51,3 +51,8 @@ export function publicBroadcastTitle(title: string): string {
 export function publicBroadcastPayload<T>(value: T): T {
   return (Array.isArray(value) ? value.map(publicBroadcastPayload) : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).map(([key, item]) => [key, /^(?:title|broadcastTitle|streamTitle)$/i.test(key) && typeof item === 'string' ? publicBroadcastTitle(item) : publicBroadcastPayload(item)])) : value) as T;
 }
+
+// 공개 응답에는 검토 상태와 검토일만 남긴다. 검토 시점의 전체 사본(snapshot)은 서버 판정에만 쓰므로 내려보내지 않는다.
+export function publicProfileView(profile: PortalProfile): PortalProfile {
+  return profile.contentReview ? { ...profile, contentReview: { state: profile.contentReview.state, reviewedAt: profile.contentReview.reviewedAt, snapshot: '' } } : profile;
+}
