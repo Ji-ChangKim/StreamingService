@@ -94,3 +94,12 @@ test('소개 상세 첫 HTML에 공개 프로필을 넣고 검토 사본은 내�
   assert.equal(embedded.contentReview.reviewedAt, '2026-11-01T00:00:00Z');
   assert.doesNotMatch(renderPortalPage(template, new URL('https://vdebut.live/creators')), /vd-initial-profile/);
 });
+
+test('자동 등록 채널 기록은 공개 목록에서 빠지고 상세 조회는 유지된다', async () => {
+  const { readPublicPortalProfiles, readPublicPortalProfileBySlug } = load('../src/services/portalProfileRepository.ts');
+  const row = (slug, name, description, time) => ({ slug, display_name: name, description, profile_image_url: '', agency_name: '', country_code: 'KR', x_url: '', debut_date: '2026-11-01', debut_time: time, timezone: 'Asia/Seoul', start_at_utc: '2026-11-01T11:00:00Z', platform: 'CHZZK', channel_url: 'https://chzzk.naver.com/' + 'a'.repeat(32) });
+  const rows = [row('auto-one', '자동', '자동 스트리머의 채널입니다.', '00:00'), row('debut-one', '데뷔', '노래 방송으로 데뷔합니다.', '20:00')];
+  const db = { prepare: (sql) => ({ bind: () => ({ first: async () => sql.includes('portal_profiles') ? null : rows[0] }), all: async () => ({ results: sql.includes('streamerChannel_info') ? rows : [] }) }) };
+  assert.deepEqual((await readPublicPortalProfiles(db)).map((p) => p.slug), ['debut-one']);
+  assert.equal((await readPublicPortalProfileBySlug(db, 'auto-one'))?.slug, 'auto-one');
+});

@@ -127,3 +127,9 @@ export function portalMonth(profile: PortalProfile, timezone: string): string {
 export function portalDay(profile: PortalProfile, timezone: string): string {
   return profile.dateState === 'TIME_TBD' ? profile.debutDate : profile.dateState === 'FIXED' ? portalDateKey(profile.startAtUtc, timezone) : '';
 }
+
+// 통계 수집·외부 채널 검색으로 자동 등록된 채널 기록인지 판정한다.
+// 소개가 기본 문구 그대로이고 데뷔 일정이 없는 기존 자료만 해당한다. 운영자가 소개를 고치면 일반 소개로 공개된다.
+export function isAutoRegisteredChannelProfile(profile: Pick<PortalProfile, 'source' | 'dateState' | 'description' | 'displayName'>): boolean {
+  return profile.source === 'EXISTING' && profile.dateState === 'NONE' && profile.description === `${profile.displayName} 스트리머의 채널입니다.`;
+}
