@@ -116,3 +116,13 @@ test('얇은 소개는 사이트맵에서 빠지고 보강하면 다시 포함�
   assert.doesNotMatch(xml, /creator\/thin-one/);
   assert.match(xml, /creator\/rich-one/);
 });
+
+test('개인정보처리방침에 운영 주체·보호책임자·시행일이 세 언어로 들어간다', () => {
+  const ko = renderPortalPage(template, new URL('https://vdebut.live/privacy'));
+  assert.match(ko, /운영 주체 및 개인정보 보호책임자/);
+  assert.match(ko, /개인정보 보호책임자: VDébut 운영자 \(이메일 ru_0120@naver.com\)/);
+  assert.match(ko, /2026년 11월 12일부터 시행/);
+  assert.doesNotMatch(ko, /비영리|비상업/);
+  assert.match(renderPortalPage(template, new URL('https://vdebut.live/privacy?lang=en')), /Privacy officer: VDébut operator/);
+  assert.match(renderPortalPage(template, new URL('https://vdebut.live/privacy?lang=ja')), /個人情報保護責任者：VDébut運営者/);
+});

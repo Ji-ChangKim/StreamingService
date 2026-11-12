@@ -30,7 +30,15 @@ export const PRIVACY_SECTIONS: PolicySection[] = [
       { href: 'https://www.aboutads.info/choices/', label: '제3자 맞춤 광고 거부(aboutads.info)' },
     ],
   },
+  {
+    heading: '운영 주체 및 개인정보 보호책임자',
+    paragraphs: [
+      'VDébut은 사업자 등록이 없는 개인이 운영하는 독립 서비스입니다.',
+      '개인정보 보호책임자: VDébut 운영자 (이메일 ru_0120@naver.com). 개인정보 관련 문의·열람·정정·삭제 요청은 이 이메일 또는 문의 화면으로 접수하며, 확인 후 지체 없이 처리합니다.',
+    ],
+  },
   { heading: '정보 열람·정정·삭제 문의', paragraphs: ['정보의 열람·정정·삭제 요청은 문의 화면 또는 아래 이메일로 접수할 수 있습니다.'] },
+  { heading: '시행일', paragraphs: ['이 개인정보처리방침은 2026년 11월 12일부터 시행합니다. 내용이 바뀌면 이 페이지에 변경 내용과 새 시행일을 안내합니다.'] },
 ];
 
 export const TERMS_SECTIONS: PolicySection[] = [

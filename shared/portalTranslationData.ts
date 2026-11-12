@@ -320,6 +320,11 @@ VDébut은 서비스 운영을 위해 Google AdSense 등 제3자 광고 서비�
 Google을 포함한 제3자 광고 사업자는 쿠키를 사용해 이용자의 이 사이트 및 다른 웹사이트 방문 기록을 바탕으로 광고를 제공할 수 있습니다. Google은 광고 쿠키를 사용해 이용자에게 이 사이트와 다른 사이트 방문 정보를 바탕으로 한 광고를 표시할 수 있습니다.|||Googleを含む第三者配信事業者は、Cookieを使用して、このサイトや他のウェブサイトへの過去のアクセス情報に基づいて広告を配信することがあります。Googleは広告Cookieを使用して、このサイトや他のサイトへのアクセス情報に基づく広告を表示することがあります。|||Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this website or other websites. Google's use of advertising cookies enables it to serve ads based on your visits to this site and other sites.
 Google 광고 설정에서 맞춤 광고를 사용 중지할 수 있으며, aboutads.info에서 제3자 광고 사업자의 맞춤 광고 쿠키 사용을 거부할 수 있습니다.|||Googleの広告設定でパーソナライズ広告を無効にできます。また、aboutads.infoで第三者配信事業者によるパーソナライズ広告用Cookieの使用を無効にできます。|||You can opt out of personalized advertising in Google Ads Settings, and opt out of third-party vendors' use of cookies for personalized advertising at aboutads.info.
 Google 광고 설정|||Googleの広告設定|||Google Ads Settings
+운영 주체 및 개인정보 보호책임자|||運営者および個人情報保護責任者|||Operator and privacy officer
+VDébut은 사업자 등록이 없는 개인이 운영하는 독립 서비스입니다.|||VDébutは事業者登録のない個人が運営する独立したサービスです。|||VDébut is an independent service run by an individual without a registered business.
+개인정보 보호책임자: VDébut 운영자 (이메일 ru_0120@naver.com). 개인정보 관련 문의·열람·정정·삭제 요청은 이 이메일 또는 문의 화면으로 접수하며, 확인 후 지체 없이 처리합니다.|||個人情報保護責任者：VDébut運営者（メール ru_0120@naver.com）。個人情報に関するお問い合わせ・閲覧・訂正・削除のご依頼は、このメールまたはお問い合わせ画面で受け付け、確認後速やかに対応します。|||Privacy officer: VDébut operator (email ru_0120@naver.com). Privacy inquiries and requests for access, correction or deletion are accepted at this email or through the Contact page and handled promptly after review.
+시행일|||施行日|||Effective date
+이 개인정보처리방침은 2026년 11월 12일부터 시행합니다. 내용이 바뀌면 이 페이지에 변경 내용과 새 시행일을 안내합니다.|||本プライバシーポリシーは2026年11月12日から施行します。内容を変更する場合は、このページで変更内容と新しい施行日をお知らせします。|||This privacy policy is effective as of November 12, 2026. If it changes, we will post the changes and the new effective date on this page.
 공개된 버튜버 소개 {0}명|||公開中のVTuber紹介 {0}人|||{0} published VTuber profiles
 Google의 광고 쿠키 사용 안내|||Googleによる広告Cookieの使用について|||How Google uses advertising cookies
 제3자 맞춤 광고 거부(aboutads.info)|||第三者パーソナライズ広告の無効化（aboutads.info）|||Opt out of third-party personalized ads (aboutads.info)
