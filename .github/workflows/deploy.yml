@@ -93,9 +93,11 @@ jobs:
           echo 'Production deployment requires a manual run with deploy_production enabled and CLOUDFLARE_API_TOKEN configured.' >> "$GITHUB_STEP_SUMMARY"
 
   deploy:
-    name: Deploy explicitly requested production release
+    name: Deploy production release
     needs: validate
-    if: github.event_name == 'workflow_dispatch' && inputs.deploy_production && github.ref == 'refs/heads/main'
+    # main에 push되면 검증 통과 후 자동 배포한다. 수동 실행(deploy_production 체크)은 비상용으로 유지한다.
+    # PR 검증과 main 외 브랜치는 배포하지 않는다.
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy_production))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: production
