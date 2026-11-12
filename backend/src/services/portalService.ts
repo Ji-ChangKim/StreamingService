@@ -182,8 +182,7 @@ portalApi.get('/profiles/:slug/detail', async (c) => {
       const profile = await readPublicPortalProfileBySlug(c.env.DB, c.req.param('slug'));
       if (!profile) { c.header('Cache-Control', 'no-store'); return c.json({ error: '소개를 찾을 수 없습니다.' }, 404); }
       const [broadcast, channelMedia] = await Promise.all([readProfileBroadcast(profile), readProfileChannelMedia(profile)]);
-      // 외부 조회가 일시 실패한 응답은 저장하지 않아 다음 방문에서 다시 조회한다.
-      if (broadcast.state === 'UNAVAILABLE' || channelMedia.videos.state === 'UNAVAILABLE' || channelMedia.clips.state === 'UNAVAILABLE') c.header('Cache-Control', 'no-store');
+      // 외부 조회 실패도 1분만 재사용한다. 계속 실패하는 채널이 방문마다 다시 기다리지 않게 한다.
       return c.json({ profile: publicProfileView(profile), broadcast, channelMedia });
     }, (promise) => c.executionCtx.waitUntil(promise));
   } catch {

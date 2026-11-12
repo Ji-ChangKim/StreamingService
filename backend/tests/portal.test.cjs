@@ -290,7 +290,8 @@ test('상세 단건 조회·공개 권한·플랫폼 직접 조회를 검증한�
   const call = (slug = 'detail') => portalApi.request(`https://example.test/profiles/${slug}/detail`, {}, { DB: db, PORTAL_ENABLED: 'true' });
   const first = await call();
   assert.equal(first.status, 200);
-  assert.equal(first.headers.get('cache-control'), 'no-store');
+  // 상세는 외부 실시간 조회가 느려 1분 동안 재사용한다.
+  assert.equal(first.headers.get('cache-control'), 'public, max-age=60');
   const payload = await first.json();
   assert.deepEqual(payload.profile.details, saved.details);
   assert.deepEqual(payload.profile.media, saved.media);
