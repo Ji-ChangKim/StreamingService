@@ -1,4 +1,5 @@
 import { profileExcerpt } from '../../../shared/portalEditorial';
+import { creatorSlugFromPath, warmCreator } from './portalPrefetch';
 import { t, usePortalLocale, getPortalLanguage, portalLanguagePath } from './portalLocale';
 import { portalCalendarFile } from '../../../shared/portalCalendarFile';
 import { dateTimeFormatter } from '../../../shared/dateTimeFormatter';
@@ -13,7 +14,10 @@ export function PortalLink({ to, children, className = '', onNavigate, ariaCurre
   usePortalLocale(); // 언어 변경은 화면 상태를 유지한 채 문구만 갱신한다.
 
   // 현재 메뉴를 스크린 리더에도 전달하고 새 탭·키보드 탐색 동작은 유지한다.
-  return <a href={portalLanguagePath(to)} className={className} aria-current={ariaCurrent} onClick={(event) => { if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); onNavigate(portalLanguagePath(to)); } }}>{children}</a>;
+  // 소개 상세 링크는 누르기 직전(마우스 올림·터치 시작·키보드 이동)에 미리 받는다.
+  const creatorSlug = creatorSlugFromPath(to);
+  const warm = creatorSlug ? () => warmCreator(creatorSlug) : undefined;
+  return <a href={portalLanguagePath(to)} className={className} aria-current={ariaCurrent} onPointerEnter={warm} onTouchStart={warm} onFocus={warm} onClick={(event) => { if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); onNavigate(portalLanguagePath(to)); } }}>{children}</a>;
 }
 
 // 화면별 핵심 제목과 설명의 위계를 통일한다.

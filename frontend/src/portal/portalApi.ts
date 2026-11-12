@@ -25,20 +25,30 @@ export async function fetchPublicProfiles(signal?: AbortSignal, fresh = false): 
   return data.profiles;
 }
 
+// 목록은 한 번 받으면 화면 이동 때 바로 보여 주고, 1분이 지나면 뒤에서 조용히 새로 받는다.
+const LIST_TTL_MS = 60_000;
+let listCache: { at: number; profiles: PortalProfile[] } | null = null;
+
 // 목록은 실제 결과·불러오는 상태·실패를 구분한다.
 export function usePortalProfiles(enabled = true, page = '') {
-  const [profiles, setProfiles] = useState<PortalProfile[]>([]);
-  const [loading, setLoading] = useState(enabled);
+  const [profiles, setProfiles] = useState<PortalProfile[]>(() => listCache?.profiles || []);
+  const [loading, setLoading] = useState(enabled && !listCache);
   const [error, setError] = useState('');
   const [attempt, setAttempt] = useState(0);
   const refresh = useCallback(() => setAttempt((value) => value + 1), []);
   useEffect(() => {
-    // 화면 이동은 짧은 캐시를 재사용하고, 새로고침 요청은 서버의 최신 공개 목록을 읽는다.
     if (!enabled) { setLoading(false); return; }
+    // 저장된 목록이 충분히 새것이면 다시 받지 않는다. 관리자 새로고침(attempt)은 항상 서버에서 받는다.
+    if (attempt === 0 && listCache && Date.now() - listCache.at < LIST_TTL_MS) { setProfiles(listCache.profiles); setLoading(false); return; }
     const abort = new AbortController();
-    setLoading(true); setError('');
-    // 새 캐시 정책의 주소를 구분해 이전 브라우저 캐시의 긴 유효 시간을 승계하지 않는다.
-    fetchPublicProfiles(abort.signal, attempt > 0).then((data) => { if (!abort.signal.aborted) { setProfiles(data); } }).catch((e: Error) => { if (!abort.signal.aborted) { setProfiles([]); setError(e.message); } }).finally(() => { if (!abort.signal.aborted) setLoading(false); });
+    // 이미 보여 줄 목록이 있으면 불러오는 화면으로 바꾸지 않는다.
+    if (!listCache) setLoading(true);
+    setError('');
+    fetchPublicProfiles(abort.signal, attempt > 0).then((data) => {
+      if (abort.signal.aborted) return;
+      listCache = { at: Date.now(), profiles: data };
+      setProfiles(data);
+    }).catch((e: Error) => { if (!abort.signal.aborted && !listCache) { setProfiles([]); setError(e.message); } }).finally(() => { if (!abort.signal.aborted) setLoading(false); });
     return () => abort.abort();
   }, [attempt, enabled, page]);
   return { profiles, loading, error, refresh };

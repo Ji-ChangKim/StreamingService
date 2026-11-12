@@ -1,4 +1,5 @@
 import { isActivityPath } from '../../../shared/activitySeo';
+import { warmPortalRoutes } from './portalPrefetch';
 import { applyPageSeo } from '../utils/applyPageSeo';
 import { t, usePortalLocale, setPortalLanguage, portalLanguagePath, PortalLanguage } from './portalLocale';
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
@@ -47,6 +48,8 @@ export function PortalApp() {
   // 목록을 받기 전에는 첫 HTML에 담긴 같은 소개로 먼저 그린다.
   const profile = profiles.find((p) => p.slug === slug) || (isCreator ? readInitialProfile(slug) : undefined);
   const navigate = useCallback((to: string) => { window.history.pushState({}, '', portalLanguagePath(to)); setLocation(`${window.location.pathname}${window.location.search}${window.location.hash}`); setMenu(false); window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
+  // 첫 화면이 뜬 뒤 쉬는 시간에 소개·통계 화면 코드를 미리 받아 이동을 빠르게 한다.
+  useEffect(() => { warmPortalRoutes(); }, []);
   useEffect(() => { const sync = () => { const requested = new URLSearchParams(window.location.search).get('lang'); if (requested === 'ko' || requested === 'ja' || requested === 'en') setPortalLanguage(requested); setLocation(`${window.location.pathname}${window.location.search}${window.location.hash}`); setMenu(false); }; window.addEventListener('popstate', sync); return () => window.removeEventListener('popstate', sync); }, []);
   useEffect(() => {
     // 통계는 실제 조회 자료로 계산한 전용 메타데이터를 유지한다.

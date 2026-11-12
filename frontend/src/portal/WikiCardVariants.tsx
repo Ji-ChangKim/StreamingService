@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { warmCreator } from './portalPrefetch';
 import { HeartIcon, ArrowUpRightIcon, CalendarDaysIcon, CalendarPlusIcon } from '@animateicons/react/lucide';
 import { sizedImageUrl } from './imageDelivery';
 import { Sparkles, Clock } from 'lucide-react';
@@ -127,6 +128,9 @@ export function WikiCreatorCardSchedule({
     <article
       className="creator-card-focus-timing"
       onClick={() => open(profile.slug)}
+      onPointerEnter={() => warmCreator(profile.slug)}
+      onTouchStart={() => warmCreator(profile.slug)}
+      onFocus={() => warmCreator(profile.slug)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
@@ -236,6 +240,9 @@ export function WikiCreatorCardContent({
     <article
       className="creator-card-focus-profile"
       onClick={() => open(profile.slug)}
+      onPointerEnter={() => warmCreator(profile.slug)}
+      onTouchStart={() => warmCreator(profile.slug)}
+      onFocus={() => warmCreator(profile.slug)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
@@ -333,6 +340,9 @@ export function WikiCreatorCardLore({
     <article
       className="creator-card-focus-lore"
       onClick={() => open(profile.slug)}
+      onPointerEnter={() => warmCreator(profile.slug)}
+      onTouchStart={() => warmCreator(profile.slug)}
+      onFocus={() => warmCreator(profile.slug)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
