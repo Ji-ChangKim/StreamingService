@@ -151,7 +151,7 @@ test('새 등록은 기존 CMS 목록·삭제·소개 URL·사이트맵까지 �
     const token = 'local-admin';
     const hash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))).toString('hex');
     db.sqlite.prepare('INSERT INTO portal_sessions VALUES(?,?)').run(hash, Date.now() + 60000);
-    const body = { countryCode: 'KR', requesterRole: 'SELF', kind: 'DEBUT', displayName: '테스트 <script>홍보</script>', description: '게임 & 노래 "소개"', platform: 'CHZZK', channelUrl: 'https://chzzk.naver.com/' + 'a'.repeat(32), dateState: 'FIXED', debutDate: '2026-10-20', debutTime: '20:00', timezone: 'Asia/Seoul', contactEmail: 'private@example.com' };
+    const body = { countryCode: 'KR', requesterRole: 'SELF', kind: 'DEBUT', displayName: '테스트 <script>홍보</script>', description: '게임 & 노래 "소개" — 매주 금요일 밤 팬들과 함께 종합 게임과 신곡 커버를 진행합니다.', platform: 'CHZZK', channelUrl: 'https://chzzk.naver.com/' + 'a'.repeat(32), dateState: 'FIXED', debutDate: '2026-10-20', debutTime: '20:00', timezone: 'Asia/Seoul', contactEmail: 'private@example.com' };
     const registered = await (await call('/api/v1/portal/requests', { method: 'POST', body: JSON.stringify(body) })).json();
     const result = await (await call(`/api/v1/portal/admin/requests/${registered.id}/decision`, { method: 'POST', headers: { 'X-Admin-Key': token }, body: JSON.stringify({ status: 'APPROVED', contentChecked: true }) })).json();
     assert.ok(result.slug);

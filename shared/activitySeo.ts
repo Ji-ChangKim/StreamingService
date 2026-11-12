@@ -33,5 +33,6 @@ export function activitySeo(filters: ActivityFilters, data: BroadcastActivity | 
 // 검색 결과와 임의 필터 조합은 별도 검색 문서로 색인하지 않는다.
 export function activityNoindex(url: URL, data: BroadcastActivity | null): boolean {
   return !data || !isActivityPath(url.pathname) || url.hostname !== 'vdebut.live' || [...url.searchParams.keys()].some(key => !['name', 'back', 'returnTo', 'lang', 'gclid', 'fbclid'].includes(key) && !key.startsWith('utm_'))
-    || Boolean(url.pathname.includes('/streamer/') && !data?.summary.broadcasts);
+    // 스트리머별 통계는 수집 기록을 같은 틀로 보여 주는 페이지라 검색에 노출하지 않는다. 방문자는 계속 볼 수 있다.
+    || url.pathname.includes('/streamer/');
 }

@@ -37,7 +37,9 @@ test('개인·플랫폼 대표 주소와 개발·검색·빈 기록의 색인 �
   const personal = { ...data, streamer: { name: '검증 & 스트리머', platform: 'CHZZK' } };
   const html = renderActivityPage(template, new URL('https://vdebut.live/analytics/streamer/' + encodeURIComponent(channel)), { ...filters, channel }, personal);
   assert.match(html, /검증 &amp; 스트리머 방송 통계 · 치지직/);
-  assert.match(html, /name="robots" content="index,follow"/);
+  // 스트리머별 통계는 방송 기록이 있어도 검색에서 제외한다.
+  assert.match(html, /name="robots" content="noindex,follow"/);
+  assert.match(renderActivityPage(template, new URL('https://vdebut.live/analytics'), filters, data), /name="robots" content="index,follow"/);
   for (const url of ['https://dev.vdebut.live/analytics', 'https://vdebut.live/analytics?search=test', 'https://vdebut.live/analytics?from=2026-10-01']) {
     assert.match(renderActivityPage(template, new URL(url), filters, data), /name="robots" content="noindex,follow"/);
   }
@@ -45,9 +47,9 @@ test('개인·플랫폼 대표 주소와 개발·검색·빈 기록의 색인 �
   assert.match(renderActivityPage(template, new URL('https://vdebut.live/analytics/chzzk'), { ...filters, platform: 'CHZZK' }, data), /canonical" href="https:\/\/vdebut.live\/analytics\/chzzk"/);
 });
 
-test('통계 사이트맵에는 실제 기록이 있는 채널과 실제 변경 시각을 사용한다', async () => {
-  const xml = await activitySitemapEntries({ prepare() { return { async all() { return { results: [{ channel, modified: '2026-10-06T00:00:00.000Z' }] }; } }; } });
+test('통계 사이트맵에는 대표 통계 화면만 넣고 실제 변경 시각을 사용한다', async () => {
+  const xml = await activitySitemapEntries({ prepare() { return { async first() { return { modified: '2026-10-06T00:00:00.000Z' }; } }; } });
   assert.match(xml, /analytics\/chzzk/);
-  assert.match(xml, /analytics\/streamer\/CHZZK%3A/);
+  assert.doesNotMatch(xml, /analytics\/streamer\//);
   assert.match(xml, /<lastmod>2026-10-06T00:00:00.000Z<\/lastmod>/);
 });

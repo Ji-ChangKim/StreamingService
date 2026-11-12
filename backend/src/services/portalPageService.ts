@@ -7,7 +7,7 @@ import { translatePortalText } from '../../../shared/portalTranslations';
 import '../../../shared/portalTranslationData'; // 서버 초기 HTML은 세 언어 사전을 항상 사용한다.
 import { escapeActivityHtml, activityJson } from './activityPageService';
 import { INITIAL_PAGE_LOADING_HEAD, initialPageRoot } from './initialPageLoading';
-import { isPublicProfile, publicProfileView } from '../../../shared/contentReview';
+import { isPublicProfile, isThinProfile, publicProfileView } from '../../../shared/contentReview';
 
 // 운영 셸의 메타데이터와 최초 본문을 공개 주소에 맞추고 외부 문자열을 이스케이프한다.
 export function renderPortalPage(html: string, url: URL, profile?: PortalProfile, profiles: PortalProfile[] = []): string {
@@ -32,6 +32,7 @@ export function renderPortalPage(html: string, url: URL, profile?: PortalProfile
 
 // 운영 공개 목록에 승인된 신규 소개도 포함하고 비공개 주소는 제외한다.
 export function portalSitemap(profiles: PortalProfile[]): string {
-  const paths = [...PORTAL_INDEX_PATHS, ...profiles.filter(isPublicProfile).map((profile) => `/creator/${encodeURIComponent(profile.slug)}`)];
+  // 얇은 소개는 보강 전까지 사이트맵에 넣지 않는다.
+  const paths = [...PORTAL_INDEX_PATHS, ...profiles.filter((profile) => isPublicProfile(profile) && !isThinProfile(profile)).map((profile) => `/creator/${encodeURIComponent(profile.slug)}`)];
   return [...new Set(paths)].flatMap((path) => (['ko', 'ja', 'en'] as const).map((language) => sitemapEntry(path, language, true))).join('');
 }

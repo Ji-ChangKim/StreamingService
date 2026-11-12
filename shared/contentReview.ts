@@ -56,3 +56,13 @@ export function publicBroadcastPayload<T>(value: T): T {
 export function publicProfileView(profile: PortalProfile): PortalProfile {
   return profile.contentReview ? { ...profile, contentReview: { state: profile.contentReview.state, reviewedAt: profile.contentReview.reviewedAt, snapshot: '' } } : profile;
 }
+
+// 활동명·날짜·플랫폼명을 빼면 자체 설명이 거의 없고 제원·영상·공지·태그도 없는 소개.
+// 목록·캘린더에는 그대로 보이지만 검색 노출과 사이트맵에서는 제외한다. 소개를 보강하면 자동으로 다시 포함된다.
+export const THIN_PROFILE_MIN_CHARS = 30;
+export function isThinProfile(profile: PortalProfile): boolean {
+  const own = [profile.description, profile.headline, profile.details?.contentSummary, profile.fanGuide, profile.regularSchedule]
+    .filter(Boolean).join(' ').split(profile.displayName || '\u0000').join('').replace(/[^\p{L}\p{N}]/gu, '');
+  const extras = (profile.media?.length || 0) + (profile.notices?.length || 0) + Object.keys(profile.details || {}).length + (profile.tags?.length || 0);
+  return own.length < THIN_PROFILE_MIN_CHARS && extras === 0;
+}

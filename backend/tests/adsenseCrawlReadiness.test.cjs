@@ -103,3 +103,16 @@ test('자동 등록 채널 기록은 공개 목록에서 빠지고 상세 조회
   assert.deepEqual((await readPublicPortalProfiles(db)).map((p) => p.slug), ['debut-one']);
   assert.equal((await readPublicPortalProfileBySlug(db, 'auto-one'))?.slug, 'auto-one');
 });
+
+test('얇은 소개는 사이트맵에서 빠지고 보강하면 다시 포함된다', () => {
+  const { isThinProfile } = load('../../shared/contentReview.ts');
+  const { portalSitemap } = load('../src/services/portalPageService.ts');
+  const thin = profile('thin-one', '하티', '2026.07.02 SOOP 데뷔 버튜버');
+  const rich = profile('rich-one', '리치', '노래와 종합 게임을 주로 하며 매주 금요일 밤 팬들과 함께 신곡 커버를 공개합니다.');
+  assert.equal(isThinProfile(thin), true);
+  assert.equal(isThinProfile(rich), false);
+  assert.equal(isThinProfile({ ...thin, tags: ['노래'] }), false);
+  const xml = portalSitemap([thin, rich]);
+  assert.doesNotMatch(xml, /creator\/thin-one/);
+  assert.match(xml, /creator\/rich-one/);
+});

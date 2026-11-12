@@ -2,6 +2,7 @@ import { isActivityPath } from '../../shared/activitySeo';
 import { publicErrorPage } from './services/publicErrorPage';
 import { sitePath, siteRobots } from '../../shared/siteSeo';
 import { isAutoRegisteredChannelProfile } from '../../shared/portal';
+import { isThinProfile } from '../../shared/contentReview';
 import { publicResponseCache } from './services/publicResponseCache';
 const STATIC_IMAGE_CACHE_CONTROL = 'public, max-age=2592000, stale-while-revalidate=86400';
 import { Hono } from 'hono';
@@ -152,7 +153,8 @@ app.use('*', async (c, next) => {
     const missing = (!seo.known && !isActivityPath(path)) || (path.startsWith('/creator/') && !profile);
     const response = await getAssetFromKV({ request: new Request(new URL(seo.development ? '/dev.html' : '/portal.html', c.req.url), c.req.raw), waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, { ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}') });
     // 자동 등록 채널 기록은 내용이 없어 검색에서 제외하되, 링크로 들어온 방문자에게는 계속 보여 준다.
-    const autoChannel = !!profile && isAutoRegisteredChannelProfile(profile);
+    // 얇은 소개도 보강 전까지 같은 방식으로 검색에서 제외한다.
+    const autoChannel = !!profile && (isAutoRegisteredChannelProfile(profile) || isThinProfile(profile));
     if (autoChannel) c.header('X-Robots-Tag', 'noindex, follow');
     if (seo.privatePage || missing) c.header('X-Robots-Tag', 'noindex, nofollow');
     c.header('Cache-Control', seo.privatePage || missing ? 'no-store' : 'public, max-age=0, must-revalidate');

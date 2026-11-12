@@ -49,11 +49,9 @@ export function renderActivityPage(html: string, url: URL, filters: ActivityFilt
 }
 
 // 실제 수집 기록이 있는 채널만 개인 통계 사이트맵에 포함한다.
+// 통계 사이트맵에는 대표 통계 화면만 넣는다. 스트리머별 통계는 검색 제외 대상이라 넣지 않는다.
 export async function activitySitemapEntries(db: D1Database): Promise<string> {
-  const rows = await db.prepare(`SELECT s.channel_key AS channel, MAX(r.observed_at) AS modified
-    FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id=s.run_id
-    WHERE r.state IN ('available','partial') GROUP BY s.channel_key`).all<{ channel: string; modified: string }>();
-  const modified = rows.results.reduce((max, row) => row.modified > max ? row.modified : max, '');
-  return ['/analytics', '/analytics/chzzk', '/analytics/soop'].map((path) => sitemapEntry(path, 'ko', false, modified)).join('')
-    + rows.results.map((row) => sitemapEntry(activityStreamerPath(row.channel), 'ko', false, row.modified)).join('');
+  const row = await db.prepare(`SELECT MAX(observed_at) AS modified FROM analytics_broadcast_runs WHERE state IN ('available','partial')`).first<{ modified: string | null }>();
+  const modified = row?.modified || '';
+  return ['/analytics', '/analytics/chzzk', '/analytics/soop'].map((path) => sitemapEntry(path, 'ko', false, modified)).join('');
 }
