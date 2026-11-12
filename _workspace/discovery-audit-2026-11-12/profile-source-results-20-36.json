@@ -1,0 +1,142 @@
+{
+  "externalRequests": 16,
+  "bytes": 58182,
+  "rows": [
+    {
+      "slug": "haita-soop",
+      "name": "하이타",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/haihito/station",
+      "currentName": "하이타",
+      "imageChanged": false,
+      "bio": "ꕤ 하잇따-!! | 🫧 비즈니스 메일: biz@akaivstudio.com ꕤ",
+      "details": {}
+    },
+    {
+      "slug": "hyesung-soop",
+      "name": "혜성²",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/hyesung0410/station",
+      "currentName": "여농이오른팔",
+      "imageChanged": false,
+      "bio": "닉변빵 당해버린 혜성이 입니다ㅠ,오전10시방송 화요일, 목요일, 토요일에 킵니다.(≡・x・≡)",
+      "details": {}
+    },
+    {
+      "slug": "iwol-soop",
+      "name": "이월이",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/kovexo0209/station",
+      "currentName": "이월이",
+      "imageChanged": false,
+      "bio": "밥주세요",
+      "details": {}
+    },
+    {
+      "slug": "haenarong-soop",
+      "name": "해나롱",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/urmuse512/station",
+      "currentName": "해나롱",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "hamoye-soop",
+      "name": "하모예0",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/hamoye0/station",
+      "currentName": "하모예0",
+      "imageChanged": false,
+      "bio": "[문의] hamoye0@naver.com",
+      "details": {}
+    },
+    {
+      "slug": "hasinyang-soop",
+      "name": "꾼구마",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/hasinyang/station",
+      "currentName": "꾼구마",
+      "imageChanged": false,
+      "bio": "제철 군고구마",
+      "details": {}
+    },
+    {
+      "slug": "sujiai-soop",
+      "name": "수지AI",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/mentos1/station",
+      "currentName": "수지AI",
+      "imageChanged": false,
+      "bio": "AI 버튜버 편의점에서 알바하는 아이돌 연습생 수지 방송이에요 !\n문의 : sooziai.contact@gmail.com",
+      "details": {}
+    },
+    {
+      "slug": "mai-chzzk",
+      "name": "마이 Mai",
+      "url": "https://api.chzzk.naver.com/service/v1/channels/767f9cfb72885ff1c2979e5b2a1b6066",
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "slug": "data-chzzk",
+      "name": "다타",
+      "url": "https://api.chzzk.naver.com/service/v1/channels/4e6514ed6f0eb092742b82f4658acdfd",
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "slug": "asagiri-yuki",
+      "name": "아사기리 유키",
+      "url": "https://api.chzzk.naver.com/service/v1/channels/36c40736c07e554abd8ff99d86d27914",
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "slug": "rien-chzzk",
+      "name": "리엔",
+      "url": "https://api.chzzk.naver.com/service/v1/channels/0c6c55d7e02084398dd285fced5b7d4b",
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "slug": "lime-chzzk",
+      "name": "라임찌",
+      "url": "https://api.chzzk.naver.com/service/v1/channels/161af422f3977b3687459d58a1a52066",
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "slug": "hanamaru-mei",
+      "name": "하나마루 메이",
+      "url": "https://api.chzzk.naver.com/service/v1/channels/4ef5180fb79d3cf53bcb4cb3ce0796bc",
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "slug": "di6ixx-soop",
+      "name": "우디디디",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/di6ixx/station",
+      "currentName": "우디디디",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "d00328-soop",
+      "name": "단온",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/d00328/station",
+      "currentName": "단온",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "dbrlshd123-soop",
+      "name": "까망까맹",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/dbrlshd123/station",
+      "currentName": "까망까맹",
+      "imageChanged": false,
+      "bio": "안녕하세요. 까망까맹입니다~",
+      "details": {}
+    }
+  ]
+}

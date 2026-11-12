@@ -1,0 +1,216 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/mentos1/station",
+  "checkedAt": "2026-11-12T05:52:37.863Z",
+  "raw": {
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/me/mentos1/mentos1.jpg",
+    "station": {
+      "display": {
+        "main_type": "1110",
+        "title_type": "IMAGE",
+        "title_text": "",
+        "profile_text": "AI 버튜버 편의점에서 알바하는 아이돌 연습생 수지 방송이에요 !\n문의 : sooziai.contact@gmail.com",
+        "skin_type": 0,
+        "skin_no": 0,
+        "title_skin_image": "",
+        "ai_profile_conf_yn": "N",
+        "ai_profile_str": null
+      },
+      "groups": [],
+      "menus": [
+        {
+          "bbs_no": 124016763,
+          "station_no": 32059439,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 104,
+          "rnum": 1,
+          "line": 1,
+          "indention": 0,
+          "name": "General Board",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "upd": {
+        "station_no": 32059439,
+        "user_id": "mentos1",
+        "asp_code": 0,
+        "fan_cnt": 46,
+        "today0_visit_cnt": 0,
+        "today1_visit_cnt": 34,
+        "total_visit_cnt": 2720,
+        "today0_ok_cnt": 0,
+        "today1_ok_cnt": 0,
+        "today0_fav_cnt": 0,
+        "today1_fav_cnt": 0,
+        "total_ok_cnt": 119,
+        "total_view_cnt": 3879
+      },
+      "vods": [
+        {
+          "bbs_no": 124016759,
+          "station_no": 32059439,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 108,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 다시보기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 124016761,
+          "station_no": 32059439,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 109,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 하이라이트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "broad_start": "2026-11-11 13:01:12",
+      "grade": 0,
+      "jointime": "2026-05-14 02:11:18",
+      "station_name": "수지AI",
+      "station_no": 32059439,
+      "station_title": "",
+      "total_broad_time": 211373,
+      "user_id": "mentos1",
+      "user_nick": "수지AI",
+      "active_no": 1
+    },
+    "broad": null,
+    "starballoon_top": [
+      {
+        "user_id": "tjdwhd930",
+        "user_nick": "알뚜",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/tj/tjdwhd930/tjdwhd930.jpg"
+      },
+      {
+        "user_id": "bureu2002",
+        "user_nick": "부르",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/bu/bureu2002/bureu2002.jpg"
+      },
+      {
+        "user_id": "acpaacp",
+        "user_nick": "부르도치♪",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ac/acpaacp/acpaacp.jpg"
+      },
+      {
+        "user_id": "chocolate7",
+        "user_nick": "Nuguri+",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ch/chocolate7/chocolate7.jpg"
+      },
+      {
+        "user_id": "mongshell2",
+        "user_nick": "몽쉘x3x",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/mo/mongshell2/mongshell2.jpg"
+      },
+      {
+        "user_id": "trigun405",
+        "user_nick": "렘던트",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/tr/trigun405/trigun405.jpg"
+      },
+      {
+        "user_id": "spkimnao",
+        "user_nick": "김나오!",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/sp/spkimnao/spkimnao.jpg"
+      },
+      {
+        "user_id": "tkddnjs2525",
+        "user_nick": "필라_",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/tk/tkddnjs2525/tkddnjs2525.jpg"
+      },
+      {
+        "user_id": "wk2401",
+        "user_nick": "과묵한인간",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/wk/wk2401/wk2401.jpg"
+      },
+      {
+        "user_id": "asn0301",
+        "user_nick": "굶줾뉇퉯",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/as/asn0301/asn0301.jpg"
+      },
+      {
+        "user_id": "chet88750",
+        "user_nick": "기가메키노",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ch/chet88750/chet88750.jpg"
+      },
+      {
+        "user_id": "nwjstngur111",
+        "user_nick": ".민트가좋아.",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/nw/nwjstngur111/nwjstngur111.jpg"
+      },
+      {
+        "user_id": "nmohoho",
+        "user_nick": "달묘_",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/nm/nmohoho/nmohoho.jpg"
+      },
+      {
+        "user_id": "geunan",
+        "user_nick": "크롬부르",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ge/geunan/geunan.jpg"
+      },
+      {
+        "user_id": "kju1257",
+        "user_nick": "애기보링",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/kj/kju1257/kju1257.jpg"
+      },
+      {
+        "user_id": "holoyuu3263",
+        "user_nick": "유우˚",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ho/holoyuu3263/holoyuu3263.jpg"
+      },
+      {
+        "user_id": "hibby1004",
+        "user_nick": "너보링",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/hi/hibby1004/hibby1004.jpg"
+      },
+      {
+        "user_id": "jyjo33o",
+        "user_nick": "코기",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/jy/jyjo33o/jyjo33o.jpg"
+      },
+      {
+        "user_id": "nwhytech",
+        "user_nick": "몽추리",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/nw/nwhytech/nwhytech.jpg"
+      },
+      {
+        "user_id": "xpfks6480",
+        "user_nick": "서라부르",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/xp/xpfks6480/xpfks6480.jpg"
+      }
+    ],
+    "sticker_top": [],
+    "subscription": {
+      "total": 1,
+      "tier1": 1,
+      "tier2": 0
+    },
+    "is_best_bj": false,
+    "is_partner_bj": false,
+    "is_ppv_bj": false,
+    "is_af_supporters_bj": false,
+    "is_shopfreeca_bj": false,
+    "is_favorite": false,
+    "is_subscription": false,
+    "is_owner": false,
+    "is_manager": false,
+    "is_notice": false,
+    "is_adsence": true,
+    "is_mobile_push": false,
+    "subscribe_visible": "on",
+    "country": "KR",
+    "current_timestamp": "2026-11-12 14:52:37"
+  }
+}

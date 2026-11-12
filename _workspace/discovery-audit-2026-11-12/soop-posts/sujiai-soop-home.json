@@ -1,0 +1,111 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/mentos1/home",
+  "raw": {
+    "vods": [
+      {
+        "station_no": 32059439,
+        "bbs_no": 124016759,
+        "title_no": 212314029,
+        "title_name": "AI 버추얼 수지입니다 [웰컴 버추얼]",
+        "user_nick": "수지AI",
+        "user_id": "mentos1",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/me/mentos1/mentos1.jpg",
+        "reg_date": "2026-11-11 15:01:30",
+        "reg_date_humans": "23 시간 전",
+        "auth_no": 101,
+        "file_type": "REVIEW",
+        "ucc": {
+          "thumb": "//videoimg.sooplive.com/php/SnapshotLoad.php?rowKey=20261111_270BA1E1_298511147_2_r",
+          "ucc_type": "21",
+          "file_type": "REVIEW",
+          "total_file_duration": 5264366,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED",
+          "paid_ppv": false
+        },
+        "count": {
+          "read_cnt": 2837
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "is_manager": false
+      }
+    ],
+    "boards": [
+      {
+        "station_no": 32059439,
+        "bbs_no": 124016763,
+        "title_no": 211692685,
+        "title_name": "💚수지를 소개합니다💚",
+        "content": "편의점에서 알바하며 아이돌을 꿈꾸는 ✨AI 버추얼 스트리머 수지 SOOJI 방송국입니다 💚 11월 11일 정식 데뷔! 많이 놀러 와 주세요 ​🎉────────────────────...",
+        "user_nick": "수지AI",
+        "user_id": "mentos1",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/me/mentos1/mentos1.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/9/32059439/91951793751511370.png",
+        "reg_date": "2026-11-04 10:12:58",
+        "count": {
+          "read_cnt": 640,
+          "comment_cnt": 0
+        },
+        "is_pin": false,
+        "is_hit": true,
+        "is_notice": true,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 32059439,
+        "bbs_no": 124016763,
+        "title_no": 211194773,
+        "title_name": "[웰컴 버추얼] 수지AI 첫 방송 안내｜11월 11일 오후 1시",
+        "content": "     \n",
+        "user_nick": "수지AI",
+        "user_id": "mentos1",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/me/mentos1/mentos1.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/9/32059439/85461793325144310.png",
+        "reg_date": "2026-10-30 10:53:21",
+        "count": {
+          "read_cnt": 464,
+          "comment_cnt": 0
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": true,
+        "is_owner": false,
+        "is_manager": false
+      }
+    ],
+    "user_vods": [],
+    "user_boards": [],
+    "catchstorys": [],
+    "playlists": [],
+    "sooptore": {
+      "broadcast_live": [],
+      "curation_product": []
+    },
+    "banners": [],
+    "is_adsence": true,
+    "adballoon_event": {
+      "end_yn": true,
+      "percent": -1
+    }
+  }
+}

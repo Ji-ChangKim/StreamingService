@@ -1,0 +1,12 @@
+{
+  "name": "live-worker",
+  "version": "0.0.0",
+  "devDependencies": {
+    "wrangler": "3.114.17"
+  },
+  "private": true,
+  "scripts": {
+    "start": "wrangler dev",
+    "deploy": "wrangler deploy"
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/kovexo0209/home",
+  "raw": {
+    "vods": [
+      {
+        "station_no": 17800080,
+        "bbs_no": 51993711,
+        "title_no": 212374979,
+        "title_name": "경쟁 마스터 가보자구우~",
+        "user_nick": "이월이",
+        "user_id": "kovexo0209",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ko/kovexo0209/kovexo0209.jpg",
+        "reg_date": "2026-11-12 01:01:52",
+        "reg_date_humans": "13 시간 전",
+        "auth_no": 101,
+        "file_type": "REVIEW",
+        "ucc": {
+          "thumb": "//videoimg.sooplive.com/php/SnapshotLoad.php?rowKey=20261111_F93599F0_298512073_3_r",
+          "ucc_type": "21",
+          "file_type": "REVIEW",
+          "total_file_duration": 39702034,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 10000,
+          "vod_category": 40058,
+          "thumb_type": "SUCCEED",
+          "paid_ppv": false
+        },
+        "count": {
+          "read_cnt": 107
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 17800080,
+        "bbs_no": 51993711,
+        "title_no": 212189631,
+        "title_name": "[웰컴버추얼] 에이펙수(╹ڡ╹ )",
+        "user_nick": "이월이",
+        "user_id": "kovexo0209",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ko/kovexo0209/kovexo0209.jpg",
+        "reg_date": "2026-11-10 00:49:47",
+        "reg_date_humans": "2 일 전",
+        "auth_no": 101,
+        "file_type": "REVIEW",
+        "ucc": {
+          "thumb": "//videoimg.sooplive.com/php/SnapshotLoad.php?rowKey=20261109_2B8D6DCE_298463917_3_r",
+          "ucc_type": "21",
+          "file_type": "REVIEW",
+          "total_file_duration": 39048334,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 10000,
+          "vod_category": 40073,
+          "thumb_type": "SUCCEED",
+          "paid_ppv": false
+        },
+        "count": {
+          "read_cnt": 3003
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "is_manager": false
+      }
+    ],
+    "boards": [
+      {
+        "station_no": 17800080,
+        "bbs_no": 51993713,
+        "title_no": 212308455,
+        "title_name": "오늘2시 노래를 조금 불러보려고합니다 (ˉ▽ˉ；)...음치지만 조용히불러볼게요",
+        "content": "2시에 봐요 여러분~",
+        "user_nick": "이월이",
+        "user_id": "kovexo0209",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 104,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ko/kovexo0209/kovexo0209.jpg",
+        "thumb": null,
+        "reg_date": "2026-11-11 13:18:40",
+        "count": {
+          "read_cnt": 2,
+          "comment_cnt": 0
+        },
+        "is_pin": false,
+        "is_hit": true,
+        "is_notice": true,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 17800080,
+        "bbs_no": 51993713,
+        "title_no": 211266269,
+        "title_name": "[웰컴버추얼]이월이 소개서!",
+        "content": "이름: 이월이나이:99년생(비둘기) 생일:2월9일RP: 여우같은강아지MBTI:(궁금하면 찾아오기~)팬애칭: 간택식(간택/간식을 섞어본 애칭입니다 ㅋ ㅋ ㅋ 최태식이~ 이게 생각나더...",
+        "user_nick": "이월이",
+        "user_id": "kovexo0209",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ko/kovexo0209/kovexo0209.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/0/17800080/72081793377467174.png",
+        "reg_date": "2026-10-31 02:01:50",
+        "count": {
+          "read_cnt": 249,
+          "comment_cnt": 0
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": true,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 17800080,
+        "bbs_no": 51993713,
+        "title_no": 211257803,
+        "title_name": "[웰컴버추얼] 이월이 데뷔!!(╹ڡ╹ )",
+        "content": "                                                                                                    ...",
+        "user_nick": "이월이",
+        "user_id": "kovexo0209",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ko/kovexo0209/kovexo0209.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/0/17800080/71181793242655955.png",
+        "reg_date": "2026-10-31 00:36:08",
+        "count": {
+          "read_cnt": 189,
+          "comment_cnt": 0
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": true,
+        "is_owner": false,
+        "is_manager": false
+      }
+    ],
+    "user_vods": [],
+    "user_boards": [],
+    "catchstorys": [],
+    "playlists": [],
+    "sooptore": {
+      "broadcast_live": [],
+      "curation_product": []
+    },
+    "banners": [],
+    "is_adsence": true,
+    "adballoon_event": {
+      "end_yn": true,
+      "percent": -1
+    }
+  }
+}

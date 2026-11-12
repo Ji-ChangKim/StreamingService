@@ -1,0 +1,51 @@
+[
+  {
+    "name": "soop-calendar.json",
+    "url": "https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-01&endDate=2026-11-30",
+    "status": 200,
+    "bytes": 13366,
+    "checkedAt": "2026-11-12T05:48:26.437Z"
+  },
+  {
+    "name": "calendar-before.json",
+    "url": "https://vdebut.live/api/v1/events",
+    "status": 200,
+    "bytes": 457229,
+    "checkedAt": "2026-11-12T05:48:28.314Z"
+  },
+  {
+    "name": "public-before.json",
+    "url": "https://vdebut.live/api/v1/portal/profiles?version=3",
+    "status": 200,
+    "bytes": 417019,
+    "checkedAt": "2026-11-12T05:48:33.369Z"
+  },
+  {
+    "name": "x-debutbot.html",
+    "url": "https://x.com/VtuberDebutBot",
+    "status": 200,
+    "bytes": 156581,
+    "checkedAt": "2026-11-12T05:48:33.786Z"
+  },
+  {
+    "name": "x-krfollower.html",
+    "url": "https://x.com/KRVtubefollower",
+    "status": 200,
+    "bytes": 183969,
+    "checkedAt": "2026-11-12T05:48:33.880Z"
+  },
+  {
+    "name": "sheet.csv",
+    "url": "https://docs.google.com/spreadsheets/d/1SEcOZAhMqFLUW7bxSsBkWK0UriMD3fD82xXX2HrUf38/export?format=csv&gid=1884409648",
+    "status": 200,
+    "bytes": 332193,
+    "checkedAt": "2026-11-12T05:48:34.362Z"
+  },
+  {
+    "name": "x-vvw.html",
+    "url": "https://x.com/vvw_kr",
+    "status": 200,
+    "bytes": 131305,
+    "checkedAt": "2026-11-12T05:48:34.748Z"
+  }
+]

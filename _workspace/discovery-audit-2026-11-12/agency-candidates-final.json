@@ -1,0 +1,64 @@
+[
+  {
+    "results": [
+      {
+        "id": "agency:charon:175425893:CHZZK:295483ac14f8c5b1426c71bebefcf563",
+        "channel_key": "CHZZK:295483ac14f8c5b1426c71bebefcf563",
+        "seed": "{\"id\":\"agency:charon:175425893:CHZZK:295483ac14f8c5b1426c71bebefcf563\",\"channelKey\":\"CHZZK:295483ac14f8c5b1426c71bebefcf563\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/295483ac14f8c5b1426c71bebefcf563\",\"name\":\"채랑\",\"date\":\"2026-11-07\",\"time\":\"15:00\",\"timezone\":\"\",\"kind\":\"UNKNOWN\",\"source\":\"AGENCY_NOTICE\",\"sourceUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\",\"primaryUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\",\"scopeConfirmed\":false}",
+        "status": "HOLD",
+        "reason": "AGENCY_FIRST_ACTIVITY_SCOPE_OR_TIMEZONE_HOLD",
+        "first_seen_at": "2026-11-12T06:20:51.962Z"
+      },
+      {
+        "id": "agency:charon:175425893:CHZZK:e17948db0ed0ee4609203cad91f89177",
+        "channel_key": "CHZZK:e17948db0ed0ee4609203cad91f89177",
+        "seed": "{\"id\":\"agency:charon:175425893:CHZZK:e17948db0ed0ee4609203cad91f89177\",\"channelKey\":\"CHZZK:e17948db0ed0ee4609203cad91f89177\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/e17948db0ed0ee4609203cad91f89177\",\"name\":\"아멜리\",\"date\":\"2026-11-07\",\"time\":\"16:00\",\"timezone\":\"\",\"kind\":\"UNKNOWN\",\"source\":\"AGENCY_NOTICE\",\"sourceUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\",\"primaryUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\",\"scopeConfirmed\":false}",
+        "status": "HOLD",
+        "reason": "AGENCY_FIRST_ACTIVITY_SCOPE_OR_TIMEZONE_HOLD",
+        "first_seen_at": "2026-11-12T06:20:51.962Z"
+      },
+      {
+        "id": "agency:charon:175425893:CHZZK:e3d4faf55988a83862318b27ff2906de",
+        "channel_key": "CHZZK:e3d4faf55988a83862318b27ff2906de",
+        "seed": "{\"id\":\"agency:charon:175425893:CHZZK:e3d4faf55988a83862318b27ff2906de\",\"channelKey\":\"CHZZK:e3d4faf55988a83862318b27ff2906de\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/e3d4faf55988a83862318b27ff2906de\",\"name\":\"나루\",\"date\":\"2026-11-07\",\"time\":\"17:00\",\"timezone\":\"\",\"kind\":\"UNKNOWN\",\"source\":\"AGENCY_NOTICE\",\"sourceUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\",\"primaryUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\",\"scopeConfirmed\":false}",
+        "status": "HOLD",
+        "reason": "AGENCY_FIRST_ACTIVITY_SCOPE_OR_TIMEZONE_HOLD",
+        "first_seen_at": "2026-11-12T06:20:51.962Z"
+      },
+      {
+        "id": "agency:revernia:roster:CHZZK:70c680e3922bebbd90969986c82d6b7c",
+        "channel_key": "CHZZK:70c680e3922bebbd90969986c82d6b7c",
+        "seed": "{\"id\":\"agency:revernia:roster:CHZZK:70c680e3922bebbd90969986c82d6b7c\",\"channelKey\":\"CHZZK:70c680e3922bebbd90969986c82d6b7c\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/70c680e3922bebbd90969986c82d6b7c\",\"name\":\"히라네코 리에\",\"date\":\"\",\"time\":\"\",\"timezone\":\"\",\"kind\":\"UNKNOWN\",\"source\":\"AGENCY_NOTICE\",\"sourceUrl\":\"https://x.com/revernia_kr\",\"primaryUrl\":\"https://x.com/revernia_kr/status/2112492682186727841\",\"scopeConfirmed\":false}",
+        "status": "HOLD",
+        "reason": "AGENCY_YEAR_SCOPE_TIMEZONE_HOLD",
+        "first_seen_at": "2026-11-12T06:30:52.199Z"
+      },
+      {
+        "id": "agency:revernia:roster:CHZZK:9d4daff602a5e804d8b49a91671b6c16",
+        "channel_key": "CHZZK:9d4daff602a5e804d8b49a91671b6c16",
+        "seed": "{\"id\":\"agency:revernia:roster:CHZZK:9d4daff602a5e804d8b49a91671b6c16\",\"channelKey\":\"CHZZK:9d4daff602a5e804d8b49a91671b6c16\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/9d4daff602a5e804d8b49a91671b6c16\",\"name\":\"카이리 시엔\",\"date\":\"\",\"time\":\"\",\"timezone\":\"\",\"kind\":\"UNKNOWN\",\"source\":\"AGENCY_NOTICE\",\"sourceUrl\":\"https://x.com/revernia_kr\",\"primaryUrl\":\"https://x.com/revernia_kr/status/2112492682186727841\",\"scopeConfirmed\":false}",
+        "status": "HOLD",
+        "reason": "AGENCY_YEAR_SCOPE_TIMEZONE_HOLD",
+        "first_seen_at": "2026-11-12T06:30:52.199Z"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.4602
+      },
+      "duration": 0.4602,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 907464704,
+      "rows_read": 67,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

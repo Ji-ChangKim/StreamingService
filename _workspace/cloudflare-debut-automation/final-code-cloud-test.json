@@ -1,0 +1,89 @@
+[
+  {
+    "results": [
+      {
+        "slot": "2026-11-12:DISCOVER",
+        "mode": "DISCOVER",
+        "status": "PARTIAL",
+        "started_at": "2026-11-12T04:56:01.714Z",
+        "finished_at": "2026-11-12T04:56:53.444Z",
+        "summary": "{\"runId\":\"500f7778-c207-4165-88fa-96d02d1e888c\",\"mode\":\"DISCOVER\",\"slot\":\"2026-11-12:DISCOVER\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":35,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":20,\"published\":[],\"updated\":[],\"unchanged\":14,\"held\":[{\"id\":\"soop:739\",\"reason\":\"EVENT_SCOPE_HOLD\"},{\"id\":\"soop:713\",\"reason\":\"EVENT_SCOPE_HOLD\"},{\"id\":\"soop:683\",\"reason\":\"EVENT_SCOPE_HOLD\"},{\"id\":\"soop:737\",\"reason\":\"EVENT_SCOPE_HOLD\"},{\"id\":\"soop:707\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"},{\"id\":\"soop:685\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"}],\"failed\":[],\"remaining\":15,\"externalRequests\":37,\"downloadBytes\":12944263,\"dbCalls\":82,\"dbRowsRead\":1375,\"dbRowsWritten\":124,\"publicVerified\":false,\"errors\":[]}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.2262
+      },
+      "duration": 0.2262,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 906616832,
+      "rows_read": 14,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "id": "soop:751",
+        "status": "UNCHANGED",
+        "reason": "",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/02yeon/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T04:56:01.714Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\",\"enrichmentPending\":false,\"enrichmentWeek\":\"2026-11-12\",\"scheduleReconfirmed\":true,\"detailsSource\":\"https://chapi.sooplive.co.kr/api/02yeon/station\",\"enrichmentCompletedWeek\":\"2026-11-12\"}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.0889
+      },
+      "duration": 0.0889,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 906616832,
+      "rows_read": 1,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "month": "2026-11",
+        "runs": 13,
+        "reserved_external": 520,
+        "reserved_reads": 390000,
+        "reserved_writes": 9100
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.0885
+      },
+      "duration": 0.0885,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 906616832,
+      "rows_read": 1,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

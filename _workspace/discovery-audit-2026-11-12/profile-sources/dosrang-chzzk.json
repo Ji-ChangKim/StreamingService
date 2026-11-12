@@ -1,0 +1,16 @@
+{
+  "slug": "dosrang-chzzk",
+  "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/329c5b387269565dbd53f2976d36bb9a",
+  "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=329c5b387269565dbd53f2976d36bb9a",
+  "checkedAt": "2026-11-12T05:53:51.730Z",
+  "raw": {
+    "success": true,
+    "platform": "CHZZK",
+    "channelId": "329c5b387269565dbd53f2976d36bb9a",
+    "creatorName": "도스랑",
+    "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjExMDJfMjI5/MDAxNzkzNjAzNjk5ODM2.ZqlSxuHpXyif9V9f1IG3Ks_M-CdoudxUurxl9p_wdIIg.YbTfz3tN0AdKt4giFL7GUQUI9OiZW_qkondSH9htSdAg.PNG/image.png",
+    "channelUrl": "https://chzzk.naver.com/329c5b387269565dbd53f2976d36bb9a",
+    "description": "같이 재밌는 추억 만들어보자!",
+    "verified": false
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/di6ixx/title/211756895",
+  "checkedAt": "2026-11-12T05:55:02.202Z",
+  "raw": {
+    "title_no": 211756895,
+    "station_no": 32536283,
+    "bbs_no": 130152017,
+    "board_type": 103,
+    "auth_no": 101,
+    "title_name": "프로필 (추가 예정)",
+    "user_nick": "우디디디",
+    "user_id": "di6ixx",
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/di/di6ixx/di6ixx.jpg",
+    "photo_cnt": 2,
+    "platform_type": 1,
+    "notice_yn": 0,
+    "comment_yn": 1,
+    "reply_yn": 1,
+    "livepost_yn": 1,
+    "share_yn": 0,
+    "search_yn": 0,
+    "ip": "",
+    "reg_date": "2026-11-05 00:49:35",
+    "count": {
+      "like_cnt": 47,
+      "read_cnt": 1059,
+      "comment_cnt": 2,
+      "vod_read_cnt": 1059,
+      "ucc_favorite_cnt": 0
+    },
+    "content": {
+      "content": "<figure tabindex=\"-1\" class=\"ImagePrimaryButton-module_parent__5NOXX\" style=\"margin-left: auto; margin-right: auto; width: 898px;\" dpt=2><img src=\"https://stimg.sooplive.com/NORMAL_BBS/3/32536283/90511793807815140.gif\" alt=\"Uploaded\" data-soop-primary-image=\"true\" style=\"display: block;\"></figure><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><figure tabindex=\"-1\" class=\"ImagePrimaryButton-module_parent__5NOXX\" style=\"margin-left: auto; margin-right: auto; width: 1016px;\" dpt=2><img src=\"https://stimg.sooplive.com/NORMAL_BBS/3/32536283/22451793857738599.png\" alt=\"Uploaded\" style=\"display: block;\"></figure><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>배너 선물해준사람 -&gt; 돌돌이</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>🚀 우주비행사 🚀</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>이름 : 우디디디</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>방송 시작일 : 2026년 11월 11일 11시</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>혈액형 : O형&nbsp;</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>투잡</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>목표&nbsp;</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>-루키존 스트리머 되기</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>-VOD 스트리머 되기</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>-베스트 스트리머 되기</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>-전업 스트리머 되기</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>퍼스널컬러</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p>",
+      "text_content": "배너 선물해준사람 -> 돌돌이<br />🚀 우주비행사 🚀<br />이름 : 우디디디<br />방송 시작일 : 2026년 11월 11일 11시<br />혈액형 : O형<br />투잡<br />목표<br />-루키존 스트리머 되기<br />-VOD 스트리머 되기<br />-베스트 스트리머 되기<br />-전업 스트리머 되기<br /...",
+      "summary": "배너 선물해준사람 -> 돌돌이🚀 우주비행사 🚀이름 : 우디디디방송 시작일 : 2026년 11월 11일 11시혈액형 : O형 투잡목표 -루키존 스트리머 되기-VOD 스트리머 되기-베스트 스트리머 되기-전업 스트리머 되기퍼스널컬러"
+    },
+    "display": {
+      "bbs_name": "🚀 프로필"
+    },
+    "photos": [
+      {
+        "photo_no": 57055967,
+        "rnum": 1,
+        "file_size": 16313419,
+        "file_name": "90511793807815140.gif",
+        "img_height": 0,
+        "img_width": 898,
+        "url": "//stimg.sooplive.co.kr/NORMAL_BBS/3/32536283/90511793807815140.gif",
+        "key": "NORMAL_BBS/3/32536283/90511793807815140.gif"
+      },
+      {
+        "photo_no": 57072659,
+        "rnum": 2,
+        "file_size": 210085,
+        "file_name": "22451793857738599.png",
+        "img_height": 0,
+        "img_width": 1016,
+        "url": "//stimg.sooplive.co.kr/NORMAL_BBS/3/32536283/22451793857738599.png",
+        "key": "NORMAL_BBS/3/32536283/22451793857738599.png"
+      }
+    ],
+    "hashtags": null,
+    "copyright": null,
+    "pin": {
+      "is_pin": null,
+      "bj_id": "di6ixx",
+      "worker_nick": "우디디디",
+      "worker_id": "di6ixx",
+      "login_id": null,
+      "is_owner": false,
+      "is_manager": false,
+      "board_type": 104,
+      "reg_date": "2026-11-12 10:24:53"
+    },
+    "comment_auth": {
+      "auth_no": 1704
+    },
+    "bjlike": null,
+    "badge": null,
+    "calendar": [],
+    "ucc": null,
+    "authority": {
+      "is_board_shareable": false,
+      "is_board_deletable": false,
+      "is_board_updatable": false,
+      "is_movable": false,
+      "is_pinable": false,
+      "is_pin_fixable": false,
+      "is_pin_cancelable": false,
+      "is_notice_cancelable": false,
+      "is_reportable": true,
+      "is_comment_writable": true,
+      "is_reply_writable": true
+    }
+  }
+}

@@ -5,7 +5,7 @@ import { readPublicPortalProfiles } from './portalProfileRepository';
 // 기존 공개 API와 알림에서도 승인된 새 소개의 실제 일정 상태를 유지한다.
 export function portalProfileEvent(profile: PortalProfile) {
   if (profile.dateState === 'NONE') return null;
-  return { id: `portal_${profile.slug}`, title: `${profile.displayName} 데뷔 방송`, type: 'FIRST_DEBUT',
+  return { id: `portal_${profile.slug}`, title: `${profile.displayName}${profile.debutKind === 'PLATFORM_DEBUT' ? ` ${profile.platform} 플랫폼` : ''} 데뷔 방송`, type: profile.debutKind || 'FIRST_DEBUT',
     startAtUtc: profile.startAtUtc, originalTimezone: profile.timezone, status: 'PUBLISHED', verificationStatus: 'COMMUNITY_SUBMITTED',
     creator: { id: profile.slug, slug: profile.slug, displayName: profile.displayName, avatarUrl: profile.avatarUrl,
       agency: profile.agency, description: profile.description, countryCode: profile.countryCode, languages: profile.languages },

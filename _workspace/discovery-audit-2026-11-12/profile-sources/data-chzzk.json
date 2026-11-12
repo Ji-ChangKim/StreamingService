@@ -1,0 +1,16 @@
+{
+  "slug": "data-chzzk",
+  "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/4e6514ed6f0eb092742b82f4658acdfd",
+  "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=4e6514ed6f0eb092742b82f4658acdfd",
+  "checkedAt": "2026-11-12T05:54:00.564Z",
+  "raw": {
+    "success": true,
+    "platform": "CHZZK",
+    "channelId": "4e6514ed6f0eb092742b82f4658acdfd",
+    "creatorName": "다타",
+    "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjA5MjdfNDYg/MDAxNzkwNDg4ODM5MTUw.gl-XMQo0uLO13mTd-Czr1YESkQXcIZm0PVmSwfLcv0gg.c33UXdoHblWza4YR2A-rMC18-JtWz9vTXj2BxPUqpMUg.PNG/image.png",
+    "channelUrl": "https://chzzk.naver.com/4e6514ed6f0eb092742b82f4658acdfd",
+    "description": "종합게임 하는 슬라임",
+    "verified": false
+  }
+}

@@ -1,0 +1,238 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/hyesung0410/station",
+  "checkedAt": "2026-11-12T05:52:37.541Z",
+  "raw": {
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/hy/hyesung0410/hyesung0410.jpg",
+    "station": {
+      "display": {
+        "main_type": "1110",
+        "title_type": "IMAGE",
+        "title_text": "",
+        "profile_text": "닉변빵 당해버린 혜성이 입니다ㅠ,오전10시방송 화요일, 목요일, 토요일에 킵니다.(≡・x・≡)",
+        "skin_type": 0,
+        "skin_no": 0,
+        "title_skin_image": "",
+        "ai_profile_conf_yn": "N",
+        "ai_profile_str": null
+      },
+      "groups": [],
+      "menus": [
+        {
+          "bbs_no": 127730431,
+          "station_no": 32932189,
+          "auth_no": 101,
+          "w_auth_no": 203,
+          "display_type": 104,
+          "rnum": 1,
+          "line": 0,
+          "indention": 0,
+          "name": "프로필 ヽ(*´＾｀)ﾉ",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 127727801,
+          "station_no": 32932189,
+          "auth_no": 101,
+          "w_auth_no": 203,
+          "display_type": 104,
+          "rnum": 2,
+          "line": 1,
+          "indention": 0,
+          "name": "공지 게시판 (ФωФ)",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 127730417,
+          "station_no": 32932189,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 3,
+          "line": 0,
+          "indention": 0,
+          "name": "자유 게시판 (≡・x・≡)",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130027191,
+          "station_no": 32932189,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 4,
+          "line": 0,
+          "indention": 0,
+          "name": "뻐꾸기 게시판",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        }
+      ],
+      "upd": {
+        "station_no": 32932189,
+        "user_id": "hyesung0410",
+        "asp_code": 0,
+        "fan_cnt": 182,
+        "today0_visit_cnt": 0,
+        "today1_visit_cnt": 19,
+        "total_visit_cnt": 1385,
+        "today0_ok_cnt": 0,
+        "today1_ok_cnt": 0,
+        "today0_fav_cnt": 0,
+        "today1_fav_cnt": 0,
+        "total_ok_cnt": 124,
+        "total_view_cnt": 1993
+      },
+      "vods": [
+        {
+          "bbs_no": 127727797,
+          "station_no": 32932189,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 108,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 다시보기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 127727799,
+          "station_no": 32932189,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 109,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 하이라이트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "broad_start": "2026-11-08 21:56:49",
+      "grade": 0,
+      "jointime": "2026-09-03 23:46:13",
+      "station_name": "여농이오른팔",
+      "station_no": 32932189,
+      "station_title": "",
+      "total_broad_time": 12413,
+      "user_id": "hyesung0410",
+      "user_nick": "여농이오른팔",
+      "active_no": 1
+    },
+    "broad": null,
+    "starballoon_top": [
+      {
+        "user_id": "d0ped",
+        "user_nick": "^INTP^",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/d0/d0ped/d0ped.jpg"
+      },
+      {
+        "user_id": "ttbtbzmfla",
+        "user_nick": "여농♡",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/tt/ttbtbzmfla/ttbtbzmfla.jpg"
+      },
+      {
+        "user_id": "nparkwa0820",
+        "user_nick": "관아。",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/np/nparkwa0820/nparkwa0820.jpg"
+      },
+      {
+        "user_id": "fbgustjd01",
+        "user_nick": "여농이납치범",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/fb/fbgustjd01/fbgustjd01.jpg"
+      },
+      {
+        "user_id": "ous1122",
+        "user_nick": "이오군",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ou/ous1122/ous1122.jpg"
+      },
+      {
+        "user_id": "hammojji",
+        "user_nick": "햄모찌♡",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/hammojji/hammojji.jpg"
+      },
+      {
+        "user_id": "energy1318",
+        "user_nick": "관아.",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/en/energy1318/energy1318.jpg"
+      },
+      {
+        "user_id": "kmini9136",
+        "user_nick": "칰붕이v아크",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/km/kmini9136/kmini9136.jpg"
+      },
+      {
+        "user_id": "pres1dent",
+        "user_nick": "레오.R",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/pr/pres1dent/pres1dent.jpg"
+      },
+      {
+        "user_id": "kimaudghks",
+        "user_nick": "크라본정부1",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ki/kimaudghks/kimaudghks.jpg"
+      },
+      {
+        "user_id": "temmy7",
+        "user_nick": "템템♥",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/te/temmy7/temmy7.jpg"
+      },
+      {
+        "user_id": "deyaan",
+        "user_nick": "루얀",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/de/deyaan/deyaan.jpg"
+      },
+      {
+        "user_id": "sdc1230",
+        "user_nick": "미녀만팬갑",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/sd/sdc1230/sdc1230.jpg"
+      },
+      {
+        "user_id": "hiss655",
+        "user_nick": "진범",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/hi/hiss655/hiss655.jpg"
+      },
+      {
+        "user_id": "chamfact",
+        "user_nick": "할말²",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ch/chamfact/chamfact.jpg"
+      },
+      {
+        "user_id": "hoy0408",
+        "user_nick": "황호진",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ho/hoy0408/hoy0408.jpg"
+      }
+    ],
+    "sticker_top": [],
+    "subscription": {
+      "total": 1,
+      "tier1": 1,
+      "tier2": 0
+    },
+    "is_best_bj": false,
+    "is_partner_bj": false,
+    "is_ppv_bj": false,
+    "is_af_supporters_bj": false,
+    "is_shopfreeca_bj": false,
+    "is_favorite": false,
+    "is_subscription": false,
+    "is_owner": false,
+    "is_manager": false,
+    "is_notice": false,
+    "is_adsence": true,
+    "is_mobile_push": false,
+    "subscribe_visible": "on",
+    "country": "KR",
+    "current_timestamp": "2026-11-12 14:52:37"
+  }
+}

@@ -1,0 +1,29 @@
+[
+  {
+    "results": [
+      {
+        "slot": "discovery-test:2026-11-12:2026-11-12.2",
+        "status": "PARTIAL",
+        "summary": "{\"runId\":\"dd6faf26-4ae7-435d-9292-aac373953733\",\"mode\":\"DISCOVER\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.2\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"OK\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"OK\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"OK\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency:charon\",\"status\":\"OK\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency:revernia\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_HTTP_406\"}],\"discovered\":3,\"discoveredCandidates\":[{\"name\":\"채랑\",\"channelKey\":\"CHZZK:295483ac14f8c5b1426c71bebefcf563\",\"source\":\"AGENCY_NOTICE\",\"date\":\"2026-11-07\",\"sourceUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\"},{\"name\":\"아멜리\",\"channelKey\":\"CHZZK:e17948db0ed0ee4609203cad91f89177\",\"source\":\"AGENCY_NOTICE\",\"date\":\"2026-11-07\",\"sourceUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\"},{\"name\":\"나루\",\"channelKey\":\"CHZZK:e3d4faf55988a83862318b27ff2906de\",\"source\":\"AGENCY_NOTICE\",\"date\":\"2026-11-07\",\"sourceUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\"}],\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":10,\"published\":[],\"updated\":[],\"unchanged\":7,\"held\":[{\"id\":\"agency:charon:175425893:CHZZK:295483ac14f8c5b1426c71bebefcf563\",\"reason\":\"AGENCY_FIRST_ACTIVITY_SCOPE_OR_TIMEZONE_HOLD\"},{\"id\":\"agency:charon:175425893:CHZZK:e17948db0ed0ee4609203cad91f89177\",\"reason\":\"AGENCY_FIRST_ACTIVITY_SCOPE_OR_TIMEZONE_HOLD\"},{\"id\":\"agency:charon:175425893:CHZZK:e3d4faf55988a83862318b27ff2906de\",\"reason\":\"AGENCY_FIRST_ACTIVITY_SCOPE_OR_TIMEZONE_HOLD\"}],\"failed\":[],\"remaining\":0,\"externalRequests\":26,\"downloadBytes\":10492952,\"dbCalls\":41,\"dbRowsRead\":1326,\"dbRowsWritten\":47,\"publicVerified\":false,\"errors\":[]}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.558
+      },
+      "duration": 0.558,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 907386880,
+      "rows_read": 22,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

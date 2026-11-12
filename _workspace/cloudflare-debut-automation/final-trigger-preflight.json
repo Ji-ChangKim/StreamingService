@@ -1,0 +1,80 @@
+[
+  {
+    "results": [
+      {
+        "id": "discovery",
+        "enabled": 1,
+        "lease_owner": "",
+        "lease_until": ""
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.2984
+      },
+      "duration": 0.2984,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 906543104,
+      "rows_read": 1,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "month": "2026-11",
+        "runs": 12,
+        "reserved_external": 480,
+        "reserved_reads": 360000,
+        "reserved_writes": 8400
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.239
+      },
+      "duration": 0.239,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 906543104,
+      "rows_read": 1,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.0994
+      },
+      "duration": 0.0994,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 906543104,
+      "rows_read": 12,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

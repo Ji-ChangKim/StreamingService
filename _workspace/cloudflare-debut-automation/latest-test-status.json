@@ -1,0 +1,110 @@
+[
+  {
+    "results": [
+      {
+        "slot": "smoke:2026-11-12T03:37",
+        "status": "RUNNING",
+        "requests": null,
+        "published": null,
+        "updated": null,
+        "errors": null
+      },
+      {
+        "slot": "smoke:2026-11-12T03:32",
+        "status": "PARTIAL",
+        "requests": 24,
+        "published": 0,
+        "updated": 0,
+        "errors": "[]"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:31",
+        "status": "PARTIAL",
+        "requests": 30,
+        "published": 0,
+        "updated": 1,
+        "errors": "[]"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.2333
+      },
+      "duration": 0.2333,
+      "changes": 0,
+      "last_row_id": 340,
+      "changed_db": false,
+      "size_after": 905814016,
+      "rows_read": 3,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "n": 9
+      },
+      {
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_502",
+        "n": 4
+      },
+      {
+        "status": "FAILED",
+        "reason": "SOURCE_TOO_LARGE",
+        "n": 1
+      },
+      {
+        "status": "HOLD",
+        "reason": "EVENT_SCOPE_HOLD",
+        "n": 4
+      },
+      {
+        "status": "HOLD",
+        "reason": "EXISTING_INFORMATION_CONFLICT_HOLD",
+        "n": 3
+      },
+      {
+        "status": "HOLD",
+        "reason": "PRIMARY_NOTICE_REQUIRED",
+        "n": 1
+      },
+      {
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "n": 6
+      },
+      {
+        "status": "PUBLISHED_PENDING_CHECK",
+        "reason": "",
+        "n": 11
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1125
+      },
+      "duration": 0.1125,
+      "changes": 0,
+      "last_row_id": 340,
+      "changed_db": false,
+      "size_after": 905814016,
+      "rows_read": 78,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

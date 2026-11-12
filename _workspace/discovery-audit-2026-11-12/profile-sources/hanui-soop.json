@@ -1,0 +1,246 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/hanui2o/station",
+  "checkedAt": "2026-11-12T05:51:15.095Z",
+  "raw": {
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/hanui2o/hanui2o.jpg",
+    "station": {
+      "display": {
+        "main_type": "1110",
+        "title_type": "IMAGE",
+        "title_text": "",
+        "profile_text": "🪸아카이브 2기생  『 IDYLL 』 의 하늬입니다!🌊 ｜ ✉️비즈니스 메일: biz@akaivstudio.com",
+        "skin_type": 0,
+        "skin_no": 0,
+        "title_skin_image": "",
+        "ai_profile_conf_yn": "N",
+        "ai_profile_str": null
+      },
+      "groups": [],
+      "menus": [
+        {
+          "bbs_no": 128828783,
+          "station_no": 33189025,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "📢 공지사항",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 130320573,
+          "station_no": 33189025,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 1,
+          "line": 0,
+          "indention": 0,
+          "name": "🪸방송 공지",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        }
+      ],
+      "upd": {
+        "station_no": 33189025,
+        "user_id": "hanui2o",
+        "asp_code": 0,
+        "fan_cnt": 3044,
+        "today0_visit_cnt": 0,
+        "today1_visit_cnt": 656,
+        "total_visit_cnt": 21182,
+        "today0_ok_cnt": 0,
+        "today1_ok_cnt": 0,
+        "today0_fav_cnt": 0,
+        "today1_fav_cnt": 24,
+        "total_ok_cnt": 1706,
+        "total_view_cnt": 27941
+      },
+      "vods": [
+        {
+          "bbs_no": 128828779,
+          "station_no": 33189025,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 108,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 다시보기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 128828781,
+          "station_no": 33189025,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 109,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 하이라이트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "broad_start": "2026-11-10 15:01:05",
+      "grade": 0,
+      "jointime": "2026-10-14 16:08:30",
+      "station_name": "하늬_",
+      "station_no": 33189025,
+      "station_title": "",
+      "total_broad_time": 31292,
+      "user_id": "hanui2o",
+      "user_nick": "하늬_",
+      "active_no": 1
+    },
+    "broad": null,
+    "starballoon_top": [
+      {
+        "user_id": "wookh2468",
+        "user_nick": "우거지상",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/wo/wookh2468/wookh2468.jpg"
+      },
+      {
+        "user_id": "yeorumi030",
+        "user_nick": "여르미_",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ye/yeorumi030/yeorumi030.jpg"
+      },
+      {
+        "user_id": "nanamoon777",
+        "user_nick": "나나문",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/na/nanamoon777/nanamoon777.jpg"
+      },
+      {
+        "user_id": "wlgns1771",
+        "user_nick": "키하",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/wl/wlgns1771/wlgns1771.jpg"
+      },
+      {
+        "user_id": "niceappler1",
+        "user_nick": "비몽두희롱범",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ni/niceappler1/niceappler1.jpg"
+      },
+      {
+        "user_id": "zeroori034",
+        "user_nick": "제로오리",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ze/zeroori034/zeroori034.jpg"
+      },
+      {
+        "user_id": "grand0123",
+        "user_nick": "23호_23rd",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/gr/grand0123/grand0123.jpg"
+      },
+      {
+        "user_id": "wckr99",
+        "user_nick": "푸몽띠",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/wc/wckr99/wckr99.jpg"
+      },
+      {
+        "user_id": "pliant093",
+        "user_nick": "연서유",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/pl/pliant093/pliant093.jpg"
+      },
+      {
+        "user_id": "sjdl98",
+        "user_nick": "uSamLEE",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/sj/sjdl98/sjdl98.jpg"
+      },
+      {
+        "user_id": "odenecol36",
+        "user_nick": "ODE",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/od/odenecol36/odenecol36.jpg"
+      },
+      {
+        "user_id": "shjshj12150",
+        "user_nick": "당수당",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/sh/shjshj12150/shjshj12150.jpg"
+      },
+      {
+        "user_id": "juniwow0",
+        "user_nick": "AAA",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ju/juniwow0/juniwow0.jpg"
+      },
+      {
+        "user_id": "n08pjy1103",
+        "user_nick": "움파룸파_",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/n0/n08pjy1103/n08pjy1103.jpg"
+      },
+      {
+        "user_id": "kwell429",
+        "user_nick": "최애한결",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/kw/kwell429/kwell429.jpg"
+      },
+      {
+        "user_id": "a64054478",
+        "user_nick": "지나가는청년",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/a6/a64054478/a64054478.jpg"
+      },
+      {
+        "user_id": "borammylove",
+        "user_nick": "지금현재",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/bo/borammylove/borammylove.jpg"
+      },
+      {
+        "user_id": "ghgs1007",
+        "user_nick": "종합병원세트",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/gh/ghgs1007/ghgs1007.jpg"
+      },
+      {
+        "user_id": "hasen379",
+        "user_nick": "파느",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/hasen379/hasen379.jpg"
+      },
+      {
+        "user_id": "puppingstar",
+        "user_nick": "스­타",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/pu/puppingstar/puppingstar.jpg"
+      }
+    ],
+    "sticker_top": [
+      {
+        "user_id": "nyammoil",
+        "user_nick": "흐루루루___",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ny/nyammoil/nyammoil.jpg"
+      },
+      {
+        "user_id": "nilous2",
+        "user_nick": "Citrus아이셔",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ni/nilous2/nilous2.jpg"
+      },
+      {
+        "user_id": "rnmrnm",
+        "user_nick": "[샤생팬]계식",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/rn/rnmrnm/rnmrnm.jpg"
+      }
+    ],
+    "subscription": {
+      "total": 73,
+      "tier1": 69,
+      "tier2": 4
+    },
+    "is_best_bj": false,
+    "is_partner_bj": false,
+    "is_ppv_bj": false,
+    "is_af_supporters_bj": false,
+    "is_shopfreeca_bj": false,
+    "is_favorite": false,
+    "is_subscription": false,
+    "is_owner": false,
+    "is_manager": false,
+    "is_notice": false,
+    "is_adsence": true,
+    "is_mobile_push": false,
+    "subscribe_visible": "on",
+    "country": "KR",
+    "current_timestamp": "2026-11-12 14:51:14"
+  }
+}

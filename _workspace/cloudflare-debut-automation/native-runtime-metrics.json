@@ -1,0 +1,103 @@
+{
+  "capturedTestExecutions": 12,
+  "maxCpuMs": 786,
+  "sumCpuMs": 2855,
+  "executions": [
+    {
+      "slot": "smoke:2026-11-12T03:24",
+      "cpuMs": 47,
+      "wallMs": 6057,
+      "outcome": "ok",
+      "workerVersion": "a68133c1-4673-4fd8-af06-68632d0fd8db",
+      "status": "PARTIAL"
+    },
+    {
+      "slot": "smoke:2026-11-12T03:25",
+      "cpuMs": 30,
+      "wallMs": 5763,
+      "outcome": "ok",
+      "workerVersion": "a68133c1-4673-4fd8-af06-68632d0fd8db",
+      "status": "PARTIAL"
+    },
+    {
+      "slot": "smoke:2026-11-12T03:26",
+      "cpuMs": 42,
+      "wallMs": 5653,
+      "outcome": "ok",
+      "workerVersion": "836a8240-676b-48b9-905c-a65bb6748cfa",
+      "status": "PARTIAL"
+    },
+    {
+      "slot": "smoke:2026-11-12T03:30",
+      "cpuMs": 29,
+      "wallMs": 4350,
+      "outcome": "ok",
+      "workerVersion": "f31cf670-7f2b-465e-9ae3-700bf1063077",
+      "status": "PARTIAL"
+    },
+    {
+      "slot": "smoke:2026-11-12T03:31",
+      "cpuMs": 629,
+      "wallMs": 33886,
+      "outcome": "ok",
+      "workerVersion": "ef7bd517-52f0-4152-8933-1589ebdf5892",
+      "status": "PARTIAL"
+    },
+    {
+      "slot": "smoke:2026-11-12T03:32",
+      "cpuMs": 172,
+      "wallMs": 29369,
+      "outcome": "ok",
+      "workerVersion": "ef7bd517-52f0-4152-8933-1589ebdf5892",
+      "status": "PARTIAL"
+    },
+    {
+      "slot": "smoke:2026-11-12T03:37",
+      "cpuMs": 472,
+      "wallMs": 51250,
+      "outcome": "ok",
+      "workerVersion": "d22668d9-9f1b-4f2c-ad41-910b21888bcc",
+      "status": "PARTIAL"
+    },
+    {
+      "slot": "smoke:2026-11-12T03:38",
+      "cpuMs": 786,
+      "wallMs": 41145,
+      "outcome": "ok",
+      "workerVersion": "d22668d9-9f1b-4f2c-ad41-910b21888bcc",
+      "status": "COMPLETED_WITH_HOLDS"
+    },
+    {
+      "slot": "smoke:2026-11-12T03:39",
+      "cpuMs": 113,
+      "wallMs": 22488,
+      "outcome": "ok",
+      "workerVersion": "d22668d9-9f1b-4f2c-ad41-910b21888bcc",
+      "status": "COMPLETED"
+    },
+    {
+      "slot": "smoke:2026-11-12T03:40",
+      "cpuMs": 129,
+      "wallMs": 6197,
+      "outcome": "ok",
+      "workerVersion": "d22668d9-9f1b-4f2c-ad41-910b21888bcc",
+      "status": "COMPLETED"
+    },
+    {
+      "slot": "smoke:2026-11-12T03:43",
+      "cpuMs": 214,
+      "wallMs": 23301,
+      "outcome": "ok",
+      "workerVersion": "21df127c-d70d-43e9-b46c-f0e4bb7ce0b3",
+      "status": "COMPLETED"
+    },
+    {
+      "slot": "smoke:2026-11-12T03:44",
+      "cpuMs": 192,
+      "wallMs": 18881,
+      "outcome": "ok",
+      "workerVersion": "21df127c-d70d-43e9-b46c-f0e4bb7ce0b3",
+      "status": "COMPLETED"
+    }
+  ]
+}

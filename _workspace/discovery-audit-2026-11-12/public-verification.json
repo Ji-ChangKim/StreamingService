@@ -1,0 +1,118 @@
+{
+  "before": 435,
+  "after": 435,
+  "changedPeople": 8,
+  "addedFields": 12,
+  "unchanged": 427,
+  "changes": [
+    {
+      "slug": "bayu-soop",
+      "name": "바유.",
+      "fields": [
+        {
+          "key": "details.contentSummary",
+          "before": "",
+          "after": "발로란트, 배그, 마크"
+        },
+        {
+          "key": "regularSchedule",
+          "before": "",
+          "after": "오후 8시 뱅온~💛 (휴뱅은 랜덤입니다!)"
+        }
+      ]
+    },
+    {
+      "slug": "geumyeonnam-soop",
+      "name": "금연남",
+      "fields": [
+        {
+          "key": "details.contentSummary",
+          "before": "",
+          "after": "발로란트 , 스팀게임"
+        }
+      ]
+    },
+    {
+      "slug": "shinittan-soop",
+      "name": "시니땅",
+      "fields": [
+        {
+          "key": "details.bloodType",
+          "before": "",
+          "after": "O형"
+        }
+      ]
+    },
+    {
+      "slug": "yorune-soop",
+      "name": "요루네",
+      "fields": [
+        {
+          "key": "details.birthday",
+          "before": "",
+          "after": "1월 2일"
+        },
+        {
+          "key": "details.mbti",
+          "before": "",
+          "after": "ISFP"
+        },
+        {
+          "key": "details.fandomName",
+          "before": "",
+          "after": "쿤단"
+        },
+        {
+          "key": "regularSchedule",
+          "before": "",
+          "after": "평일 pm10:30, 주말 pm03:00 (*자세한건 스케쥴 공지로 확인)"
+        }
+      ]
+    },
+    {
+      "slug": "haso-soop",
+      "name": "하소o",
+      "fields": [
+        {
+          "key": "regularSchedule",
+          "before": "",
+          "after": "오후 4시~ (사실 유동적일지두)"
+        }
+      ]
+    },
+    {
+      "slug": "iwol-soop",
+      "name": "이월이",
+      "fields": [
+        {
+          "key": "regularSchedule",
+          "before": "",
+          "after": "오후 4시~ 오후10시 까지? 컨디션에 따라 달라용! 자세히는 캘린더에 올릴예정입니다."
+        }
+      ]
+    },
+    {
+      "slug": "di6ixx-soop",
+      "name": "우디디디",
+      "fields": [
+        {
+          "key": "details.bloodType",
+          "before": "",
+          "after": "O형"
+        }
+      ]
+    },
+    {
+      "slug": "d00328-soop",
+      "name": "단온",
+      "fields": [
+        {
+          "key": "details.birthday",
+          "before": "",
+          "after": "3월 28일"
+        }
+      ]
+    }
+  ],
+  "verifiedAt": "2026-11-12T06:19:57.673Z"
+}

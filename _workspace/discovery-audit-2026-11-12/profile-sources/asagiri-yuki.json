@@ -1,0 +1,16 @@
+{
+  "slug": "asagiri-yuki",
+  "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/36c40736c07e554abd8ff99d86d27914",
+  "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=36c40736c07e554abd8ff99d86d27914",
+  "checkedAt": "2026-11-12T05:54:00.019Z",
+  "raw": {
+    "success": true,
+    "platform": "CHZZK",
+    "channelId": "36c40736c07e554abd8ff99d86d27914",
+    "creatorName": "아사기리 유키",
+    "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMDNfMjA1/MDAxNzkxMDIxMTIxMjc5.OTohsMkBRolkgVcHOJ9B83Wo9B9AKjz9vIqQOkB2QPQg.9JYwIWyhe1axdO8q14M-ir-kj5bKAvkXRDGFP2WEzdcg.PNG/image.png",
+    "channelUrl": "https://chzzk.naver.com/36c40736c07e554abd8ff99d86d27914",
+    "description": "이메일:asagiri.yuki.official@gmail.com",
+    "verified": false
+  }
+}

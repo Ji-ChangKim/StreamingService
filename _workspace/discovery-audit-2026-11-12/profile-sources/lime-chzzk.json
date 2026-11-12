@@ -1,0 +1,16 @@
+{
+  "slug": "lime-chzzk",
+  "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/161af422f3977b3687459d58a1a52066",
+  "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=161af422f3977b3687459d58a1a52066",
+  "checkedAt": "2026-11-12T05:54:07.177Z",
+  "raw": {
+    "success": true,
+    "platform": "CHZZK",
+    "channelId": "161af422f3977b3687459d58a1a52066",
+    "creatorName": "라임찌Lime",
+    "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMzBfMjk3/MDAxNzkzMzY0NTI4NDI2.0IjZ_ZkIC-VgAI0rMmxOD_FRpBOquGWIrpztiu7CoEEg.W_MvpnISVJyBjM5wHX-py1TqAAQk3SdcEOuQ2X7585Ug.PNG/image.png",
+    "channelUrl": "https://chzzk.naver.com/161af422f3977b3687459d58a1a52066",
+    "description": "- 더 강력한 힘을 위해 신을 버리고 저주를 택한 퇴마사🔮",
+    "verified": false
+  }
+}

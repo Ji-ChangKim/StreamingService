@@ -1,0 +1,492 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/ghdlcom753/station",
+  "checkedAt": "2026-11-12T05:51:14.705Z",
+  "raw": {
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/gh/ghdlcom753/ghdlcom753.jpg",
+    "station": {
+      "display": {
+        "main_type": "1110",
+        "title_type": "IMAGE",
+        "title_text": "",
+        "profile_text": "",
+        "skin_type": 0,
+        "skin_no": 0,
+        "title_skin_image": "",
+        "ai_profile_conf_yn": "N",
+        "ai_profile_str": null
+      },
+      "groups": [
+        {
+          "idx": 5032,
+          "group_no": 2,
+          "priority": 2,
+          "info": {
+            "group_name": "베스트",
+            "translation_group_name": "{\"ko_KR\":\"베스트\", \"en_US\":\"Best\", \"th_TH\":\"ดีที่สุด\", \"zh_TW\":\"最佳\", \"zh_CN\":\"最佳\"}",
+            "group_class_name": "badge_best",
+            "group_background_color": "#00ca55"
+          }
+        }
+      ],
+      "menus": [
+        {
+          "bbs_no": 130149357,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 107,
+          "rnum": 0,
+          "line": 0,
+          "indention": 0,
+          "name": "🤍코밍🤍",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129870431,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 1,
+          "line": 0,
+          "indention": 0,
+          "name": "프로필",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 65367161,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 2,
+          "line": 0,
+          "indention": 0,
+          "name": "공지사항",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129870419,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 3,
+          "line": 0,
+          "indention": 0,
+          "name": "재잘재잘",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129870433,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 4,
+          "line": 0,
+          "indention": 0,
+          "name": "이벤트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129870437,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 5,
+          "line": 0,
+          "indention": 0,
+          "name": "룰렛/방셀/업보",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130149119,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 6,
+          "line": 0,
+          "indention": 0,
+          "name": "UP눌러주뎨요",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129870439,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 106,
+          "rnum": 7,
+          "line": 0,
+          "indention": 0,
+          "name": "",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130149359,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 107,
+          "rnum": 8,
+          "line": 0,
+          "indention": 0,
+          "name": "🤍코뭉🤍",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129870443,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 9,
+          "line": 0,
+          "indention": 0,
+          "name": "뻐꾸기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129870453,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 10,
+          "line": 0,
+          "indention": 0,
+          "name": "컨텐츠 추천",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129870463,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 11,
+          "line": 0,
+          "indention": 0,
+          "name": "코밍이에게",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        }
+      ],
+      "upd": {
+        "station_no": 19634963,
+        "user_id": "ghdlcom753",
+        "asp_code": 0,
+        "fan_cnt": 3663,
+        "today0_visit_cnt": 0,
+        "today1_visit_cnt": 875,
+        "total_visit_cnt": 196372,
+        "today0_ok_cnt": 0,
+        "today1_ok_cnt": 5,
+        "today0_fav_cnt": 0,
+        "today1_fav_cnt": 1,
+        "total_ok_cnt": 50313,
+        "total_view_cnt": 271947
+      },
+      "vods": [
+        {
+          "bbs_no": 61228112,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 108,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 다시보기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 61228113,
+          "station_no": 19634963,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 109,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 하이라이트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "broad_start": "2026-11-12 11:59:51",
+      "grade": 0,
+      "jointime": "2018-08-12 10:49:11",
+      "station_name": "코미코미코미",
+      "station_no": 19634963,
+      "station_title": "",
+      "total_broad_time": 23145812,
+      "user_id": "ghdlcom753",
+      "user_nick": "코밍˚",
+      "active_no": 1
+    },
+    "broad": {
+      "user_id": "ghdlcom753",
+      "broad_no": 298535493,
+      "broad_cate_no": 810000,
+      "broad_title": "[뉴걸 7일차] 뉴걸 하나 잘 키워보실 분 구함 (˶❛⩊❛˵)",
+      "current_sum_viewer": 14,
+      "broad_grade": 0,
+      "subscription_only": 0,
+      "is_password": false
+    },
+    "starballoon_top": [
+      {
+        "user_id": "tjddnd9024",
+        "user_nick": "코밍트코트",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/tj/tjddnd9024/tjddnd9024.jpg"
+      },
+      {
+        "user_id": "lovesj1225",
+        "user_nick": "빵뎅오빠야",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/lo/lovesj1225/lovesj1225.jpg"
+      },
+      {
+        "user_id": "cmn1767",
+        "user_nick": "이제없는사람",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/cm/cmn1767/cmn1767.jpg"
+      },
+      {
+        "user_id": "dbstn147",
+        "user_nick": "듕이♥윤수",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/db/dbstn147/dbstn147.jpg"
+      },
+      {
+        "user_id": "coppie",
+        "user_nick": "[K]나름커피",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/co/coppie/coppie.jpg"
+      },
+      {
+        "user_id": "godgo369",
+        "user_nick": "#깝Or",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/go/godgo369/godgo369.jpg"
+      },
+      {
+        "user_id": "glad222",
+        "user_nick": "RohanA.I",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/gl/glad222/glad222.jpg"
+      },
+      {
+        "user_id": "kundo",
+        "user_nick": "다닥",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ku/kundo/kundo.jpg"
+      },
+      {
+        "user_id": "harry5959",
+        "user_nick": "안녕찌-",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/harry5959/harry5959.jpg"
+      },
+      {
+        "user_id": "kbr7782",
+        "user_nick": "공듕이",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/kb/kbr7782/kbr7782.jpg"
+      },
+      {
+        "user_id": "manseok96",
+        "user_nick": "TerryGod",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ma/manseok96/manseok96.jpg"
+      },
+      {
+        "user_id": "rkd5940",
+        "user_nick": "남성이",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/rk/rkd5940/rkd5940.jpg"
+      },
+      {
+        "user_id": "chunsoo14",
+        "user_nick": "hdbrhek",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ch/chunsoo14/chunsoo14.jpg"
+      },
+      {
+        "user_id": "dbal6505",
+        "user_nick": "쟤간둥이",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/db/dbal6505/dbal6505.jpg"
+      },
+      {
+        "user_id": "risamt",
+        "user_nick": "채니악마쿠키",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ri/risamt/risamt.jpg"
+      },
+      {
+        "user_id": "skelwlahs12",
+        "user_nick": "킁카.",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/sk/skelwlahs12/skelwlahs12.jpg"
+      },
+      {
+        "user_id": "nindrdr",
+        "user_nick": "달팽이고기",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ni/nindrdr/nindrdr.jpg"
+      },
+      {
+        "user_id": "dlqownt789",
+        "user_nick": "I_Ce",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/dl/dlqownt789/dlqownt789.jpg"
+      },
+      {
+        "user_id": "cdki65",
+        "user_nick": "강시기",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/cd/cdki65/cdki65.jpg"
+      },
+      {
+        "user_id": "npws4460",
+        "user_nick": "[comi]n우석",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/np/npws4460/npws4460.jpg"
+      }
+    ],
+    "sticker_top": [
+      {
+        "user_id": "cmn1767",
+        "user_nick": "이제없는사람",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/cm/cmn1767/cmn1767.jpg"
+      },
+      {
+        "user_id": "tjsrhs7",
+        "user_nick": "불구미",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/tj/tjsrhs7/tjsrhs7.jpg"
+      },
+      {
+        "user_id": "kbr7782",
+        "user_nick": "공듕이",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/kb/kbr7782/kbr7782.jpg"
+      },
+      {
+        "user_id": "ylmark1512",
+        "user_nick": "Uoo하이",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/yl/ylmark1512/ylmark1512.jpg"
+      },
+      {
+        "user_id": "myidjkh0820",
+        "user_nick": "♥♥천사",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/my/myidjkh0820/myidjkh0820.jpg"
+      },
+      {
+        "user_id": "harry5959",
+        "user_nick": "안녕찌-",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/harry5959/harry5959.jpg"
+      },
+      {
+        "user_id": "tjddnd9024",
+        "user_nick": "코밍트코트",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/tj/tjddnd9024/tjddnd9024.jpg"
+      },
+      {
+        "user_id": "npws4460",
+        "user_nick": "[comi]n우석",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/np/npws4460/npws4460.jpg"
+      },
+      {
+        "user_id": "oopp1004",
+        "user_nick": "갠쥐좔좔♥",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/oo/oopp1004/oopp1004.jpg"
+      },
+      {
+        "user_id": "rkdguswlsz",
+        "user_nick": "꽃진♥바보",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/rk/rkdguswlsz/rkdguswlsz.jpg"
+      },
+      {
+        "user_id": "dnjsdnl300",
+        "user_nick": "[ZiO]차태래",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/dn/dnjsdnl300/dnjsdnl300.jpg"
+      },
+      {
+        "user_id": "ccik12457",
+        "user_nick": "*.**.*",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/cc/ccik12457/ccik12457.jpg"
+      },
+      {
+        "user_id": "phs800625",
+        "user_nick": "박동현님",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ph/phs800625/phs800625.jpg"
+      },
+      {
+        "user_id": "hsan220011",
+        "user_nick": "hearte",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/hs/hsan220011/hsan220011.jpg"
+      },
+      {
+        "user_id": "oioio45",
+        "user_nick": "메일★",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/oi/oioio45/oioio45.jpg"
+      },
+      {
+        "user_id": "skagp12",
+        "user_nick": "해장앤해장국",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/sk/skagp12/skagp12.jpg"
+      },
+      {
+        "user_id": "qa1459",
+        "user_nick": "♥까꿍♥",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/qa/qa1459/qa1459.jpg"
+      },
+      {
+        "user_id": "powerwin12",
+        "user_nick": "물자라",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/po/powerwin12/powerwin12.jpg"
+      },
+      {
+        "user_id": "lyd96110400",
+        "user_nick": "보림이의베프",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ly/lyd96110400/lyd96110400.jpg"
+      },
+      {
+        "user_id": "daddyjin",
+        "user_nick": "J™",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/da/daddyjin/daddyjin.jpg"
+      }
+    ],
+    "subscription": {
+      "total": 13,
+      "tier1": 13,
+      "tier2": 0
+    },
+    "is_best_bj": true,
+    "is_partner_bj": false,
+    "is_ppv_bj": false,
+    "is_af_supporters_bj": false,
+    "is_shopfreeca_bj": false,
+    "is_favorite": false,
+    "is_subscription": false,
+    "is_owner": false,
+    "is_manager": false,
+    "is_notice": false,
+    "is_adsence": true,
+    "is_mobile_push": false,
+    "subscribe_visible": "on",
+    "country": "KR",
+    "current_timestamp": "2026-11-12 14:51:14"
+  }
+}

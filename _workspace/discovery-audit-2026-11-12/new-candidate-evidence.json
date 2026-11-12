@@ -1,0 +1,92 @@
+{
+  "records": [
+    {
+      "name": "charon-notice.html",
+      "url": "https://www.charonuniverse.com/notice/?bmode=view&idx=175425893&q=YToxOntzOjEyOiJrZXl3b3JkX3R5cGUiO3M6MzoiYWxsIjt9&t=board",
+      "status": 200,
+      "checkedAt": "2026-11-12T06:03:08.282Z",
+      "bytes": 277230
+    },
+    {
+      "name": "amely-x.html",
+      "url": "https://x.com/AmelyCharon",
+      "status": 200,
+      "checkedAt": "2026-11-12T06:03:08.318Z",
+      "bytes": 158073
+    },
+    {
+      "name": "charon-x.html",
+      "url": "https://x.com/CHARON_UNIVERSE/status/2115725987887661567",
+      "status": 200,
+      "checkedAt": "2026-11-12T06:03:08.347Z",
+      "bytes": 136770
+    },
+    {
+      "name": "chaerang-x.html",
+      "url": "https://x.com/ChaerangCharon",
+      "status": 200,
+      "checkedAt": "2026-11-12T06:03:08.712Z",
+      "bytes": 151349
+    },
+    {
+      "name": "naru-x.html",
+      "url": "https://x.com/NaruCharon",
+      "status": 200,
+      "checkedAt": "2026-11-12T06:03:08.718Z",
+      "bytes": 152509
+    }
+  ],
+  "channels": [
+    {
+      "name": "채랑",
+      "short": "https://ch.ci/gVJap",
+      "url": "https://chzzk.naver.com/295483ac14f8c5b1426c71bebefcf563",
+      "id": "295483ac14f8c5b1426c71bebefcf563",
+      "profile": {
+        "success": true,
+        "platform": "CHZZK",
+        "channelId": "295483ac14f8c5b1426c71bebefcf563",
+        "creatorName": "채랑 Chaerang",
+        "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjExMDRfMTUz/MDAxNzkzNzc4MzU1Mjc1.gRp5ahhIGgF03zb7TFUY-Kmt0WMS3WmX4t-kHHeBGacg.YsA_pqKdApt87YMCkAKMiKf6U7aeBJDP6Gi6GilKCN8g.PNG/image.png",
+        "channelUrl": "https://chzzk.naver.com/295483ac14f8c5b1426c71bebefcf563",
+        "description": "카론 유니버스 소속 채랑 입니다",
+        "verified": false
+      },
+      "checkedAt": "2026-11-12T06:03:16.580Z"
+    },
+    {
+      "name": "아멜리",
+      "short": "https://ch.ci/CrUNW",
+      "url": "https://chzzk.naver.com/e17948db0ed0ee4609203cad91f89177",
+      "id": "e17948db0ed0ee4609203cad91f89177",
+      "profile": {
+        "success": true,
+        "platform": "CHZZK",
+        "channelId": "e17948db0ed0ee4609203cad91f89177",
+        "creatorName": "아멜리 Amely",
+        "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjExMDRfMjkz/MDAxNzkzNzgzMjc0MzE5.RYBfDW6TpTE_y6_bfOeH_7Td1e6-8jYWZdvYWyjaACsg.YSocWCzC3CwDlTJ2LnnI-Le6DgcYsLkfqQQd0r8mfDcg.PNG/image.png",
+        "channelUrl": "https://chzzk.naver.com/e17948db0ed0ee4609203cad91f89177",
+        "description": "카론 유니버스 소속 아멜리 입니다",
+        "verified": false
+      },
+      "checkedAt": "2026-11-12T06:03:19.781Z"
+    },
+    {
+      "name": "나루",
+      "short": "https://ch.ci/GtDqw",
+      "url": "https://chzzk.naver.com/e3d4faf55988a83862318b27ff2906de",
+      "id": "e3d4faf55988a83862318b27ff2906de",
+      "profile": {
+        "success": true,
+        "platform": "CHZZK",
+        "channelId": "e3d4faf55988a83862318b27ff2906de",
+        "creatorName": "나루 Naruu",
+        "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjExMDRfMyAg/MDAxNzkzNzg2NDk2NDg4.ErWxaFpcZJg1CHpkhRrKYRPUvaYQjAdITJ2CHIjI8iMg.T1mnS42Nscq-0q9Ht8x7ukEoRGsw8ef_GFzR8J4fvoQg.PNG/image.png",
+        "channelUrl": "https://chzzk.naver.com/e3d4faf55988a83862318b27ff2906de",
+        "description": "카론 유니버스 소속 나루 입니다",
+        "verified": false
+      },
+      "checkedAt": "2026-11-12T06:03:23.926Z"
+    }
+  ]
+}

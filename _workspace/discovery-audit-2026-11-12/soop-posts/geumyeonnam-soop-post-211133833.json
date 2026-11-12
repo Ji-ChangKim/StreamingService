@@ -1,0 +1,64 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/gusdn1870/title/211133833",
+  "checkedAt": "2026-11-12T05:53:46.564Z",
+  "raw": {
+    "title_no": 211133833,
+    "station_no": 27716164,
+    "bbs_no": 129923783,
+    "board_type": 104,
+    "auth_no": 101,
+    "title_name": "기본 정보 입니다.",
+    "user_nick": "금연남",
+    "user_id": "gusdn1870",
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/gu/gusdn1870/gusdn1870.jpg",
+    "photo_cnt": 0,
+    "platform_type": 1,
+    "notice_yn": 0,
+    "comment_yn": 1,
+    "reply_yn": 1,
+    "livepost_yn": 1,
+    "share_yn": 1,
+    "search_yn": 1,
+    "ip": "",
+    "reg_date": "2026-10-29 18:45:56",
+    "count": {
+      "like_cnt": 1,
+      "read_cnt": 48,
+      "comment_cnt": 0,
+      "vod_read_cnt": 48,
+      "ucc_favorite_cnt": 0
+    },
+    "content": {
+      "content": "<p data-align=\"center\" style=\"text-align: center;\" dpt=1><span style=\"font-size: 20px\">정보 </span></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1><span style=\"font-size: 20px\">성별 : 남자 </span></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" class=\"\" dpt=1><span style=\"font-size: 20px\">나이 : 30대초중반</span></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1><span style=\"font-size: 20px\">생일 : 10/08 </span></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1><span style=\"font-size: 20px\">좋아하는게임 : 발로란트 , 스팀게임 </span></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1><span style=\"font-size: 20px\">와우는 왁굳님 하는것만 보고 해본적 없습니다! </span></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1><span style=\"font-size: 20px\">직업은 인간 사냥꾼,드워프 주술사,나이트엘프 드루이드로 만들었습니다.</span></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p style=\"text-align: left;\" dpt=1></p>",
+      "text_content": "정보 <br />성별 : 남자 <br />나이 : 30대초중반<br />생일 : 10/08 <br />좋아하는게임 : 발로란트 , 스팀게임 <br />와우는 왁굳님 하는것만 보고 해본적 없습니다! <br />직업은 인간 사냥꾼,드워프 주술사,나이트엘프 드루이드로 만들었습니다.",
+      "summary": "정보 성별 : 남자 나이 : 30대초중반생일 : 10/08 좋아하는게임 : 발로란트 , 스팀게임 와우는 왁굳님 하는것만 보고 해본적 없습니다! 직업은 인간 사냥꾼,드워프 주술사,나이트엘프 드루이드로 만들었습니다."
+    },
+    "display": {
+      "bbs_name": "공지사항"
+    },
+    "photos": [],
+    "hashtags": null,
+    "copyright": null,
+    "pin": null,
+    "comment_auth": {
+      "auth_no": 1704
+    },
+    "bjlike": null,
+    "badge": null,
+    "calendar": [],
+    "ucc": null,
+    "authority": {
+      "is_board_shareable": true,
+      "is_board_deletable": false,
+      "is_board_updatable": false,
+      "is_movable": false,
+      "is_pinable": false,
+      "is_pin_fixable": false,
+      "is_pin_cancelable": false,
+      "is_notice_cancelable": false,
+      "is_reportable": true,
+      "is_comment_writable": true,
+      "is_reply_writable": true
+    }
+  }
+}

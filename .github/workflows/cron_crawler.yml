@@ -1,9 +1,7 @@
 name: Investigate Virtual Debut Announcements (Report Only)
 
 on:
-  schedule:
-    # 한국 시간 09:00·21:00. GitHub 스케줄은 지연될 수 있다.
-    - cron: '0 0,12 * * *'
+  # 정기 조사는 Cloudflare vdebut-discovery가 수행한다. 이 워크플로는 수동 보고만 유지한다.
   workflow_dispatch:
 
 # 소스 읽기와 보고서 보관만 허용한다. Cloudflare 배포 인증은 전달하지 않는다.

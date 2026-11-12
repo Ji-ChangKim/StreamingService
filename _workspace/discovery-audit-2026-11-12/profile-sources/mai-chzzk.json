@@ -1,0 +1,16 @@
+{
+  "slug": "mai-chzzk",
+  "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/767f9cfb72885ff1c2979e5b2a1b6066",
+  "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=767f9cfb72885ff1c2979e5b2a1b6066",
+  "checkedAt": "2026-11-12T05:53:52.790Z",
+  "raw": {
+    "success": true,
+    "platform": "CHZZK",
+    "channelId": "767f9cfb72885ff1c2979e5b2a1b6066",
+    "creatorName": "마이 Mai",
+    "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjA5MDdfMzAw/MDAxNzg4NzE5MDM3MjY1.SAEW6owF1X3BYxsaHBJgVt1SsV_D8M6yaKKEhrawQzsg.-dKfryXzqDbRwn-1qgfj3lQ-aFc2jdO-DrkFBcsnG4wg.JPEG/image.jpg",
+    "channelUrl": "https://chzzk.naver.com/767f9cfb72885ff1c2979e5b2a1b6066",
+    "description": "🤍 maituyoi1@gmail.com 🤍🐢",
+    "verified": false
+  }
+}

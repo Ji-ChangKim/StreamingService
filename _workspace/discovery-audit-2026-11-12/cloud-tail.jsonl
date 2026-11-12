@@ -1,0 +1,547 @@
+{
+    "wallTime": 38776,
+    "cpuTime": 762,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464031389
+    },
+    "scriptVersion": {
+        "id": "2cdb0759-3271-464a-b4c6-2aef6e19a325"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"2f7ef0a7-9a5c-46aa-ba98-a0f948ab90fa\",\"mode\":\"BACKFILL\",\"slot\":\"backfill:2026-11-01:2026-11-11:2026-11-12T06:13\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-01\",\"to\":\"2026-11-11\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"registered-enrichment\",\"status\":\"OK\",\"count\":0,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":15,\"checked\":13,\"published\":[],\"updated\":[\"bayu-soop\",\"geumyeonnam-soop\",\"haso-soop\"],\"unchanged\":10,\"held\":[],\"failed\":[],\"remaining\":7,\"externalRequests\":38,\"downloadBytes\":11362728,\"dbCalls\":95,\"dbRowsRead\":2213,\"dbRowsWritten\":154,\"publicVerified\":true,\"errors\":[\"DETAIL_BUDGET_DEFERRED\"]}"
+            ],
+            "level": "log",
+            "timestamp": 1794464071591
+        }
+    ],
+    "eventTimestamp": 1794464032775,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464031389
+    }
+}
+{
+    "wallTime": 6932,
+    "cpuTime": 454,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464091389
+    },
+    "scriptVersion": {
+        "id": "2cdb0759-3271-464a-b4c6-2aef6e19a325"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"fdbc7dee-556a-4e0b-95fe-d1286d12c3d6\",\"mode\":\"BACKFILL\",\"slot\":\"backfill:2026-11-01:2026-11-11:2026-11-12T06:14\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-01\",\"to\":\"2026-11-11\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"registered-enrichment\",\"status\":\"OK\",\"count\":0,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":14,\"published\":[],\"updated\":[\"iwol-soop\",\"d00328-soop\",\"di6ixx-soop\"],\"unchanged\":10,\"held\":[],\"failed\":[],\"remaining\":9,\"externalRequests\":40,\"downloadBytes\":12656690,\"dbCalls\":78,\"dbRowsRead\":2261,\"dbRowsWritten\":117,\"publicVerified\":true,\"errors\":[\"EXTERNAL_BUDGET_EXCEEDED\"]}"
+            ],
+            "level": "log",
+            "timestamp": 1794464099394
+        }
+    ],
+    "eventTimestamp": 1794464092572,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464091389
+    }
+}
+{
+    "wallTime": 38759,
+    "cpuTime": 325,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464151389
+    },
+    "scriptVersion": {
+        "id": "2cdb0759-3271-464a-b4c6-2aef6e19a325"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"14631c6c-3e8b-45b6-ae1e-5ddf87b77aec\",\"mode\":\"BACKFILL\",\"slot\":\"backfill:2026-11-01:2026-11-11:2026-11-12T06:15\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-01\",\"to\":\"2026-11-11\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"registered-enrichment\",\"status\":\"OK\",\"count\":0,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":9,\"published\":[],\"updated\":[\"shinittan-soop\",\"yorune-soop\"],\"unchanged\":7,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":30,\"downloadBytes\":8459888,\"dbCalls\":41,\"dbRowsRead\":1949,\"dbRowsWritten\":42,\"publicVerified\":true,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794464190667
+        }
+    ],
+    "eventTimestamp": 1794464151894,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464151389
+    }
+}
+{
+    "wallTime": 4797,
+    "cpuTime": 39,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464211389
+    },
+    "scriptVersion": {
+        "id": "2cdb0759-3271-464a-b4c6-2aef6e19a325"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"541b364a-2049-432f-8e78-50178f04ad11\",\"mode\":\"BACKFILL\",\"slot\":\"backfill:2026-11-01:2026-11-11:2026-11-12T06:16\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-01\",\"to\":\"2026-11-11\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"registered-enrichment\",\"status\":\"OK\",\"count\":0,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":0,\"downloadBytes\":0,\"dbCalls\":17,\"dbRowsRead\":1362,\"dbRowsWritten\":7,\"publicVerified\":false,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794464217076
+        }
+    ],
+    "eventTimestamp": 1794464212264,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464211389
+    }
+}
+{
+    "wallTime": 3531,
+    "cpuTime": 42,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464271389
+    },
+    "scriptVersion": {
+        "id": "b1ad7d78-8ebe-40c3-8723-a70212825030"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"86405ca7-e46d-43d5-a624-b9147a12b1bf\",\"mode\":\"BACKFILL\",\"slot\":\"backfill:2026-11-01:2026-11-11:2026-11-12T06:17\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-01\",\"to\":\"2026-11-11\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"registered-enrichment\",\"status\":\"OK\",\"count\":0,\"reason\":\"\"}],\"discovered\":0,\"discoveredCandidates\":[],\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":0,\"downloadBytes\":0,\"dbCalls\":16,\"dbRowsRead\":1362,\"dbRowsWritten\":6,\"publicVerified\":false,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794464275651
+        }
+    ],
+    "eventTimestamp": 1794464272103,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464271389
+    }
+}
+{
+    "wallTime": 3770,
+    "cpuTime": 78,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464331389
+    },
+    "scriptVersion": {
+        "id": "2831d48c-2a48-4c34-939d-b5e14d18d1a4"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"3409a567-176f-45dd-b316-c543f7329b2f\",\"mode\":\"BACKFILL\",\"slot\":\"backfill:2026-11-01:2026-11-11:2026-11-12T06:18\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-01\",\"to\":\"2026-11-11\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"registered-enrichment\",\"status\":\"OK\",\"count\":0,\"reason\":\"\"}],\"discovered\":0,\"discoveredCandidates\":[],\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":1,\"published\":[],\"updated\":[],\"unchanged\":1,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":2,\"downloadBytes\":468867,\"dbCalls\":21,\"dbRowsRead\":1369,\"dbRowsWritten\":16,\"publicVerified\":false,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794464335974
+        }
+    ],
+    "eventTimestamp": 1794464332216,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464331389
+    }
+}
+{
+    "wallTime": 4952,
+    "cpuTime": 42,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464391389
+    },
+    "scriptVersion": {
+        "id": "2831d48c-2a48-4c34-939d-b5e14d18d1a4"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"1977821d-a996-4813-aa1b-849c146af6a2\",\"mode\":\"BACKFILL\",\"slot\":\"backfill:2026-11-01:2026-11-11:2026-11-12T06:19\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-01\",\"to\":\"2026-11-11\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"registered-enrichment\",\"status\":\"OK\",\"count\":0,\"reason\":\"\"}],\"discovered\":0,\"discoveredCandidates\":[],\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":0,\"downloadBytes\":0,\"dbCalls\":17,\"dbRowsRead\":1370,\"dbRowsWritten\":7,\"publicVerified\":false,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794464396883
+        }
+    ],
+    "eventTimestamp": 1794464391909,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464391389
+    }
+}
+{
+    "wallTime": 30856,
+    "cpuTime": 372,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464451389
+    },
+    "scriptVersion": {
+        "id": "488c626e-beb5-4326-85e0-a8a2d799c1f4"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"dd6faf26-4ae7-435d-9292-aac373953733\",\"mode\":\"DISCOVER\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.2\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"OK\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"OK\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"OK\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency:charon\",\"status\":\"OK\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency:revernia\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_HTTP_406\"}],\"discovered\":3,\"discoveredCandidates\":[{\"name\":\"채랑\",\"channelKey\":\"CHZZK:295483ac14f8c5b1426c71bebefcf563\",\"source\":\"AGENCY_NOTICE\",\"date\":\"2026-11-07\",\"sourceUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\"},{\"name\":\"아멜리\",\"channelKey\":\"CHZZK:e17948db0ed0ee4609203cad91f89177\",\"source\":\"AGENCY_NOTICE\",\"date\":\"2026-11-07\",\"sourceUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\"},{\"name\":\"나루\",\"channelKey\":\"CHZZK:e3d4faf55988a83862318b27ff2906de\",\"source\":\"AGENCY_NOTICE\",\"date\":\"2026-11-07\",\"sourceUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\"}],\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":10,\"published\":[],\"updated\":[],\"unchanged\":7,\"held\":[{\"id\":\"agency:charon:175425893:CHZZK:295483ac14f8c5b1426c71bebefcf563\",\"reason\":\"AGENCY_FIRST_ACTIVITY_SCOPE_OR_TIMEZONE_HOLD\"},{\"id\":\"agency:charon:175425893:CHZZK:e17948db0ed0ee4609203cad91f89177\",\"reason\":\"AGENCY_FIRST_ACTIVITY_SCOPE_OR_TIMEZONE_HOLD\"},{\"id\":\"agency:charon:175425893:CHZZK:e3d4faf55988a83862318b27ff2906de\",\"reason\":\"AGENCY_FIRST_ACTIVITY_SCOPE_OR_TIMEZONE_HOLD\"}],\"failed\":[],\"remaining\":0,\"externalRequests\":26,\"downloadBytes\":10492952,\"dbCalls\":41,\"dbRowsRead\":1326,\"dbRowsWritten\":47,\"publicVerified\":false,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794464482816
+        }
+    ],
+    "eventTimestamp": 1794464451952,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464451389
+    }
+}
+{
+    "wallTime": 224,
+    "cpuTime": 2,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464511389
+    },
+    "scriptVersion": {
+        "id": "488c626e-beb5-4326-85e0-a8a2d799c1f4"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.2\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794464512130
+        }
+    ],
+    "eventTimestamp": 1794464511893,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464511389
+    }
+}
+{
+    "wallTime": 183,
+    "cpuTime": 4,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464571389
+    },
+    "scriptVersion": {
+        "id": "488c626e-beb5-4326-85e0-a8a2d799c1f4"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.2\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794464572073
+        }
+    ],
+    "eventTimestamp": 1794464571876,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464571389
+    }
+}
+{
+    "wallTime": 269,
+    "cpuTime": 2,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464631389
+    },
+    "scriptVersion": {
+        "id": "488c626e-beb5-4326-85e0-a8a2d799c1f4"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.2\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794464632188
+        }
+    ],
+    "eventTimestamp": 1794464631904,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464631389
+    }
+}
+{
+    "wallTime": 245,
+    "cpuTime": 1,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464691389
+    },
+    "scriptVersion": {
+        "id": "488c626e-beb5-4326-85e0-a8a2d799c1f4"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.2\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794464692563
+        }
+    ],
+    "eventTimestamp": 1794464692309,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464691389
+    }
+}
+{
+    "wallTime": 284,
+    "cpuTime": 2,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464751389
+    },
+    "scriptVersion": {
+        "id": "488c626e-beb5-4326-85e0-a8a2d799c1f4"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.2\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794464752085
+        }
+    ],
+    "eventTimestamp": 1794464751783,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464751389
+    }
+}
+{
+    "wallTime": 228,
+    "cpuTime": 3,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464811389
+    },
+    "scriptVersion": {
+        "id": "488c626e-beb5-4326-85e0-a8a2d799c1f4"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.2\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794464812132
+        }
+    ],
+    "eventTimestamp": 1794464811892,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464811389
+    }
+}
+{
+    "wallTime": 11835,
+    "cpuTime": 195,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464871389
+    },
+    "scriptVersion": {
+        "id": "1f41196c-456a-4af7-ad52-f6b8df96ee23"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"e95e6377-ce88-4ed2-a7ad-562ec24fd58f\",\"mode\":\"DISCOVER\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.3\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED_WITH_HOLDS\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency:charon\",\"status\":\"OK\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency-x:revernia\",\"status\":\"OK\",\"count\":2,\"reason\":\"\"}],\"discovered\":2,\"discoveredCandidates\":[{\"name\":\"카이리 시엔\",\"channelKey\":\"CHZZK:9d4daff602a5e804d8b49a91671b6c16\",\"source\":\"AGENCY_NOTICE\",\"date\":\"\",\"sourceUrl\":\"https://x.com/revernia_kr\"},{\"name\":\"히라네코 리에\",\"channelKey\":\"CHZZK:70c680e3922bebbd90969986c82d6b7c\",\"source\":\"AGENCY_NOTICE\",\"date\":\"\",\"sourceUrl\":\"https://x.com/revernia_kr\"}],\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[{\"id\":\"agency:revernia:roster:CHZZK:9d4daff602a5e804d8b49a91671b6c16\",\"reason\":\"AGENCY_YEAR_SCOPE_TIMEZONE_HOLD\"},{\"id\":\"agency:revernia:roster:CHZZK:70c680e3922bebbd90969986c82d6b7c\",\"reason\":\"AGENCY_YEAR_SCOPE_TIMEZONE_HOLD\"}],\"failed\":[],\"remaining\":0,\"externalRequests\":12,\"downloadBytes\":1208123,\"dbCalls\":29,\"dbRowsRead\":1326,\"dbRowsWritten\":23,\"publicVerified\":false,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794464883839
+        }
+    ],
+    "eventTimestamp": 1794464871972,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464871389
+    }
+}
+{
+    "wallTime": 186,
+    "cpuTime": 5,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464931389
+    },
+    "scriptVersion": {
+        "id": "1f41196c-456a-4af7-ad52-f6b8df96ee23"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.3\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794464932568
+        }
+    ],
+    "eventTimestamp": 1794464932356,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464931389
+    }
+}
+{
+    "wallTime": 271,
+    "cpuTime": 6,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464991389
+    },
+    "scriptVersion": {
+        "id": "1f41196c-456a-4af7-ad52-f6b8df96ee23"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.3\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794464992624
+        }
+    ],
+    "eventTimestamp": 1794464992320,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794464991389
+    }
+}
+{
+    "wallTime": 10036,
+    "cpuTime": 178,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794465051389
+    },
+    "scriptVersion": {
+        "id": "9e518e87-53ca-4158-bd9b-812c7701cc54"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"4269e8d2-b278-465c-8165-bafba5cfebd3\",\"mode\":\"DISCOVER\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.4\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED_WITH_HOLDS\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency:charon\",\"status\":\"OK\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency-x:revernia\",\"status\":\"OK\",\"count\":2,\"reason\":\"\"}],\"discovered\":2,\"discoveredCandidates\":[{\"name\":\"카이리 시엔\",\"channelKey\":\"CHZZK:9d4daff602a5e804d8b49a91671b6c16\",\"source\":\"AGENCY_NOTICE\",\"date\":\"\",\"sourceUrl\":\"https://x.com/revernia_kr\"},{\"name\":\"히라네코 리에\",\"channelKey\":\"CHZZK:70c680e3922bebbd90969986c82d6b7c\",\"source\":\"AGENCY_NOTICE\",\"date\":\"\",\"sourceUrl\":\"https://x.com/revernia_kr\"}],\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[{\"id\":\"agency:revernia:roster:CHZZK:9d4daff602a5e804d8b49a91671b6c16\",\"reason\":\"AGENCY_YEAR_SCOPE_TIMEZONE_HOLD\"},{\"id\":\"agency:revernia:roster:CHZZK:70c680e

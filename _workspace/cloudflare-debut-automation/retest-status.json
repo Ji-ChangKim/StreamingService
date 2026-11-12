@@ -1,0 +1,108 @@
+[
+  {
+    "results": [
+      {
+        "slot": "smoke:2026-11-12T03:32",
+        "status": "PARTIAL",
+        "requests": 24,
+        "bytes": 1145110,
+        "published": 0,
+        "errors": "[]"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:31",
+        "status": "PARTIAL",
+        "requests": 30,
+        "bytes": 3090996,
+        "published": 0,
+        "errors": "[]"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:30",
+        "status": "PARTIAL",
+        "requests": 0,
+        "bytes": 0,
+        "published": 0,
+        "errors": "[]"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:26",
+        "status": "PARTIAL",
+        "requests": 5,
+        "bytes": 0,
+        "published": 0,
+        "errors": "[]"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.281
+      },
+      "duration": 0.281,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 905695232,
+      "rows_read": 4,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "id": "soop-calendar",
+        "status": "OK",
+        "reason": "",
+        "failures": 0
+      },
+      {
+        "id": "community-sheet",
+        "status": "OK",
+        "reason": "",
+        "failures": 0
+      },
+      {
+        "id": "x-curator:VtuberDebutBot",
+        "status": "OK",
+        "reason": "",
+        "failures": 0
+      },
+      {
+        "id": "x-curator:KRVtubefollower",
+        "status": "OK",
+        "reason": "",
+        "failures": 0
+      },
+      {
+        "id": "x-curator:vvw_kr",
+        "status": "OK",
+        "reason": "",
+        "failures": 0
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.2671
+      },
+      "duration": 0.2671,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 905695232,
+      "rows_read": 5,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

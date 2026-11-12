@@ -1,0 +1,460 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/bbosori/station",
+  "checkedAt": "2026-11-12T05:51:14.654Z",
+  "raw": {
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/bb/bbosori/bbosori.jpg",
+    "station": {
+      "display": {
+        "main_type": "1110",
+        "title_type": "IMAGE",
+        "title_text": "",
+        "profile_text": "벌꿀오소리🧡  bbosori725@naver.com",
+        "skin_type": 0,
+        "skin_no": 0,
+        "title_skin_image": "",
+        "ai_profile_conf_yn": "N",
+        "ai_profile_str": null
+      },
+      "groups": [],
+      "menus": [
+        {
+          "bbs_no": 129075063,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "꒰🐝 뽀소리 양봉쟝 🐝꒱",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 129711639,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 106,
+          "rnum": 1,
+          "line": 0,
+          "indention": 0,
+          "name": "",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130026909,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 107,
+          "rnum": 2,
+          "line": 0,
+          "indention": 0,
+          "name": "🧡",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129824421,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 208,
+          "display_type": 104,
+          "rnum": 3,
+          "line": 0,
+          "indention": 0,
+          "name": "୨୧ 📢 공지",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129824423,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 4,
+          "line": 0,
+          "indention": 0,
+          "name": "୨୧ 🗓️ 뽀뱅알",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130123393,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 5,
+          "line": 0,
+          "indention": 0,
+          "name": "୨୧ 🗓️ 주간 일정표",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129824611,
+          "station_no": 33249849,
+          "auth_no": 103,
+          "w_auth_no": 209,
+          "display_type": 104,
+          "rnum": 6,
+          "line": 0,
+          "indention": 0,
+          "name": "୨୧ 💬 뽀잘뽀잘",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129824425,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 106,
+          "rnum": 7,
+          "line": 0,
+          "indention": 0,
+          "name": "",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130026911,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 107,
+          "rnum": 8,
+          "line": 0,
+          "indention": 0,
+          "name": "💛🤎",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130026907,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 9,
+          "line": 0,
+          "indention": 0,
+          "name": "୨୧ UP 뽀랑하는 만큼",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129711647,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 10,
+          "line": 0,
+          "indention": 0,
+          "name": "୨୧ 컨텐츠 뽀꾸기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129838593,
+          "station_no": 33249849,
+          "auth_no": 103,
+          "w_auth_no": 209,
+          "display_type": 104,
+          "rnum": 11,
+          "line": 0,
+          "indention": 0,
+          "name": "୨୧ 꿀벌이 방명록",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129824427,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 106,
+          "rnum": 12,
+          "line": 0,
+          "indention": 0,
+          "name": "",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130026929,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 107,
+          "rnum": 13,
+          "line": 0,
+          "indention": 0,
+          "name": "૮ ᴗ͈ˬᴗ͈ෆა",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130316219,
+          "station_no": 33249849,
+          "auth_no": 103,
+          "w_auth_no": 208,
+          "display_type": 104,
+          "rnum": 14,
+          "line": 0,
+          "indention": 0,
+          "name": "🧡 바뜨엥용 게시판",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130026805,
+          "station_no": 33249849,
+          "auth_no": 103,
+          "w_auth_no": 209,
+          "display_type": 104,
+          "rnum": 15,
+          "line": 0,
+          "indention": 0,
+          "name": "୨୧ 뽀소리 방셀 보석함",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130181043,
+          "station_no": 33249849,
+          "auth_no": 103,
+          "w_auth_no": 209,
+          "display_type": 104,
+          "rnum": 16,
+          "line": 0,
+          "indention": 0,
+          "name": "୨୧ 이벤트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130185953,
+          "station_no": 33249849,
+          "auth_no": 103,
+          "w_auth_no": 209,
+          "display_type": 104,
+          "rnum": 17,
+          "line": 0,
+          "indention": 0,
+          "name": "୨୧ 룰렛",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        }
+      ],
+      "upd": {
+        "station_no": 33249849,
+        "user_id": "bbosori",
+        "asp_code": 0,
+        "fan_cnt": 1149,
+        "today0_visit_cnt": 0,
+        "today1_visit_cnt": 416,
+        "total_visit_cnt": 16766,
+        "today0_ok_cnt": 0,
+        "today1_ok_cnt": 33,
+        "today0_fav_cnt": 0,
+        "today1_fav_cnt": 9,
+        "total_ok_cnt": 1003,
+        "total_view_cnt": 32905
+      },
+      "vods": [
+        {
+          "bbs_no": 129075059,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 108,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 다시보기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 129075061,
+          "station_no": 33249849,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 109,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 하이라이트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "broad_start": "2026-11-10 20:01:51",
+      "grade": 0,
+      "jointime": "2026-10-16 12:50:50",
+      "station_name": "뽀소리_",
+      "station_no": 33249849,
+      "station_title": "11월 5일 오후 3시에 만나요🧡",
+      "total_broad_time": 440378,
+      "user_id": "bbosori",
+      "user_nick": "뽀소리_",
+      "active_no": 1
+    },
+    "broad": null,
+    "starballoon_top": [
+      {
+        "user_id": "nbbkmsbb",
+        "user_nick": "nbbkmsbb",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/nb/nbbkmsbb/nbbkmsbb.jpg"
+      },
+      {
+        "user_id": "lgy619",
+        "user_nick": "룹장",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/lg/lgy619/lgy619.jpg"
+      },
+      {
+        "user_id": "kss2554",
+        "user_nick": "담황곰_",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ks/kss2554/kss2554.jpg"
+      },
+      {
+        "user_id": "wjd5821",
+        "user_nick": "꿀벌커피",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/wj/wjd5821/wjd5821.jpg"
+      },
+      {
+        "user_id": "123123zz",
+        "user_nick": "둬밧얼드",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/12/123123zz/123123zz.jpg"
+      },
+      {
+        "user_id": "xxeng503",
+        "user_nick": "뽀만튀_",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/xx/xxeng503/xxeng503.jpg"
+      },
+      {
+        "user_id": "popo852741",
+        "user_nick": "선택과치킨",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/po/popo852741/popo852741.jpg"
+      },
+      {
+        "user_id": "kukdobin1",
+        "user_nick": "달빛·",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ku/kukdobin1/kukdobin1.jpg"
+      },
+      {
+        "user_id": "whdtn2933",
+        "user_nick": "둬경주",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/wh/whdtn2933/whdtn2933.jpg"
+      },
+      {
+        "user_id": "gksdidqksxn",
+        "user_nick": "준밧드",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/gk/gksdidqksxn/gksdidqksxn.jpg"
+      },
+      {
+        "user_id": "ymsshintan2",
+        "user_nick": "머머둬",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ym/ymsshintan2/ymsshintan2.jpg"
+      },
+      {
+        "user_id": "tkfkd04a",
+        "user_nick": "[둬]라이네",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/tk/tkfkd04a/tkfkd04a.jpg"
+      },
+      {
+        "user_id": "jay3614",
+        "user_nick": "나기냄새후욱",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ja/jay3614/jay3614.jpg"
+      },
+      {
+        "user_id": "jacob296",
+        "user_nick": "[BD]경찰서장",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ja/jacob296/jacob296.jpg"
+      },
+      {
+        "user_id": "ejtsl123",
+        "user_nick": "찹탕마",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ej/ejtsl123/ejtsl123.jpg"
+      },
+      {
+        "user_id": "jjs2146jjs",
+        "user_nick": "나푸__",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/jj/jjs2146jjs/jjs2146jjs.jpg"
+      },
+      {
+        "user_id": "dydrbs60409",
+        "user_nick": "스규-_-",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/dy/dydrbs60409/dydrbs60409.jpg"
+      },
+      {
+        "user_id": "mo3913",
+        "user_nick": "샤를마르텔",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/mo/mo3913/mo3913.jpg"
+      },
+      {
+        "user_id": "alsznd4467",
+        "user_nick": "[둬]아쿠",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/al/alsznd4467/alsznd4467.jpg"
+      },
+      {
+        "user_id": "rkdgml4531",
+        "user_nick": "뽀디쥬디",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/rk/rkdgml4531/rkdgml4531.jpg"
+      }
+    ],
+    "sticker_top": [
+      {
+        "user_id": "jay3614",
+        "user_nick": "나기냄새후욱",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ja/jay3614/jay3614.jpg"
+      }
+    ],
+    "subscription": {
+      "total": 28,
+      "tier1": 23,
+      "tier2": 5
+    },
+    "is_best_bj": false,
+    "is_partner_bj": false,
+    "is_ppv_bj": false,
+    "is_af_supporters_bj": false,
+    "is_shopfreeca_bj": false,
+    "is_favorite": false,
+    "is_subscription": false,
+    "is_owner": false,
+    "is_manager": false,
+    "is_notice": false,
+    "is_adsence": true,
+    "is_mobile_push": false,
+    "subscribe_visible": "on",
+    "country": "KR",
+    "current_timestamp": "2026-11-12 14:51:14"
+  }
+}

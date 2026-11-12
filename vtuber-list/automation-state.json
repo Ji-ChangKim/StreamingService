@@ -1,22 +1,26 @@
 {
   "automationId": "automation",
-  "lastRunId": "2026-11-11-2104",
-  "lastRunAt": "2026-11-11T21:22:35+09:00",
-  "lastRunStatus": "PARTIAL",
-  "lastSoopSourceSuccessAt": "2026-11-11T21:22:35+09:00",
-  "lastPublicSiteSuccessAt": "2026-11-11T21:22:35+09:00",
-  "lastCommunitySheetSuccessAt": "2026-11-11T21:22:35+09:00",
-  "lastRunSummary": "_workspace/debut-automation/2026-11-11-2104/run-summary.json",
-  "nextDateSearchCursor": "2026-11-21",
+  "lastRunId": "4269e8d2-b278-465c-8165-bafba5cfebd3",
+  "lastRunAt": "2026-11-12T06:31:02.054Z",
+  "lastRunStatus": "COMPLETED_WITH_HOLDS",
+  "lastSoopSourceSuccessAt": "2026-11-12T11:04:06+09:00",
+  "lastPublicSiteSuccessAt": "2026-11-12T11:04:06+09:00",
+  "lastCommunitySheetSuccessAt": "2026-11-12T11:04:06+09:00",
+  "lastRunSummary": {
+    "audit": "2026-11-01~2026-11-11",
+    "checkedRegisteredProfiles": 36,
+    "updatedProfiles": 8,
+    "addedFields": 12,
+    "netNewChannels": 2,
+    "previouslyResearchedCandidates": 3,
+    "newPublicProfiles": 0,
+    "candidateHolds": 5,
+    "report": "docs/debut-discovery-audit-2026-11-12.md"
+  },
+  "nextDateSearchCursor": null,
   "pendingCandidateIds": [
-    "521f1defbdd5576d",
-    "7d439b842c0a829c",
-    "6d8fae22a87cd402",
-    "e20dd623ae962456",
-    "43e5eaa95a86c89b",
-    "a8090ed9ace9699f",
-    "614ebf7250851a24",
-    "4995a3c53e20bb15"
+    "4995a3c53e20bb15",
+    "f8825fe8db9f7489"
   ],
   "existingPendingCandidatesReverified": [
     "f7ad8e9b7ceb0dd5"
@@ -29,14 +33,7 @@
   "primaryScheduleRecheckNeeded": [
     "mai-chzzk"
   ],
-  "blockingModelGap": "플랫폼 데뷔·이적을 FIRST_DEBUT와 구분하는 공개 데이터 모델 필요",
   "deferredLeads": [
-    {
-      "name": "시라나미 우유루",
-      "dateHint": "2026-12-12",
-      "reason": "범위 밖. 재게시 단서만 확인",
-      "source": "https://teapaw.org/vvw_kr"
-    },
     {
       "name": "쿠로세 유우",
       "monthHint": "2026-12",
@@ -61,5 +58,58 @@
       "reason": "재게시 단서의 주체·연도·채널 미확인",
       "source": "https://instalker.org/VtuberDebutBot"
     }
-  ]
+  ],
+  "lastRunCoverage": "PARTIAL_WEB_SEARCH",
+  "preferredPrimaryXReadMethod": "공개 X 원문 HTTPS 본문·메타정보·원문 링크 확인; 웹 도구 실패만으로 접근 불가 판정하지 않음",
+  "unattendedUiPolicy": "네이티브 앱 실행·활성화·브라우저 UI 조작·승인창 유발 경로 사용 금지. 접근이 필요한 항목은 보류.",
+  "lastVerifiedExistingWithinWindow": [
+    "hiyuka-meri",
+    "malribu-2"
+  ],
+  "resolvedModelGap": "플랫폼 데뷔·이적을 FIRST_DEBUT와 구분하는 공개 데이터 모델 필요",
+  "executionOwner": "Cloudflare vdebut-discovery",
+  "pcAutomationStatus": "PAUSED",
+  "cloudflare": {
+    "worker": "vdebut-discovery",
+    "deploymentVersion": "088bd9d7-08e6-4eb2-9a53-c9e2e1fc6eca",
+    "timezone": "Asia/Seoul",
+    "schedule": [
+      "매일 09:00",
+      "매일 21:00",
+      "월요일 10:00"
+    ],
+    "serverTestRunCount": 13,
+    "newPublicProfiles": 7,
+    "updatedExistingProfiles": 22,
+    "publicProfileCount": 435,
+    "runbook": "docs/debut-server-automation.md",
+    "sourceOfTruth": "Cloudflare D1 debut_automation_*",
+    "localCsvRole": "공개 반영을 확인한 월별 스냅샷; PC 파일의 자동 갱신은 아님",
+    "lastRunSlot": "2026-11-12:DISCOVER",
+    "lastRunStatus": "PARTIAL",
+    "lastRunNote": "20명 확인·실패 0·상한으로 재확인 15건을 다음 회차로 이월",
+    "pendingRechecks": 15,
+    "oldGithubScheduleRemovedCommit": "3d1ba1d184e6150b8c1862c935ea84c100ac30d5",
+    "lastAudit": {
+      "runId": "4269e8d2-b278-465c-8165-bafba5cfebd3",
+      "stats": {
+        "runs": 10,
+        "external": 160,
+        "reads": 15861,
+        "writes": 439
+      },
+      "nativeNewChannelKeys": [
+        "CHZZK:9d4daff602a5e804d8b49a91671b6c16",
+        "CHZZK:70c680e3922bebbd90969986c82d6b7c"
+      ],
+      "knownLimit": "치지직 후보 일시·최초 활동 범위 미확정, 공개 보류"
+    }
+  },
+  "legacyPcRun": {
+    "lastRunId": "2026-11-12-0903",
+    "lastRunAt": "2026-11-12T11:04:06+09:00",
+    "lastRunStatus": "COMPLETED_WITH_HOLDS",
+    "lastRunSummary": "_workspace/debut-automation/2026-11-12-0903/run-summary.json",
+    "nextDateSearchCursor": "2026-11-25"
+  }
 }

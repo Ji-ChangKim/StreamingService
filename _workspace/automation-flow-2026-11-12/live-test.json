@@ -1,0 +1,180 @@
+{
+  "checkedAt": "2026-11-12T08:19:51.805Z",
+  "kind": "READ_ONLY_PRODUCTION_RECHECK",
+  "checks": [
+    {
+      "name": "서버 자동화 활성화",
+      "pass": true
+    },
+    {
+      "name": "저장 후 공개 확인 대기",
+      "pass": true,
+      "details": {
+        "remaining": 0
+      }
+    },
+    {
+      "name": "기존 36명 보강 완료 기록 보존",
+      "pass": true,
+      "details": {
+        "completed": 36
+      }
+    },
+    {
+      "name": "새 후보 보존 카이리 시엔",
+      "pass": true,
+      "details": {
+        "reason": "AGENCY_YEAR_SCOPE_TIMEZONE_HOLD"
+      }
+    },
+    {
+      "name": "미검증 후보 공개 차단 카이리 시엔",
+      "pass": true
+    },
+    {
+      "name": "새 후보 보존 히라네코 리에",
+      "pass": true,
+      "details": {
+        "reason": "AGENCY_YEAR_SCOPE_TIMEZONE_HOLD"
+      }
+    },
+    {
+      "name": "미검증 후보 공개 차단 히라네코 리에",
+      "pass": true
+    },
+    {
+      "name": "8명 12항목 공개 값 보존",
+      "pass": true,
+      "details": {
+        "matched": 12
+      }
+    },
+    {
+      "name": "36명 프로필과 캘린더 일치",
+      "pass": true,
+      "details": {
+        "profiles": 36
+      }
+    },
+    {
+      "name": "정규 예약만 유지",
+      "pass": true
+    },
+    {
+      "name": "실행 비용 제한 유지",
+      "pass": true,
+      "details": {
+        "monthRuns": 23
+      }
+    }
+  ],
+  "passed": 11,
+  "total": 11,
+  "profiles": 435,
+  "calendarEvents": 435,
+  "latestServerRun": {
+    "id": "4269e8d2-b278-465c-8165-bafba5cfebd3",
+    "slot": "discovery-test:2026-11-12:2026-11-12.4",
+    "status": "COMPLETED_WITH_HOLDS",
+    "finishedAt": "2026-11-12T06:31:02.054Z",
+    "summary": {
+      "runId": "4269e8d2-b278-465c-8165-bafba5cfebd3",
+      "mode": "DISCOVER",
+      "slot": "discovery-test:2026-11-12:2026-11-12.4",
+      "range": {
+        "today": "2026-11-12",
+        "from": "2026-11-05",
+        "to": "2026-12-12"
+      },
+      "status": "COMPLETED_WITH_HOLDS",
+      "coverage": "LIMITED_PUBLIC_SOURCES",
+      "sources": [
+        {
+          "id": "soop-calendar",
+          "status": "OK",
+          "count": 35,
+          "reason": ""
+        },
+        {
+          "id": "community-sheet",
+          "status": "OK",
+          "count": 1,
+          "reason": ""
+        },
+        {
+          "id": "x-curator:VtuberDebutBot",
+          "status": "CACHED",
+          "count": 5,
+          "reason": ""
+        },
+        {
+          "id": "x-curator:KRVtubefollower",
+          "status": "CACHED",
+          "count": 8,
+          "reason": ""
+        },
+        {
+          "id": "x-curator:vvw_kr",
+          "status": "CACHED",
+          "count": 3,
+          "reason": ""
+        },
+        {
+          "id": "agency:charon",
+          "status": "OK",
+          "count": 3,
+          "reason": ""
+        },
+        {
+          "id": "agency-x:revernia",
+          "status": "OK",
+          "count": 2,
+          "reason": ""
+        }
+      ],
+      "discovered": 2,
+      "discoveredCandidates": [
+        {
+          "name": "카이리 시엔",
+          "channelKey": "CHZZK:9d4daff602a5e804d8b49a91671b6c16",
+          "source": "AGENCY_NOTICE",
+          "date": "",
+          "sourceUrl": "https://x.com/revernia_kr"
+        },
+        {
+          "name": "히라네코 리에",
+          "channelKey": "CHZZK:70c680e3922bebbd90969986c82d6b7c",
+          "source": "AGENCY_NOTICE",
+          "date": "",
+          "sourceUrl": "https://x.com/revernia_kr"
+        }
+      ],
+      "sourceChanges": 0,
+      "seedDeferred": 0,
+      "enrichmentDeferred": 0,
+      "checked": 0,
+      "published": [],
+      "updated": [],
+      "unchanged": 0,
+      "held": [
+        {
+          "id": "agency:revernia:roster:CHZZK:9d4daff602a5e804d8b49a91671b6c16",
+          "reason": "AGENCY_YEAR_SCOPE_TIMEZONE_HOLD"
+        },
+        {
+          "id": "agency:revernia:roster:CHZZK:70c680e3922bebbd90969986c82d6b7c",
+          "reason": "AGENCY_YEAR_SCOPE_TIMEZONE_HOLD"
+        }
+      ],
+      "failed": [],
+      "remaining": 0,
+      "externalRequests": 12,
+      "downloadBytes": 1208123,
+      "dbCalls": 29,
+      "dbRowsRead": 1323,
+      "dbRowsWritten": 20,
+      "publicVerified": false,
+      "errors": []
+    }
+  }
+}

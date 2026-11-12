@@ -1,0 +1,186 @@
+{
+  "externalRequests": 20,
+  "bytes": 106924,
+  "rows": [
+    {
+      "slug": "aran-anura",
+      "name": "아란 아누라",
+      "url": "https://api.chzzk.naver.com/service/v1/channels/cd3b3bc8f8fe774cfcb375b31cc51beb",
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "slug": "irinajjyang",
+      "name": "이리나쨩",
+      "url": "https://api.chzzk.naver.com/service/v1/channels/dbc5906d632b15ff5f226285eb68866d",
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "slug": "stina-soop",
+      "name": "스티나_",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/nsjanjsi12/station",
+      "currentName": "스티나_",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "sharuru-soop",
+      "name": "샤루루",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/ire1113/station",
+      "currentName": "#샤루루",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "esnya-retrona",
+      "name": "에스냐",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/retrona/station",
+      "currentName": "에스냐~",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "hakung-chzzk",
+      "name": "하쿵",
+      "url": "https://api.chzzk.naver.com/service/v1/channels/df15cb831b80356e79aab8bdb49ac577",
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "slug": "bayu-soop",
+      "name": "바유.",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/ruchar0526/station",
+      "currentName": "바유.",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "dosrang-chzzk",
+      "name": "도스랑",
+      "url": "https://api.chzzk.naver.com/service/v1/channels/329c5b387269565dbd53f2976d36bb9a",
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "slug": "geumyeonnam-soop",
+      "name": "금연남",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/gusdn1870/station",
+      "currentName": "금연남",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "pplora-soop",
+      "name": "#쁠로라",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/alsgurdl761/station",
+      "currentName": "#쁠로라",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "aru-soop",
+      "name": "아루_",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/s666666/station",
+      "currentName": "아루_",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "bbosori-soop",
+      "name": "뽀소리_",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/bbosori/station",
+      "currentName": "뽀소리_",
+      "imageChanged": false,
+      "bio": "11월 5일 오후 3시에 만나요🧡",
+      "details": {}
+    },
+    {
+      "slug": "koming-soop",
+      "name": "코밍˚",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/ghdlcom753/station",
+      "currentName": "코밍˚",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "kissingyou-soop",
+      "name": "키싱유*",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/kwonyoa/station",
+      "currentName": "키싱유*",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "shinittan-soop",
+      "name": "시니땅",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/chouzaigal/station",
+      "currentName": "시니땅",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "soda-soop",
+      "name": "소다*",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/xooooooo/station",
+      "currentName": "소다*",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "yorune-soop",
+      "name": "요루네",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/dbsthduda/station",
+      "currentName": "요루네",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "hanui-soop",
+      "name": "하늬_",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/hanui2o/station",
+      "currentName": "하늬_",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    },
+    {
+      "slug": "choneul-chzzk",
+      "name": "초늘",
+      "url": "https://api.chzzk.naver.com/service/v1/channels/1ab2064f691dbdad417c0da07365a2b3",
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "slug": "haso-soop",
+      "name": "하소o",
+      "platform": "SOOP",
+      "url": "https://chapi.sooplive.co.kr/api/hasooo/station",
+      "currentName": "하소o",
+      "imageChanged": false,
+      "bio": "",
+      "details": {}
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+[
+  {
+    "results": [
+      {
+        "slot": "discovery-test:2026-11-12:2026-11-12.2",
+        "id": "dd6faf26-4ae7-435d-9292-aac373953733",
+        "status": "PARTIAL",
+        "started_at": "2026-11-12T06:20:51.962Z",
+        "finished_at": "2026-11-12T06:21:22.553Z",
+        "summary": "{\"runId\":\"dd6faf26-4ae7-435d-9292-aac373953733\",\"mode\":\"DISCOVER\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.2\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"OK\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"OK\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"OK\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency:charon\",\"status\":\"OK\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency:revernia\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_HTTP_406\"}],\"discovered\":3,\"discoveredCandidates\":[{\"name\":\"채랑\",\"channelKey\":\"CHZZK:295483ac14f8c5b1426c71bebefcf563\",\"source\":\"AGENCY_NOTICE\",\"date\":\"2026-11-07\",\"sourceUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\"},{\"name\":\"아멜리\",\"channelKey\":\"CHZZK:e17948db0ed0ee4609203cad91f89177\",\"source\":\"AGENCY_NOTICE\",\"date\":\"2026-11-07\",\"sourceUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\"},{\"name\":\"나루\",\"channelKey\":\"CHZZK:e3d4faf55988a83862318b27ff2906de\",\"source\":\"AGENCY_NOTICE\",\"date\":\"2026-11-07\",\"sourceUrl\":\"https://www.charonuniverse.com/notice/?bmode=view&idx=175425893\"}],\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":10,\"published\":[],\"updated\":[],\"unchanged\":7,\"held\":[{\"id\":\"agency:charon:175425893:CHZZK:295483ac14f8c5b1426c71bebefcf563\",\"reason\":\"AGENCY_FIRST_ACTIVITY_SCOPE_OR_TIMEZONE_HOLD\"},{\"id\":\"agency:charon:175425893:CHZZK:e17948db0ed0ee4609203cad91f89177\",\"reason\":\"AGENCY_FIRST_ACTIVITY_SCOPE_OR_TIMEZONE_HOLD\"},{\"id\":\"agency:charon:175425893:CHZZK:e3d4faf55988a83862318b27ff2906de\",\"reason\":\"AGENCY_FIRST_ACTIVITY_SCOPE_OR_TIMEZONE_HOLD\"}],\"failed\":[],\"remaining\":0,\"externalRequests\":26,\"downloadBytes\":10492952,\"dbCalls\":41,\"dbRowsRead\":1326,\"dbRowsWritten\":47,\"publicVerified\":false,\"errors\":[]}"
+      },
+      {
+        "slot": "discovery-test:2026-11-12:2026-11-12.3",
+        "id": "e95e6377-ce88-4ed2-a7ad-562ec24fd58f",
+        "status": "COMPLETED_WITH_HOLDS",
+        "started_at": "2026-11-12T06:27:52.000Z",
+        "finished_at": "2026-11-12T06:28:03.633Z",
+        "summary": "{\"runId\":\"e95e6377-ce88-4ed2-a7ad-562ec24fd58f\",\"mode\":\"DISCOVER\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.3\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED_WITH_HOLDS\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency:charon\",\"status\":\"OK\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency-x:revernia\",\"status\":\"OK\",\"count\":2,\"reason\":\"\"}],\"discovered\":2,\"discoveredCandidates\":[{\"name\":\"카이리 시엔\",\"channelKey\":\"CHZZK:9d4daff602a5e804d8b49a91671b6c16\",\"source\":\"AGENCY_NOTICE\",\"date\":\"\",\"sourceUrl\":\"https://x.com/revernia_kr\"},{\"name\":\"히라네코 리에\",\"channelKey\":\"CHZZK:70c680e3922bebbd90969986c82d6b7c\",\"source\":\"AGENCY_NOTICE\",\"date\":\"\",\"sourceUrl\":\"https://x.com/revernia_kr\"}],\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[{\"id\":\"agency:revernia:roster:CHZZK:9d4daff602a5e804d8b49a91671b6c16\",\"reason\":\"AGENCY_YEAR_SCOPE_TIMEZONE_HOLD\"},{\"id\":\"agency:revernia:roster:CHZZK:70c680e3922bebbd90969986c82d6b7c\",\"reason\":\"AGENCY_YEAR_SCOPE_TIMEZONE_HOLD\"}],\"failed\":[],\"remaining\":0,\"externalRequests\":12,\"downloadBytes\":1208123,\"dbCalls\":29,\"dbRowsRead\":1326,\"dbRowsWritten\":23,\"publicVerified\":false,\"errors\":[]}"
+      },
+      {
+        "slot": "discovery-test:2026-11-12:2026-11-12.4",
+        "id": "4269e8d2-b278-465c-8165-bafba5cfebd3",
+        "status": "COMPLETED_WITH_HOLDS",
+        "started_at": "2026-11-12T06:30:52.199Z",
+        "finished_at": "2026-11-12T06:31:02.054Z",
+        "summary": "{\"runId\":\"4269e8d2-b278-465c-8165-bafba5cfebd3\",\"mode\":\"DISCOVER\",\"slot\":\"discovery-test:2026-11-12:2026-11-12.4\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED_WITH_HOLDS\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency:charon\",\"status\":\"OK\",\"count\":3,\"reason\":\"\"},{\"id\":\"agency-x:revernia\",\"status\":\"OK\",\"count\":2,\"reason\":\"\"}],\"discovered\":2,\"discoveredCandidates\":[{\"name\":\"카이리 시엔\",\"channelKey\":\"CHZZK:9d4daff602a5e804d8b49a91671b6c16\",\"source\":\"AGENCY_NOTICE\",\"date\":\"\",\"sourceUrl\":\"https://x.com/revernia_kr\"},{\"name\":\"히라네코 리에\",\"channelKey\":\"CHZZK:70c680e3922bebbd90969986c82d6b7c\",\"source\":\"AGENCY_NOTICE\",\"date\":\"\",\"sourceUrl\":\"https://x.com/revernia_kr\"}],\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[{\"id\":\"agency:revernia:roster:CHZZK:9d4daff602a5e804d8b49a91671b6c16\",\"reason\":\"AGENCY_YEAR_SCOPE_TIMEZONE_HOLD\"},{\"id\":\"agency:revernia:roster:CHZZK:70c680e3922bebbd90969986c82d6b7c\",\"reason\":\"AGENCY_YEAR_SCOPE_TIMEZONE_HOLD\"}],\"failed\":[],\"remaining\":0,\"externalRequests\":12,\"downloadBytes\":1208123,\"dbCalls\":29,\"dbRowsRead\":1323,\"dbRowsWritten\":20,\"publicVerified\":false,\"errors\":[]}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.7316
+      },
+      "duration": 0.7316,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 907464704,
+      "rows_read": 23,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

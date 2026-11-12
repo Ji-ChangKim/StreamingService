@@ -1,0 +1,322 @@
+[
+  {
+    "results": [
+      {
+        "id": "soop:761",
+        "name": "은재_",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:755",
+        "name": "키리에♥",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:757",
+        "name": "온비",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:699",
+        "name": "한이음",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:753",
+        "name": "시즈즈",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:697",
+        "name": "란비",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:759",
+        "name": "묘해¸",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:741",
+        "name": "단온",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_502",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:733",
+        "name": "꾼구마",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_502",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:725",
+        "name": "수지AI",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_502",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:737",
+        "name": "치키쨩",
+        "status": "HOLD",
+        "reason": "EVENT_SCOPE_HOLD",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:743",
+        "name": "우디디디",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:715",
+        "name": "에스냐~",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_502",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:689",
+        "name": "하모예0",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:709",
+        "name": "해나롱",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:687",
+        "name": "이월이",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:685",
+        "name": "여농이오른팔",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:729",
+        "name": "하이타",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "sheet:CHZZK:e4ae5646d01063022591e26bb81106cf:2026-12-01",
+        "name": "말리부",
+        "status": "HOLD",
+        "reason": "PRIMARY_NOTICE_REQUIRED",
+        "profile_slug": ""
+      },
+      {
+        "id": "registered:CHZZK:037d7ba305538de29dbf2789071dbb82",
+        "name": "아먕",
+        "status": "HOLD",
+        "reason": "EXISTING_INFORMATION_CONFLICT_HOLD",
+        "profile_slug": ""
+      },
+      {
+        "id": "registered:CHZZK:7795f5c37a5941cc20f44f5ee2744cd8",
+        "name": "레오 퍄코",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "leopyaco-chzzk"
+      },
+      {
+        "id": "registered:CHZZK:bce5bac086baed274db13a2c9aacd41b",
+        "name": "코바야시 후토",
+        "status": "FAILED",
+        "reason": "SOURCE_TOO_LARGE",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:751",
+        "name": "공이연",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:711",
+        "name": "유령마녀",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:739",
+        "name": "슈야SHUYA",
+        "status": "HOLD",
+        "reason": "EVENT_SCOPE_HOLD",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:749",
+        "name": "휴이~",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:717",
+        "name": "깅말랑",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:747",
+        "name": "에이루나",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:745",
+        "name": "아오이로하쿠",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:683",
+        "name": "하소o",
+        "status": "HOLD",
+        "reason": "EVENT_SCOPE_HOLD",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:727",
+        "name": "하늬_",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:721",
+        "name": "요루네",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:695",
+        "name": "소다*",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:707",
+        "name": "#샤루루",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:659",
+        "name": "시니땅",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:719",
+        "name": "키싱유*",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:705",
+        "name": "코밍˚",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:735",
+        "name": "까망까맹",
+        "status": "FAILED",
+        "reason": "SOURCE_HTTP_404",
+        "profile_slug": ""
+      },
+      {
+        "id": "soop:713",
+        "name": "뽀소리_",
+        "status": "HOLD",
+        "reason": "EVENT_SCOPE_HOLD",
+        "profile_slug": ""
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.9556
+      },
+      "duration": 0.9556,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 905695232,
+      "rows_read": 78,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "summary": "{\"runId\":\"6f879b08-e8e7-4f93-b47f-4c8a537dddaa\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:32\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":19,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[{\"id\":\"soop:737\",\"reason\":\"EVENT_SCOPE_HOLD\"},{\"id\":\"sheet:CHZZK:e4ae5646d01063022591e26bb81106cf:2026-12-01\",\"reason\":\"PRIMARY_NOTICE_REQUIRED\"}],\"failed\":[{\"id\":\"soop:685\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:729\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:687\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:689\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:709\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:715\",\"reason\":\"SOURCE_HTTP_502\"},{\"id\":\"soop:725\",\"reason\":\"SOURCE_HTTP_502\"},{\"id\":\"soop:733\",\"reason\":\"SOURCE_HTTP_502\"},{\"id\":\"soop:741\",\"reason\":\"SOURCE_HTTP_502\"},{\"id\":\"soop:743\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:759\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:697\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:753\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:699\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:757\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:755\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:761\",\"reason\":\"SOURCE_HTTP_404\"}],\"remaining\":0,\"externalRequests\":24,\"downloadBytes\":1145110,\"dbCalls\":80,\"dbRowsRead\":2792,\"dbRowsWritten\":50,\"publicVerified\":false,\"errors\":[]}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1152
+      },
+      "duration": 0.1152,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 905695232,
+      "rows_read": 1,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

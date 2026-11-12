@@ -1,0 +1,381 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/ire1113/station",
+  "checkedAt": "2026-11-12T05:50:50.118Z",
+  "raw": {
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/ir/ire1113/ire1113.jpg",
+    "station": {
+      "display": {
+        "main_type": "1110",
+        "title_type": "IMAGE",
+        "title_text": "",
+        "profile_text": "오전 7시~ 키라키랏 샤루루입니다-★ (브이메이드 기업세아님) / 💌 sharuruxx@naver.com",
+        "skin_type": 0,
+        "skin_no": 0,
+        "title_skin_image": "",
+        "ai_profile_conf_yn": "N",
+        "ai_profile_str": null
+      },
+      "groups": [],
+      "menus": [
+        {
+          "bbs_no": 128769999,
+          "station_no": 33139339,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 107,
+          "rnum": 0,
+          "line": 0,
+          "indention": 0,
+          "name": "ʚ샤루ɞ",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 128769971,
+          "station_no": 33139339,
+          "auth_no": 101,
+          "w_auth_no": 208,
+          "display_type": 104,
+          "rnum": 1,
+          "line": 0,
+          "indention": 0,
+          "name": "💜루루위키",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 128770009,
+          "station_no": 33139339,
+          "auth_no": 101,
+          "w_auth_no": 208,
+          "display_type": 104,
+          "rnum": 2,
+          "line": 0,
+          "indention": 0,
+          "name": "📅방송일정",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 128770029,
+          "station_no": 33139339,
+          "auth_no": 103,
+          "w_auth_no": 208,
+          "display_type": 104,
+          "rnum": 4,
+          "line": 0,
+          "indention": 0,
+          "name": "📘다이어리",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 128770233,
+          "station_no": 33139339,
+          "auth_no": 107,
+          "w_auth_no": 208,
+          "display_type": 104,
+          "rnum": 5,
+          "line": 0,
+          "indention": 0,
+          "name": "🔒샤생이에게",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 128770093,
+          "station_no": 33139339,
+          "auth_no": 101,
+          "w_auth_no": 208,
+          "display_type": 104,
+          "rnum": 6,
+          "line": 0,
+          "indention": 0,
+          "name": "🎬VOD",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 128803247,
+          "station_no": 33139339,
+          "auth_no": 103,
+          "w_auth_no": 209,
+          "display_type": 104,
+          "rnum": 7,
+          "line": 0,
+          "indention": 0,
+          "name": "📷사진첩",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 128803257,
+          "station_no": 33139339,
+          "auth_no": 103,
+          "w_auth_no": 209,
+          "display_type": 104,
+          "rnum": 8,
+          "line": 0,
+          "indention": 0,
+          "name": "🎨일러스트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 128770017,
+          "station_no": 33139339,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 106,
+          "rnum": 9,
+          "line": 0,
+          "indention": 0,
+          "name": "",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 128770175,
+          "station_no": 33139339,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 107,
+          "rnum": 10,
+          "line": 0,
+          "indention": 0,
+          "name": "샤생팬🌸",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 128615233,
+          "station_no": 33139339,
+          "auth_no": 101,
+          "w_auth_no": 243,
+          "display_type": 104,
+          "rnum": 11,
+          "line": 1,
+          "indention": 0,
+          "name": "💟샤루에게",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 130033475,
+          "station_no": 33139339,
+          "auth_no": 101,
+          "w_auth_no": 243,
+          "display_type": 104,
+          "rnum": 13,
+          "line": 0,
+          "indention": 0,
+          "name": "📝방송후기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        }
+      ],
+      "upd": {
+        "station_no": 33139339,
+        "user_id": "ire1113",
+        "asp_code": 0,
+        "fan_cnt": 545,
+        "today0_visit_cnt": 0,
+        "today1_visit_cnt": 513,
+        "total_visit_cnt": 15497,
+        "today0_ok_cnt": 0,
+        "today1_ok_cnt": 20,
+        "today0_fav_cnt": 0,
+        "today1_fav_cnt": 15,
+        "total_ok_cnt": 311,
+        "total_view_cnt": 6199
+      },
+      "vods": [
+        {
+          "bbs_no": 128615229,
+          "station_no": 33139339,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 108,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 다시보기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 128615231,
+          "station_no": 33139339,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 109,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 하이라이트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "broad_start": "2026-11-12 06:55:33",
+      "grade": 0,
+      "jointime": "2026-10-05 22:23:15",
+      "station_name": "#샤루루",
+      "station_no": 33139339,
+      "station_title": "",
+      "total_broad_time": 109182,
+      "user_id": "ire1113",
+      "user_nick": "#샤루루",
+      "active_no": 1
+    },
+    "broad": null,
+    "starballoon_top": [
+      {
+        "user_id": "enddl12006",
+        "user_nick": "4월_",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/en/enddl12006/enddl12006.jpg"
+      },
+      {
+        "user_id": "shinhyuck7",
+        "user_nick": "#지는캐루루",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/sh/shinhyuck7/shinhyuck7.jpg"
+      },
+      {
+        "user_id": "abwtzwkbh42",
+        "user_nick": "새결",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ab/abwtzwkbh42/abwtzwkbh42.jpg"
+      },
+      {
+        "user_id": "goodboy2026",
+        "user_nick": "캘륨은리엘꺼",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/go/goodboy2026/goodboy2026.jpg"
+      },
+      {
+        "user_id": "twocjf247",
+        "user_nick": "#샤루루.",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/tw/twocjf247/twocjf247.jpg"
+      },
+      {
+        "user_id": "jun2930",
+        "user_nick": "추보고발싸",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ju/jun2930/jun2930.jpg"
+      },
+      {
+        "user_id": "kjinyr2",
+        "user_nick": "에리오르☆",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/kj/kjinyr2/kjinyr2.jpg"
+      },
+      {
+        "user_id": "diehard1996",
+        "user_nick": "존매클레인",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/di/diehard1996/diehard1996.jpg"
+      },
+      {
+        "user_id": "dkfpsk",
+        "user_nick": "어스맛",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/dk/dkfpsk/dkfpsk.jpg"
+      },
+      {
+        "user_id": "duhii3735",
+        "user_nick": "샤루루겨배벅",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/du/duhii3735/duhii3735.jpg"
+      },
+      {
+        "user_id": "aturv1000",
+        "user_nick": "채키리",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/at/aturv1000/aturv1000.jpg"
+      },
+      {
+        "user_id": "souldivider",
+        "user_nick": "계식8호",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/so/souldivider/souldivider.jpg"
+      },
+      {
+        "user_id": "realaccident",
+        "user_nick": "#야루루",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/re/realaccident/realaccident.jpg"
+      },
+      {
+        "user_id": "jiand0502",
+        "user_nick": "지앤*",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ji/jiand0502/jiand0502.jpg"
+      },
+      {
+        "user_id": "abzcd1",
+        "user_nick": "1lI",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ab/abzcd1/abzcd1.jpg"
+      },
+      {
+        "user_id": "ppdodssu2",
+        "user_nick": "3분커피",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/pp/ppdodssu2/ppdodssu2.jpg"
+      },
+      {
+        "user_id": "ikjiny",
+        "user_nick": "ikjiny",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ik/ikjiny/ikjiny.jpg"
+      },
+      {
+        "user_id": "kirihito",
+        "user_nick": "졸려잔다",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ki/kirihito/kirihito.jpg"
+      },
+      {
+        "user_id": "poyas73",
+        "user_nick": "∑:배추됴아",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/po/poyas73/poyas73.jpg"
+      },
+      {
+        "user_id": "tkaqnszkfp",
+        "user_nick": "루루사랑단",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/tk/tkaqnszkfp/tkaqnszkfp.jpg"
+      }
+    ],
+    "sticker_top": [
+      {
+        "user_id": "rnmrnm",
+        "user_nick": "샤크크",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/rn/rnmrnm/rnmrnm.jpg"
+      },
+      {
+        "user_id": "ppdodssu2",
+        "user_nick": "3분커피",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/pp/ppdodssu2/ppdodssu2.jpg"
+      }
+    ],
+    "subscription": {
+      "total": 24,
+      "tier1": 23,
+      "tier2": 1
+    },
+    "is_best_bj": false,
+    "is_partner_bj": false,
+    "is_ppv_bj": false,
+    "is_af_supporters_bj": false,
+    "is_shopfreeca_bj": false,
+    "is_favorite": false,
+    "is_subscription": false,
+    "is_owner": false,
+    "is_manager": false,
+    "is_notice": false,
+    "is_adsence": true,
+    "is_mobile_push": false,
+    "subscribe_visible": "on",
+    "country": "KR",
+    "current_timestamp": "2026-11-12 14:50:49"
+  }
+}

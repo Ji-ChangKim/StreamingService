@@ -14,6 +14,7 @@ function load(file) {
 }
 const { portalApi, portalTokenHash, cleanPortalProfile, readPortalProfiles } = load('../src/services/portalService.ts');
 const { portalUtc, portalDateKey, portalChannelUrl, portalMonth } = load('../../shared/portal.ts');
+const { reviewedProfile } = load('../../shared/contentReview.ts');
 
 // SQLite 모의 바인딩은 D1 배치의 원자성도 유지한다.
 function database() {
@@ -51,6 +52,8 @@ test('대표 영상·채널·공지의 저장 흐름과 관리자 전용 데뷔 
   db.sqlite.prepare('INSERT INTO portal_sessions VALUES(?,?)').run(await portalTokenHash(adminToken), Date.now() + 60000);
   const approved = await (await call(`/admin/requests/${submission.id}/decision`, 'POST', { status: 'APPROVED', contentChecked: true }, admin)).json();
   const registered = (await readPortalProfiles(db))[0];
+  Object.assign(registered, reviewedProfile({ ...registered, debutKind: 'PLATFORM_DEBUT' }, 'APPROVED', new Date().toISOString()));
+  db.sqlite.prepare('UPDATE portal_profiles SET data=? WHERE slug=?').run(JSON.stringify(registered), registered.slug);
   for (const field of ['headline', 'bannerUrl', 'websiteUrl', 'cafeUrl', 'noticeUrl', 'xUrl', 'videoUrl', 'videoTitle', 'videoKind']) assert.equal(registered[field], details[field]);
   assert.deepEqual(registered.additionalChannels, details.additionalChannels);
   assert.deepEqual(registered.media.map((item) => item.url), details.media.map((item) => item.url));
@@ -64,6 +67,7 @@ test('대표 영상·채널·공지의 저장 흐름과 관리자 전용 데뷔 
   assert.equal((await call(`/admin/requests/${claim.id}/decision`, 'POST', { status: 'APPROVED', proofChecked: true }, admin)).status, 200);
   assert.equal((await call(`/profiles/${approved.slug}`, 'PUT', { ...details, headline: '수정한 한 줄 소개', debutGroupId: 'spoofed', debutGroupName: '가짜' }, { 'X-Request-Key': claim.token })).status, 200);
   const saved = (await readPortalProfiles(db))[0];
+  assert.equal(saved.debutKind, 'PLATFORM_DEBUT');
   assert.deepEqual(saved.media.map((item) => item.url), details.media.map((item) => item.url));
   assert.equal(saved.fanGuide, details.fanGuide);
   assert.deepEqual(saved.details, details.details);

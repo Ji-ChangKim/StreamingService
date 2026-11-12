@@ -1,0 +1,16 @@
+{
+  "slug": "hakung-chzzk",
+  "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/df15cb831b80356e79aab8bdb49ac577",
+  "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=df15cb831b80356e79aab8bdb49ac577",
+  "checkedAt": "2026-11-12T05:53:50.157Z",
+  "raw": {
+    "success": true,
+    "platform": "CHZZK",
+    "channelId": "df15cb831b80356e79aab8bdb49ac577",
+    "creatorName": "하쿵Hakung",
+    "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMjZfMTAg/MDAxNzkyOTQyNTI4NzIy.eLLBQqhTBSXm52YiqjXovy3k-k8T2P0PacgXgckpPVYg.xLxgDROcNs_l-2MorlLHTcP9BH6NSVh155x0i9JI4lcg.PNG/image.png",
+    "channelUrl": "https://chzzk.naver.com/df15cb831b80356e79aab8bdb49ac577",
+    "description": "아침 11시 방송 월,목 휴방🤍\n문의: hakungs@naver.com",
+    "verified": false
+  }
+}
