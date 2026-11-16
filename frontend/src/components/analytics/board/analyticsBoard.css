@@ -8,6 +8,8 @@
   /* 사이트 바탕색을 그대로 쓴다(가운데만 다른 색이 되지 않게). */
   background: transparent; color: var(--ab-ink); font-family: Inter, 'Noto Sans KR', system-ui, sans-serif;
   font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; min-height: 70vh;
+  /* 한국어는 단어(어절) 단위로만 줄을 바꾼다. 긴 영문·숫자는 칸을 넘지 않게 끊는다. */
+  word-break: keep-all; overflow-wrap: break-word;
 }
 .ab a { color: var(--ab-bar); text-decoration: none; }
 .ab a:hover { text-decoration: underline; }
@@ -32,7 +34,7 @@
 .ab-filter button { height: 36px; padding: 0 14px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--ab-rule); border-radius: 8px; background: #fff; color: var(--ab-text); font-size: 14px; font-weight: 600; }
 .ab-filter button[aria-pressed='true'] { border: 2px solid var(--ab-ink); color: var(--ab-ink); padding: 0 13px; }
 .ab-filter img { display: block; object-fit: contain; }
-.ab-lede { margin: -8px 0 0; max-width: 820px; font-size: 16px; font-weight: 500; line-height: 1.65; color: var(--ab-text); }
+.ab-lede { margin: -8px 0 0; max-width: 820px; text-wrap: pretty; font-size: 16px; font-weight: 500; line-height: 1.65; color: var(--ab-text); }
 .ab-lede strong { font-weight: 700; color: var(--ab-ink); }
 /* 섹션은 도감의 흰 패널과 같은 모양(흰 바탕, 1px 선, 모서리 14px) */
 .ab-section { background: var(--ab-panel); border: 1px solid var(--ab-rule); border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; box-sizing: border-box; }
@@ -148,7 +150,7 @@
 .ab-layout { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
 .ab-span-2 { grid-column: span 2; }
 .ab-span-3 { grid-column: 1 / -1; }
-.ab-insight { margin: 4px 0 0; font-size: 15px; font-weight: 600; color: var(--ab-ink); line-height: 1.5; }
+.ab-insight { text-wrap: pretty; margin: 4px 0 0; font-size: 15px; font-weight: 600; color: var(--ab-ink); line-height: 1.5; }
 .ab-section h2 + .ab-insight { margin-top: 4px; }
 /* 섹션 제목은 작은 회색 라벨, 그 아래 해석 한 줄이 주인공이다. */
 .ab .ab-section h2 { font-size: 13px; font-weight: 700; color: var(--ab-sub); }
