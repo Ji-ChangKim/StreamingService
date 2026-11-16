@@ -2,149 +2,88 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>리그 오브 레전드 방송 통계</title>
+<title>게임 상세 — 디자인 시스템 규격</title>
 <script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
 <helmet>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
-<style>
-body{margin:0;background:#FBFAF7}
-a{color:#2F5D7C;text-decoration:none}a:hover{color:#22475F}
-</style>
+<link rel="stylesheet" href="./ds.css">
 </helmet>
-<div style="min-height: 100%; background: #FBFAF7; font-family: Inter, 'Noto Sans KR', sans-serif; color: #1F2328; font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased">
-  <header style="background: #FFFFFF; border-bottom: 1px solid #E4E0D8">
-    <div style="max-width: 1280px; margin: 0 auto; padding: 0 32px; height: 72px; display: flex; align-items: center; gap: 40px; flex-wrap: wrap">
-      <a href="#" style="font-size: 24px; font-weight: 700; color: #1F2328; letter-spacing: -0.02em">VDébut</a>
-      <nav aria-label="주요 메뉴" style="display: flex; gap: 28px; font-size: 15px; font-weight: 600">
-        <a href="#" style="color: #57524C">데뷔 캘린더</a>
-        <a href="#" style="color: #57524C">버튜버 탐색</a>
-        <a href="Main.dc.html" aria-current="page" style="color: #2F5D7C; border-bottom: 2px solid #2F5D7C; padding-bottom: 4px">방송 통계</a>
-      </nav>
-    </div>
-  </header>
-
-  <main style="max-width: 1280px; margin: 0 auto; padding: 24px 32px 72px; display: flex; flex-direction: column; gap: 44px">
-    <nav aria-label="경로" style="display: flex; justify-content: space-between; font-size: 13px; color: #6B6560"><span><a href="Main.dc.html">방송 통계</a> / <a href="Main.dc.html">인기 게임 순위</a> / 리그 오브 레전드</span></nav>
-
-    <section style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center">
-      <div style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 8px">
-        <h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em">리그 오브 레전드</h1>
-        <p style="margin: 0; font-size: 15px; color: #3D3A36">게임 순위 7일 기준 <strong>1위</strong> · 지난주와 같음</p>
-      </div>
-      <dl style="margin: 0; display: grid; grid-template-columns: repeat(3, minmax(120px, 1fr)); gap: 20px; flex: 1 1 480px">
-        <div><dt style="font-size: 13px; color: #6B6560">지금 시청자</dt><dd style="margin: 4px 0 0; font-size: 26px; font-weight: 700">48,196명</dd></div>
-        <div><dt style="font-size: 13px; color: #6B6560">지금 방송 수</dt><dd style="margin: 4px 0 0; font-size: 26px; font-weight: 700">24개</dd></div>
-        <div><dt style="font-size: 13px; color: #6B6560">방송당 시청자</dt><dd style="margin: 4px 0 0; font-size: 26px; font-weight: 700">2,008명 <span style="font-size: 13px; font-weight: 600; color: #6B6560; vertical-align: middle">경쟁 보통</span></dd></div>
-      </dl>
+<div class="vd">
+  <header class="hdr"><div class="hdr-in"><b>VDébut</b><nav><a href="#">데뷔 캘린더</a><a href="#">버튜버 탐색</a><a class="on" href="Main.dc.html">방송 통계</a></nav></div></header>
+  <main class="pg">
+    <nav class="crumb"><a href="Main.dc.html">방송 통계</a> / 인기 게임 순위 / 리그 오브 레전드</nav>
+    <section class="head">
+      <div><span class="eyebrow">GAME</span><h1>리그 오브 레전드</h1><p>지금 게임 순위 1위 · 오늘 오후 9시 30분 기준</p></div>
     </section>
 
-    <section aria-label="지금 상황 정리" style="display: flex; flex-direction: column; gap: 8px; max-width: 860px">
-      <p style="margin: 0; font-size: 22px; font-weight: 500; line-height: 1.55; letter-spacing: -0.01em; color: #1F2328">지금 <strong style="font-weight: 700">「죵쬐컵」</strong> 참가 채널이 이 게임 시청자의 <strong style="font-weight: 700">46%</strong>를 모으고 있어요. 대형 채널이 몰린 <strong style="font-weight: 700">21~23시</strong>는 방송당 시청자가 평소의 <strong style="font-weight: 700">0.7배</strong>로 붐벼요. <strong style="font-weight: 700">오후 2~5시</strong>가 상대적으로 여유로워요.</p>
+    <section class="kpis" aria-label="지금 한눈에">
+      <article class="panel kpi hero"><span class="lab">지금 시청자</span><div><span class="num">25,379</span><span class="unit">명</span></div><span class="chip down">7일 평균보다 ▼ 19%</span>
+        <svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:100%;height:36px;display:block" aria-hidden="true"><polygon points="0,30 0,12 16,11 33,11 50,10 66,10 83,9 100,6 100,30" fill="#DBE7FB"></polygon><polyline points="0,12 16,11 33,11 50,10 66,10 83,9 100,6" fill="none" stroke="#2563EB" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg></article>
+      <article class="panel kpi"><span class="lab">지금 방송 수</span><div><span class="num">14</span><span class="unit">개</span></div><p class="sub">7일 평균 <b>15.4개</b></p></article>
+      <article class="panel kpi"><span class="lab">방송당 시청자</span><div><span class="num">1,813</span><span class="unit">명</span></div><span class="comp c-보통" style="margin-top:auto;align-self:flex-start">경쟁 보통</span></article>
+      <article class="panel kpi"><span class="lab">가장 많이 보는 때</span><div><span class="num" style="font-size:22px">일요일 15시</span></div><p class="sub">최근 4주 평균 <b>58,661명</b></p></article>
     </section>
-    <div style="display: flex; flex-wrap: wrap; gap: 20px">
-      <section aria-labelledby="t7" style="flex: 3 1 600px; min-width: 0; border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 14px">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px">
-          <h2 id="t7" style="margin: 0; font-size: 17px; font-weight: 700">7일 추이</h2>
-          <div style="display: flex; gap: 16px; font-size: 12px; color: #6B6560">
-            <span style="display: flex; gap: 6px; align-items: center"><span aria-hidden="true" style="width: 14px; height: 2px; background: #2F5D7C"></span>평균 시청자</span>
-            <span style="display: flex; gap: 6px; align-items: center"><span aria-hidden="true" style="width: 8px; height: 10px; background: #D9E3EA; border-radius: 1px"></span>평균 방송 수</span>
-          </div>
+
+    <div class="grid3">
+      <section class="panel">
+        <div class="sec-h"><div><span class="eyebrow">7일 추이</span><h2>토요일에 가장 많이 봤어요 · 시간당 평균 38,600명</h2></div></div>
+        <div class="legend"><span><i class="dot" style="background:#2563EB"></i>시간당 평균 시청자</span><span><i style="width:16px;border-top:2px solid #19263B;display:inline-block"></i>평균 방송 수</span></div>
+        <div class="chart" style="height:200px">
+          <sc-for list="{{week.bars}}" as="b" hint-placeholder-count="7"><span title="{{b.tip}}"><i style="{{b.style}}"></i></span></sc-for>
+          <svg viewBox="0 0 700 100" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible"><polyline points="{{week.line}}" fill="none" stroke="#19263B" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>
         </div>
-        <div style="display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 8px">
-          <div aria-hidden="true" style="position: relative; height: 200px; font-size: 11px; color: #9A948C"><span style="position: absolute; right: 0; top: -7px">40k</span><span style="position: absolute; right: 0; top: 93px">20k</span><span style="position: absolute; right: 0; bottom: -7px">0</span></div>
-          <div style="position: relative; height: 200px; border-bottom: 1px solid #CFC9BE; background: linear-gradient(#ECE8E0, #ECE8E0) 0 0 / 100% 1px no-repeat, linear-gradient(#ECE8E0, #ECE8E0) 0 50% / 100% 1px no-repeat">
-            <div style="position: absolute; inset: 0; display: flex; align-items: flex-end">
-              <sc-for list="{{days}}" as="d" hint-placeholder-count="7"><span style="flex: 1; height: 100%; display: flex; align-items: flex-end; justify-content: center"><span title="{{d.tip}}" style="{{d.bar}}"></span></span></sc-for>
-            </div>
-            <svg viewBox="0 0 700 200" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible"><polyline points="{{line}}" fill="none" stroke="#2F5D7C" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"></polyline></svg>
-            <sc-for list="{{pts}}" as="p" hint-placeholder-count="7"><span title="{{p.tip}}" style="{{p.dot}}"></span><span style="{{p.labStyle}}">{{p.lab}}</span></sc-for>
-          </div>
-          <span></span>
-          <div aria-hidden="true" style="display: flex; font-size: 12px; color: #7A746D"><sc-for list="{{dayNames}}" as="n" hint-placeholder-count="7"><span style="flex: 1; text-align: center">{{n}}</span></sc-for></div>
-        </div>
-        <p style="margin: 0; font-size: 14px; color: #3D3A36">7일 평균 시청자 <strong>31,240명</strong> · 그 전 7일보다 ▲ 12%</p>
+        <div class="xl"><sc-for list="{{week.labels}}" as="l" hint-placeholder-count="7"><span>{{l}}</span></sc-for></div>
       </section>
-
-      <section aria-labelledby="share" style="flex: 2 1 340px; min-width: 0; border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 14px">
-        <h2 id="share" style="margin: 0; font-size: 17px; font-weight: 700">플랫폼별 시청자</h2>
-        <sc-for list="{{plat}}" as="p" hint-placeholder-count="2">
-          <div style="display: flex; flex-direction: column; gap: 6px">
-            <div style="display: flex; justify-content: space-between; font-size: 14px"><span style="font-weight: 700; display: flex; align-items: center; gap: 8px"><img src="{{p.icon}}" alt="" style="{{p.iconStyle}}">{{p.name}}</span><span><strong>{{p.v}}</strong> · {{p.pct}}</span></div>
-            <div aria-hidden="true" style="height: 6px; border-radius: 999px; background: #EFECE6; overflow: hidden; display: flex"><span style="{{p.bar}}"></span></div>
-          </div>
-        </sc-for>
-        <p style="margin: 0; font-size: 13px; color: #6B6560">7일 평균 · 각 플랫폼 시청자 상위 100개 방송 기준</p>
+      <section class="panel brief">
+        <div><span class="eyebrow">시청자가 몰리는 시간</span><h2 class="ph2">주말 오후에 가장 많이 봐요</h2></div>
+        <div class="blk" style="border-top:0;padding-top:0"><h3>많이 보는 때 TOP 3 <small>최근 4주 평균</small></h3><ol class="mini"><li><span><span>1.</span>일요일 15시</span><b>58,661명</b></li><li><span><span>2.</span>토요일 15시</span><b>58,391명</b></li><li><span><span>3.</span>일요일 14시</span><b>58,205명</b></li></ol></div>
+        <div class="blk"><h3>플랫폼별 시청자 <small>최근 7일</small></h3>
+          <div class="share"><i style="width:61%;background:#2563EB"></i><i style="width:39%;background:#8FB1F2"></i></div>
+          <div class="slegend" style="margin:0"><span><i class="dot" style="background:#2563EB"></i>치지직 <b>61%</b></span><span><i class="dot" style="background:#8FB1F2"></i>SOOP <b>39%</b></span></div></div>
       </section>
     </div>
 
-    <section aria-labelledby="heat" style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 14px">
-      <div>
-        <h2 id="heat" style="margin: 0; font-size: 17px; font-weight: 700">언제 많이 볼까?</h2>
-        <p style="margin: 4px 0 0; font-size: 13px; color: #6B6560">요일·시간대별 평균 시청자 · 최근 7일</p>
+    <section class="panel">
+      <div class="sec-h"><div><span class="eyebrow">요일·시간대별 시청자</span><h2>일요일 15시 전후에 가장 많이 보고, 2~5시는 비교적 조용해요</h2></div></div>
+      <div class="heat">
+        <div class="heat-row"><span></span><sc-for list="{{hours}}" as="h" hint-placeholder-count="24"><span style="text-align:center">{{h}}</span></sc-for></div>
+        <sc-for list="{{heat}}" as="row" hint-placeholder-count="7"><div class="heat-row"><b>{{row.day}}</b><sc-for list="{{row.cells}}" as="c" hint-placeholder-count="24"><i style="{{c}}"></i></sc-for></div></sc-for>
       </div>
-      <div style="overflow-x: auto">
-        <div style="min-width: 680px; display: flex; flex-direction: column; gap: 3px">
-          <div aria-hidden="true" style="display: grid; grid-template-columns: 28px repeat(24, minmax(0, 1fr)); gap: 3px; font-size: 11px; color: #7A746D"><span></span><sc-for list="{{hours}}" as="h" hint-placeholder-count="24"><span style="text-align: center">{{h}}</span></sc-for></div>
-          <sc-for list="{{heat}}" as="row" hint-placeholder-count="7">
-            <div style="display: grid; grid-template-columns: 28px repeat(24, minmax(0, 1fr)); gap: 3px; align-items: center">
-              <span style="font-size: 12px; font-weight: 600; color: #3D3A36">{{row.day}}</span>
-              <sc-for list="{{row.cells}}" as="c" hint-placeholder-count="24"><span title="{{c.tip}}" style="{{c.style}}"></span></sc-for>
-            </div>
-          </sc-for>
-        </div>
-      </div>
-      <div style="display: flex; gap: 8px; align-items: center; font-size: 12px; color: #6B6560"><span>적음</span><sc-for list="{{legend}}" as="l" hint-placeholder-count="5"><span style="{{l}}"></span></sc-for><span>많음</span></div>
+      <div class="scale"><span>적음</span><i style="background:#EEF4FF"></i><i style="background:#C9DAFB"></i><i style="background:#8FB1F2"></i><i style="background:#4A7FE0"></i><i style="background:#1D4FB8"></i><span>많음</span></div>
     </section>
 
-    <section aria-labelledby="topch" style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 12px">
-      <div>
-        <h2 id="topch" style="margin: 0; font-size: 17px; font-weight: 700">이 게임의 상위 채널</h2>
-        <p style="margin: 4px 0 0; font-size: 13px; color: #6B6560">최근 7일 이 게임 방송의 평균 시청자 순 · 이 게임 방송 1시간 이상</p>
-      </div>
-      <div style="display: flex; gap: 16px; font-size: 13px; color: #3D3A36">
-        <span style="display: flex; gap: 6px; align-items: center"><span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 3px; background: #2F5D7C"></span>평균 시청자</span>
-        <span style="display: flex; gap: 6px; align-items: center"><span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 3px; background: #B9CCD9"></span>최고 시청자</span>
-      </div>
-      <ol style="margin: 0; padding: 0; list-style: none">
-        <sc-for list="{{top}}" as="t" hint-placeholder-count="6">
-          <li style="border-top: 1px solid #EFECE6; display: grid; grid-template-columns: 32px minmax(0, 240px) minmax(0, 1fr) 72px; gap: 14px; align-items: center; padding: 12px 0">
-            <span style="font-size: 15px; font-weight: 700; color: #3D3A36; text-align: center">{{t.rank}}</span>
-            <a href="Channel.dc.html" style="display: flex; gap: 10px; align-items: center; color: #1F2328; min-width: 0"><span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 50%; background: #E6E2DA; flex-shrink: 0"></span><span style="display: flex; flex-direction: column; min-width: 0"><span style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.name}}</span><span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6B6560"><img src="{{t.icon}}" alt="" style="{{t.iconStyle}}">{{t.sub}}</span></span></a>
-            <span title="{{t.tip}}" style="display: flex; flex-direction: column; gap: 4px">
-              <span aria-hidden="true" style="position: relative; height: 8px; background: #F2EFE9; border-radius: 999px; overflow: hidden"><span style="{{t.peakBar}}"></span><span style="{{t.avgBar}}"></span></span>
-              <span style="display: flex; gap: 12px; font-size: 13px"><strong style="font-weight: 700">평균 {{t.avg}}</strong><span style="color: #6B6560">최고 {{t.peak}}</span></span>
-            </span>
-            <span style="text-align: right; font-size: 13px; color: #3D3A36">{{t.hours}}</span>
-          </li>
-        </sc-for>
-      </ol>
+    <section class="panel">
+      <div class="sec-h"><div><span class="eyebrow">이 게임의 상위 채널</span><h2>상위 3개 채널이 이 목록 시청자의 32%를 차지해요</h2></div><span class="note" style="margin:0">최근 7일 이 게임 방송의 평균 시청자 순</span></div>
+      <ol class="top3"><sc-for list="{{top3}}" as="t" hint-placeholder-count="3"><li class="{{t.cls}}"><span class="rk">{{t.rank}}</span><span class="av"></span><a href="Channel.dc.html" class="nm">{{t.name}}</a><span class="vw">평균 {{t.avg}}</span><span class="meta"><span class="plat"><img src="{{t.icon}}" alt="">{{t.sub}}</span> · 최고 {{t.peak}} · {{t.hours}}</span></li></sc-for></ol>
+      <ol class="rows"><sc-for list="{{rows}}" as="r" hint-placeholder-count="3"><li style="grid-template-columns:32px 40px minmax(0,1.2fr) minmax(0,2fr) 72px"><span class="rn">{{r.rank}}</span><span class="av sm"></span><a class="who" href="Channel.dc.html"><b>{{r.name}}</b><span class="plat"><img src="{{r.icon}}" alt="">{{r.sub}}</span></a><span class="vbar"><span class="tr" style="height:8px"><i style="{{r.peakBar}}"></i></span><strong style="width:auto;font-size:13px">평균 {{r.avg}} <span style="color:#8593A8;font-weight:500">· 최고 {{r.peak}}</span></strong></span><span class="note" style="margin:0;text-align:right">{{r.hours}}</span></li></sc-for></ol>
     </section>
   </main>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2300}}'>
 class Component extends DCLogic {
   renderVals() {
-    const avg = [26800, 28400, 27900, 30100, 33200, 38600, 33700];
-    const ch = [19, 20, 19, 21, 23, 26, 24];
-    const days = ch.map((c, i) => ({ tip: `평균 방송 ${c}개`, bar: `display: block; width: 28px; height: ${Math.round(c / 30 * 100)}%; background: #D9E3EA; border-radius: 2px 2px 0 0` }));
-    const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
-    const pts = avg.map((v, i) => { const x = (i + 0.5) / 7 * 100; const y = v / 40000 * 100; const last = i === 6 || i === 5; return { tip: `${dayNames[i]} 평균 ${v.toLocaleString('ko-KR')}명`, dot: `position: absolute; left: calc(${x}% - 3.5px); bottom: calc(${y}% - 3.5px); width: 7px; height: 7px; border-radius: 50%; background: #FFFFFF; border: 2px solid #2F5D7C; box-sizing: border-box`, lab: last ? `${(v / 1000).toFixed(1)}k` : '', labStyle: `position: absolute; left: calc(${x}% - 24px); bottom: calc(${y}% + 8px); width: 48px; text-align: center; font-size: 11px; font-weight: 600; color: #2F5D7C` }; });
-    const line = avg.map((v, i) => `${50 + i * 100},${(200 - v / 40000 * 200).toFixed(1)}`).join(' ');
-    const plat = [['치지직', 18900, 61, '/_blob/af83299f810965a478532a41f1074b69', 'width: 20px; height: 20px; object-fit: contain'], ['SOOP', 12340, 39, '/_blob/1423303da46c36a87b0ffcbbb05fc587', 'width: 26px; height: 15px; object-fit: contain']].map(([name, v, pct, icon, iconStyle]) => ({ name, v: `${v.toLocaleString('ko-KR')}명`, pct: `${pct}%`, icon, iconStyle, bar: `width: ${pct}%; background: #3D3A36` }));
-    const scale = ['#EAF5EE', '#BFE3CB', '#7CC59A', '#2F9E63', '#13693F'];
-    const legend = scale.map((c) => `width: 20px; height: 12px; border-radius: 3px; background: ${c}`);
+    const avg = [30.1, 30.4, 29.8, 31.2, 33.9, 38.6, 33.7];
+    const cnt = [15, 16, 15, 15, 16, 17, 14];
+    const week = {
+      bars: avg.map((v) => ({ tip: `${v}k`, style: `height:${v / 42 * 88}%;max-width:44px;background:#2563EB` })),
+      line: cnt.map((v, i) => `${i * 100 + 50},${(100 - v / 20 * 88).toFixed(1)}`).join(' '),
+      labels: ['월 11/10', '화 11/11', '수 11/12', '목 11/13', '금 11/14', '토 11/15', '일 11/16'],
+    };
+    const scale = ['#EEF4FF', '#C9DAFB', '#8FB1F2', '#4A7FE0', '#1D4FB8'];
     const hours = Array.from({ length: 24 }, (_, h) => (h % 3 === 0 ? String(h) : ''));
     const heat = ['월', '화', '수', '목', '금', '토', '일'].map((day, d) => ({ day, cells: Array.from({ length: 24 }, (_, h) => {
-      const wk = d >= 5;
-      let v = h >= 3 && h <= 9 ? 0 : h >= 10 && h <= 15 ? (wk ? 2 : 1) : h >= 16 && h <= 18 ? 2 : h >= 19 || h <= 1 ? (wk ? 4 : 3) : 1;
-      return { tip: `${day} ${h}시`, style: `display: block; height: 18px; border-radius: 2px; background: ${scale[v]}` };
-    }) }));
-    const top = [['[채널 1]', '치지직', 6420, 11050, '18시간'], ['[채널 2]', '치지직 / [소속사]', 5180, 9720, '22시간'], ['[채널 3]', 'SOOP', 4960, 8310, '31시간'], ['[채널 4]', '치지직', 3870, 6940, '12시간'], ['[채널 5]', 'SOOP', 2450, 4120, '26시간'], ['[채널 6]', '치지직 / [소속사]', 1980, 3500, '9시간']].map(([name, sub, a, p, h], i) => { const soop = sub.startsWith('SOOP'); const f = (n) => `${n.toLocaleString('ko-KR')}명`; const max = 11050; return { rank: i + 1, name, sub, avg: f(a), peak: f(p), hours: h, tip: `평균 ${f(a)} · 최고 ${f(p)} · 방송 ${h}`, peakBar: `position: absolute; left: 0; top: 0; bottom: 0; width: ${(p / max * 100).toFixed(1)}%; background: #B9CCD9; border-radius: 999px`, avgBar: `position: absolute; left: 0; top: 0; bottom: 0; width: ${(a / max * 100).toFixed(1)}%; background: #2F5D7C; border-radius: 999px`, icon: soop ? '/_blob/1423303da46c36a87b0ffcbbb05fc587' : '/_blob/af83299f810965a478532a41f1074b69', iconStyle: soop ? 'width: 22px; height: 13px; object-fit: contain' : 'width: 16px; height: 16px; object-fit: contain' }; });
-    return { days, dayNames, pts, line, plat, legend, hours, heat, top };
+      const wk = d >= 5; const v = h >= 2 && h <= 6 ? 0 : h >= 7 && h <= 10 ? 1 : h >= 11 && h <= 12 ? 2 : h >= 13 && h <= 18 ? (wk ? 4 : 3) : h >= 19 && h <= 22 ? (wk ? 3 : 2) : 1;
+      return `background:${scale[v]}`; }) }));
+    const C = '/_blob/af83299f810965a478532a41f1074b69', S = '/_blob/1423303da46c36a87b0ffcbbb05fc587';
+    const list = [['한결', '치지직 / 스텔라이브', C, 2330, 3673, '18시간'], ['도윤', '치지직', C, 2270, 3577, '22시간'], ['서아', 'SOOP', S, 2209, 3482, '31시간'], ['라온', '치지직', C, 2148, 3386, '12시간'], ['하늘', '치지직 / 스텔라이브', C, 2088, 3290, '9시간'], ['시온', 'SOOP', S, 2054, 2621, '26시간']];
+    const won = (v) => `${v.toLocaleString('ko-KR')}명`;
+    const top3 = list.slice(0, 3).map(([name, sub, icon, a, p, h], i) => ({ rank: i + 1, name, sub, icon, avg: won(a), peak: won(p), hours: `이 게임 방송 ${h}`, cls: i === 0 ? 't3 first' : 't3' }));
+    const rows = list.slice(3).map(([name, sub, icon, a, p, h], i) => ({ rank: i + 4, name, sub, icon, avg: won(a), peak: won(p), hours: h, peakBar: `width:${a / 3673 * 100}%` }));
+    return { week, hours, heat, top3, rows };
   }
 }
 </script>
