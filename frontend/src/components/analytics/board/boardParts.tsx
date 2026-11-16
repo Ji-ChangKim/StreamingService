@@ -62,8 +62,15 @@ export function useHourlyData<T extends { asOf: string | null; nextAt: string }>
   return { ...state, reload: load };
 }
 
-export function Seg<T extends string>({ label, value, options, onChange }: { label: string; value: T; options: Array<[T, string]>; onChange: (value: T) => void }) {
-  return <div className="ab-seg" role="group" aria-label={label}>{options.map(([id, text]) => <button key={id} type="button" aria-pressed={value === id} onClick={() => onChange(id)}>{text}</button>)}</div>;
+// 데이터가 아직 없는 선택지는 음영 처리하고 누를 수 없게 한다. 데이터가 쌓이면 자동으로 켜진다(정의서 5.12).
+export type SegOption<T extends string> = [T, string] | [T, string, { disabled?: boolean; hint?: string } | undefined];
+export function Seg<T extends string>({ label, value, options, onChange }: { label: string; value: T; options: Array<SegOption<T>>; onChange: (value: T) => void }) {
+  return <div className="ab-seg" role="group" aria-label={label}>{options.map(([id, text, opt]) => <button key={id} type="button" aria-pressed={value === id} disabled={Boolean(opt?.disabled)} title={opt?.disabled ? opt.hint : undefined} onClick={() => onChange(id)}>{text}</button>)}</div>;
+}
+
+// 기간 선택지를 '수집된 날 수'로 켜고 끈다.
+export function needDays(coverage: number, need: number) {
+  return coverage >= need ? undefined : { disabled: true, hint: `기록이 ${need}일 쌓이면 볼 수 있어요 (지금 ${coverage}일)` };
 }
 
 export function PlatformIcon({ platform }: { platform: 'CHZZK' | 'SOOP' }) {

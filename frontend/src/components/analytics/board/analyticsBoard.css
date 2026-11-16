@@ -247,6 +247,12 @@
 .ab-filter { display: inline-flex; gap: 3px; background: var(--ab-seg); padding: 4px; border-radius: 10px; align-self: flex-start; }
 .ab-filter button { height: auto; padding: 6px 16px; border: 0; border-radius: 7px; background: transparent; color: #64748B; font-size: 12px; font-weight: 700; }
 .ab-filter button[aria-pressed='true'] { border: 0; padding: 6px 16px; background: #fff; color: var(--ab-bar); box-shadow: 0 1px 4px rgba(15, 23, 42, .08); }
+/* 데이터가 없는 선택지: 음영 + 누를 수 없음 */
+.ab-seg button:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; }
+/* 플랫폼 로고는 브랜드 가이드라인상 흐리게·색 변경할 수 없어 글자만 음영 처리한다. */
+.ab .ab-filter button:disabled { opacity: 1; cursor: not-allowed; color: #B6C0CE; background: transparent; box-shadow: none; }
+.ab-chip.off { background: #F1F5F9; color: #94A3B8; cursor: help; }
+.ab-soon { font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 4px; background: #E9EEF5; color: #94A3B8; margin-left: 2px; }
 /* 패널: 안쪽 24, 패널 사이 24 */
 .ab-section { padding: 24px; gap: 12px; }
 .ab-kpis-grid, .ab-layout { gap: 24px; }

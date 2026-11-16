@@ -9,7 +9,14 @@ export interface BoardRising { name: string; growth: number; viewers: number }
 export interface BoardTag { tag: string; viewers: number; broadcasts: number }
 export interface BoardChannel { channelKey: string; name: string; platform: 'CHZZK' | 'SOOP'; affiliation: string; category: string; isGame: boolean; viewers: number; liveUrl: string | null; imageUrl: string | null; isVtuber: boolean }
 
+// 화면의 기간·플랫폼 버튼은 데이터가 있을 때만 누를 수 있다(정의서 5.12).
+export interface BoardAvailability {
+  coverageDays: number; // 수집이 시작된 뒤 지난 날 수
+  platformReady: { CHZZK: boolean; SOOP: boolean }; // 그 플랫폼 데이터를 보여 줄 수 있는가
+}
+
 export interface AnalyticsBoard {
+  availability: BoardAvailability;
   asOf: string | null;
   nextAt: string;
   summary: string | null;
@@ -40,6 +47,7 @@ export interface AnalyticsTagBoard {
   withTags: Array<{ tag: string; broadcasts: number }>;
   // 저장된 태그 기록으로 그린 추이. 기록이 없으면 빈 배열.
   trend: { today: TagTrendPoint[]; yesterday: TagTrendPoint[]; d7: TagTrendPoint[]; d30: TagTrendPoint[] };
+  tagCoverageDays: number; // 태그 저장이 시작된 뒤 지난 날 수
 }
 export interface TagTrendPoint { label: string; viewers: number | null; broadcasts: number | null }
 
@@ -47,6 +55,8 @@ export type ChannelPeriod = 7 | 30 | 90;
 export interface ChannelBroadcastLog { streamId: string; date: string; title: string; category: string; isGame: boolean; minutes: number; avg: number | null; peak: number | null }
 export interface AnalyticsChannelBoard {
   asOf: string | null; nextAt: string; days: ChannelPeriod;
+  coverageDays: number; // 수집이 시작된 뒤 지난 날 수(기간 버튼·앞 기간 비교 활성화 기준)
+  prevReady: boolean; // 앞 기간이 모두 수집 범위 안에 있어 비교할 수 있는가
   channel: { channelKey: string; platform: 'CHZZK' | 'SOOP'; name: string; affiliation: string; imageUrl: string | null; channelUrl: string; profileSlug: string | null; followers: number | null };
   live: { viewers: number; category: string; liveUrl: string | null } | null;
   summary: string | null;

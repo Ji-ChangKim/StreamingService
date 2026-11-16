@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { AnalyticsBoard, BoardPlatform } from '../../../../../shared/analyticsBoard';
 import { activityStreamerPath } from '../../../../../shared/activitySeo';
 import { StreamerSearch } from './StreamerSearch';
-import { ChannelRows, ComboChart, Lede, Move, PlatformIcon, Seg, ShareBar, Sparkline, asOfLabel, gamePath, linkProps, num, people, platformLine, tagPath, useHourlyData } from './boardParts';
+import { ChannelRows, ComboChart, Lede, Move, PlatformIcon, Seg, ShareBar, Sparkline, asOfLabel, needDays, gamePath, linkProps, num, people, platformLine, tagPath, useHourlyData } from './boardParts';
 import './analyticsBoard.css';
 
 type TrendTab = 'today' | 'yesterday' | 'd7' | 'd30';
@@ -38,6 +38,7 @@ export function AnalyticsBoardPage({ path, onNavigate }: { path: string; onNavig
   const tagMaxCount = Math.max(1, ...(data?.tags || []).map((t) => t.broadcasts));
   const [showAllChannels, setShowAllChannels] = useState(false);
   const card = data?.platforms[0];
+  const coverage = data?.availability?.coverageDays ?? 0;
   const topGame = data?.games.now[0];
   const topChannel = data?.channels[0];
   // 점유율: 지금 수집된 방송 시청자 전체(게임+게임 외) 중 몫.
@@ -74,7 +75,10 @@ export function AnalyticsBoardPage({ path, onNavigate }: { path: string; onNavig
           <StreamerSearch onNavigate={onNavigate} />
         </div>
         <div className="ab-filter" role="group" aria-label="플랫폼">
-          {(['ALL', 'CHZZK', 'SOOP'] as const).map((p) => <button key={p} type="button" aria-pressed={platform === p} onClick={() => choosePlatform(p)}>{p !== 'ALL' && <PlatformIcon platform={p} />}{p === 'ALL' ? '전체' : p === 'CHZZK' ? '치지직' : 'SOOP'}</button>)}
+          {(['ALL', 'CHZZK', 'SOOP'] as const).map((p) => {
+            const off = p !== 'ALL' && data?.availability ? !data.availability.platformReady[p] : false;
+            return <button key={p} type="button" aria-pressed={platform === p} disabled={off && platform !== p} title={off ? `${p === 'CHZZK' ? '치지직' : 'SOOP'} 데이터를 준비하고 있어요. 데이터가 들어오면 선택할 수 있어요.` : undefined} onClick={() => choosePlatform(p)}>{p !== 'ALL' && <PlatformIcon platform={p} />}{p === 'ALL' ? '전체' : p === 'CHZZK' ? '치지직' : 'SOOP'}{off && <small className="ab-soon">준비 중</small>}</button>;
+          })}
         </div>
       </section>
 
@@ -122,7 +126,7 @@ export function AnalyticsBoardPage({ path, onNavigate }: { path: string; onNavig
         {/* ② 흐름과 해석 */}
         <div className="ab-layout">
           {trend.some((p) => p.chzzk !== null) && <section className="ab-section ab-span-2" aria-labelledby="ab-trend">
-            <div className="ab-section-head"><div><h2 id="ab-trend">시청자 추이</h2>{trendInsight && <p className="ab-insight">{trendInsight}</p>}</div><Seg label="기간" value={trendTab} onChange={setTrendTab} options={[['today', '오늘'], ['yesterday', '어제'], ['d7', '7일'], ['d30', '30일']]} /></div>
+            <div className="ab-section-head"><div><h2 id="ab-trend">시청자 추이</h2>{trendInsight && <p className="ab-insight">{trendInsight}</p>}</div><Seg label="기간" value={trendTab} onChange={setTrendTab} options={[['today', '오늘'], ['yesterday', '어제', needDays(coverage, 1)], ['d7', '7일', needDays(coverage, 7)], ['d30', '30일', needDays(coverage, 30)]]} /></div>
             <div className="ab-legend"><span><i style={{ width: 10, height: 10, background: 'var(--ab-bar)', borderRadius: 2 }} />치지직 시청자{trendTab === 'd7' || trendTab === 'd30' ? ' (하루 평균)' : ''}</span>{trend.some((p) => p.usual !== null) && <span><i style={{ width: 14, height: 2, background: 'var(--ab-accent)' }} />평소</span>}</div>
             <ComboChart height={200} maxBarWidth={trendTab === 'd30' ? 18 : 28} items={trend.map((p, i) => ({ key: `${trendTab}-${i}`, bar: p.chzzk, line: p.usual, tip: p.chzzk === null ? `${p.label} 아직 집계 전` : `${p.label} ${people(p.chzzk)}${p.usual ? ` · 평소 ${people(p.usual)}` : ''}`, label: trend.length <= 7 || (trend.length === 24 ? i % 6 === 0 || i === 23 : (trend.length - 1 - i) % 7 === 0) ? p.label : '' }))} />
           </section>}
@@ -138,7 +142,7 @@ export function AnalyticsBoardPage({ path, onNavigate }: { path: string; onNavig
 
         {/* ③ 어디에 몰리나: 게임 점유와 순위 */}
         {(data.games.now.length > 0 || data.games.d7.length > 0) && <section className="ab-section" aria-labelledby="ab-games">
-          <div className="ab-section-head"><div><h2 id="ab-games">인기 게임 순위</h2>{games[0] && <p className="ab-insight">「{games[0].name}」{gameTab === 'now' ? '이 지금' : gameTab === 'today' ? '이 오늘' : '이 최근 7일'} 게임 시청자의 {gameShare(games[0].viewers)}%를 모으고 있어요</p>}</div><Seg label="기간" value={gameTab} onChange={setGameTab} options={[['now', '지금'], ['today', '오늘'], ['d7', '7일']]} /></div>
+          <div className="ab-section-head"><div><h2 id="ab-games">인기 게임 순위</h2>{games[0] && <p className="ab-insight">「{games[0].name}」{gameTab === 'now' ? '이 지금' : gameTab === 'today' ? '이 오늘' : '이 최근 7일'} 게임 시청자의 {gameShare(games[0].viewers)}%를 모으고 있어요</p>}</div><Seg label="기간" value={gameTab} onChange={setGameTab} options={[['now', '지금'], ['today', '오늘'], ['d7', '7일', needDays(coverage, 7)]]} /></div>
           {games.length > 0 && <ShareBar items={games.slice(0, 5).map((g) => ({ key: g.name, label: g.name, value: g.viewers }))} other={games.slice(5).reduce((sum, g) => sum + g.viewers, 0)} />}
           <div className="ab-legend"><span><i style={{ width: 10, height: 10, background: 'var(--ab-bar)', borderRadius: 2 }} />시청자{gameTab === 'now' ? '' : ' (시간당 평균)'}</span><span><i style={{ width: 14, height: 2, background: 'var(--ab-accent)' }} />방송 수</span></div>
           {games.length ? <ComboChart height={170} lineMax={gameMaxCount} minColWidth={92} items={games.map((g, i) => ({ key: g.name, bar: g.viewers, line: g.broadcasts, tip: `${g.name} · ${people(g.viewers)} · 방송 ${num(g.broadcasts)}개`, label: <a className="ab-col-label" {...linkProps(gamePath(g.name), onNavigate)}><b>{i + 1}. {g.name}</b><small>방송 {num(g.broadcasts)}개</small><em className={`ab-comp ab-comp-${g.competition === '경쟁 없음' ? 'none' : g.competition}`}>{COMPETITION_NOTE[g.competition]}</em>{gameTab !== 'today' && <Move value={g.rankChange} />}</a> }))} /> : <p className="ab-note">이 기간에 집계된 게임이 없어요.</p>}

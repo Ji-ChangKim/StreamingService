@@ -131,6 +131,9 @@ test('통계 첫 화면은 정각 회차만 쓰고 플랫폼·게임·채널·�
   assert.equal(b.isVtuber, false, '공개 소개가 없으면 버튜버로 보지 않는다');
   assert.deepEqual(data.tags.find((t) => t.tag === '신입'), { tag: '신입', viewers: 3800, broadcasts: 2 });
   assert.ok(data.summary && data.summary.includes('리그 오브 레전드'));
+  assert.equal(data.availability.coverageDays, 30);
+  assert.equal(data.availability.platformReady.CHZZK, true);
+  assert.equal(data.availability.platformReady.SOOP, true, 'SOOP 최근 회차에 분류(LOL)가 있으면 켠다');
   db.close();
 });
 
@@ -152,6 +155,16 @@ test('지금 숫자는 가장 최근 10분 회차로, 기간 통계는 정각 �
   assert.equal(data.channels[0].channelKey, `CHZZK:${'d'.repeat(32)}`);
   assert.equal(data.trend.today[21].chzzk, 6960, '시간대 추이는 정각 값 그대로');
   assert.equal(data.games.today[0].name, '리그 오브 레전드', '오늘 순위는 정각 평균 그대로');
+  db.close();
+});
+
+test('SOOP 최근 회차에 방송 분류가 절반 넘게 비어 있으면 SOOP 선택을 끈다', async () => {
+  stubChzzk();
+  const db = fixture();
+  db.exec(`UPDATE analytics_broadcast_snapshots SET category_name = '카테고리 미제공' WHERE run_id LIKE 'SOOP:%'`);
+  const data = await board.getAnalyticsBoard(binding(db), 'ALL', 'https://vdebut.live', () => {}, NOW);
+  assert.equal(data.availability.platformReady.SOOP, false);
+  assert.equal(data.availability.platformReady.CHZZK, true);
   db.close();
 });
 
@@ -212,6 +225,11 @@ test('채널 페이지는 정각 시청자·10분 단위 방송 시간·게임 �
   assert.equal(data.heat.length, 7);
   assert.ok(data.log.length > 0);
   assert.ok(data.kpis.prev, '7일은 앞 7일과 비교한다');
+  assert.equal(data.coverageDays, 30);
+  assert.equal(data.prevReady, true, '수집 30일이면 7일 비교(14일 필요)가 가능하다');
+  const thirty = await board.getAnalyticsChannelBoard(binding(db), LOL_A, 30, NOW);
+  assert.equal(thirty.prevReady, false, '30일 비교는 60일이 모여야 한다');
+  assert.equal(thirty.kpis.prev, null, '앞 기간이 덜 모였으면 비교 수치를 내지 않는다');
   const ninety = await board.getAnalyticsChannelBoard(binding(db), LOL_A, 90, NOW);
   assert.equal(ninety.kpis.prev, null, '90일은 보관 기간과 같아 비교하지 않는다');
   assert.equal(await board.getAnalyticsChannelBoard(binding(db), `CHZZK:${'f'.repeat(32)}`, 7, NOW), null);

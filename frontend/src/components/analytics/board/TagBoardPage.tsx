@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { AnalyticsTagBoard } from '../../../../../shared/analyticsBoard';
 import { activityStreamerPath } from '../../../../../shared/activitySeo';
-import { ChannelRows, ComboChart, Lede, PlatformIcon, Seg, ShareBar, Sparkline, asOfLabel, gamePath, linkProps, num, people, platformLine, tagPath, useHourlyData } from './boardParts';
+import { ChannelRows, ComboChart, Lede, PlatformIcon, Seg, ShareBar, Sparkline, asOfLabel, needDays, gamePath, linkProps, num, people, platformLine, tagPath, useHourlyData } from './boardParts';
 import './analyticsBoard.css';
 
 // 태그 채널 목록(정의서 7.3-1): 한눈에 → 흐름·구성 → 누가 하고 있나.
@@ -64,7 +64,7 @@ export function TagBoardPage({ tag, onNavigate }: { tag: string; onNavigate: (pa
         {/* ② 흐름 + 구성 */}
         <div className="ab-layout">
           {hasTrend && <section className="ab-section ab-span-2" aria-labelledby="ab-tag-trend">
-            <div className="ab-section-head"><div><h2 id="ab-tag-trend">#{data.tag} 추이</h2>{trendInsight && <p className="ab-insight">{trendInsight}</p>}</div><Seg label="기간" value={trendTab} onChange={setTrendTab} options={[['today', '오늘'], ['yesterday', '어제'], ['d7', '7일'], ['d30', '30일']]} /></div>
+            <div className="ab-section-head"><div><h2 id="ab-tag-trend">#{data.tag} 추이</h2>{trendInsight && <p className="ab-insight">{trendInsight}</p>}</div><Seg label="기간" value={trendTab} onChange={setTrendTab} options={[['today', '오늘'], ['yesterday', '어제', needDays(data.tagCoverageDays ?? 0, 1)], ['d7', '7일', needDays(data.tagCoverageDays ?? 0, 7)], ['d30', '30일', needDays(data.tagCoverageDays ?? 0, 30)]]} /></div>
             <div className="ab-legend"><span><i style={{ width: 10, height: 10, background: 'var(--ab-bar)', borderRadius: 2 }} />태그 시청자{trendTab === 'd7' || trendTab === 'd30' ? ' (정각 평균)' : ''}</span><span><i style={{ width: 14, height: 2, background: 'var(--ab-accent)' }} />태그 방송 수</span></div>
             <ComboChart height={200} maxBarWidth={trendTab === 'd30' ? 18 : 28} lineMax={Math.max(1, ...trend.map((p) => p.broadcasts ?? 0))}
               items={trend.map((p, i) => ({ key: `${trendTab}-${i}`, bar: p.viewers, line: p.broadcasts, tip: p.viewers === null ? `${p.label} 기록 없음` : `${p.label} · ${people(p.viewers)} · 방송 ${p.broadcasts}개`, label: trend.length <= 7 || (trend.length === 24 ? i % 6 === 0 || i === 23 : (trend.length - 1 - i) % 7 === 0) ? p.label : '' }))} />

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { AnalyticsChannelBoard, ChannelPeriod } from '../../../../../shared/analyticsBoard';
-import { ComboChart, Lede, PlatformIcon, Seg, ShareBar, Sparkline, asOfLabel, gamePath, linkProps, num, people, platformLine, tagPath, useHourlyData } from './boardParts';
+import { ComboChart, Lede, PlatformIcon, Seg, ShareBar, Sparkline, asOfLabel, needDays, gamePath, linkProps, num, people, platformLine, tagPath, useHourlyData } from './boardParts';
 import './analyticsBoard.css';
 
 const SCALE = ['#EEF4FF', '#C9DAFB', '#8FB1F2', '#4A7FE0', '#1D4FB8'];
@@ -13,8 +13,10 @@ function readDays(): ChannelPeriod {
   return value === 7 || value === 90 ? value : 30;
 }
 
-function Delta({ now, before, unit = '%' }: { now: number | null; before: number | null | undefined; unit?: string }) {
-  if (now === null || before === null || before === undefined || before === 0) return <span className="ab-note">앞 기간 기록 없음</span>;
+// 앞 기간이 모두 모이기 전에는 음영 칩으로만 보여 주고, 모이면 자동으로 비교 수치를 보여 준다(정의서 5.12).
+function Delta({ now, before, unit = '%', off }: { now: number | null; before: number | null | undefined; unit?: string; off?: { wait: number } }) {
+  if (off) return <span className="ab-chip off" title={`앞 기간 기록이 모두 모이면 비교해요 · ${off.wait}일 뒤부터`}>앞 기간 기록 부족</span>;
+  if (now === null || before === null || before === undefined || before === 0) return <span className="ab-chip off">앞 기간에 방송 기록 없음</span>;
   const change = unit === '%' ? Math.round((now - before) / before * 100) : Math.round(now - before);
   if (change === 0) return <span className="ab-note">앞 기간과 같음</span>;
   // 앞 기간 기록이 아주 적으면 비율이 의미 없이 커지므로 말로만 적는다.
@@ -29,6 +31,12 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
   const { data, error, loading, missing } = useHourlyData<AnalyticsChannelBoard>(`/api/analytics/board/channel?key=${encodeURIComponent(channelKey)}&days=${days}`);
   useEffect(() => { if (data) document.title = `${data.channel.name} 방송 통계 · ${data.channel.platform === 'CHZZK' ? '치지직' : 'SOOP'} | VDébut`; }, [data]);
   useEffect(() => { setLogCount(20); }, [days, channelKey]);
+  // 아직 데이터가 모자란 기간으로 들어오면 볼 수 있는 가장 긴 기간으로 바꾼다.
+  useEffect(() => {
+    if (!data || data.coverageDays === undefined || data.coverageDays >= days) return;
+    const fallback = ([30, 7] as const).find((d) => d < days && data.coverageDays >= d) || 7;
+    if (fallback !== days) setDays(fallback);
+  }, [data, days]);
   const pickDays = (next: ChannelPeriod) => {
     setDays(next);
     const url = new URL(window.location.href);
@@ -39,6 +47,7 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
   const cuts = [0.2, 0.4, 0.6, 0.8].map((q) => filled[Math.min(filled.length - 1, Math.floor(filled.length * q))] ?? 0);
   const step = (v: number) => cuts.filter((cut) => v > cut).length;
   const ch = data?.channel;
+  const prevOff = data && data.prevReady === false && days < 90 ? { wait: Math.max(1, days * 2 - (data.coverageDays ?? 0)) } : undefined;
   const knownDays = (data?.trend || []).filter((d) => d.avg !== null);
   const bestDay = knownDays.length ? knownDays.reduce((a, b) => ((b.avg || 0) > (a.avg || 0) ? b : a)) : null;
   const bestGame = (data?.games || []).some((g) => g.avg !== null);
@@ -92,7 +101,7 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
 
         <div className="ab-section-head" style={{ marginBottom: -24 }}>
           <span className="ab-note">{asOfLabel(data.asOf)}</span>
-          <Seg label="기간" value={String(days) as '7' | '30' | '90'} onChange={(v) => pickDays(Number(v) as ChannelPeriod)} options={[['7', '7일'], ['30', '30일'], ['90', '90일']]} />
+          <Seg label="기간" value={String(days) as '7' | '30' | '90'} onChange={(v) => pickDays(Number(v) as ChannelPeriod)} options={[['7', '7일', needDays(data.coverageDays ?? 0, 7)], ['30', '30일', needDays(data.coverageDays ?? 0, 30)], ['90', '90일', needDays(data.coverageDays ?? 0, 90)]]} />
         </div>
 
         {data.kpis.broadcasts === 0 ? <p className="ab-empty">이 기간에는 집계 범위 안에서 기록된 방송이 없어요. <a {...linkProps('/analytics/method', onNavigate)}>집계 기준</a></p> : <>
@@ -101,7 +110,7 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
             <article className="ab-kpi ab-kpi-hero">
               <header>평균 시청자</header>
               <div className="ab-kpi-value"><strong>{data.kpis.avg !== null ? num(data.kpis.avg) : '—'}</strong>{data.kpis.avg !== null && <span>명</span>}</div>
-              <Delta now={data.kpis.avg} before={data.kpis.prev?.avg} />
+              <Delta now={data.kpis.avg} before={data.kpis.prev?.avg} off={prevOff} />
               <Sparkline values={data.trend.map((d) => d.avg)} />
             </article>
             <article className="ab-kpi">
@@ -112,7 +121,7 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
             <article className="ab-kpi">
               <header>기록된 방송 시간</header>
               <div className="ab-kpi-value"><strong>{Math.floor(data.kpis.minutes / 60)}</strong><span>시간</span></div>
-              <Delta now={data.kpis.minutes} before={data.kpis.prev?.minutes} />
+              <Delta now={data.kpis.minutes} before={data.kpis.prev?.minutes} off={prevOff} />
             </article>
             <article className="ab-kpi">
               <header>방송 횟수</header>
