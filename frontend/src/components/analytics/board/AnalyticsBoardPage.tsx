@@ -42,7 +42,7 @@ export function AnalyticsBoardPage({ path, onNavigate }: { path: string; onNavig
   const topGame = data?.games.now[0];
   const topChannel = data?.channels[0];
   // 점유율: 지금 수집된 방송 시청자 전체(게임+게임 외) 중 몫.
-  const nowTotal = card?.viewers || [...(data?.games.now || []), ...(data?.nonGame || [])].reduce((sum, g) => sum + g.viewers, 0);
+  const nowTotal = data?.nowViewers || [...(data?.games.now || []), ...(data?.nonGame || [])].reduce((sum, g) => sum + g.viewers, 0);
   const share = (v: number) => Math.round(v / Math.max(1, nowTotal) * 100);
   const gameShare = (v: number) => Math.round(v / Math.max(1, games.reduce((sum, g) => sum + g.viewers, 0)) * 100);
   const today = data?.trend.today || [];

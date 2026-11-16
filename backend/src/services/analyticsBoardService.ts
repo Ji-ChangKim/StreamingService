@@ -17,7 +17,7 @@ const LIVE = `r.state IN ('available','partial')`;
 // 화면 갱신 단위: 수집 주기와 같은 10분(정의서 5.10).
 const SLOT = 10 * 60000;
 const NON_GAME = /토크|talk|캠방|노래|음악|music|먹방|쿡방|요리|그림|아트|art|asmr|운동|피트니스|여행|야외|일상|스포츠|교육|시사|주식|경제|댄스|라디오|chatting|버추얼|virtual|카테고리 미제공|unknown/i;
-const NOT_A_GAME_TITLE = /^(종합\s*게임|기타\s*게임|게임\s*기타|게임|카테고리 미제공|카테고리 미지정|unknown|none)$/i;
+const NOT_A_GAME_TITLE = /^(종합\s*게임|기타\s*게임|게임\s*기타|게임|카테고리 미제공|카테고리 미지정|미분류|unknown|none)$/i;
 // 플랫폼이 영문 분류 값만 준 경우 화면 이름으로 바꾼다.
 const CATEGORY_LABELS: Record<string, string> = { talk: '토크', music: '음악/노래', art: '그림', mukbang: '먹방', asmr: 'ASMR', sports: '스포츠', cooking: '요리', travel: '여행' };
 export const categoryLabel = (name: string) => CATEGORY_LABELS[name.trim().toLowerCase()] || name.trim();
@@ -81,6 +81,20 @@ async function readRuns(db: D1Database, since: string): Promise<RunRow[]> {
   return result.results || [];
 }
 
+// '지금' 기준 회차: 요청한 플랫폼이 모두 끝낸 가장 최근 회차. 같은 회차에서 한 플랫폼만 먼저 끝나
+// 다른 플랫폼이 빠진 화면이 캐시되지 않게 한다. 20분 넘게 멈춘 플랫폼은 기다리지 않는다.
+export function commonLatest(recent: RunRow[], runs: RunRow[], platforms: Platform[]): string | null {
+  const per = platforms.map((p) => last(recent.filter((run) => run.platform === p))?.scheduled_at).filter((v): v is string => Boolean(v));
+  if (!per.length) return last(runs.filter((run) => platforms.includes(run.platform)))?.scheduled_at || null;
+  const newest = per.reduce((a, b) => (a > b ? a : b));
+  const alive = per.filter((at) => Date.parse(newest) - Date.parse(at) <= 20 * 60000);
+  return alive.reduce((a, b) => (a < b ? a : b));
+}
+
+// '카테고리 미제공'처럼 분류가 없는 방송인가(순위·채널 줄·플랫폼 준비 판정에서 같은 기준을 쓴다).
+export const UNCATEGORIZED_NAMES = ['카테고리 미제공', '카테고리 미지정', '미분류', 'unknown', 'none', ''];
+export const isUncategorized = (name: string) => UNCATEGORIZED_NAMES.includes(name.trim().toLowerCase()) || UNCATEGORIZED_NAMES.includes(name.trim());
+
 // 수집이 시작된 뒤 지난 날 수. 기간 버튼과 앞 기간 비교를 켤지 정한다(정의서 5.12).
 async function readCoverageDays(db: D1Database, now: number): Promise<number> {
   const row = await db.prepare(`SELECT MIN(r.scheduled_at) AS first FROM analytics_broadcast_runs r WHERE ${LIVE}`).first<{ first: string | null }>();
@@ -90,10 +104,10 @@ async function readCoverageDays(db: D1Database, now: number): Promise<number> {
 // 플랫폼을 보여 줄 수 있는가: 최근 하루 안에 수집됐고, 방송 분류가 절반 이상 들어 있어야 한다.
 async function readPlatformReady(db: D1Database, platform: Platform, now: number): Promise<boolean> {
   const row = await db.prepare(`SELECT COUNT(*) AS n,
-      SUM(CASE WHEN s.category_name IN ('카테고리 미제공', '미분류', 'unknown', '') THEN 0 ELSE 1 END) AS named
+      SUM(CASE WHEN lower(trim(s.category_name)) IN (${inList(UNCATEGORIZED_NAMES)}) THEN 0 ELSE 1 END) AS named
     FROM analytics_broadcast_snapshots s
     WHERE s.run_id = (SELECT r.run_id FROM analytics_broadcast_runs r WHERE ${LIVE} AND r.platform = ? AND r.scheduled_at >= ? ORDER BY r.scheduled_at DESC LIMIT 1)`)
-    .bind(platform, new Date(now - DAY).toISOString()).first<{ n: number; named: number | null }>();
+    .bind(...UNCATEGORIZED_NAMES.map((n) => n.toLowerCase()), platform, new Date(now - DAY).toISOString()).first<{ n: number; named: number | null }>();
   return Boolean(row && row.n > 0 && (row.named || 0) / row.n >= 0.5);
 }
 
@@ -144,9 +158,19 @@ async function readRegistered(db: D1Database): Promise<Map<string, Registered>> 
   return map;
 }
 
+// 채널 페이지용: 한 채널의 등록 정보만 읽는다(전체 목록을 읽지 않는다).
+async function readRegisteredOne(db: D1Database, platform: Platform, id: string): Promise<Registered | null> {
+  const urls = platform === 'CHZZK' ? [`https://chzzk.naver.com/${id}`, `https://chzzk.naver.com/live/${id}`]
+    : [`https://www.sooplive.co.kr/station/${id}`, `https://ch.sooplive.co.kr/${id}`, `https://bj.afreecatv.com/${id}`, `https://play.sooplive.co.kr/${id}`];
+  const row = await db.prepare(`SELECT i.slug, i.agency_name, i.display_name, i.profile_image_url FROM streamerChannel c LEFT JOIN streamerChannel_info i ON i.channel_id = c.id
+    WHERE c.platform = ? AND lower(c.channel_url) IN (${inList(urls)}) LIMIT 1`).bind(platform, ...urls.map((u) => u.toLowerCase()))
+    .first<{ slug: string | null; agency_name: string | null; display_name: string | null; profile_image_url: string | null }>();
+  return row ? { affiliation: profileAgencyName(row.agency_name || ''), isVtuber: Boolean(row.slug), slug: row.slug || null, name: row.display_name || null, imageUrl: row.profile_image_url || null } : null;
+}
+
 function toChannel(row: { platform: Platform; channelKey: string; name: string; category: string; viewers: number; liveUrl: string | null; imageUrl: string | null }, registered: Map<string, Registered>): BoardChannel {
   const info = registered.get(row.channelKey.toLowerCase());
-  return { channelKey: row.channelKey, name: row.name, platform: row.platform, affiliation: info?.affiliation || '', category: NOT_A_GAME_TITLE.test(row.category.trim()) && /미제공|미지정|unknown|none/i.test(row.category) ? '카테고리 없음' : categoryLabel(row.category), isGame: isGameCategory(row.category), viewers: row.viewers, liveUrl: row.liveUrl, imageUrl: row.imageUrl, isVtuber: Boolean(info?.isVtuber) };
+  return { channelKey: row.channelKey, name: row.name, platform: row.platform, affiliation: info?.affiliation || '', category: isUncategorized(row.category) ? '카테고리 없음' : categoryLabel(row.category), isGame: isGameCategory(row.category), viewers: row.viewers, liveUrl: row.liveUrl, imageUrl: row.imageUrl, isVtuber: Boolean(info?.isVtuber) };
 }
 
 // 태그는 아직 저장하지 않아 정각마다 치지직 인기 방송을 한 번 읽어 쓴다(치지직만, 정의서 6.4).
@@ -218,8 +242,8 @@ export async function getAnalyticsBoard(db: D1Database, platform: BoardPlatform,
   const platforms = platformsOf(platform);
   // 기간 통계는 정각 회차(runs), '지금' 숫자는 가장 최근 10분 회차(recent)로 계산한다(정의서 5.10).
   const [runs, recent, availability] = await Promise.all([readRuns(db, new Date(now - 36 * DAY).toISOString()), readRecentRuns(db, new Date(now - 3 * HOUR).toISOString()), readBoardAvailability(db, now)]);
-  const latest = last(recent.filter((run) => platforms.includes(run.platform)))?.scheduled_at || last(runs.filter((run) => platforms.includes(run.platform)))?.scheduled_at || null;
-  const empty: AnalyticsBoard = { availability, asOf: latest, nextAt: boardNextAt(now), summary: null, platforms: [], trend: { today: [], yesterday: [], d7: [], d30: [] }, games: { now: [], today: [], d7: [] }, rising: [], nonGame: [], tags: [], channels: [] };
+  const latest = commonLatest(recent, runs, platforms);
+  const empty: AnalyticsBoard = { availability, nowViewers: 0, asOf: latest, nextAt: boardNextAt(now), summary: null, platforms: [], trend: { today: [], yesterday: [], d7: [], d30: [] }, games: { now: [], today: [], d7: [] }, rising: [], nonGame: [], tags: [], channels: [] };
   if (!latest) return empty;
   const nowRuns = recent.some((run) => run.scheduled_at === latest) ? recent : runs;
   const today = kstDate(latest);
@@ -286,6 +310,8 @@ export async function getAnalyticsBoard(db: D1Database, platform: BoardPlatform,
 
   return {
     availability,
+    // 점유율 분모: 지금 회차에 수집된 모든 플랫폼 방송의 시청자 합(게임 시청자와 같은 범위).
+    nowViewers: snapshots.reduce((sum, row) => sum + row.viewers, 0),
     asOf: latest, nextAt: boardNextAt(now), summary: summaryParts.length >= 2 ? summaryParts.join(' ') : null,
     platforms: platformCards,
     trend: platforms.includes('CHZZK') ? { today: dayTrend(runs, today, runs), yesterday: dayTrend(runs, kstDate(Date.parse(latest) - DAY), runs), d7: periodTrend(runs, 7, today), d30: periodTrend(runs, 30, today) } : empty.trend,
@@ -301,7 +327,7 @@ export async function getAnalyticsGameBoard(db: D1Database, name: string, now = 
   const target = gameName(name);
   const runs = await readRuns(db, new Date(now - 29 * DAY).toISOString());
   const recent = await readRecentRuns(db, new Date(now - 3 * HOUR).toISOString());
-  const latest = last(recent)?.scheduled_at || last(runs)?.scheduled_at || null;
+  const latest = commonLatest(recent, runs, ['CHZZK', 'SOOP']);
   if (!latest) return null;
   const nowRuns = recent.some((run) => run.scheduled_at === latest) ? recent : runs;
   const variants = [target, ...Object.entries(GAME_ALIASES).filter(([, value]) => value === target).map(([key]) => key)];
@@ -443,12 +469,12 @@ export async function getAnalyticsChannelBoard(db: D1Database, channelKey: strin
       FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id = s.run_id
       WHERE s.channel_key = ? COLLATE NOCASE AND r.state IN ('available','partial') AND r.scheduled_at >= ? ORDER BY r.scheduled_at`).bind(key, prevFrom).all<ChannelRow>(),
     db.prepare(`SELECT r.run_id, r.scheduled_at FROM analytics_broadcast_runs r WHERE ${LIVE} AND r.platform = ? ORDER BY r.scheduled_at DESC LIMIT 1`).bind(platform).first<{ run_id: string; scheduled_at: string }>(),
-    readRegistered(db),
+    readRegisteredOne(db, platform, id.toLowerCase()),
     platform === 'CHZZK' ? readChzzkFollowers(id) : Promise.resolve(null),
     readCoverageDays(db, now),
   ]);
   const all = rowsResult.results || [];
-  const info = registered.get(key.toLowerCase());
+  const info = registered;
   if (!all.length && !info) return null;
   const isHourlyAt = (iso: string) => iso.slice(14, 16) === '00';
   const latestRow = all[all.length - 1];
@@ -475,7 +501,7 @@ export async function getAnalyticsChannelBoard(db: D1Database, channelKey: strin
   const byCategory = new Map<string, { name: string; isGame: boolean; samples: number; hourly: number[] }>();
   for (const row of rows) {
     const game = isGameCategory(row.category_name);
-    const name = NOT_A_GAME_TITLE.test(row.category_name.trim()) && /미제공|미지정|unknown|none/i.test(row.category_name) ? '카테고리 없음' : game ? gameName(row.category_name) : categoryLabel(row.category_name);
+    const name = isUncategorized(row.category_name) ? '카테고리 없음' : game ? gameName(row.category_name) : categoryLabel(row.category_name);
     const entry = byCategory.get(name) || { name, isGame: game, samples: 0, hourly: [] };
     entry.samples += 1;
     if (isHourlyAt(row.scheduled_at)) entry.hourly.push(row.viewers);

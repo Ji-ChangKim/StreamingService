@@ -1383,8 +1383,22 @@ const renderActivityPageResponse = async (c: any) => {
     if (!/^(CHZZK:[a-f0-9]{32}|SOOP:[a-z0-9_]{1,50})$/i.test(channel)) return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404);
     channel = `${channel.split(':')[0].toUpperCase()}:${channel.split(':')[1].toLowerCase()}`;
   } else if (/^\/analytics\/(game|tag)\/[^/]{1,240}$/.test(url.pathname)) {
-    // 게임·태그 하위 화면은 화면에서 자료를 읽는다. 노출 기준(정의서 7.1)을 서버에서 판정하기 전까지 검색 제외한다.
-    c.header('X-Robots-Tag', 'noindex, follow');
+    // 게임·태그 하위 화면은 화면에서 자료를 읽으므로 무거운 활동 집계 없이 앱 껍데기만 돌려준다.
+    // 노출 기준(정의서 7.1)을 서버에서 판정하기 전까지 검색 제외한다.
+    try {
+      const shellRequest = c.env.PORTAL_ENABLED === 'true' ? new Request(new URL(url.hostname === 'vdebut.live' ? '/portal.html' : '/dev.html', c.req.url), c.req.raw) : c.req.raw;
+      const asset = await getAssetFromKV({ request: shellRequest, waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, {
+        ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}'),
+        ...(c.env.PORTAL_ENABLED === 'true' ? {} : { mapRequestToAsset: serveSinglePageApp }),
+      });
+      c.header('X-Robots-Tag', 'noindex, follow');
+      c.header('Cache-Control', 'public, max-age=60, s-maxage=600');
+      return c.html(await asset.text());
+    } catch (error) {
+      console.error('[Statistics] Board shell failed', String(error));
+      c.header('Cache-Control', 'no-store');
+      return c.html(publicErrorPage(url, '방송 통계를 불러오지 못했어요', 503), 503);
+    }
   } else if (!['/analytics', '/analytics/chzzk', '/analytics/soop', '/analytics/method'].includes(url.pathname)) {
     c.header('X-Robots-Tag', 'noindex');
     return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404);

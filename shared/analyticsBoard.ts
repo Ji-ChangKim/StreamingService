@@ -17,6 +17,7 @@ export interface BoardAvailability {
 
 export interface AnalyticsBoard {
   availability: BoardAvailability;
+  nowViewers: number; // 지금 회차에 수집된 모든 방송의 시청자 합(점유율 분모)
   asOf: string | null;
   nextAt: string;
   summary: string | null;

@@ -158,6 +158,24 @@ test('지금 숫자는 가장 최근 10분 회차로, 기간 통계는 정각 �
   db.close();
 });
 
+test('한 플랫폼만 먼저 끝난 회차는 지금 기준으로 쓰지 않고, 20분 넘게 멈춘 플랫폼은 기다리지 않는다', () => {
+  const r = (platform, at) => ({ platform, scheduled_at: at, viewer_total: 1 });
+  assert.equal(board.commonLatest([r('CHZZK', '2026-11-16T12:00:00.000Z'), r('SOOP', '2026-11-16T12:00:00.000Z'), r('SOOP', '2026-11-16T12:10:00.000Z')], [], ['CHZZK', 'SOOP']), '2026-11-16T12:00:00.000Z');
+  assert.equal(board.commonLatest([r('CHZZK', '2026-11-16T12:10:00.000Z'), r('SOOP', '2026-11-16T11:00:00.000Z')], [], ['CHZZK', 'SOOP']), '2026-11-16T12:10:00.000Z');
+  assert.equal(board.isUncategorized('카테고리 미제공'), true);
+  assert.equal(board.isUncategorized('미분류'), true);
+  assert.equal(board.isUncategorized('토크'), false);
+});
+
+test('점유율 분모(nowViewers)는 지금 회차의 모든 플랫폼 시청자 합이다', async () => {
+  stubChzzk();
+  const db = fixture();
+  const data = await board.getAnalyticsBoard(binding(db), 'ALL', 'https://vdebut.live', () => {}, NOW);
+  assert.equal(data.nowViewers, 6960 + 900);
+  assert.ok(data.games.now[0].viewers <= data.nowViewers);
+  db.close();
+});
+
 test('SOOP 최근 회차에 방송 분류가 절반 넘게 비어 있으면 SOOP 선택을 끈다', async () => {
   stubChzzk();
   const db = fixture();
