@@ -38,7 +38,10 @@ export interface AnalyticsTagBoard {
   channels: BoardChannel[];
   games: Array<{ name: string; broadcasts: number }>;
   withTags: Array<{ tag: string; broadcasts: number }>;
+  // 저장된 태그 기록으로 그린 추이. 기록이 없으면 빈 배열.
+  trend: { today: TagTrendPoint[]; yesterday: TagTrendPoint[]; d7: TagTrendPoint[]; d30: TagTrendPoint[] };
 }
+export interface TagTrendPoint { label: string; viewers: number | null; broadcasts: number | null }
 
 export type ChannelPeriod = 7 | 30 | 90;
 export interface ChannelBroadcastLog { streamId: string; date: string; title: string; category: string; isGame: boolean; minutes: number; avg: number | null; peak: number | null }
@@ -52,6 +55,7 @@ export interface AnalyticsChannelBoard {
   games: Array<{ name: string; isGame: boolean; share: number; avg: number | null }>;
   heat: number[][]; // [월..일][0..23] 방송한 비율(%)
   log: ChannelBroadcastLog[];
+  tags: Array<{ tag: string; broadcasts: number; avg: number | null }>;
 }
 
 // 태그는 띄어쓰기·대소문자만 다른 값을 같은 태그로 본다(정의서 6.4).

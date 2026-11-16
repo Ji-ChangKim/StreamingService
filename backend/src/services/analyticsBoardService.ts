@@ -3,6 +3,9 @@ import type { AnalyticsBoard, AnalyticsGameBoard, AnalyticsTagBoard, BoardChanne
 import { normalizeBoardTag } from '../../../shared/analyticsBoard';
 import { profileAgencyName } from '../../../shared/profilePresentation';
 import { getChzzkStatisticsSource } from './broadcastStatisticsSources';
+import { snapshotTagsReady } from './broadcastStatisticsCollection';
+export { resetSnapshotTagsCheck } from './broadcastStatisticsCollection';
+import type { TagTrendPoint } from '../../../shared/analyticsBoard';
 import { extractSoopUserId } from './soopCollector';
 
 // 방송 통계 개편 화면의 집계. 모든 공개 수치는 매시 정각 회차만 쓴다(기준 정의서 5.10).
@@ -121,6 +124,26 @@ async function readLiveTags(origin: string, wait: (p: Promise<unknown>) => void)
   return body;
 }
 
+// 가장 최근 정각 회차에 저장된 치지직 태그를 읽고, 아직 저장 기록이 없으면 인기 방송 목록을 직접 읽는다.
+async function readTagSource(db: D1Database, origin: string, wait: (p: Promise<unknown>) => void): Promise<{ asOf: string; rows: LiveRow[] }> {
+  if (await snapshotTagsReady(db)) {
+    const run = await db.prepare(`SELECT r.scheduled_at FROM analytics_broadcast_runs r WHERE ${HOURLY} AND r.platform = 'CHZZK' ORDER BY r.scheduled_at DESC LIMIT 1`).first<{ scheduled_at: string }>();
+    if (run) {
+      const result = await db.prepare(`SELECT s.channel_key, s.channel_name, s.category_name, s.viewers, s.live_url, s.image_url, s.tags
+        FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id = s.run_id
+        WHERE r.scheduled_at = ? AND r.platform = 'CHZZK' AND s.tags IS NOT NULL`).bind(run.scheduled_at)
+        .all<{ channel_key: string; channel_name: string | null; category_name: string; viewers: number; live_url: string | null; image_url: string | null; tags: string }>();
+      const rows = (result.results || []).map((row) => {
+        let tags: string[] = [];
+        try { const parsed = JSON.parse(row.tags); if (Array.isArray(parsed)) tags = parsed.filter((t): t is string => typeof t === 'string'); } catch { /* 깨진 값은 태그 없음으로 본다. */ }
+        return { channelKey: row.channel_key, name: row.channel_name || '', category: row.category_name, viewers: row.viewers, liveUrl: row.live_url, imageUrl: row.image_url, tags };
+      }).filter((row) => row.tags.length);
+      if (rows.length) return { asOf: run.scheduled_at, rows };
+    }
+  }
+  return readLiveTags(origin, wait);
+}
+
 function tagRanking(rows: LiveRow[]) {
   const tags = new Map<string, { tag: string; viewers: number; broadcasts: number; channels: Set<string> }>();
   for (const row of rows) for (const raw of new Set(row.tags.map((tag) => tag.trim()).filter(Boolean))) {
@@ -204,7 +227,7 @@ export async function getAnalyticsBoard(db: D1Database, platform: BoardPlatform,
 
   let tags: AnalyticsBoard['tags'] = [];
   if (platforms.includes('CHZZK')) {
-    try { tags = tagRanking((await readLiveTags(origin, wait)).rows).slice(0, 8); } catch (error) { console.warn('[Board] live tags unavailable', String(error)); }
+    try { tags = tagRanking((await readTagSource(db, origin, wait)).rows).slice(0, 8); } catch (error) { console.warn('[Board] tags unavailable', String(error)); }
   }
 
   const card = platformCards[0];
@@ -287,7 +310,7 @@ export async function getAnalyticsGameBoard(db: D1Database, name: string, now = 
 export async function getAnalyticsTagBoard(db: D1Database, tag: string, origin: string, wait: (p: Promise<unknown>) => void, now = Date.now()): Promise<AnalyticsTagBoard | null> {
   const key = normalizeBoardTag(tag);
   if (!key) return null;
-  const [live, registered] = await Promise.all([readLiveTags(origin, wait), readRegistered(db)]);
+  const [live, registered] = await Promise.all([readTagSource(db, origin, wait), readRegistered(db)]);
   const ranking = tagRanking(live.rows);
   const rank = ranking.findIndex((row) => normalizeBoardTag(row.tag) === key);
   const rows = live.rows.filter((row) => row.tags.some((t) => normalizeBoardTag(t) === key)).sort((a, b) => b.viewers - a.viewers);
@@ -316,10 +339,37 @@ export async function getAnalyticsTagBoard(db: D1Database, tag: string, origin: 
     channels: rows.map((row) => toChannel({ platform: 'CHZZK', channelKey: row.channelKey, name: row.name, category: row.category, viewers: row.viewers, liveUrl: row.liveUrl, imageUrl: row.imageUrl }, registered)),
     games: [...games.entries()].map(([name, broadcasts]) => ({ name, broadcasts })).sort((a, b) => b.broadcasts - a.broadcasts).slice(0, 5),
     withTags: [...withTags.values()].sort((a, b) => b.broadcasts - a.broadcasts).slice(0, 8),
+    trend: await readTagTrend(db, key, live.asOf),
   };
 }
 
-interface ChannelRow { scheduled_at: string; stream_id: string; channel_name: string | null; image_url: string | null; live_url: string | null; title: string; category_name: string; viewers: number }
+// 저장된 태그 기록으로 오늘·어제(정각별)·7일·30일(하루 평균) 추이를 만든다. 저장 시작 전 시각은 비워 둔다.
+async function readTagTrend(db: D1Database, key: string, asOf: string): Promise<AnalyticsTagBoard['trend']> {
+  const empty = { today: [], yesterday: [], d7: [], d30: [] };
+  if (!(await snapshotTagsReady(db))) return empty;
+  const since = new Date(Date.parse(asOf) - 31 * DAY).toISOString();
+  const [start, hits, runs] = await Promise.all([
+    db.prepare(`SELECT MIN(r.scheduled_at) AS first FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id = s.run_id WHERE ${HOURLY} AND r.platform = 'CHZZK' AND s.tags IS NOT NULL AND r.scheduled_at >= ?`).bind(since).first<{ first: string | null }>(),
+    db.prepare(`SELECT r.scheduled_at AS at, SUM(s.viewers) AS v, COUNT(DISTINCT s.channel_key) AS n
+      FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id = s.run_id, json_each(s.tags) t
+      WHERE ${HOURLY} AND r.platform = 'CHZZK' AND r.scheduled_at >= ? AND s.tags IS NOT NULL
+        AND lower(replace(replace(t.value, ' ', ''), '#', '')) = ?
+      GROUP BY r.scheduled_at`).bind(since, key).all<{ at: string; v: number; n: number }>().then((r) => r.results || []),
+    readRuns(db, since),
+  ]);
+  if (!start?.first) return empty;
+  const byAt = new Map(hits.map((hit) => [hit.at, hit]));
+  const slots = runs.filter((run) => run.platform === 'CHZZK' && run.scheduled_at >= (start.first as string) && run.scheduled_at <= asOf).map((run) => run.scheduled_at);
+  const point = (label: string, list: string[]): TagTrendPoint => list.length
+    ? { label, viewers: Math.round(list.reduce((sum, at) => sum + (byAt.get(at)?.v || 0), 0) / list.length), broadcasts: Math.round(list.reduce((sum, at) => sum + (byAt.get(at)?.n || 0), 0) / list.length * 10) / 10 }
+    : { label, viewers: null, broadcasts: null };
+  const today = kstDate(asOf);
+  const hoursOf = (date: string) => Array.from({ length: 24 }, (_, hour) => point(`${hour}시`, slots.filter((at) => kstDate(at) === date && kstHour(at) === hour)));
+  const daysBack = (n: number) => Array.from({ length: n }, (_, index) => { const date = kstDate(Date.parse(`${today}T00:00:00Z`) - (n - 1 - index) * DAY); return point(date.slice(5).replace('-', '/'), slots.filter((at) => kstDate(at) === date)); });
+  return { today: hoursOf(today), yesterday: hoursOf(kstDate(Date.parse(`${today}T00:00:00Z`) - DAY)), d7: daysBack(7), d30: daysBack(30) };
+}
+
+interface ChannelRow { scheduled_at: string; stream_id: string; channel_name: string | null; image_url: string | null; live_url: string | null; title: string; category_name: string; viewers: number; tags?: string | null }
 
 // 치지직 팔로워 수(공개 정보). 실패하면 표시하지 않는다.
 async function readChzzkFollowers(id: string): Promise<number | null> {
@@ -338,8 +388,9 @@ export async function getAnalyticsChannelBoard(db: D1Database, channelKey: strin
   const key = `${platform}:${id.toLowerCase()}`;
   const from = new Date(now - days * DAY).toISOString();
   const prevFrom = new Date(now - 2 * days * DAY).toISOString();
+  const withTags = await snapshotTagsReady(db);
   const [rowsResult, latestRun, registered, followers] = await Promise.all([
-    db.prepare(`SELECT r.scheduled_at, s.stream_id, s.channel_name, s.image_url, s.live_url, s.title, s.category_name, s.viewers
+    db.prepare(`SELECT r.scheduled_at, s.stream_id, s.channel_name, s.image_url, s.live_url, s.title, s.category_name, s.viewers${withTags ? ', s.tags' : ''}
       FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id = s.run_id
       WHERE s.channel_key = ? COLLATE NOCASE AND r.state IN ('available','partial') AND r.scheduled_at >= ? ORDER BY r.scheduled_at`).bind(key, prevFrom).all<ChannelRow>(),
     db.prepare(`SELECT r.run_id, r.scheduled_at FROM analytics_broadcast_runs r WHERE ${HOURLY} AND r.platform = ? ORDER BY r.scheduled_at DESC LIMIT 1`).bind(platform).first<{ run_id: string; scheduled_at: string }>(),
@@ -395,6 +446,27 @@ export async function getAnalyticsChannelBoard(db: D1Database, channelKey: strin
     return { streamId, date: list[0].scheduled_at, title: list[list.length - 1].title, category: isGameCategory(category) ? gameName(category) : categoryLabel(category), isGame: isGameCategory(category), minutes: list.length * 10, avg: hourly.length ? Math.round(hourly.reduce((a, b) => a + b, 0) / hourly.length) : null, peak: hourly.length ? Math.max(...hourly) : null };
   }).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 100);
 
+  // 자주 쓰는 태그: 그 태그를 단 방송 수와 그 방송들의 평균 시청자(정의서 T6).
+  const tagStats = new Map<string, { tag: string; streams: Set<string> }>();
+  for (const row of rows) {
+    if (!row.tags) continue;
+    let list: unknown = [];
+    try { list = JSON.parse(row.tags); } catch { continue; }
+    if (!Array.isArray(list)) continue;
+    for (const raw of list) {
+      if (typeof raw !== 'string') continue;
+      const norm = normalizeBoardTag(raw);
+      if (!norm) continue;
+      const entry = tagStats.get(norm) || { tag: raw.replace(/^#/, ''), streams: new Set<string>() };
+      entry.streams.add(row.stream_id); tagStats.set(norm, entry);
+    }
+  }
+  const streamAvg = new Map(log.map((entry) => [entry.streamId, entry.avg]));
+  const tags = [...tagStats.values()].sort((a, b) => b.streams.size - a.streams.size).slice(0, 10).map((entry) => {
+    const avgs = [...entry.streams].map((s) => streamAvg.get(s)).filter((v): v is number => typeof v === 'number');
+    return { tag: entry.tag, broadcasts: entry.streams.size, avg: avgs.length ? Math.round(avgs.reduce((a, b) => a + b, 0) / avgs.length) : null };
+  });
+
   const liveRow = latestRun ? all.find((row) => row.scheduled_at === latestRun.scheduled_at) : undefined;
   const name = info?.name || latestRow?.channel_name || id;
   const parts: string[] = [];
@@ -407,7 +479,7 @@ export async function getAnalyticsChannelBoard(db: D1Database, channelKey: strin
     live: liveRow ? { viewers: liveRow.viewers, category: isGameCategory(liveRow.category_name) ? gameName(liveRow.category_name) : categoryLabel(liveRow.category_name), liveUrl: liveRow.live_url } : null,
     summary: parts.length >= 2 ? parts.join(' ') : null,
     kpis: { ...current, prev: prev ? { avg: prev.avg, minutes: prev.minutes, broadcasts: prev.broadcasts } : null, peakDate: peakRow ? kstDate(peakRow.scheduled_at) : null },
-    trend, games, heat, log,
+    trend, games, heat, log, tags,
   };
 }
 

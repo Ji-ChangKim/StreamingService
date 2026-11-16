@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { AnalyticsChannelBoard, ChannelPeriod } from '../../../../../shared/analyticsBoard';
-import { ComboChart, HBars, Lede, PlatformIcon, Seg, asOfLabel, gamePath, linkProps, num, people, platformLine, useHourlyData } from './boardParts';
+import { ComboChart, HBars, Lede, PlatformIcon, Seg, asOfLabel, gamePath, linkProps, num, people, platformLine, tagPath, useHourlyData } from './boardParts';
 import './analyticsBoard.css';
 
 const SCALE = ['#EAF5EE', '#BFE3CB', '#7CC59A', '#2F9E63', '#13693F'];
@@ -93,6 +93,12 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
               <HBars rows={data.games.map((g) => ({ key: g.name, name: g.isGame ? <a {...linkProps(gamePath(g.name), onNavigate)}>{g.name}</a> : <span>{g.name}</span>, value: g.share, text: `${g.share}%${g.avg !== null ? ` · ${people(g.avg)}` : ''}` }))} />
             </section>
           </div>
+
+          {data.tags?.length > 0 && <section className="ab-section" aria-labelledby="ab-ch-tags">
+            <h2 id="ab-ch-tags">자주 쓰는 태그</h2>
+            <p className="ab-note">기간 동안 방송에 단 태그 · 그 태그를 단 방송의 평균 시청자</p>
+            <ul className="ab-chips">{data.tags.map((t) => <li key={t.tag}><a {...linkProps(tagPath(t.tag), onNavigate)}>#{t.tag} <small>{t.broadcasts}회{t.avg !== null ? ` · 평균 ${people(t.avg)}` : ''}</small></a></li>)}</ul>
+          </section>}
 
           <section className="ab-section" aria-labelledby="ab-ch-heat">
             <h2 id="ab-ch-heat">방송 시간대</h2>

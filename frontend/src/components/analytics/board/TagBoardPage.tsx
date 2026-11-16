@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import type { AnalyticsTagBoard } from '../../../../../shared/analyticsBoard';
-import { ChannelRows, HBars, Lede, PlatformIcon, asOfLabel, gamePath, linkProps, num, people, tagPath, useHourlyData } from './boardParts';
+import { ChannelRows, ComboChart, HBars, Lede, PlatformIcon, Seg, asOfLabel, gamePath, linkProps, num, people, tagPath, useHourlyData } from './boardParts';
 import './analyticsBoard.css';
 
-// 태그 채널 목록(정의서 7.3-1). 태그 기록 저장 전이라 지금 방송 기준만 보여 준다.
+// 태그 채널 목록(정의서 7.3-1). 추이는 태그 저장이 시작된 뒤의 기록으로 그린다.
 export function TagBoardPage({ tag, onNavigate }: { tag: string; onNavigate: (path: string) => void }) {
   const { data, error, loading, missing } = useHourlyData<AnalyticsTagBoard>(`/api/analytics/board/tag?tag=${encodeURIComponent(tag)}`);
   const [showAll, setShowAll] = useState(false);
   useEffect(() => { setShowAll(false); document.title = `#${data?.tag || tag} 태그 방송 · 지금 방송 중인 채널 | VDébut`; }, [data, tag]);
   const channels = data ? (showAll ? data.channels : data.channels.slice(0, 10)) : [];
+  const [trendTab, setTrendTab] = useState<'today' | 'yesterday' | 'd7' | 'd30'>('today');
+  const trend = data?.trend?.[trendTab] || [];
 
   return <div className="ab">
     <main className="ab-main">
@@ -27,6 +29,13 @@ export function TagBoardPage({ tag, onNavigate }: { tag: string; onNavigate: (pa
         </section>
 
         <Lede text={data.summary} />
+
+        {trend.some((p) => p.viewers !== null) && <section className="ab-section" aria-labelledby="ab-tag-trend">
+          <div className="ab-section-head"><h2 id="ab-tag-trend">#{data.tag} 추이</h2><Seg label="기간" value={trendTab} onChange={setTrendTab} options={[['today', '오늘'], ['yesterday', '어제'], ['d7', '7일'], ['d30', '30일']]} /></div>
+          <div className="ab-legend"><span><i style={{ width: 10, height: 10, background: 'var(--ab-bar)', borderRadius: 2 }} />태그 시청자{trendTab === 'd7' || trendTab === 'd30' ? ' (정각 평균)' : ''}</span><span><i style={{ width: 14, height: 2, background: 'var(--ab-accent)' }} />태그 방송 수</span></div>
+          <ComboChart height={200} maxBarWidth={trendTab === 'd30' ? 18 : 32} lineMax={Math.max(1, ...trend.map((p) => p.broadcasts ?? 0))}
+            items={trend.map((p, i) => ({ key: `${trendTab}-${i}`, bar: p.viewers, line: p.broadcasts, tip: p.viewers === null ? `${p.label} 기록 없음` : `${p.label} · ${people(p.viewers)} · 방송 ${p.broadcasts}개`, label: trend.length <= 7 || (trend.length === 24 ? i % 6 === 0 || i === 23 : (trend.length - 1 - i) % 7 === 0) ? p.label : '' }))} />
+        </section>}
 
         <section className="ab-section" aria-labelledby="ab-tag-list">
           <h2 id="ab-tag-list">#{data.tag} 태그로 지금 방송 중인 채널</h2>

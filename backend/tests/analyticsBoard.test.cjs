@@ -27,12 +27,18 @@ const { normalizeBoardTag } = loadTypeScript(path.join(root, 'shared/analyticsBo
 // SQLite를 D1 호출 모양(prepare → bind → all/first, prepare → all)에 맞춘다.
 function binding(db) {
   const statement = (sql, values) => ({
+    sql, values,
     async all() { return { results: db.prepare(sql).all(...values) }; },
     async first() { return db.prepare(sql).get(...values) || null; },
-    async run() { return db.prepare(sql).run(...values); },
+    async run() { const r = db.prepare(sql).run(...values); return { meta: { changes: r.changes } }; },
   });
-  return { prepare(sql) { return { ...statement(sql, []), bind(...values) { return statement(sql, values); } }; } };
+  return {
+    prepare(sql) { return { ...statement(sql, []), bind(...values) { return statement(sql, values); } }; },
+    // 두 플랫폼이 동시에 저장하므로 테스트에서는 트랜잭션 없이 순서대로 실행한다.
+    async batch(list) { const out = []; for (const s of list) out.push(await s.run()); return out; },
+  };
 }
+const collection = loadTypeScript(path.join(root, 'backend/src/services/broadcastStatisticsCollection.ts'));
 
 const LOL_A = `CHZZK:${'a'.repeat(32)}`;
 const LOL_B = `CHZZK:${'b'.repeat(32)}`;
@@ -189,6 +195,59 @@ test('채널 페이지는 정각 시청자·10분 단위 방송 시간·게임 �
   assert.equal(ninety.kpis.prev, null, '90일은 보관 기간과 같아 비교하지 않는다');
   assert.equal(await board.getAnalyticsChannelBoard(binding(db), `CHZZK:${'f'.repeat(32)}`, 7, NOW), null);
   db.close();
+});
+
+// 수집 테스트용: 치지직 인기 방송 1페이지(태그 포함)와 빈 SOOP 등록 채널.
+function collectionDb(withTagColumn) {
+  const db = new DatabaseSync(':memory:');
+  db.exec(fs.readFileSync(path.join(root, 'backend/migrations/0030_broadcast_statistics_collection.sql'), 'utf8'));
+  if (withTagColumn) db.exec(fs.readFileSync(path.join(root, 'backend/migrations/0064_add_broadcast_snapshot_tags.sql'), 'utf8'));
+  db.exec(`CREATE TABLE streamerChannel (id INTEGER, platform TEXT, channel_name TEXT, channel_url TEXT);
+    CREATE TABLE streamerChannel_info (channel_id INTEGER, slug TEXT, agency_name TEXT, display_name TEXT, profile_image_url TEXT, debut_date TEXT);`);
+  return db;
+}
+
+test('태그 열이 없어도 수집은 그대로 저장되고, 열이 생기면 태그를 함께 저장한다', async () => {
+  stubChzzk();
+  for (const withTagColumn of [false, true]) {
+    collection.resetSnapshotTagsCheck(); board.resetSnapshotTagsCheck();
+    const db = collectionDb(withTagColumn);
+    const results = await collection.collectBroadcastStatistics(binding(db), Date.parse('2026-11-16T12:00:00.000Z'));
+    assert.equal(results.find((r) => r.platform === 'CHZZK').state, 'available');
+    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM analytics_broadcast_snapshots').get().n, 3);
+    if (withTagColumn) {
+      const row = db.prepare(`SELECT tags FROM analytics_broadcast_snapshots WHERE channel_key = ?`).get(TALK_C);
+      assert.deepEqual(JSON.parse(row.tags), ['신입', '소통'], '#과 앞뒤 공백을 정리해 저장한다');
+    }
+    db.close();
+  }
+  collection.resetSnapshotTagsCheck(); board.resetSnapshotTagsCheck();
+});
+
+test('저장된 태그로 태그 순위·태그 추이·채널의 자주 쓰는 태그를 계산한다', async () => {
+  collection.resetSnapshotTagsCheck(); board.resetSnapshotTagsCheck();
+  global.fetch = async () => { throw new Error('저장된 태그가 있으면 인기 방송 목록을 다시 읽지 않는다'); };
+  const db = fixture();
+  db.exec(fs.readFileSync(path.join(root, 'backend/migrations/0064_add_broadcast_snapshot_tags.sql'), 'utf8'));
+  // 최근 3시간 동안 A·C 채널이 '신입' 태그를 달았다.
+  db.exec(`UPDATE analytics_broadcast_snapshots SET tags = '["신입","롤"]' WHERE channel_key = '${LOL_A}' AND run_id IN (SELECT run_id FROM analytics_broadcast_runs WHERE platform = 'CHZZK' AND scheduled_at >= '2026-11-16T10:00:00.000Z')`);
+  db.exec(`UPDATE analytics_broadcast_snapshots SET tags = '["신 입 "]' WHERE channel_key = '${TALK_C}' AND run_id IN (SELECT run_id FROM analytics_broadcast_runs WHERE platform = 'CHZZK' AND scheduled_at >= '2026-11-16T10:00:00.000Z')`);
+  const d1 = binding(db);
+  const main = await board.getAnalyticsBoard(d1, 'ALL', 'https://vdebut.live', () => {}, NOW);
+  assert.deepEqual(main.tags.find((t) => t.tag === '신입'), { tag: '신입', viewers: 3600 + 960, broadcasts: 2 });
+  const tag = await board.getAnalyticsTagBoard(d1, '신입', 'https://vdebut.live', () => {}, NOW);
+  assert.equal(tag.now.broadcasts, 2);
+  assert.equal(tag.trend.today.length, 24);
+  assert.equal(tag.trend.today[19].viewers, 3000 + 800, '19시(KST) 정각: A 3,000명 + C 800명');
+  assert.equal(tag.trend.today[18].viewers, null, '태그 저장 시작 전 시각은 비운다');
+  assert.equal(tag.trend.d30.length, 30);
+  const real = global.fetch; global.fetch = async () => ({ ok: false });
+  const channel = await board.getAnalyticsChannelBoard(d1, LOL_A, 7, NOW);
+  global.fetch = real;
+  assert.deepEqual(channel.tags.map((t) => t.tag).sort(), ['롤', '신입']);
+  assert.ok(channel.tags.every((t) => t.broadcasts >= 1));
+  db.close();
+  collection.resetSnapshotTagsCheck(); board.resetSnapshotTagsCheck();
 });
 
 test('응답은 다음 정각까지, 정각 회차가 아직 없으면 1분만 재사용한다', () => {
