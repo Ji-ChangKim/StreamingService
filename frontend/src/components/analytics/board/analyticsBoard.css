@@ -265,7 +265,9 @@
 .ab-insight { margin: 6px 0 0; font-size: 20px; font-weight: 750; letter-spacing: -0.035em; line-height: 1.35; color: var(--ab-ink); }
 .ab-section-head { margin-bottom: 8px; align-items: flex-start; }
 .ab-brief h2 { font-size: 11px; color: var(--ab-bar); }
-.ab-brief .ab-lede { color: var(--ab-text); }
+/* 시안: 패널 안 요약 문단은 14px, 줄 높이 1.75, 굵은 부분만 먹색 */
+.ab-brief .ab-lede { margin: 0; font-size: 14px; line-height: 1.75; font-weight: 400; color: var(--ab-text); }
+.ab-brief .ab-lede strong { font-weight: 700; color: var(--ab-ink); }
 .ab-lede { font-size: 15px; color: var(--ab-text); }
 /* 버튼: 작은 버튼 34, 모서리 9 */
 .ab-watch { height: 34px; border-radius: 9px; border-color: #DCE3EE; color: #40516B !important; font-size: 12px; font-weight: 650; }

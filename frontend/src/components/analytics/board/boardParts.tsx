@@ -9,7 +9,13 @@ export const PLATFORM_ICON = {
   SOOP: { src: '/icons/soop/soop_symbol_blue.svg', w: 24, h: 14, name: 'SOOP' },
 } as const;
 
-export const num = (n: number | null | undefined) => (n ?? 0).toLocaleString('ko-KR');
+// 이름 뒤 조사: 받침이 있으면 '이', 없으면 '가'(한글이 아닌 끝 글자는 '가').
+export function subjectJosa(name: string): string {
+  const code = name.trim().charCodeAt(name.trim().length - 1) - 0xAC00;
+  return code >= 0 && code <= 11171 && code % 28 !== 0 ? '이' : '가';
+}
+
+export const num =(n: number | null | undefined) => (n ?? 0).toLocaleString('ko-KR');
 export const people = (n: number | null | undefined) => `${num(Math.round(n ?? 0))}명`;
 export const gamePath = (name: string) => `/analytics/game/${encodeURIComponent(name)}`;
 export const tagPath = (tag: string) => `/analytics/tag/${encodeURIComponent(tag.replace(/^#/, ''))}`;
