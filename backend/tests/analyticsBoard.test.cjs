@@ -41,9 +41,9 @@ function fixture() {
   const db = new DatabaseSync(':memory:');
   db.exec(fs.readFileSync(path.join(root, 'backend/migrations/0030_broadcast_statistics_collection.sql'), 'utf8'));
   db.exec(`CREATE TABLE streamerChannel (id INTEGER, platform TEXT, channel_name TEXT, channel_url TEXT);
-    CREATE TABLE streamerChannel_info (channel_id INTEGER, slug TEXT, agency_name TEXT);
+    CREATE TABLE streamerChannel_info (channel_id INTEGER, slug TEXT, agency_name TEXT, display_name TEXT, profile_image_url TEXT);
     INSERT INTO streamerChannel VALUES (1, 'CHZZK', 'A', 'https://chzzk.naver.com/${'a'.repeat(32)}'), (2, 'CHZZK', 'B', 'https://chzzk.naver.com/${'b'.repeat(32)}'), (3, 'SOOP', 'S', 'https://www.sooplive.co.kr/station/soopone');
-    INSERT INTO streamerChannel_info VALUES (1, 'channel-a', '스텔라이브'), (2, NULL, '개인세'), (3, 'soop-one', '');`);
+    INSERT INTO streamerChannel_info VALUES (1, 'channel-a', '스텔라이브', '에이', 'https://img.test/a.png'), (2, NULL, '개인세', NULL, NULL), (3, 'soop-one', '', NULL, NULL);`);
   const run = db.prepare(`INSERT INTO analytics_broadcast_runs (run_id, platform, scheduled_at, started_at, attempt_id, state, scope, viewer_total, channel_total) VALUES (?, ?, ?, ?, ?, 'available', 'test', ?, ?)`);
   const snap = db.prepare(`INSERT INTO analytics_broadcast_snapshots (run_id, stream_id, channel_key, channel_name, title, category_id, category_name, viewers) VALUES (?, ?, ?, ?, '방송', ?, ?, ?)`);
   const latest = Date.parse('2026-11-16T12:00:00.000Z');
@@ -163,6 +163,31 @@ test('태그 채널 목록은 지금 그 태그로 방송 중인 채널만 보�
   assert.deepEqual(data.channels.map((c) => c.channelKey), [LOL_A, TALK_C]);
   assert.ok(data.withTags.some((t) => t.tag === '롤'));
   assert.equal(await board.getAnalyticsTagBoard(binding(db), '없는태그', 'https://vdebut.live', () => {}, NOW), null);
+  db.close();
+});
+
+test('채널 페이지는 정각 시청자·10분 단위 방송 시간·게임 구성·시간대·방송 기록을 계산한다', async () => {
+  const db = fixture();
+  const real = global.fetch;
+  global.fetch = async () => ({ ok: true, async json() { return { content: { followerCount: 1234 } }; } });
+  const data = await board.getAnalyticsChannelBoard(binding(db), LOL_A, 7, NOW);
+  global.fetch = real;
+  assert.equal(data.channel.name, '에이');
+  assert.equal(data.channel.affiliation, '스텔라이브');
+  assert.equal(data.channel.profileSlug, 'channel-a');
+  assert.equal(data.channel.followers, 1234);
+  assert.deepEqual(data.live, { viewers: 3600, category: '리그 오브 레전드', liveUrl: null });
+  // 정각 값만 쓰므로 10분 회차의 999,999명은 최고 시청자에 들어가지 않는다.
+  assert.equal(data.kpis.peak, 3600);
+  assert.equal(data.kpis.avg, Math.round((3000 * 167 + 3600) / 168)); // 최근 7일 정각 168회
+  assert.equal(data.trend.length, 7);
+  assert.equal(data.games[0].name, '리그 오브 레전드');
+  assert.equal(data.heat.length, 7);
+  assert.ok(data.log.length > 0);
+  assert.ok(data.kpis.prev, '7일은 앞 7일과 비교한다');
+  const ninety = await board.getAnalyticsChannelBoard(binding(db), LOL_A, 90, NOW);
+  assert.equal(ninety.kpis.prev, null, '90일은 보관 기간과 같아 비교하지 않는다');
+  assert.equal(await board.getAnalyticsChannelBoard(binding(db), `CHZZK:${'f'.repeat(32)}`, 7, NOW), null);
   db.close();
 });
 

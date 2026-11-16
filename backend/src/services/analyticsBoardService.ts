@@ -1,3 +1,4 @@
+import type { AnalyticsChannelBoard, ChannelPeriod } from '../../../shared/analyticsBoard';
 import type { AnalyticsBoard, AnalyticsGameBoard, AnalyticsTagBoard, BoardChannel, BoardGame, BoardPlatform, BoardTrendPoint, Competition } from '../../../shared/analyticsBoard';
 import { normalizeBoardTag } from '../../../shared/analyticsBoard';
 import { profileAgencyName } from '../../../shared/profilePresentation';
@@ -22,7 +23,7 @@ interface RunRow { platform: Platform; scheduled_at: string; viewer_total: numbe
 interface CategoryRow { platform: Platform; category_id: string; category_name: string; v: number; n: number; period?: string }
 interface SnapshotRow { platform: Platform; channel_key: string; channel_name: string | null; image_url: string | null; live_url: string | null; category_name: string; viewers: number; scheduled_at?: string }
 interface LiveRow { channelKey: string; name: string; category: string; viewers: number; liveUrl: string | null; imageUrl: string | null; tags: string[] }
-interface Registered { affiliation: string; isVtuber: boolean }
+interface Registered { affiliation: string; isVtuber: boolean; slug: string | null; name: string | null; imageUrl: string | null }
 
 export const kstDate = (iso: string | number) => new Date((typeof iso === 'number' ? iso : Date.parse(iso)) + KST).toISOString().slice(0, 10);
 const kstHour = (iso: string) => new Date(Date.parse(iso) + KST).getUTCHours();
@@ -91,12 +92,12 @@ function countRuns(runs: RunRow[], from: string, to: string): Record<Platform, n
 // VDébut 공개 소개가 있는 채널만 버튜버로 보고, 공식 소속이 있을 때만 소속을 붙인다(정의서 5.3·5.8).
 async function readRegistered(db: D1Database): Promise<Map<string, Registered>> {
   const map = new Map<string, Registered>();
-  const result = await db.prepare(`SELECT c.platform, c.channel_url, i.slug, i.agency_name FROM streamerChannel c LEFT JOIN streamerChannel_info i ON i.channel_id = c.id`).all<{ platform: string; channel_url: string | null; slug: string | null; agency_name: string | null }>();
+  const result = await db.prepare(`SELECT c.platform, c.channel_url, i.slug, i.agency_name, i.display_name, i.profile_image_url FROM streamerChannel c LEFT JOIN streamerChannel_info i ON i.channel_id = c.id`).all<{ platform: string; channel_url: string | null; slug: string | null; agency_name: string | null; display_name: string | null; profile_image_url: string | null }>();
   for (const row of result.results || []) {
     const url = row.channel_url || '';
     const id = row.platform === 'SOOP' ? extractSoopUserId(url) : url.split('/').filter(Boolean).pop();
     if (!id || (row.platform !== 'CHZZK' && row.platform !== 'SOOP')) continue;
-    map.set(`${row.platform}:${id}`.toLowerCase(), { affiliation: profileAgencyName(row.agency_name || ''), isVtuber: Boolean(row.slug) });
+    map.set(`${row.platform}:${id}`.toLowerCase(), { affiliation: profileAgencyName(row.agency_name || ''), isVtuber: Boolean(row.slug), slug: row.slug || null, name: row.display_name || null, imageUrl: row.profile_image_url || null });
   }
   return map;
 }
@@ -315,6 +316,98 @@ export async function getAnalyticsTagBoard(db: D1Database, tag: string, origin: 
     channels: rows.map((row) => toChannel({ platform: 'CHZZK', channelKey: row.channelKey, name: row.name, category: row.category, viewers: row.viewers, liveUrl: row.liveUrl, imageUrl: row.imageUrl }, registered)),
     games: [...games.entries()].map(([name, broadcasts]) => ({ name, broadcasts })).sort((a, b) => b.broadcasts - a.broadcasts).slice(0, 5),
     withTags: [...withTags.values()].sort((a, b) => b.broadcasts - a.broadcasts).slice(0, 8),
+  };
+}
+
+interface ChannelRow { scheduled_at: string; stream_id: string; channel_name: string | null; image_url: string | null; live_url: string | null; title: string; category_name: string; viewers: number }
+
+// 치지직 팔로워 수(공개 정보). 실패하면 표시하지 않는다.
+async function readChzzkFollowers(id: string): Promise<number | null> {
+  try {
+    const response = await fetch(`https://api.chzzk.naver.com/service/v1/channels/${encodeURIComponent(id)}`, { headers: { Accept: 'application/json', 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(3000) });
+    if (!response.ok) return null;
+    const json = await response.json() as { content?: { followerCount?: unknown } };
+    return typeof json.content?.followerCount === 'number' ? json.content.followerCount : null;
+  } catch { return null; }
+}
+
+// 한 채널의 기간별 기록(정의서 7.4). 방송 시간은 10분 간격 기록으로, 시청자는 정각 값으로 계산한다.
+export async function getAnalyticsChannelBoard(db: D1Database, channelKey: string, days: ChannelPeriod, now = Date.now()): Promise<AnalyticsChannelBoard | null> {
+  const platform: Platform = channelKey.toUpperCase().startsWith('SOOP:') ? 'SOOP' : 'CHZZK';
+  const id = channelKey.slice(channelKey.indexOf(':') + 1);
+  const key = `${platform}:${id.toLowerCase()}`;
+  const from = new Date(now - days * DAY).toISOString();
+  const prevFrom = new Date(now - 2 * days * DAY).toISOString();
+  const [rowsResult, latestRun, registered, followers] = await Promise.all([
+    db.prepare(`SELECT r.scheduled_at, s.stream_id, s.channel_name, s.image_url, s.live_url, s.title, s.category_name, s.viewers
+      FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id = s.run_id
+      WHERE s.channel_key = ? COLLATE NOCASE AND r.state IN ('available','partial') AND r.scheduled_at >= ? ORDER BY r.scheduled_at`).bind(key, prevFrom).all<ChannelRow>(),
+    db.prepare(`SELECT r.run_id, r.scheduled_at FROM analytics_broadcast_runs r WHERE ${HOURLY} AND r.platform = ? ORDER BY r.scheduled_at DESC LIMIT 1`).bind(platform).first<{ run_id: string; scheduled_at: string }>(),
+    readRegistered(db),
+    platform === 'CHZZK' ? readChzzkFollowers(id) : Promise.resolve(null),
+  ]);
+  const all = rowsResult.results || [];
+  const info = registered.get(key.toLowerCase());
+  if (!all.length && !info) return null;
+  const isHourlyAt = (iso: string) => iso.slice(14, 16) === '00';
+  const latestRow = all[all.length - 1];
+
+  const summarize = (rows: ChannelRow[]) => {
+    const hourly = rows.filter((row) => isHourlyAt(row.scheduled_at)).map((row) => row.viewers);
+    return { avg: hourly.length ? Math.round(hourly.reduce((a, b) => a + b, 0) / hourly.length) : null, peak: hourly.length ? Math.max(...hourly) : null, minutes: rows.length * 10, broadcasts: new Set(rows.map((row) => row.stream_id)).size };
+  };
+  const rows = all.filter((row) => row.scheduled_at >= from);
+  const prevRows = all.filter((row) => row.scheduled_at < from);
+  const current = summarize(rows);
+  // 90일은 보관 기간과 같아 앞 기간 비교를 하지 않는다.
+  const prev = days < 90 && prevRows.length ? summarize(prevRows) : null;
+  const peakRow = rows.filter((row) => isHourlyAt(row.scheduled_at)).sort((a, b) => b.viewers - a.viewers)[0];
+
+  const today = kstDate(now);
+  const trend = Array.from({ length: days }, (_, index) => {
+    const date = kstDate(Date.parse(`${today}T00:00:00Z`) - (days - 1 - index) * DAY);
+    const values = rows.filter((row) => isHourlyAt(row.scheduled_at) && kstDate(row.scheduled_at) === date).map((row) => row.viewers);
+    return { date, avg: values.length ? Math.round(values.reduce((a, b) => a + b, 0) / values.length) : null, peak: values.length ? Math.max(...values) : null };
+  });
+
+  const byCategory = new Map<string, { name: string; isGame: boolean; samples: number; hourly: number[] }>();
+  for (const row of rows) {
+    const game = isGameCategory(row.category_name);
+    const name = NOT_A_GAME_TITLE.test(row.category_name.trim()) && /미제공|미지정|unknown|none/i.test(row.category_name) ? '카테고리 없음' : game ? gameName(row.category_name) : categoryLabel(row.category_name);
+    const entry = byCategory.get(name) || { name, isGame: game, samples: 0, hourly: [] };
+    entry.samples += 1;
+    if (isHourlyAt(row.scheduled_at)) entry.hourly.push(row.viewers);
+    byCategory.set(name, entry);
+  }
+  const games = [...byCategory.values()].sort((a, b) => b.samples - a.samples).slice(0, 6).map((entry) => ({ name: entry.name, isGame: entry.isGame, share: Math.round(entry.samples / Math.max(1, rows.length) * 100), avg: entry.hourly.length ? Math.round(entry.hourly.reduce((a, b) => a + b, 0) / entry.hourly.length) : null }));
+
+  const counts = Array.from({ length: 7 }, () => Array(24).fill(0) as number[]);
+  for (const row of rows) counts[(kstWeekday(row.scheduled_at) + 6) % 7][kstHour(row.scheduled_at)] += 1;
+  const heat = counts.map((line) => line.map((count) => Math.round(count / Math.max(1, rows.length) * 1000) / 10));
+
+  const streams = new Map<string, ChannelRow[]>();
+  for (const row of rows) { const list = streams.get(row.stream_id) || []; list.push(row); streams.set(row.stream_id, list); }
+  const log = [...streams.entries()].map(([streamId, list]) => {
+    const hourly = list.filter((row) => isHourlyAt(row.scheduled_at)).map((row) => row.viewers);
+    const minutesBy = new Map<string, number>();
+    for (const row of list) minutesBy.set(row.category_name, (minutesBy.get(row.category_name) || 0) + 1);
+    const category = [...minutesBy.entries()].sort((a, b) => b[1] - a[1])[0][0];
+    return { streamId, date: list[0].scheduled_at, title: list[list.length - 1].title, category: isGameCategory(category) ? gameName(category) : categoryLabel(category), isGame: isGameCategory(category), minutes: list.length * 10, avg: hourly.length ? Math.round(hourly.reduce((a, b) => a + b, 0) / hourly.length) : null, peak: hourly.length ? Math.max(...hourly) : null };
+  }).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 100);
+
+  const liveRow = latestRun ? all.find((row) => row.scheduled_at === latestRun.scheduled_at) : undefined;
+  const name = info?.name || latestRow?.channel_name || id;
+  const parts: string[] = [];
+  if (current.broadcasts) parts.push(`최근 ${days}일 동안 ${current.broadcasts}번 방송했고, 기록된 방송 시간은 ${Math.floor(current.minutes / 60)}시간이에요.`);
+  if (current.avg !== null && prev?.avg) { const change = Math.round((current.avg - prev.avg) / prev.avg * 100); if (Math.abs(change) >= 5) parts.push(`평균 시청자는 앞 ${days}일보다 ${Math.abs(change)}% ${change > 0 ? '늘었어요' : '줄었어요'}.`); }
+  if (games[0] && games[0].share >= 20) parts.push(`방송 시간의 ${games[0].share}%를 「${games[0].name}」에 썼어요.`);
+  return {
+    asOf: latestRun?.scheduled_at || null, nextAt: boardNextAt(now), days,
+    channel: { channelKey: key, platform, name, affiliation: info?.affiliation || '', imageUrl: info?.imageUrl || latestRow?.image_url || null, channelUrl: platform === 'CHZZK' ? `https://chzzk.naver.com/${id}` : `https://www.sooplive.co.kr/station/${id}`, profileSlug: info?.slug || null, followers },
+    live: liveRow ? { viewers: liveRow.viewers, category: isGameCategory(liveRow.category_name) ? gameName(liveRow.category_name) : categoryLabel(liveRow.category_name), liveUrl: liveRow.live_url } : null,
+    summary: parts.length >= 2 ? parts.join(' ') : null,
+    kpis: { ...current, prev: prev ? { avg: prev.avg, minutes: prev.minutes, broadcasts: prev.broadcasts } : null, peakDate: peakRow ? kstDate(peakRow.scheduled_at) : null },
+    trend, games, heat, log,
   };
 }
 

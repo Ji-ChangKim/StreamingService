@@ -103,7 +103,7 @@ export function AnalyticsBoardPage({ path, onNavigate }: { path: string; onNavig
         {trend.some((p) => p.chzzk !== null) && <section className="ab-section" aria-labelledby="ab-trend">
           <div className="ab-section-head"><h2 id="ab-trend">시청자 추이</h2><Seg label="기간" value={trendTab} onChange={setTrendTab} options={[['today', '오늘'], ['yesterday', '어제'], ['d7', '7일'], ['d30', '30일']]} /></div>
           <div className="ab-legend"><span><i style={{ width: 10, height: 10, background: 'var(--ab-bar)', borderRadius: 2 }} />치지직 시청자{trendTab === 'd7' || trendTab === 'd30' ? ' (하루 평균)' : ''}</span>{trend.some((p) => p.usual !== null) && <span><i style={{ width: 14, height: 2, background: 'var(--ab-accent)' }} />평소</span>}</div>
-          <ComboChart height={220} maxBarWidth={trendTab === 'd30' ? 18 : 32} items={trend.map((p, i) => ({ key: `${trendTab}-${i}`, bar: p.chzzk, line: p.usual, tip: p.chzzk === null ? `${p.label} 아직 집계 전` : `${p.label} ${people(p.chzzk)}${p.usual ? ` · 평소 ${people(p.usual)}` : ''}`, label: trend.length <= 7 || i % (trend.length === 24 ? 6 : 7) === 0 || i === trend.length - 1 ? p.label : '' }))} />
+          <ComboChart height={220} maxBarWidth={trendTab === 'd30' ? 18 : 32} items={trend.map((p, i) => ({ key: `${trendTab}-${i}`, bar: p.chzzk, line: p.usual, tip: p.chzzk === null ? `${p.label} 아직 집계 전` : `${p.label} ${people(p.chzzk)}${p.usual ? ` · 평소 ${people(p.usual)}` : ''}`, label: trend.length <= 7 || (trend.length === 24 ? i % 6 === 0 || i === 23 : (trend.length - 1 - i) % 7 === 0) ? p.label : '' }))} />
         </section>}
 
         {(data.games.now.length > 0 || data.games.d7.length > 0) && <section className="ab-section" aria-labelledby="ab-games">

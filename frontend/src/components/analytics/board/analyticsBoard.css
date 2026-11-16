@@ -73,9 +73,9 @@
 
 /* 가로 막대 목록 */
 .ab-hbars { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
-.ab-hbars li { display: grid; grid-template-columns: minmax(0, 160px) minmax(0, 1fr) 96px; gap: 12px; align-items: center; font-size: 14px; }
+.ab-hbars li { display: grid; grid-template-columns: minmax(0, 160px) minmax(0, 1fr) minmax(96px, max-content); gap: 12px; align-items: center; font-size: 14px; }
 .ab-hbars li > :first-child { font-weight: 700; color: var(--ab-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ab-hbars li > :last-child { text-align: right; font-weight: 700; }
+.ab-hbars li > :last-child { text-align: right; font-weight: 700; white-space: nowrap; }
 .ab-track { height: 6px; background: var(--ab-track); border-radius: 999px; overflow: hidden; position: relative; }
 .ab-track i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: var(--ab-bar); }
 
@@ -106,6 +106,29 @@
 .ab-scale { display: flex; gap: 6px; align-items: center; font-size: 12px; color: var(--ab-sub); }
 .ab-scale i { width: 20px; height: 10px; border-radius: 2px; display: inline-block; }
 
+/* 채널 페이지 */
+.ab-channel-head { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+.ab-avatar-lg { width: 80px; height: 80px; }
+.ab-channel-id { flex: 1 1 260px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.ab-plat-lg { margin: 0; font-size: 14px; }
+.ab-channel-actions { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+.ab-channel-buttons { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: flex-end; }
+.ab-btn { height: 50px; padding: 0 18px; font-size: 14px; }
+.ab-live { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--ab-ink); }
+.ab-live i { width: 8px; height: 8px; border-radius: 50%; background: #E03131; display: inline-block; }
+/* 공식 채널 버튼: 치지직 가이드(#00FFA3 배경, 검정 국문 로고 높이 24px, 여백 12px, 높이 50px). 로고 파일은 그대로 쓴다. */
+.ab-official { height: 50px; box-sizing: border-box; padding: 12px; display: inline-flex; align-items: center; border-radius: 8px; }
+.ab-official img { height: 24px; width: auto; display: block; }
+.ab-official-chzzk { background: #00FFA3; }
+.ab-official-soop { background: #fff; border: 1px solid var(--ab-rule); }
+.ab-kpis > div { display: flex; flex-direction: column; gap: 2px; }
+.ab-table { width: 100%; min-width: 720px; border-collapse: collapse; font-size: 14px; }
+.ab-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--ab-sub); padding: 8px 8px; border-bottom: 1px solid var(--ab-rule); }
+.ab-table td { padding: 12px 8px; border-bottom: 1px solid var(--ab-hair); color: var(--ab-text); }
+.ab-table .num { text-align: right; white-space: nowrap; }
+.ab-table td:first-child { white-space: nowrap; }
+.ab-title { max-width: 360px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ab-ink) !important; }
+
 .ab-empty, .ab-error { padding: 48px 0; text-align: center; color: var(--ab-sub); font-size: 15px; }
 .ab-foot { margin: 0; text-align: center; font-size: 13px; color: var(--ab-sub); }
 .ab-results { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ab-rule); }
@@ -124,8 +147,11 @@
   .ab-row { grid-template-columns: 24px 36px minmax(0, 1fr) 88px; }
   .ab-row .ab-game, .ab-row .ab-watch { display: none; }
   .ab-avatar { width: 36px; height: 36px; }
-  .ab-hbars li { grid-template-columns: minmax(0, 110px) minmax(0, 1fr) 76px; }
+  .ab-hbars li { grid-template-columns: minmax(0, 110px) minmax(0, 1fr) minmax(76px, max-content); }
   .ab-col-label small, .ab-col-label em { display: none; }
+  .ab-channel-actions { align-items: flex-start; width: 100%; }
+  .ab-channel-buttons { justify-content: flex-start; }
+  .ab-avatar-lg { width: 64px; height: 64px; }
   .ab-method dl { grid-template-columns: 1fr; gap: 4px; }
   .ab-method dd { margin-bottom: 10px; }
 }

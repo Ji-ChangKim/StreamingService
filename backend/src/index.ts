@@ -57,7 +57,7 @@ import { collectChzzkLiveSnapshot } from './services/chzzkCollector';
 import { getLiveDiscovery } from './services/liveDiscoveryService';
 import { getLiveHistory, getCreatorHistory } from './services/liveHistoryService';
 import { getBroadcastStatistics, getStreamerBroadcastHistory } from './services/broadcastStatisticsService';
-import { boardCacheSeconds, getAnalyticsBoard, getAnalyticsGameBoard, getAnalyticsTagBoard } from './services/analyticsBoardService';
+import { boardCacheSeconds, getAnalyticsBoard, getAnalyticsChannelBoard, getAnalyticsGameBoard, getAnalyticsTagBoard } from './services/analyticsBoardService';
 import { getBroadcastActivity, getActivityBroadcastPage, readActivityCursor } from './services/broadcastActivityService';
 import { activityPeriod, validActivityRange } from '../../shared/broadcastActivity';
 import { collectBroadcastStatistics } from './services/broadcastStatisticsCollection';
@@ -1293,6 +1293,17 @@ app.get('/api/analytics/board/game', async (c) => {
   const key = new URL('/api/analytics/board/game', c.req.url);
   key.searchParams.set('name', name);
   return analyticsBoardResponse(c, key, () => getAnalyticsGameBoard(c.env.DB, name));
+});
+
+app.get('/api/analytics/board/channel', async (c) => {
+  const key = (c.req.query('key') || '').trim();
+  const days = Number(c.req.query('days') || 30);
+  if (!/^(CHZZK:[a-f0-9]{32}|SOOP:[a-z0-9_]{1,50})$/i.test(key) || ![7, 30, 90].includes(days)) return c.json({ error: '조회 조건을 확인해 주세요.' }, 400);
+  const normalized = `${key.split(':')[0].toUpperCase()}:${key.split(':')[1].toLowerCase()}`;
+  const cacheKey = new URL('/api/analytics/board/channel', c.req.url);
+  cacheKey.searchParams.set('key', normalized);
+  cacheKey.searchParams.set('days', String(days));
+  return analyticsBoardResponse(c, cacheKey, () => getAnalyticsChannelBoard(c.env.DB, normalized, days as 7 | 30 | 90));
 });
 
 app.get('/api/analytics/board/tag', async (c) => {

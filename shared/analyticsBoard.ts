@@ -40,6 +40,20 @@ export interface AnalyticsTagBoard {
   withTags: Array<{ tag: string; broadcasts: number }>;
 }
 
+export type ChannelPeriod = 7 | 30 | 90;
+export interface ChannelBroadcastLog { streamId: string; date: string; title: string; category: string; isGame: boolean; minutes: number; avg: number | null; peak: number | null }
+export interface AnalyticsChannelBoard {
+  asOf: string | null; nextAt: string; days: ChannelPeriod;
+  channel: { channelKey: string; platform: 'CHZZK' | 'SOOP'; name: string; affiliation: string; imageUrl: string | null; channelUrl: string; profileSlug: string | null; followers: number | null };
+  live: { viewers: number; category: string; liveUrl: string | null } | null;
+  summary: string | null;
+  kpis: { avg: number | null; peak: number | null; minutes: number; broadcasts: number; prev: { avg: number | null; minutes: number; broadcasts: number } | null; peakDate: string | null };
+  trend: Array<{ date: string; avg: number | null; peak: number | null }>;
+  games: Array<{ name: string; isGame: boolean; share: number; avg: number | null }>;
+  heat: number[][]; // [월..일][0..23] 방송한 비율(%)
+  log: ChannelBroadcastLog[];
+}
+
 // 태그는 띄어쓰기·대소문자만 다른 값을 같은 태그로 본다(정의서 6.4).
 export function normalizeBoardTag(tag: string): string {
   return tag.normalize('NFKC').replace(/^#/, '').replace(/\s+/g, '').toLowerCase().slice(0, 40);
