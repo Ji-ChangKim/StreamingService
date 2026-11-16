@@ -1248,10 +1248,10 @@ app.get('/api/analytics/current-content', async (c) => {
   return c.json(result);
 });
 
-// 방송 통계 개편 화면 응답. 정각 단위 키로 엣지에 저장해 다음 정각(수집 여유 5분)까지 재사용한다.
+// 방송 통계 개편 화면 응답. 10분 회차 단위 키로 엣지에 저장해 다음 회차(수집 여유 2분)까지 재사용한다.
 async function analyticsBoardResponse(c: any, key: URL, load: () => Promise<{ asOf: string | null } | null>): Promise<Response> {
-  key.searchParams.set('slot', new Date(Math.floor(Date.now() / 3600000) * 3600000).toISOString());
-  key.searchParams.set('v', '3');
+  key.searchParams.set('slot', new Date(Math.floor(Date.now() / 600000) * 600000).toISOString());
+  key.searchParams.set('v', '4');
   const cache = typeof caches === 'undefined' ? undefined : (caches as any).default as Cache;
   const cacheKey = new Request(key.toString());
   if (cache) {

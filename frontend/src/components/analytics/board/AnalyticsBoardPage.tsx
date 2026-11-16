@@ -42,7 +42,7 @@ export function AnalyticsBoardPage({ path, onNavigate }: { path: string; onNavig
         <div className="ab-head-row">
           <div>
             <h1>방송 통계</h1>
-            <p className="ab-subtitle">매시 정각마다 새로 집계해요{data?.asOf ? ` · ${asOfLabel(data.asOf)}` : ''}</p>
+            <p className="ab-subtitle">10분마다 새로 집계해요{data?.asOf ? ` · ${asOfLabel(data.asOf)}` : ''}</p>
           </div>
           <StreamerSearch onNavigate={onNavigate} />
         </div>

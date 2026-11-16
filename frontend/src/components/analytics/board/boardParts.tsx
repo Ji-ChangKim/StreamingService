@@ -14,18 +14,20 @@ export const people = (n: number | null | undefined) => `${num(Math.round(n ?? 0
 export const gamePath = (name: string) => `/analytics/game/${encodeURIComponent(name)}`;
 export const tagPath = (tag: string) => `/analytics/tag/${encodeURIComponent(tag.replace(/^#/, ''))}`;
 
-// 정각 회차 시각을 "오늘 오후 9시 기준"처럼 한국 시간으로 적는다.
+// 회차 시각을 "오늘 오후 9시 30분 기준"처럼 한국 시간으로 적는다.
 export function asOfLabel(asOf: string | null): string {
   if (!asOf) return '';
   const kst = new Date(Date.parse(asOf) + 9 * HOUR);
   const today = new Date(Date.now() + 9 * HOUR).toISOString().slice(0, 10);
   const hour = kst.getUTCHours();
-  const clock = `${hour < 12 ? '오전' : '오후'} ${hour % 12 === 0 ? 12 : hour % 12}시`;
+  const minute = kst.getUTCMinutes();
+  const clock = `${hour < 12 ? '오전' : '오후'} ${hour % 12 === 0 ? 12 : hour % 12}시${minute ? ` ${minute}분` : ''}`;
   const day = kst.toISOString().slice(0, 10) === today ? '오늘' : `${kst.getUTCMonth() + 1}월 ${kst.getUTCDate()}일`;
   return `${day} ${clock} 기준`;
 }
 
-// 정각이 지난 뒤 새로고침·탭 복귀·다음 확인 때 새 집계를 받아 교체한다(정의서 5.10).
+// 10분 회차가 바뀐 뒤 새로고침·탭 복귀·다음 확인 때 새 집계를 받아 교체한다(정의서 5.10).
+const SLOT = 10 * 60000;
 export function useHourlyData<T extends { asOf: string | null; nextAt: string }>(url: string | null) {
   const [state, setState] = useState<{ data: T | null; error: string; loading: boolean; missing: boolean }>({ data: null, error: '', loading: Boolean(url), missing: false });
   const urlRef = useRef(url);
@@ -48,9 +50,9 @@ export function useHourlyData<T extends { asOf: string | null; nextAt: string }>
   useEffect(() => {
     const data = state.data;
     if (!data) return;
-    const slot = Math.floor(Date.now() / HOUR) * HOUR;
-    // 정각 회차가 아직 모이지 않았으면 2분 뒤 다시, 아니면 다음 정각 1분 뒤에 확인한다.
-    const due = data.asOf && Date.parse(data.asOf) < slot ? Date.now() + 120000 : Date.parse(data.nextAt) + 60000;
+    const slot = Math.floor(Date.now() / SLOT) * SLOT;
+    // 이번 회차가 아직 모이지 않았으면 1분 뒤 다시, 아니면 다음 회차 1분 뒤(수집이 끝난 뒤)에 확인한다.
+    const due = data.asOf && Date.parse(data.asOf) < slot ? Date.now() + 60000 : Date.parse(data.nextAt) + 60000;
     const check = () => { if (document.visibilityState === 'visible' && Date.now() >= due) void load(); };
     const timer = window.setInterval(check, 30000);
     document.addEventListener('visibilitychange', check);

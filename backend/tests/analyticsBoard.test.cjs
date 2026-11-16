@@ -66,9 +66,9 @@ function fixture() {
       snap.run(`SOOP:${at}`, `p${h}`, 'SOOP:soopone', 'S', '00040019', 'LOL', 900);
     }
   }
-  // 정각이 아닌 10분 회차는 공개 수치에 쓰지 않는다.
+  // 아직 끝나지 않은(running) 10분 회차는 어떤 수치에도 쓰지 않는다.
   const tenPast = '2026-11-16T12:10:00.000Z';
-  run.run(`CHZZK:${tenPast}`, 'CHZZK', tenPast, tenPast, 'x', 999999, 1);
+  db.prepare(`INSERT INTO analytics_broadcast_runs (run_id, platform, scheduled_at, started_at, attempt_id, state, scope, viewer_total, channel_total) VALUES (?, 'CHZZK', ?, ?, 'x', 'running', 'test', 999999, 1)`).run(`CHZZK:${tenPast}`, tenPast, tenPast);
   snap.run(`CHZZK:${tenPast}`, 'ten', LOL_A, 'A', 'League_of_Legends', '리그 오브 레전드', 999999);
   return db;
 }
@@ -104,10 +104,10 @@ test('통계 첫 화면은 정각 회차만 쓰고 플랫폼·게임·채널·�
   assert.ok(!data.games.now.some((g) => g.name.includes('미제공')));
   assert.equal(data.channels.find((c) => c.channelName === 'E' || c.name === 'E').category, '카테고리 없음');
   assert.equal(data.asOf, '2026-11-16T12:00:00.000Z');
-  assert.equal(data.nextAt, '2026-11-16T13:00:00.000Z');
+  assert.equal(data.nextAt, '2026-11-16T12:40:00.000Z', '다음 10분 회차');
   const card = data.platforms[0];
   assert.equal(card.platform, 'CHZZK');
-  assert.equal(card.viewers, 6960); // 5800 × 1.2, 10분 회차(999,999명)는 제외
+  assert.equal(card.viewers, 6960); // 5800 × 1.2, 끝나지 않은 회차(999,999명)는 제외
   assert.equal(card.peakToday, 6960);
   assert.equal(card.usualDelta, 31); // 평소(4주 전 같은 정각) 5,300명 → 지금 6,960명
   assert.equal(card.bigCount, 2);
@@ -131,6 +131,27 @@ test('통계 첫 화면은 정각 회차만 쓰고 플랫폼·게임·채널·�
   assert.equal(b.isVtuber, false, '공개 소개가 없으면 버튜버로 보지 않는다');
   assert.deepEqual(data.tags.find((t) => t.tag === '신입'), { tag: '신입', viewers: 3800, broadcasts: 2 });
   assert.ok(data.summary && data.summary.includes('리그 오브 레전드'));
+  db.close();
+});
+
+test('지금 숫자는 가장 최근 10분 회차로, 기간 통계는 정각 회차로 계산한다', async () => {
+  stubChzzk();
+  const db = fixture();
+  const at = '2026-11-16T12:20:00.000Z';
+  db.prepare(`INSERT INTO analytics_broadcast_runs (run_id, platform, scheduled_at, started_at, attempt_id, state, scope, viewer_total, channel_total) VALUES (?, 'CHZZK', ?, ?, 'x', 'available', 'test', 8000, 2)`).run(`CHZZK:${at}`, at, at);
+  const snap = db.prepare(`INSERT INTO analytics_broadcast_snapshots (run_id, stream_id, channel_key, channel_name, title, category_id, category_name, viewers) VALUES (?, ?, ?, ?, '방송', ?, ?, ?)`);
+  snap.run(`CHZZK:${at}`, 'm1', `CHZZK:${'d'.repeat(32)}`, 'D', 'Minecraft', '마인크래프트', 6000);
+  snap.run(`CHZZK:${at}`, 'm2', LOL_A, 'A', 'Minecraft', '마인크래프트', 2000);
+  const data = await board.getAnalyticsBoard(binding(db), 'CHZZK', 'https://vdebut.live', () => {}, NOW);
+  assert.equal(data.asOf, at);
+  assert.equal(data.platforms[0].viewers, 8000);
+  assert.equal(data.platforms[0].peakToday, 8000, '오늘 최고는 10분 회차까지 포함한다');
+  assert.equal(data.platforms[0].bigCount, 2);
+  assert.equal(data.games.now[0].name, '마인크래프트');
+  assert.equal(data.games.now[0].broadcasts, 2);
+  assert.equal(data.channels[0].channelKey, `CHZZK:${'d'.repeat(32)}`);
+  assert.equal(data.trend.today[21].chzzk, 6960, '시간대 추이는 정각 값 그대로');
+  assert.equal(data.games.today[0].name, '리그 오브 레전드', '오늘 순위는 정각 평균 그대로');
   db.close();
 });
 
@@ -250,7 +271,7 @@ test('저장된 태그로 태그 순위·태그 추이·채널의 자주 쓰는 
   collection.resetSnapshotTagsCheck(); board.resetSnapshotTagsCheck();
 });
 
-test('응답은 다음 정각까지, 정각 회차가 아직 없으면 1분만 재사용한다', () => {
-  assert.equal(board.boardCacheSeconds('2026-11-16T12:00:00.000Z', NOW), 35 * 60);
-  assert.equal(board.boardCacheSeconds('2026-11-16T11:00:00.000Z', NOW), 60);
+test('응답은 다음 10분 회차(+2분)까지, 이번 회차가 아직 없으면 1분만 재사용한다', () => {
+  assert.equal(board.boardCacheSeconds('2026-11-16T12:30:00.000Z', NOW), 12 * 60);
+  assert.equal(board.boardCacheSeconds('2026-11-16T12:20:00.000Z', NOW), 60);
 });

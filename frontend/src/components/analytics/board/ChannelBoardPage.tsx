@@ -3,7 +3,7 @@ import type { AnalyticsChannelBoard, ChannelPeriod } from '../../../../../shared
 import { ComboChart, HBars, Lede, PlatformIcon, Seg, asOfLabel, gamePath, linkProps, num, people, platformLine, tagPath, useHourlyData } from './boardParts';
 import './analyticsBoard.css';
 
-const SCALE = ['#EAF5EE', '#BFE3CB', '#7CC59A', '#2F9E63', '#13693F'];
+const SCALE = ['#EEF4FF', '#C9DAFB', '#8FB1F2', '#4A7FE0', '#1D4FB8'];
 const DAYS = ['월', '화', '수', '목', '금', '토', '일'];
 const hours = (minutes: number) => minutes >= 60 ? `${Math.floor(minutes / 60)}시간${minutes % 60 ? ` ${minutes % 60}분` : ''}` : `${minutes}분`;
 const shortDate = (iso: string) => { const d = new Date(Date.parse(iso) + 9 * 3600000); return `${d.getUTCMonth() + 1}월 ${d.getUTCDate()}일 (${['일', '월', '화', '수', '목', '금', '토'][d.getUTCDay()]})`; };

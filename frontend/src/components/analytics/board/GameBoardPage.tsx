@@ -4,8 +4,8 @@ import { activityStreamerPath } from '../../../../../shared/activitySeo';
 import { ComboChart, HBars, Lede, PlatformIcon, asOfLabel, linkProps, num, people, platformLine, useHourlyData } from './boardParts';
 import './analyticsBoard.css';
 
-// 시간대 칸은 녹색 한 가지의 명도 단계만 쓴다(정의서 5.11).
-const SCALE = ['#EAF5EE', '#BFE3CB', '#7CC59A', '#2F9E63', '#13693F'];
+// 시간대 칸은 파란색 한 가지의 명도 단계만 쓴다(정의서 5.11, 도감과 같은 색).
+const SCALE = ['#EEF4FF', '#C9DAFB', '#8FB1F2', '#4A7FE0', '#1D4FB8'];
 const DAYS = ['월', '화', '수', '목', '금', '토', '일'];
 
 // 게임 상세(정의서 7.3).

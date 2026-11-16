@@ -1,8 +1,10 @@
 /* 방송 통계 개편 화면. 기준 정의서 5.11 화면 표현 규칙을 따른다: 카드 상자·그라데이션·그림자 없이 선과 여백으로 나눈다. */
 .ab {
-  --ab-bg: #FBFAF7; --ab-ink: #1F2328; --ab-sub: #6B6560; --ab-mute: #7A746D; --ab-text: #3D3A36;
-  --ab-rule: #D9D4CA; --ab-hair: #EFECE6; --ab-track: #F2EFE9; --ab-seg: #ECE8E0;
-  --ab-bar: #2F5D7C; --ab-bar-soft: #B9CCD9; --ab-bar-pale: #D9E3EA; --ab-accent: #D9480F; --ab-up: #047857; --ab-down: #B91C1C;
+  /* 버튜버 도감 상세(포털)와 같은 색: 바탕 #f7f9fc, 글자 #19263b, 선 #e4eaf2, 포인트 #2563eb */
+  --ab-bg: #F7F9FC; --ab-ink: #19263B; --ab-sub: #6A778B; --ab-mute: #8593A8; --ab-text: #3B4A61;
+  --ab-rule: #E4EAF2; --ab-hair: #EDF1F6; --ab-track: #F1F5FC; --ab-seg: #EEF2F8;
+  --ab-bar: #2563EB; --ab-bar-soft: #BCD0F7; --ab-bar-pale: #DBE7FB; --ab-accent: #F08C2E; --ab-up: #047857; --ab-down: #DC2626;
+  --ab-panel: #FFFFFF;
   /* 사이트 바탕색을 그대로 쓴다(가운데만 다른 색이 되지 않게). */
   background: transparent; color: var(--ab-ink); font-family: Inter, 'Noto Sans KR', system-ui, sans-serif;
   font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; min-height: 70vh;
@@ -32,12 +34,13 @@
 .ab-filter img { display: block; object-fit: contain; }
 .ab-lede { margin: -8px 0 0; max-width: 820px; font-size: 16px; font-weight: 500; line-height: 1.65; color: var(--ab-text); }
 .ab-lede strong { font-weight: 700; color: var(--ab-ink); }
-.ab-section { border-top: 1px solid var(--ab-rule); padding-top: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+/* 섹션은 도감의 흰 패널과 같은 모양(흰 바탕, 1px 선, 모서리 14px) */
+.ab-section { background: var(--ab-panel); border: 1px solid var(--ab-rule); border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; box-sizing: border-box; }
 
 /* 플랫폼 현황: 숫자 세 개를 한 줄로 */
-.ab-stats { margin: 0; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr); border-top: 1px solid var(--ab-rule); border-bottom: 1px solid var(--ab-rule); }
-.ab-stats > div { padding: 14px 16px; border-left: 1px solid var(--ab-hair); }
-.ab-stats > div:first-child { border-left: 0; padding-left: 0; }
+.ab-stats { margin: 0; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr); background: var(--ab-panel); border: 1px solid var(--ab-rule); border-radius: 14px; }
+.ab-stats > div { padding: 16px 22px; border-left: 1px solid var(--ab-hair); }
+.ab-stats > div:first-child { border-left: 0; }
 .ab-stats dt { font-size: 12px; color: var(--ab-sub); display: flex; align-items: center; gap: 6px; }
 .ab-stats dd { margin: 4px 0 0; font-size: 14px; color: var(--ab-sub); display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; }
 .ab-stats strong { font-size: 24px; font-weight: 700; color: var(--ab-ink); letter-spacing: -0.02em; }
@@ -52,7 +55,7 @@
 .ab-legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--ab-sub); }
 .ab-legend span { display: inline-flex; align-items: center; gap: 6px; }
 .ab-legend i { display: inline-block; }
-.ab-cols { display: flex; flex-wrap: wrap; gap: 40px; }
+.ab-cols { display: flex; flex-wrap: wrap; gap: 20px; }
 .ab-cols > * { flex: 1 1 400px; }
 
 /* 플랫폼 현황 */
@@ -125,7 +128,7 @@
 .ab-scale i { width: 20px; height: 10px; border-radius: 2px; display: inline-block; }
 
 /* 채널 페이지 */
-.ab-channel-head { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+.ab-channel-head { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; background: var(--ab-panel); border: 1px solid var(--ab-rule); border-radius: 18px; padding: 22px 26px; }
 .ab-avatar-lg { width: 80px; height: 80px; }
 .ab-channel-id { flex: 1 1 260px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .ab-plat-lg { margin: 0; font-size: 14px; }
@@ -139,6 +142,7 @@
 .ab-official img { height: 24px; width: auto; display: block; }
 .ab-official-chzzk { background: #00FFA3; }
 .ab-official-soop { background: #fff; border: 1px solid var(--ab-rule); }
+.ab-kpis { background: var(--ab-panel); border: 1px solid var(--ab-rule); border-radius: 14px; padding: 18px 22px; }
 .ab-kpis > div { display: flex; flex-direction: column; gap: 2px; }
 .ab-table { width: 100%; min-width: 720px; border-collapse: collapse; font-size: 14px; }
 .ab-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--ab-sub); padding: 8px 8px; border-bottom: 1px solid var(--ab-rule); }
@@ -163,8 +167,11 @@
   .ab-lede { font-size: 15px; }
   .ab-search { flex: 1 1 100%; min-width: 0; }
   .ab-stats { grid-template-columns: 1fr 1fr; }
-  .ab-stats > .ab-stat-main { grid-column: 1 / -1; padding-left: 0; border-bottom: 1px solid var(--ab-hair); }
-  .ab-stats > div:nth-child(2) { border-left: 0; padding-left: 0; }
+  .ab-stats > div { padding: 14px 16px; }
+  .ab-stats > .ab-stat-main { grid-column: 1 / -1; border-bottom: 1px solid var(--ab-hair); }
+  .ab-stats > div:nth-child(2) { border-left: 0; }
+  .ab-section { padding: 16px; border-radius: 12px; }
+  .ab-channel-head { padding: 18px 16px; }
   .ab-big { font-size: 32px; }
   .ab-row { grid-template-columns: 24px 36px minmax(0, 1fr) 88px; }
   .ab-row .ab-game, .ab-row .ab-watch { display: none; }
