@@ -52,7 +52,7 @@
 .ab-kv dd.ab-kv-large { font-size: 26px; }
 
 /* 막대+선 그래프 */
-.ab-chart-wrap { overflow-x: auto; overscroll-behavior-x: contain; padding-top: 10px; }
+.ab-chart-wrap { overflow-x: auto; overscroll-behavior-x: contain; padding: 10px 14px 0 0; }
 .ab-chart { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 8px; }
 .ab-axis { position: relative; font-size: 11px; color: #9A948C; }
 .ab-axis span { position: absolute; right: 0; transform: translateY(-50%); }

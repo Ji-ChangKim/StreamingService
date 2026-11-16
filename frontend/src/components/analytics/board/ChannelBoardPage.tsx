@@ -59,7 +59,7 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
             <div className="ab-channel-buttons">
               {data.live?.liveUrl && <a className="ab-watch ab-btn" href={data.live.liveUrl} target="_blank" rel="noopener noreferrer">방송 보기</a>}
               {ch.platform === 'CHZZK'
-                ? <a className="ab-official ab-official-chzzk" href={ch.channelUrl} target="_blank" rel="noopener noreferrer" aria-label={`${ch.name}의 치지직 공식 채널 열기 (새 창)`}><img src="/icons/chzzk/chzzklogo_kor(Black).png" alt="치지직" /></a>
+                ? <a className="ab-official ab-official-chzzk" href={ch.channelUrl} target="_blank" rel="noopener noreferrer" aria-label={`${ch.name}의 치지직 공식 채널 열기 (새 창)`}><img src="/icons/chzzk/chzzklogo_kor_black.png" alt="치지직" /></a>
                 : <a className="ab-official ab-official-soop" href={ch.channelUrl} target="_blank" rel="noopener noreferrer" aria-label={`${ch.name}의 SOOP 방송국 열기 (새 창)`}><img src="/icons/soop/soop_logo_blue.svg" alt="SOOP" /></a>}
               {ch.profileSlug && <a className="ab-watch ab-btn" {...linkProps(`/creator/${encodeURIComponent(ch.profileSlug)}`, onNavigate)}>소개 보기</a>}
             </div>
