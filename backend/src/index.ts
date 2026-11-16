@@ -57,6 +57,7 @@ import { collectChzzkLiveSnapshot } from './services/chzzkCollector';
 import { getLiveDiscovery } from './services/liveDiscoveryService';
 import { getLiveHistory, getCreatorHistory } from './services/liveHistoryService';
 import { getBroadcastStatistics, getStreamerBroadcastHistory } from './services/broadcastStatisticsService';
+import { boardCacheSeconds, getAnalyticsBoard, getAnalyticsGameBoard, getAnalyticsTagBoard } from './services/analyticsBoardService';
 import { getBroadcastActivity, getActivityBroadcastPage, readActivityCursor } from './services/broadcastActivityService';
 import { activityPeriod, validActivityRange } from '../../shared/broadcastActivity';
 import { collectBroadcastStatistics } from './services/broadcastStatisticsCollection';
@@ -1247,6 +1248,62 @@ app.get('/api/analytics/current-content', async (c) => {
   return c.json(result);
 });
 
+// 방송 통계 개편 화면 응답. 정각 단위 키로 엣지에 저장해 다음 정각(수집 여유 5분)까지 재사용한다.
+async function analyticsBoardResponse(c: any, key: URL, load: () => Promise<{ asOf: string | null } | null>): Promise<Response> {
+  key.searchParams.set('slot', new Date(Math.floor(Date.now() / 3600000) * 3600000).toISOString());
+  key.searchParams.set('v', '1');
+  const cache = typeof caches === 'undefined' ? undefined : (caches as any).default as Cache;
+  const cacheKey = new Request(key.toString());
+  if (cache) {
+    const hit = await cache.match(cacheKey).catch(() => undefined);
+    if (hit && Number(hit.headers.get('X-VD-Cache-Until')) > Date.now()) {
+      const response = new Response(hit.body, hit);
+      response.headers.set('Cache-Control', 'public, max-age=60');
+      response.headers.set('X-VD-Cache', 'HIT');
+      return response;
+    }
+  }
+  try {
+    const data = await load();
+    if (!data) { c.header('Cache-Control', 'public, max-age=60'); return c.json({ error: '집계된 기록이 없어요.' }, 404); }
+    const seconds = boardCacheSeconds(data.asOf);
+    const body = JSON.stringify(data);
+    const headers = { 'Content-Type': 'application/json; charset=utf-8', 'X-VD-Cache-Until': String(Date.now() + seconds * 1000) };
+    if (cache) c.executionCtx.waitUntil(cache.put(cacheKey, new Response(body, { headers: { ...headers, 'Cache-Control': `public, s-maxage=${seconds}` } })).catch(() => undefined));
+    return new Response(body, { headers: { ...headers, 'Cache-Control': 'public, max-age=60', 'X-VD-Cache': 'MISS' } });
+  } catch (error) {
+    console.error('[Board] request failed', String(error));
+    c.header('Cache-Control', 'no-store');
+    return c.json({ error: '방송 통계를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.' }, 503);
+  }
+}
+
+app.get('/api/analytics/board', async (c) => {
+  const platform = (c.req.query('platform') || 'ALL').toUpperCase();
+  if (!['ALL', 'CHZZK', 'SOOP'].includes(platform)) return c.json({ error: '조회 조건을 확인해 주세요.' }, 400);
+  const key = new URL('/api/analytics/board', c.req.url);
+  key.searchParams.set('platform', platform);
+  const origin = new URL(c.req.url).origin;
+  return analyticsBoardResponse(c, key, () => getAnalyticsBoard(c.env.DB, platform as 'ALL' | 'CHZZK' | 'SOOP', origin, (p) => c.executionCtx.waitUntil(p)));
+});
+
+app.get('/api/analytics/board/game', async (c) => {
+  const name = (c.req.query('name') || '').trim();
+  if (!name || name.length > 80) return c.json({ error: '게임 이름을 확인해 주세요.' }, 400);
+  const key = new URL('/api/analytics/board/game', c.req.url);
+  key.searchParams.set('name', name);
+  return analyticsBoardResponse(c, key, () => getAnalyticsGameBoard(c.env.DB, name));
+});
+
+app.get('/api/analytics/board/tag', async (c) => {
+  const tag = (c.req.query('tag') || '').trim();
+  if (!tag || tag.length > 40) return c.json({ error: '태그를 확인해 주세요.' }, 400);
+  const key = new URL('/api/analytics/board/tag', c.req.url);
+  key.searchParams.set('tag', tag);
+  const origin = new URL(c.req.url).origin;
+  return analyticsBoardResponse(c, key, () => getAnalyticsTagBoard(c.env.DB, tag, origin, (p) => c.executionCtx.waitUntil(p)));
+});
+
 // 14.2 VDébut 실시간 방송 탐색 API (기획서 10.2절: GET /api/discovery/live)
 app.get('/api/discovery/live', async (c) => {
   const platform = (c.req.query('platform') || 'ALL').toUpperCase() as 'ALL' | 'CHZZK' | 'SOOP';
@@ -1314,7 +1371,10 @@ const renderActivityPageResponse = async (c: any) => {
     try { channel = decodeURIComponent(url.pathname.slice('/analytics/streamer/'.length)); } catch { return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404); }
     if (!/^(CHZZK:[a-f0-9]{32}|SOOP:[a-z0-9_]{1,50})$/i.test(channel)) return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404);
     channel = `${channel.split(':')[0].toUpperCase()}:${channel.split(':')[1].toLowerCase()}`;
-  } else if (!['/analytics', '/analytics/chzzk', '/analytics/soop'].includes(url.pathname)) {
+  } else if (/^\/analytics\/(game|tag)\/[^/]{1,240}$/.test(url.pathname)) {
+    // 게임·태그 하위 화면은 화면에서 자료를 읽는다. 노출 기준(정의서 7.1)을 서버에서 판정하기 전까지 검색 제외한다.
+    c.header('X-Robots-Tag', 'noindex, follow');
+  } else if (!['/analytics', '/analytics/chzzk', '/analytics/soop', '/analytics/method'].includes(url.pathname)) {
     c.header('X-Robots-Tag', 'noindex');
     return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404);
   }
