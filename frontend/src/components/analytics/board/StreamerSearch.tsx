@@ -34,7 +34,12 @@ export function StreamerSearch({ onNavigate }: { onNavigate: (path: string) => v
     return () => document.removeEventListener('mousedown', close);
   }, []);
 
-  const go = (streamer: StatisticsStreamer) => { setOpen(false); onNavigate(activityStreamerPath(streamer.channelKey || `${streamer.platform}:${streamer.id}`)); };
+  // 기록이 없는 채널도 이름을 들고 가서 채널 페이지가 '아직 기록 없음' 안내를 이름과 함께 보여 준다.
+  const go = (streamer: StatisticsStreamer) => {
+    setOpen(false);
+    const path = activityStreamerPath(streamer.channelKey || `${streamer.platform}:${streamer.id}`);
+    onNavigate((streamer.recordedBroadcasts || 0) > 0 ? path : `${path}?name=${encodeURIComponent(streamer.name)}`);
+  };
   const submit = (event: FormEvent) => { event.preventDefault(); setOpen(true); if (items[active >= 0 ? active : 0] && state === 'done') go(items[active >= 0 ? active : 0]); else void search(query); };
   const keys = (event: KeyboardEvent) => {
     if (event.key === 'ArrowDown') { event.preventDefault(); setOpen(true); setActive((i) => Math.min(items.length - 1, i + 1)); }
@@ -53,8 +58,11 @@ export function StreamerSearch({ onNavigate }: { onNavigate: (path: string) => v
       {state === 'done' && !items.length && <p className="ab-dropdown-note">‘{query.trim()}’ 스트리머를 찾지 못했어요.</p>}
       {items.map((s, i) => <button key={`${s.platform}:${s.id}`} type="button" role="option" aria-selected={i === active} className="ab-dropdown-item" onMouseEnter={() => setActive(i)} onClick={() => go(s)}>
         {s.imageUrl ? <img src={s.imageUrl} alt="" referrerPolicy="no-referrer" /> : <span className="ab-dropdown-avatar" aria-hidden="true" />}
-        <span className="ab-dropdown-name">{s.name}</span>
-        <span className="ab-plat"><PlatformIcon platform={s.platform} />{s.platform === 'CHZZK' ? '치지직' : 'SOOP'}{s.isLive ? ' · 방송 중' : ''}</span>
+        <span className="ab-dropdown-who">
+          <span className="ab-dropdown-name">{s.name}{s.isLive && <i className="ab-dropdown-live">방송 중</i>}</span>
+          <span className={(s.recordedBroadcasts || 0) > 0 ? 'ab-dropdown-rec' : 'ab-dropdown-rec off'}>{(s.recordedBroadcasts || 0) > 0 ? `최근 30일 방송 ${s.recordedBroadcasts}회 기록` : '통계 기록 없음'}{typeof s.followerCount === 'number' && s.followerCount > 0 ? ` · 팔로워 ${s.followerCount.toLocaleString('ko-KR')}명` : ''}</span>
+        </span>
+        <span className="ab-plat"><PlatformIcon platform={s.platform} />{s.platform === 'CHZZK' ? '치지직' : 'SOOP'}</span>
       </button>)}
     </div>}
   </form>;

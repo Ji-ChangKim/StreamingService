@@ -167,6 +167,22 @@ test('한 플랫폼만 먼저 끝난 회차는 지금 기준으로 쓰지 않고
   assert.equal(board.isUncategorized('토크'), false);
 });
 
+test('스트리머 검색은 방송 통계 기록이 있는 채널을 앞에 두고 기록 수를 붙인다', async () => {
+  const { searchStatisticsStreamers } = loadTypeScript(path.join(root, 'backend/src/services/statisticsStreamerSearchService.ts'));
+  const db = fixture();
+  // B 채널을 '에이 공식'으로, 기록이 전혀 없는 '에이' 이름의 채널을 하나 더 둔다.
+  db.exec(`ALTER TABLE streamerChannel_info ADD COLUMN id INTEGER; UPDATE streamerChannel_info SET id = channel_id;
+    UPDATE streamerChannel_info SET display_name = '에이 공식' WHERE channel_id = 2;
+    INSERT INTO streamerChannel VALUES (9, 'CHZZK', '에이', 'https://chzzk.naver.com/${'9'.repeat(32)}');
+    INSERT INTO streamerChannel_info VALUES (9, NULL, '', '에이', NULL, 9);`);
+  const result = await searchStatisticsStreamers(binding(db), '에이', false, 'ALL');
+  const names = result.streamers.map((s) => `${s.name}:${s.recordedBroadcasts}`);
+  assert.equal(result.streamers[0].channelKey, LOL_A, '이름이 같고 기록이 있는 채널이 1위');
+  assert.ok(result.streamers[0].recordedBroadcasts > 0);
+  assert.ok(names.indexOf('에이 공식:' + result.streamers.find((s) => s.name === '에이 공식').recordedBroadcasts) < names.indexOf('에이:0'), `기록 있는 채널이 기록 없는 동명 채널보다 앞: ${names.join(', ')}`);
+  db.close();
+});
+
 test('점유율 분모(nowViewers)는 지금 회차의 모든 플랫폼 시청자 합이다', async () => {
   stubChzzk();
   const db = fixture();

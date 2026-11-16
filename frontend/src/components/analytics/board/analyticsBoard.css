@@ -29,7 +29,11 @@
 .ab .ab-dropdown-item { width: 100%; display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px; border: 0; border-radius: 8px; background: transparent; text-align: left; color: var(--ab-ink); font-size: 14px; }
 .ab .ab-dropdown-item[aria-selected='true'], .ab .ab-dropdown-item:hover { background: var(--ab-track); }
 .ab-dropdown-item img, .ab-dropdown-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #E6E2DA; display: block; }
-.ab-dropdown-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ab-dropdown-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+.ab-dropdown-who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ab-dropdown-rec { font-size: 12px; color: var(--ab-bar); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ab-dropdown-rec.off { color: var(--ab-mute); font-weight: 500; }
+.ab-dropdown-live { font-style: normal; font-size: 10px; font-weight: 700; color: var(--ab-down); background: #FDEEEE; padding: 1px 5px; border-radius: 4px; }
 .ab-filter { display: flex; gap: 8px; flex-wrap: wrap; }
 .ab-filter button { height: 36px; padding: 0 14px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--ab-rule); border-radius: 8px; background: #fff; color: var(--ab-text); font-size: 14px; font-weight: 600; }
 .ab-filter button[aria-pressed='true'] { border: 2px solid var(--ab-ink); color: var(--ab-ink); padding: 0 13px; }
@@ -301,6 +305,8 @@
 .ab-kv-list li { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--ab-hair); font-size: 13px; }
 .ab-kv-list li:first-child { border-top: 0; }
 .ab-kv-list li span { color: var(--ab-sub); font-size: 12px; }
+/* 안내 상자(callout): 강조 면 #EEF4FF, 테두리 #DBE7FB, 모서리 16 */
+.ab-callout { background: #EEF4FF; border-color: #DBE7FB; border-radius: 16px; }
 .ab-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .ab-table th { padding: 10px 8px; }
 .ab-foot { font-size: 12px; color: var(--ab-mute); }

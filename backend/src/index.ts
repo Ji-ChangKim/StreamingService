@@ -4,6 +4,7 @@ import { sitePath, siteRobots } from '../../shared/siteSeo';
 import { isAutoRegisteredChannelProfile } from '../../shared/portal';
 import { isThinProfile } from '../../shared/contentReview';
 import { publicResponseCache } from './services/publicResponseCache';
+import { normalizeStreamerQuery } from '../../shared/statisticsStreamerSearch';
 const STATIC_IMAGE_CACHE_CONTROL = 'public, max-age=2592000, stale-while-revalidate=86400';
 import { Hono } from 'hono';
 import { portalApi, readPublicPortalProfiles, readPublicPortalProfileBySlug, portalAdminStreamers, deletePortalProfile } from './services/portalService';
@@ -1017,9 +1018,10 @@ app.get('/api/analytics/streamers/search', async (c) => {
   const platform = c.req.query('platform') || 'ALL';
   if (!['ALL', 'CHZZK', 'SOOP'].includes(platform)) return c.json({ error: '검색 플랫폼을 확인해 주세요.' }, 400);
   try {
-    const result = await searchStatisticsStreamers(c.env.DB, query, includeExternal, platform as 'ALL' | 'CHZZK' | 'SOOP');
-    c.header('Cache-Control', 'public, max-age=15');
-    return c.json(result);
+    // 같은 검색어는 5분 동안 엣지에 저장해 외부 플랫폼 검색(1~3초)을 반복하지 않는다.
+    const key = new URL('/api/analytics/streamers/search', c.req.url);
+    key.search = new URLSearchParams({ q: normalizeStreamerQuery(query), external: String(includeExternal), platform, v: '2' }).toString();
+    return await publicResponseCache(c.req.raw, key, 300, async () => c.json(await searchStatisticsStreamers(c.env.DB, query, includeExternal, platform as 'ALL' | 'CHZZK' | 'SOOP')), (promise) => c.executionCtx.waitUntil(promise));
   } catch (error) {
     console.error('[Statistics] Streamer search failed', String(error));
     return c.json({ error: '스트리머 정보를 불러오지 못했습니다.' }, 503);

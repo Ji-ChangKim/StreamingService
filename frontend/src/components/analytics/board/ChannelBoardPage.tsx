@@ -78,7 +78,33 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
       <nav className="ab-crumb" aria-label="경로"><a {...linkProps('/analytics', onNavigate)}>방송 통계</a> / 채널</nav>
       {loading && !data && <div className="ab-empty">불러오고 있어요</div>}
       {error && !data && <div className="ab-error">{error}</div>}
-      {missing && <div className="ab-empty">이 채널의 방송 기록을 찾지 못했어요. <a {...linkProps('/analytics', onNavigate)}>방송 통계로 돌아가기</a></div>}
+      {missing && (() => {
+        // 통계 기록이 아직 없는 채널: 검색에서 넘겨준 이름으로 안내하고 공식 채널로 이어 준다.
+        const platform = channelKey.toUpperCase().startsWith('SOOP:') ? 'SOOP' : 'CHZZK';
+        const id = channelKey.slice(channelKey.indexOf(':') + 1);
+        const name = new URLSearchParams(window.location.search).get('name')?.slice(0, 60) || id;
+        const url = platform === 'CHZZK' ? `https://chzzk.naver.com/${id}` : `https://www.sooplive.co.kr/station/${id}`;
+        return <>
+          <section className="ab-channel-head">
+            <span className="ab-avatar ab-avatar-lg" aria-hidden="true" />
+            <div className="ab-channel-id">
+              <span className="ab-eyebrow">Channel</span>
+              <h1>{name}</h1>
+              <p className="ab-plat ab-plat-lg"><PlatformIcon platform={platform} />{platform === 'CHZZK' ? '치지직' : 'SOOP'}</p>
+            </div>
+            <div className="ab-channel-actions"><div className="ab-channel-buttons">
+              {platform === 'CHZZK'
+                ? <a className="ab-official ab-official-chzzk" href={url} target="_blank" rel="noopener noreferrer" aria-label={`${name}의 치지직 공식 채널 열기 (새 창)`}><img src="/icons/chzzk/chzzklogo_kor_black.png" alt="치지직" /></a>
+                : <a className="ab-official ab-official-soop" href={url} target="_blank" rel="noopener noreferrer" aria-label={`${name}의 SOOP 방송국 열기 (새 창)`}><img src="/icons/soop/soop_logo_blue.svg" alt="SOOP" /></a>}
+            </div></div>
+          </section>
+          <section className="ab-section ab-callout" aria-labelledby="ab-ch-none">
+            <div><h2 id="ab-ch-none">방송 통계</h2><p className="ab-insight">아직 쌓인 방송 기록이 없어요</p></div>
+            <p className="ab-lede">VDébut은 {platform === 'CHZZK' ? '치지직 인기 방송 상위 100개' : 'VDébut에 등록된 SOOP 채널'}를 10분마다 기록해요. 이 채널의 방송이 기록 범위에 들어오면 평균·최고 시청자, 방송 시간대, 방송 기록이 이곳에 쌓여요.</p>
+            <p className="ab-note"><a {...linkProps('/analytics/method', onNavigate)}>집계 기준 보기</a> · <a {...linkProps('/analytics', onNavigate)}>방송 통계로 돌아가기</a></p>
+          </section>
+        </>;
+      })()}
       {data && ch && <>
         <section className="ab-channel-head">
           {ch.imageUrl ? <img className="ab-avatar ab-avatar-lg" src={ch.imageUrl} alt="" referrerPolicy="no-referrer" /> : <span className="ab-avatar ab-avatar-lg" aria-hidden="true" />}
