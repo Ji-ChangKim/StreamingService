@@ -53,6 +53,15 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
     const topDays = byDay.map((v, d) => ({ v, d })).sort((a, b) => b.v - a.v).slice(0, 2).filter((x) => x.v > 0).map((x) => DAYS[x.d]);
     return `주로 ${topDays.join('·')}요일, ${start}~${(start + 3) % 24}시에 방송해요`;
   })();
+  const habitInfo = (() => {
+    const heat = data?.heat || [];
+    const byHour = Array.from({ length: 24 }, (_, h) => heat.reduce((s, row) => s + (row[h] || 0), 0));
+    if (!byHour.some((v) => v > 0)) return null;
+    const byDay = heat.map((row) => row.reduce((s, v) => s + v, 0));
+    const start = byHour.reduce((best, _, h) => (byHour[h] + byHour[(h + 1) % 24] + byHour[(h + 2) % 24] > byHour[best] + byHour[(best + 1) % 24] + byHour[(best + 2) % 24] ? h : best), 0);
+    const days = byDay.map((v, d) => ({ v, d })).sort((a, b) => b.v - a.v).slice(0, 2).filter((x) => x.v > 0).map((x) => DAYS[x.d]).join('·');
+    return { days: `${days}요일`, hours: `${start}~${(start + 3) % 24}시` };
+  })();
 
   return <div className="ab">
     <main className="ab-main">
@@ -64,6 +73,7 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
         <section className="ab-channel-head">
           {ch.imageUrl ? <img className="ab-avatar ab-avatar-lg" src={ch.imageUrl} alt="" referrerPolicy="no-referrer" /> : <span className="ab-avatar ab-avatar-lg" aria-hidden="true" />}
           <div className="ab-channel-id">
+            <span className="ab-eyebrow">Channel</span>
             <h1>{ch.name}</h1>
             <p className="ab-plat ab-plat-lg"><PlatformIcon platform={ch.platform} />{platformLine(ch)}</p>
             {ch.followers !== null && <p className="ab-note">팔로워 {num(ch.followers)}명</p>}
@@ -129,11 +139,22 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
             </section>
           </div>
 
-          {data.tags?.length > 0 && <section className="ab-section" aria-labelledby="ab-ch-tags">
-            <div><h2 id="ab-ch-tags">자주 쓰는 태그</h2><p className="ab-insight">#{data.tags[0].tag} 태그를 가장 자주 달았어요 ({data.tags[0].broadcasts}회)</p></div>
-            <p className="ab-note">기간 동안 방송에 단 태그 · 그 태그를 단 방송의 평균 시청자</p>
-            <ul className="ab-chips">{data.tags.map((t) => <li key={t.tag}><a {...linkProps(tagPath(t.tag), onNavigate)}>#{t.tag} <small>{t.broadcasts}회{t.avg !== null ? ` · 평균 ${people(t.avg)}` : ''}</small></a></li>)}</ul>
-          </section>}
+          <div className={data.tags?.length > 0 ? 'ab-pair' : ''}>
+            {data.tags?.length > 0 && <section className="ab-section" aria-labelledby="ab-ch-tags">
+              <div><h2 id="ab-ch-tags">자주 쓰는 태그</h2><p className="ab-insight">#{data.tags[0].tag} 태그를 가장 자주 달았어요</p></div>
+              <p className="ab-note">기간 동안 방송에 단 태그 · 그 태그를 단 방송의 평균 시청자</p>
+              <ul className="ab-chips">{data.tags.map((t) => <li key={t.tag}><a {...linkProps(tagPath(t.tag), onNavigate)}>#{t.tag} <small>{t.broadcasts}회{t.avg !== null ? ` · 평균 ${people(t.avg)}` : ''}</small></a></li>)}</ul>
+            </section>}
+            {habitInfo && <section className="ab-section" aria-labelledby="ab-ch-habit">
+              <div><h2 id="ab-ch-habit">채널 정보</h2><p className="ab-insight">방송 습관</p></div>
+              <ul className="ab-kv-list">
+                <li><span>주로 방송하는 요일</span><b>{habitInfo.days}</b></li>
+                <li><span>주로 방송하는 시간</span><b>{habitInfo.hours}</b></li>
+                <li><span>한 번에 평균</span><b>{hours(Math.round(data.kpis.minutes / Math.max(1, data.kpis.broadcasts) / 10) * 10)}</b></li>
+                {data.games[0] && <li><span>가장 많이 한 콘텐츠</span><b>{data.games[0].name}</b></li>}
+              </ul>
+            </section>}
+          </div>
 
           <section className="ab-section" aria-labelledby="ab-ch-heat">
             <div><h2 id="ab-ch-heat">방송 시간대</h2>{habit && <p className="ab-insight">{habit}</p>}</div>
@@ -146,7 +167,7 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
           </section>
 
           <section className="ab-section" aria-labelledby="ab-ch-log">
-            <h2 id="ab-ch-log">방송 기록</h2>
+            <div><h2 id="ab-ch-log">방송 기록</h2><p className="ab-insight">최근 {days}일 {num(data.kpis.broadcasts)}번 방송했어요</p></div>
             <div className="ab-scroll"><table className="ab-table">
               <thead><tr><th scope="col">날짜</th><th scope="col">제목</th><th scope="col">게임</th><th scope="col" className="num">방송 시간</th><th scope="col" className="num">평균</th><th scope="col" className="num">최고</th></tr></thead>
               <tbody>{data.log.slice(0, logCount).map((row) => <tr key={row.streamId}>

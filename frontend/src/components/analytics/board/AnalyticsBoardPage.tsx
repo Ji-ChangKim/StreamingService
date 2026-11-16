@@ -67,6 +67,7 @@ export function AnalyticsBoardPage({ path, onNavigate }: { path: string; onNavig
       <section className="ab-head" aria-label="제목과 조회 조건">
         <div className="ab-head-row">
           <div>
+            <span className="ab-eyebrow">Live statistics</span>
             <h1>방송 통계</h1>
             <p className="ab-subtitle">10분마다 새로 집계해요{data?.asOf ? ` · ${asOfLabel(data.asOf)}` : ''}</p>
           </div>
@@ -126,7 +127,7 @@ export function AnalyticsBoardPage({ path, onNavigate }: { path: string; onNavig
             <ComboChart height={200} maxBarWidth={trendTab === 'd30' ? 18 : 28} items={trend.map((p, i) => ({ key: `${trendTab}-${i}`, bar: p.chzzk, line: p.usual, tip: p.chzzk === null ? `${p.label} 아직 집계 전` : `${p.label} ${people(p.chzzk)}${p.usual ? ` · 평소 ${people(p.usual)}` : ''}`, label: trend.length <= 7 || (trend.length === 24 ? i % 6 === 0 || i === 23 : (trend.length - 1 - i) % 7 === 0) ? p.label : '' }))} />
           </section>}
           <section className="ab-section ab-brief" aria-labelledby="ab-brief">
-            <h2 id="ab-brief">지금 판도</h2>
+            <div><h2 id="ab-brief">지금 판도</h2>{topGame && <p className="ab-insight">「{topGame.name}」가 이끌고 있어요</p>}</div>
             {data.summary && <div className="ab-brief-text"><Lede text={data.summary} /></div>}
             {data.rising.length > 0 && <div className="ab-brief-block"><h3>급상승 게임 <small>지난 7일, 그 전 7일 대비</small></h3>
               <ol className="ab-mini-list">{data.rising.slice(0, 3).map((g) => <li key={g.name}><a {...linkProps(gamePath(g.name), onNavigate)}>{g.name}</a><b className="ab-up">▲ {g.growth}%</b></li>)}</ol></div>}

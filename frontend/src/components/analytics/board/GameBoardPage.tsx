@@ -45,7 +45,7 @@ export function GameBoardPage({ name, onNavigate }: { name: string; onNavigate: 
       {missing && <div className="ab-empty">최근 4주 동안 이 게임의 방송 기록이 없어요. <a {...linkProps('/analytics', onNavigate)}>방송 통계로 돌아가기</a></div>}
       {data && <>
         <section className="ab-head">
-          <div><h1>{data.name}</h1><p className="ab-subtitle">{data.now.rank ? `지금 게임 순위 ${data.now.rank}위 · ` : ''}{asOfLabel(data.asOf)}</p></div>
+          <div><span className="ab-eyebrow">Game</span><h1>{data.name}</h1><p className="ab-subtitle">{data.now.rank ? `지금 게임 순위 ${data.now.rank}위 · ` : ''}{asOfLabel(data.asOf)}</p></div>
         </section>
 
         {/* ① 한눈에 */}
@@ -85,7 +85,7 @@ export function GameBoardPage({ name, onNavigate }: { name: string; onNavigate: 
               items={data.days.map((d) => ({ key: d.date, bar: d.viewers, line: d.broadcasts, tip: d.viewers === null ? `${d.date} 기록 없음` : `${d.date} · 평균 ${people(d.viewers)} · 방송 ${d.broadcasts}개`, label: `${d.date.slice(5).replace('-', '/')}` }))} />
           </section>
           <section className="ab-section ab-brief" aria-labelledby="ab-gbest">
-            <h2 id="ab-gbest">시청자가 몰리는 시간</h2>
+            <div><h2 id="ab-gbest">시청자가 몰리는 시간</h2>{bestTimes[0] && <p className="ab-insight">{bestTimes.filter((t) => t.d >= 5).length >= 2 ? '주말' : `${DAYS[bestTimes[0].d]}요일`} {bestTimes[0].h < 12 ? '오전' : bestTimes[0].h < 18 ? '오후' : '저녁'}에 가장 많이 봐요</p>}</div>
             <div className="ab-brief-block" style={{ borderTop: 0, paddingTop: 0 }}><h3>많이 보는 때 TOP 3 <small>최근 4주 평균</small></h3>
               <ol className="ab-mini-list">{bestTimes.map((t) => <li key={`${t.d}-${t.h}`}><span>{DAYS[t.d]}요일 {t.h}시</span><b>{people(t.v)}</b></li>)}</ol></div>
             {data.platforms.length > 0 && <div className="ab-brief-block"><h3>플랫폼별 시청자 <small>최근 7일</small></h3>

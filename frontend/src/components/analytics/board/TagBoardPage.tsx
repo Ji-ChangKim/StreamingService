@@ -31,7 +31,7 @@ export function TagBoardPage({ tag, onNavigate }: { tag: string; onNavigate: (pa
       {missing && <div className="ab-empty">지금 #{tag} 태그로 방송 중인 채널이 없어요. <a {...linkProps('/analytics', onNavigate)}>방송 통계로 돌아가기</a></div>}
       {data && <>
         <section className="ab-head">
-          <div><h1>#{data.tag}</h1><p className="ab-subtitle"><PlatformIcon platform="CHZZK" />치지직 방송 태그 · {asOfLabel(data.asOf)}</p></div>
+          <div><span className="ab-eyebrow">Broadcast tag</span><h1>#{data.tag}</h1><p className="ab-subtitle"><PlatformIcon platform="CHZZK" />치지직 방송 태그 · {asOfLabel(data.asOf)}</p></div>
         </section>
 
         {/* ① 한눈에 */}
@@ -70,7 +70,7 @@ export function TagBoardPage({ tag, onNavigate }: { tag: string; onNavigate: (pa
               items={trend.map((p, i) => ({ key: `${trendTab}-${i}`, bar: p.viewers, line: p.broadcasts, tip: p.viewers === null ? `${p.label} 기록 없음` : `${p.label} · ${people(p.viewers)} · 방송 ${p.broadcasts}개`, label: trend.length <= 7 || (trend.length === 24 ? i % 6 === 0 || i === 23 : (trend.length - 1 - i) % 7 === 0) ? p.label : '' }))} />
           </section>}
           <section className={`ab-section ab-brief${hasTrend ? '' : ' ab-span-3'}`} aria-labelledby="ab-tag-mix">
-            <h2 id="ab-tag-mix">#{data.tag} 방송은 무엇을 하나</h2>
+            <div><h2 id="ab-tag-mix">#{data.tag} 방송은 무엇을 하나</h2>{topGame && <p className="ab-insight">「{topGame.name}」 방송이 가장 많아요</p>}</div>
             {data.games.length > 0 && <div className="ab-brief-block" style={{ borderTop: 0, paddingTop: 0 }}><h3>콘텐츠 구성 <small>지금 방송 수 기준</small></h3>
               <ShareBar items={data.games.slice(0, 4).map((g) => ({ key: g.name, label: g.name, value: g.broadcasts, href: gamePath(g.name) }))} other={Math.max(0, gameTotal - data.games.slice(0, 4).reduce((s, g) => s + g.broadcasts, 0))} /></div>}
             {data.withTags.length > 0 && <div className="ab-brief-block"><h3>함께 많이 쓴 태그</h3>
