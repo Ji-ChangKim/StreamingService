@@ -127,6 +127,69 @@
 .ab-scale { display: flex; gap: 6px; align-items: center; font-size: 12px; color: var(--ab-sub); }
 .ab-scale i { width: 20px; height: 10px; border-radius: 2px; display: inline-block; }
 
+/* ① 한눈에: 요약 카드 네 개 */
+.ab-kpis-grid { display: grid; grid-template-columns: 1.35fr 1fr 1fr 1fr; gap: 16px; }
+.ab-kpi { background: var(--ab-panel); border: 1px solid var(--ab-rule); border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; min-width: 0; position: relative; overflow: hidden; }
+.ab-kpi header { font-size: 12px; font-weight: 600; color: var(--ab-sub); display: flex; align-items: center; gap: 6px; }
+.ab-kpi-value { display: flex; align-items: baseline; gap: 4px; color: var(--ab-ink) !important; min-width: 0; }
+.ab-kpi-value strong { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+.ab-kpi-value span { font-size: 14px; color: var(--ab-sub); }
+.ab-kpi-name strong { font-size: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ab-kpi p { margin: auto 0 0; font-size: 12px; color: var(--ab-sub); }
+.ab-kpi p b { color: var(--ab-ink); }
+.ab-kpi-hero { border-color: #C9D9F6; }
+.ab-kpi-hero .ab-kpi-value strong { font-size: 34px; }
+.ab-spark { width: 100%; display: block; margin-top: 4px; }
+.ab-chip { align-self: flex-start; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: var(--ab-track); color: var(--ab-text); }
+.ab-chip.up { background: #E8F6EF; color: var(--ab-up); }
+.ab-chip.down { background: #FDEEEE; color: var(--ab-down); }
+
+/* ② 흐름과 해석: 넓은 그래프 + 오른쪽 브리핑 */
+.ab-layout { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.ab-span-2 { grid-column: span 2; }
+.ab-insight { margin: 4px 0 0; font-size: 15px; font-weight: 600; color: var(--ab-ink); line-height: 1.5; }
+.ab-section h2 + .ab-insight { margin-top: 4px; }
+.ab-section-head h2 { font-size: 13px; font-weight: 700; color: var(--ab-sub); }
+.ab-brief { gap: 14px; }
+.ab-brief h2 { font-size: 13px; color: var(--ab-sub); }
+.ab-brief .ab-lede { margin: 0; font-size: 14px; line-height: 1.7; }
+.ab-brief-block { border-top: 1px solid var(--ab-hair); padding-top: 12px; }
+.ab-brief-block h3 { margin: 0 0 8px; font-size: 13px; font-weight: 700; color: var(--ab-ink); }
+.ab-brief-block h3 small { font-weight: 500; color: var(--ab-mute); margin-left: 4px; }
+.ab-mini-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; counter-reset: mini; }
+.ab-mini-list li { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; counter-increment: mini; }
+.ab-mini-list li > :first-child { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ab-mini-list li > :first-child::before { content: counter(mini) '. '; color: var(--ab-mute); font-weight: 600; }
+.ab-mini-list b { white-space: nowrap; font-weight: 700; }
+.ab-up { color: var(--ab-up); }
+
+/* ③ 점유율 막대 */
+.ab-share { display: flex; flex-direction: column; gap: 10px; }
+.ab-share-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; gap: 2px; background: var(--ab-track); }
+.ab-share-bar span { display: block; min-width: 2px; }
+.ab-share-legend { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--ab-text); }
+.ab-share-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.ab-share-legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.ab-share-legend b { color: var(--ab-ink); }
+.ab-comp { font-size: 11px !important; font-weight: 700 !important; padding: 1px 6px; border-radius: 4px; }
+.ab-comp-여유 { background: #E8F6EF; color: var(--ab-up) !important; }
+.ab-comp-보통 { background: var(--ab-track); color: var(--ab-text) !important; }
+.ab-comp-혼잡 { background: #FDEEEE; color: var(--ab-down) !important; }
+.ab-comp-none { background: var(--ab-track); color: var(--ab-mute) !important; }
+.ab-col-label .ab-move { font-size: 11px; font-style: normal; font-weight: 600; color: var(--ab-mute); }
+
+/* ④ 채널 TOP 3 */
+.ab-podium { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.ab-podium li { position: relative; border: 1px solid var(--ab-rule); border-radius: 12px; padding: 16px; display: grid; grid-template-columns: 52px minmax(0, 1fr); grid-template-rows: auto auto auto; column-gap: 12px; row-gap: 4px; align-items: center; background: #FBFCFE; }
+.ab-podium-1 { border-color: #BFD3F8 !important; background: #F4F8FF !important; }
+.ab-podium-rank { position: absolute; top: 10px; right: 12px; font-size: 20px; font-weight: 800; color: #C9D6EC; }
+.ab-podium-1 .ab-podium-rank { color: var(--ab-bar); }
+.ab-avatar-md { width: 52px; height: 52px; grid-row: span 2; }
+.ab-podium .ab-name { padding-right: 24px; }
+.ab-podium-viewers { grid-column: 2; font-size: 20px; font-weight: 700; }
+.ab-podium .ab-note { grid-column: 1 / -1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ab-podium .ab-watch { grid-column: 1 / -1; justify-self: stretch; justify-content: center; margin-top: 4px; }
+
 /* 채널 페이지 */
 .ab-channel-head { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; background: var(--ab-panel); border: 1px solid var(--ab-rule); border-radius: 18px; padding: 22px 26px; }
 .ab-avatar-lg { width: 80px; height: 80px; }
@@ -161,6 +224,11 @@
 .ab-method h3 { margin: 0 0 4px; font-size: 15px; }
 .ab-method p, .ab-method li { margin: 0; font-size: 15px; line-height: 1.7; color: var(--ab-text); }
 
+@media (max-width: 1100px) and (min-width: 761px) {
+  .ab-kpis-grid { grid-template-columns: 1fr 1fr; }
+  .ab-layout { grid-template-columns: 1fr 1fr; }
+  .ab-span-2 { grid-column: 1 / -1; }
+}
 @media (max-width: 760px) {
   .ab-main { padding: 16px 16px 48px; gap: 24px; }
   .ab h1 { font-size: 22px; }
@@ -171,6 +239,16 @@
   .ab-stats > .ab-stat-main { grid-column: 1 / -1; border-bottom: 1px solid var(--ab-hair); }
   .ab-stats > div:nth-child(2) { border-left: 0; }
   .ab-section { padding: 16px; border-radius: 12px; }
+  .ab-kpis-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ab-kpi-hero { grid-column: 1 / -1; }
+  .ab-kpi { padding: 14px; }
+  .ab-kpi-value strong { font-size: 22px; }
+  .ab-kpi-hero .ab-kpi-value strong { font-size: 28px; }
+  .ab-kpi-name strong { font-size: 16px; white-space: normal; word-break: keep-all; }
+  .ab-layout { grid-template-columns: 1fr; }
+  .ab-span-2 { grid-column: auto; }
+  .ab-podium { grid-template-columns: 1fr; }
+  .ab-insight { font-size: 14px; }
   .ab-channel-head { padding: 18px 16px; }
   .ab-big { font-size: 32px; }
   .ab-row { grid-template-columns: 24px 36px minmax(0, 1fr) 88px; }

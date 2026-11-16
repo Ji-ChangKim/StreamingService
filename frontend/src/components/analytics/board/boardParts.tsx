@@ -111,17 +111,49 @@ export function ComboChart({ items, height = 220, barColor = 'var(--ab-bar)', li
   </div>;
 }
 
+// 요약 카드 안의 작은 선 그래프. 값이 없는 칸은 건너뛴다.
+export function Sparkline({ values, height = 36 }: { values: Array<number | null>; height?: number }) {
+  const known = values.map((v, i) => [i, v] as const).filter((p): p is readonly [number, number] => p[1] !== null);
+  if (known.length < 2) return null;
+  const max = Math.max(...known.map((p) => p[1])) || 1;
+  const n = Math.max(1, values.length - 1);
+  const pts = known.map(([i, v]) => `${(i / n * 100).toFixed(2)},${(100 - v / max * 88).toFixed(2)}`);
+  const lastPt = pts[pts.length - 1].split(',');
+  return <svg className="ab-spark" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ height }} aria-hidden="true">
+    <polygon points={`${pts[0].split(',')[0]},100 ${pts.join(' ')} ${lastPt[0]},100`} fill="var(--ab-bar-pale)" opacity="0.7" />
+    <polyline points={pts.join(' ')} fill="none" stroke="var(--ab-bar)" strokeWidth={2} vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+  </svg>;
+}
+
+// 100% 누적 막대: 전체 중 각 항목의 몫을 한 줄로 보여 준다.
+const SHARE_COLORS = ['#2563EB', '#5B8DEF', '#8FB1F2', '#BCD0F7', '#DBE7FB'];
+export function ShareBar({ items, other }: { items: Array<{ key: string; label: string; value: number; href?: string }>; other: number }) {
+  const total = items.reduce((sum, item) => sum + item.value, 0) + other;
+  if (!total) return null;
+  const pct = (v: number) => Math.round(v / total * 1000) / 10;
+  return <div className="ab-share">
+    <div className="ab-share-bar" role="img" aria-label={items.map((item) => `${item.label} ${pct(item.value)}%`).join(', ')}>
+      {items.map((item, i) => <span key={item.key} style={{ width: `${item.value / total * 100}%`, background: SHARE_COLORS[i % SHARE_COLORS.length] }} title={`${item.label} ${pct(item.value)}%`} />)}
+      {other > 0 && <span style={{ width: `${other / total * 100}%`, background: 'var(--ab-seg)' }} title={`기타 ${pct(other)}%`} />}
+    </div>
+    <ul className="ab-share-legend">
+      {items.map((item, i) => <li key={item.key}><i style={{ background: SHARE_COLORS[i % SHARE_COLORS.length] }} />{item.label}<b>{pct(item.value)}%</b></li>)}
+      {other > 0 && <li><i style={{ background: 'var(--ab-seg)' }} />기타<b>{pct(other)}%</b></li>}
+    </ul>
+  </div>;
+}
+
 export function HBars({ rows }: { rows: Array<{ key: string; name: ReactNode; value: number; text: string; color?: string }> }) {
   const max = Math.max(1, ...rows.map((row) => row.value));
   return <ol className="ab-hbars">{rows.map((row) => <li key={row.key}>{row.name}<span className="ab-track" aria-hidden="true"><i style={{ width: `${row.value / max * 100}%`, background: row.color }} /></span><span>{row.text}</span></li>)}</ol>;
 }
 
-export function ChannelRows({ channels, onNavigate, showWatch = true }: { channels: BoardChannel[]; onNavigate: (path: string) => void; showWatch?: boolean }) {
-  const top = Math.max(1, ...channels.map((channel) => channel.viewers));
+export function ChannelRows({ channels, onNavigate, showWatch = true, startRank = 1, scaleMax }: { channels: BoardChannel[]; onNavigate: (path: string) => void; showWatch?: boolean; startRank?: number; scaleMax?: number }) {
+  const top = scaleMax || Math.max(1, ...channels.map((channel) => channel.viewers));
   return <ol className="ab-list">{channels.map((channel, index) => {
     const path = activityStreamerPath(channel.channelKey);
     return <li key={channel.channelKey} className="ab-row">
-      <span className="ab-rank">{index + 1}</span>
+      <span className="ab-rank">{index + startRank}</span>
       {channel.imageUrl ? <img className="ab-avatar" src={channel.imageUrl} alt="" loading="lazy" referrerPolicy="no-referrer" /> : <span className="ab-avatar" aria-hidden="true" />}
       <a className="ab-name" href={path} onClick={(e) => { e.preventDefault(); onNavigate(path); }}><b>{channel.name}</b><span className="ab-plat"><PlatformIcon platform={channel.platform} />{platformLine(channel)}</span></a>
       {channel.isGame ? <a className="ab-game" href={gamePath(channel.category)} onClick={(e) => { e.preventDefault(); onNavigate(gamePath(channel.category)); }}>{channel.category}</a> : <span className="ab-game">{channel.category}</span>}
