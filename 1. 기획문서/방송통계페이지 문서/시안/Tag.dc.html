@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>#신입 태그 방송</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#FBFAF7}
+a{color:#2F5D7C;text-decoration:none}a:hover{color:#22475F}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="min-height: 100%; background: #FBFAF7; font-family: Inter, 'Noto Sans KR', sans-serif; color: #1F2328; font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased">
+  <header style="background: #FFFFFF; border-bottom: 1px solid #E4E0D8">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 0 32px; height: 72px; display: flex; align-items: center; gap: 40px; flex-wrap: wrap">
+      <a href="#" style="font-size: 24px; font-weight: 700; color: #1F2328; letter-spacing: -0.02em">VDébut</a>
+      <nav aria-label="주요 메뉴" style="display: flex; gap: 28px; font-size: 15px; font-weight: 600">
+        <a href="#" style="color: #57524C">데뷔 캘린더</a>
+        <a href="#" style="color: #57524C">버튜버 탐색</a>
+        <a href="Main.dc.html" aria-current="page" style="color: #2F5D7C; border-bottom: 2px solid #2F5D7C; padding-bottom: 4px">방송 통계</a>
+      </nav>
+    </div>
+  </header>
+
+  <main style="max-width: 1280px; margin: 0 auto; padding: 24px 32px 72px; display: flex; flex-direction: column; gap: 44px">
+    <nav aria-label="경로" style="font-size: 13px; color: #6B6560"><a href="Main.dc.html">방송 통계</a> / <a href="Main.dc.html">방송 태그 순위</a> / #신입</nav>
+
+    <section style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <h1 style="margin: 0; font-size: 34px; font-weight: 700; letter-spacing: -0.03em">#신입</h1>
+        <p style="margin: 0; font-size: 14px; color: #6B6560; display: flex; align-items: center; gap: 6px"><img src="/_blob/af83299f810965a478532a41f1074b69" alt="" style="width: 16px; height: 16px; object-fit: contain">치지직 방송 태그 · 태그 순위 4위 · 오늘 오후 9시 기준</p>
+      </div>
+    </section>
+
+    <section aria-label="요약" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+      <sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+        <div style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 13px; font-weight: 600; color: #6B6560">{{k.label}}</span>
+          <strong style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em">{{k.value}}</strong>
+          <span style="{{k.subStyle}}">{{k.sub}}</span>
+        </div>
+      </sc-for>
+    </section>
+
+    <section aria-label="지금 상황 정리" style="display: flex; flex-direction: column; gap: 8px; max-width: 860px">
+      <p style="margin: 0; font-size: 22px; font-weight: 500; line-height: 1.55; letter-spacing: -0.01em; color: #1F2328">오늘은 소속사 채널 <strong style="font-weight: 700">9곳</strong>이 #신입을 달아 평소(<strong style="font-weight: 700">4곳</strong>)보다 많아요. 상위 <strong style="font-weight: 700">3개</strong> 채널이 시청자의 <strong style="font-weight: 700">41%</strong>를 가져가고 있어요. 혼자 시작하는 신입이라면 지금보다 경쟁이 적은 <strong style="font-weight: 700">오후 2~5시</strong> 토크 방송이 유리해요.</p>
+    </section>
+    <section aria-labelledby="trend" style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+        <h2 id="trend" style="margin: 0; font-size: 17px; font-weight: 700">#신입 추이</h2>
+        <div role="group" aria-label="기간" style="display: flex; gap: 4px; background: #ECE8E0; border-radius: 12px; padding: 4px">
+          <sc-for list="{{tabs}}" as="p" hint-placeholder-count="4"><button type="button" aria-pressed="{{p.on}}" onClick="{{p.pick}}" style="{{p.style}}">{{p.label}}</button></sc-for>
+        </div>
+      </div>
+      <div style="display: flex; gap: 16px; font-size: 13px; color: #3D3A36">
+        <span style="display: flex; gap: 6px; align-items: center"><span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 3px; background: #2F5D7C"></span>시청자 (막대)</span>
+        <span style="display: flex; gap: 6px; align-items: center"><span aria-hidden="true" style="width: 18px; height: 3px; background: #D9480F"></span>방송 수 (선)</span>
+      </div>
+      <div style="position: relative; height: 220px; border-bottom: 1px solid #D6D1C7; display: flex; align-items: flex-end; gap: 4px">
+        <sc-for list="{{chart.cols}}" as="c" hint-placeholder-count="24"><span title="{{c.tip}}" style="{{c.bar}}"></span></sc-for>
+        <svg viewBox="{{chart.vb}}" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible"><polyline points="{{chart.line}}" fill="none" stroke="#D9480F" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>
+      </div>
+      <div aria-hidden="true" style="display: flex; justify-content: space-between; font-size: 12px; color: #7A746D"><sc-for list="{{chart.labels}}" as="l" hint-placeholder-count="5"><span>{{l}}</span></sc-for></div>
+    </section>
+
+    <section aria-labelledby="list" style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+        <h2 id="list" style="margin: 0; font-size: 17px; font-weight: 700">{{listTitle}}</h2>
+        <div role="group" aria-label="목록 기준" style="display: flex; gap: 4px; background: #ECE8E0; border-radius: 12px; padding: 4px">
+          <sc-for list="{{listTabs}}" as="p" hint-placeholder-count="2"><button type="button" aria-pressed="{{p.on}}" onClick="{{p.pick}}" style="{{p.style}}">{{p.label}}</button></sc-for>
+        </div>
+      </div>
+      <ol style="margin: 0; padding: 0; list-style: none">
+        <sc-for list="{{channels}}" as="c" hint-placeholder-count="10">
+          <li style="border-top: 1px solid #EFECE6; display: grid; grid-template-columns: 32px 40px minmax(0, 1.2fr) minmax(0, 0.9fr) minmax(0, 1.4fr) 96px; gap: 12px; align-items: center; padding: 10px 0">
+            <span style="font-size: 15px; font-weight: 700; color: #3D3A36; text-align: center">{{c.rank}}</span>
+            <span aria-hidden="true" style="width: 40px; height: 40px; border-radius: 50%; background: #E6E2DA"></span>
+            <a href="Channel.dc.html" style="display: flex; flex-direction: column; gap: 2px; min-width: 0; color: #1F2328">
+              <span style="font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.name}}</span>
+              <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6B6560"><img src="/_blob/af83299f810965a478532a41f1074b69" alt="" style="width: 16px; height: 16px; object-fit: contain">{{c.sub}}</span>
+            </a>
+            <a href="Game.dc.html" style="font-size: 13px; color: #3D3A36; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.game}}</a>
+            <span style="display: flex; align-items: center; gap: 10px"><span aria-hidden="true" style="flex: 1; height: 6px; background: #EFECE6; border-radius: 999px; overflow: hidden; display: flex"><span style="{{c.bar}}"></span></span><span style="width: 76px; text-align: right; font-size: 15px; font-weight: 700">{{c.viewers}}</span></span>
+            <sc-if value="{{c.live}}" hint-placeholder-val="{{true}}"><a href="#" style="justify-self: end; height: 36px; padding: 0 12px; display: inline-flex; align-items: center; border: 1px solid #D6D1C7; border-radius: 10px; font-size: 13px; font-weight: 600; color: #1F2328">방송 보기</a></sc-if>
+          </li>
+        </sc-for>
+      </ol>
+      <button type="button" style="align-self: center; height: 44px; padding: 0 20px; border: 1px solid #D6D1C7; border-radius: 10px; background: #FFFFFF; font-size: 14px; font-weight: 600; color: #1F2328">{{moreLabel}}</button>
+    </section>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 20px">
+      <section aria-labelledby="g" style="flex: 1 1 400px; min-width: 0; border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 14px">
+        <h2 id="g" style="margin: 0; font-size: 18px; font-weight: 700">#신입 방송이 많이 한 게임</h2>
+        <ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px">
+          <sc-for list="{{games}}" as="r" hint-placeholder-count="5">
+            <li style="display: grid; grid-template-columns: minmax(0, 150px) minmax(0, 1fr) 56px; gap: 12px; align-items: center; font-size: 14px">
+              <a href="Game.dc.html" style="font-weight: 700; color: #1F2328; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</a>
+              <span aria-hidden="true" style="height: 6px; background: #EFECE6; border-radius: 999px; overflow: hidden; display: flex"><span style="{{r.bar}}"></span></span>
+              <span style="text-align: right; font-weight: 700">{{r.n}}개</span>
+            </li>
+          </sc-for>
+        </ol>
+      </section>
+      <section aria-labelledby="w" style="flex: 1 1 400px; min-width: 0; border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 14px">
+        <h2 id="w" style="margin: 0; font-size: 18px; font-weight: 700">함께 많이 쓴 태그</h2>
+        <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px">
+          <sc-for list="{{withTags}}" as="t" hint-placeholder-count="6">
+            <li><a href="Tag.dc.html" style="display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border: 1px solid #E4E0D8; border-radius: 999px; color: #1F2328; font-size: 14px; font-weight: 600">#{{t.name}} <span style="font-size: 12px; color: #6B6560">{{t.n}}개</span></a></li>
+          </sc-for>
+        </ul>
+      </section>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2000}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { tab: 'today', list: 'live' }; }
+  renderVals() {
+    const s = this.state;
+    const seg = (on) => on
+      ? 'height: 36px; padding: 0 14px; border: 0; border-radius: 9px; background: #FFFFFF; color: #1F2328; font-size: 13px; font-weight: 700; box-shadow: 0 1px 3px rgba(15,23,42,0.12)'
+      : 'height: 36px; padding: 0 14px; border: 0; border-radius: 9px; background: transparent; color: #57524C; font-size: 13px; font-weight: 600';
+    const mk = (key, list) => list.map(([id, label]) => ({ label, on: s[key] === id, style: seg(s[key] === id), pick: () => this.setState({ [key]: id }) }));
+    const kpis = [
+      ['지금 방송 수', '23개', '지난주 같은 시각보다 ▲ 4개', '#047857'],
+      ['지금 시청자', '18,420명', '지난주 같은 시각보다 ▲ 18%', '#047857'],
+      ['방송당 시청자', '801명', '전체 태그 중간값의 1.2배', '#6B6560'],
+      ['오늘 이 태그를 쓴 채널', '38개', '어제 31개', '#6B6560'],
+    ].map(([label, value, sub, c]) => ({ label, value, sub, subStyle: `font-size: 13px; font-weight: 600; color: ${c}` }));
+    const tabs = mk('tab', [['today', '오늘'], ['yesterday', '어제'], ['7d', '7일'], ['30d', '30일']]);
+    const sets = {
+      today: { v: [3,2,2,2,3,4,5,6,7,8,9,11,12,14,16,18,null,null,null,null,null,null,null,null], c: [6,5,4,4,5,6,8,10,11,12,14,15,17,19,21,23,null,null,null,null,null,null,null,null], labels: ['0시', '6시', '12시', '18시', '23시'] },
+      yesterday: { v: [9,6,4,3,2,2,3,4,5,6,7,8,9,10,12,13,15,17,19,20,19,17,14,11], c: [14,10,7,5,4,4,5,6,8,9,11,12,13,15,16,18,20,22,24,25,24,22,19,16], labels: ['0시', '6시', '12시', '18시', '23시'] },
+      '7d': { v: [12,13,12,14,16,19,17], c: [16,17,16,18,20,24,22], labels: ['월', '화', '수', '목', '금', '토', '일'] },
+      '30d': { v: Array.from({ length: 30 }, (_, i) => 9 + i * 0.25 + (i % 7 >= 5 ? 3 : 0)), c: Array.from({ length: 30 }, (_, i) => 13 + i * 0.25 + (i % 7 >= 5 ? 4 : 0)), labels: ['10/18', '10/25', '11/1', '11/8', '11/16'] },
+    };
+    const d = sets[s.tab];
+    const N = d.v.length;
+    const chart = {
+      cols: d.v.map((v, i) => ({ tip: v == null ? '아직 집계 전' : `시청자 ${v}천 명 · 방송 ${d.c[i]}개`, bar: `flex: 1; height: ${v == null ? 0 : v / 22 * 85}%; background: #2F5D7C; border-radius: 2px 2px 0 0` })),
+      vb: `0 0 ${N * 100} 100`,
+      line: d.c.map((c, i) => c == null ? null : `${i * 100 + 50},${(100 - c / 28 * 90).toFixed(1)}`).filter(Boolean).join(' '),
+      labels: d.labels,
+    };
+    const listTabs = mk('list', [['live', '지금 방송 중'], ['week', '7일 동안 사용']]);
+    const liveRows = [['[채널 A]', '치지직', '토크', 3120], ['[채널 B]', '치지직 / [소속사]', '마인크래프트', 2480], ['[채널 C]', '치지직', '토크', 1960], ['[채널 D]', '치지직', '리그 오브 레전드', 1410], ['[채널 E]', '치지직 / [소속사]', '노래', 980], ['[채널 F]', '치지직', '토크', 870], ['[채널 G]', '치지직', '피크', 760], ['[채널 H]', '치지직', '토크', 640], ['[채널 I]', '치지직', '종합 게임', 520], ['[채널 J]', '치지직', '토크', 410]];
+    const weekRows = [['[채널 B]', '치지직 / [소속사]', '마인크래프트', 2210], ['[채널 A]', '치지직', '토크', 1980], ['[채널 K]', '치지직', '노래', 1540], ['[채널 C]', '치지직', '토크', 1320], ['[채널 L]', '치지직', '리그 오브 레전드', 1090], ['[채널 D]', '치지직', '리그 오브 레전드', 940], ['[채널 M]', '치지직 / [소속사]', '토크', 820], ['[채널 E]', '치지직 / [소속사]', '노래', 760], ['[채널 N]', '치지직', '피크', 610], ['[채널 F]', '치지직', '토크', 480]];
+    const rows = s.list === 'live' ? liveRows : weekRows;
+    const top = rows[0][3];
+    const channels = rows.map(([name, sub, game, v], i) => ({ rank: i + 1, name, sub, game, live: s.list === 'live', viewers: `${v.toLocaleString('ko-KR')}명`, bar: `width: ${Math.round(v / top * 100)}%; background: #2F5D7C; border-radius: 999px` }));
+    const games = [['토크', 9], ['마인크래프트', 4], ['리그 오브 레전드', 3], ['노래', 3], ['피크', 2]].map(([name, n]) => ({ name, n, bar: `width: ${Math.round(n / 9 * 100)}%; background: #3D3A36; border-radius: 999px` }));
+    const withTags = [['버츄얼', 19], ['소통', 14], ['첫방송', 8], ['노래', 6], ['합방', 4], ['공포', 3]].map(([name, n]) => ({ name, n }));
+    return { kpis, tabs, chart, listTabs, channels, games, withTags,
+      listTitle: s.list === 'live' ? '#신입 태그로 지금 방송 중인 채널' : '최근 7일 #신입 태그를 쓴 채널',
+      moreLabel: s.list === 'live' ? '23개 모두 보기' : '38개 모두 보기' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>채널 방송 통계</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#FBFAF7}
+a{color:#2F5D7C;text-decoration:none}a:hover{color:#22475F}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="min-height: 100%; background: #FBFAF7; font-family: Inter, 'Noto Sans KR', sans-serif; color: #1F2328; font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased">
+  <header style="background: #FFFFFF; border-bottom: 1px solid #E4E0D8">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 0 32px; height: 72px; display: flex; align-items: center; gap: 40px; flex-wrap: wrap">
+      <a href="#" style="font-size: 24px; font-weight: 700; color: #1F2328; letter-spacing: -0.02em">VDébut</a>
+      <nav aria-label="주요 메뉴" style="display: flex; gap: 28px; font-size: 15px; font-weight: 600">
+        <a href="#" style="color: #57524C">데뷔 캘린더</a>
+        <a href="#" style="color: #57524C">버튜버 탐색</a>
+        <a href="Main.dc.html" aria-current="page" style="color: #2F5D7C; border-bottom: 2px solid #2F5D7C; padding-bottom: 4px">방송 통계</a>
+      </nav>
+    </div>
+  </header>
+
+  <main style="max-width: 1280px; margin: 0 auto; padding: 24px 32px 72px; display: flex; flex-direction: column; gap: 44px">
+    <nav aria-label="경로" style="display: flex; justify-content: space-between; font-size: 13px; color: #6B6560"><span><a href="Main.dc.html">방송 통계</a> / 채널</span></nav>
+
+    <section style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center">
+      <span aria-hidden="true" style="width: 88px; height: 88px; border-radius: 50%; background: #E6E2DA; flex-shrink: 0"></span>
+      <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+        <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em">[채널 이름]</h1>
+        <p style="margin: 0; font-size: 15px; color: #3D3A36; display: flex; align-items: center; gap: 8px"><img src="/_blob/af83299f810965a478532a41f1074b69" alt="" style="width: 20px; height: 20px; object-fit: contain">치지직 / [소속사]</p>
+        <p style="margin: 0; font-size: 14px; color: #6B6560">팔로워 128,400명</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end">
+        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #DC2626"></span>방송 중 · 4,496명 · 마인크래프트</span>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap">
+          <a href="#" style="height: 50px; padding: 0 16px; display: inline-flex; align-items: center; border-radius: 10px; background: #1F2328; color: #FFFFFF; font-size: 14px; font-weight: 700">방송 보기</a>
+          <a href="#" aria-label="[채널 이름]의 치지직 공식 채널 열기 (새 창)" style="height: 50px; padding: 0 12px; display: inline-flex; align-items: center; border-radius: 10px; background: #00FFA3"><img src="/_blob/66c17cfa33a68a0a5c5de687c856671a" alt="치지직" style="height: 24px; width: auto; display: block"></a>
+          <a href="#" style="height: 50px; padding: 0 16px; display: inline-flex; align-items: center; border-radius: 10px; border: 1px solid #D6D1C7; color: #1F2328; font-size: 14px; font-weight: 600">소개 보기</a>
+        </div>
+      </div>
+    </section>
+
+    <div role="group" aria-label="기간" style="display: flex; gap: 4px; background: #ECE8E0; border-radius: 12px; padding: 4px; align-self: flex-start">
+      <sc-for list="{{periods}}" as="p" hint-placeholder-count="3"><button type="button" aria-pressed="{{p.on}}" onClick="{{p.pick}}" style="{{p.style}}">{{p.label}}</button></sc-for>
+    </div>
+
+    <section aria-label="요약" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+      <sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+        <div style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 13px; font-weight: 600; color: #6B6560">{{k.label}}</span>
+          <strong style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em">{{k.value}}</strong>
+          <span style="{{k.deltaStyle}}">{{k.delta}}</span>
+        </div>
+      </sc-for>
+    </section>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 20px">
+      <section aria-labelledby="trend" style="flex: 3 1 600px; min-width: 0; border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px">
+          <h2 id="trend" style="margin: 0; font-size: 17px; font-weight: 700">시청자 추이</h2>
+          <div style="display: flex; gap: 14px; font-size: 13px; color: #3D3A36">
+            <span style="display: flex; gap: 6px; align-items: center"><span aria-hidden="true" style="width: 16px; height: 3px; background: #1F2328"></span>평균</span>
+            <span style="display: flex; gap: 6px; align-items: center"><span aria-hidden="true" style="width: 16px; border-top: 2px dashed #D9480F"></span>최고</span>
+          </div>
+        </div>
+        <svg viewBox="0 0 900 200" preserveAspectRatio="none" role="img" aria-label="기간 동안의 일별 평균·최고 시청자" style="width: 100%; height: 200px; display: block">
+          <line x1="0" y1="199" x2="900" y2="199" stroke="#D6D1C7" stroke-width="1"></line>
+          <polyline points="{{chart.peak}}" fill="none" stroke="#D9480F" stroke-width="2" stroke-dasharray="6 5"></polyline>
+          <polyline points="{{chart.avg}}" fill="none" stroke="#1F2328" stroke-width="2.5"></polyline>
+        </svg>
+        <div aria-hidden="true" style="display: flex; justify-content: space-between; font-size: 12px; color: #7A746D"><sc-for list="{{chart.labels}}" as="l" hint-placeholder-count="5"><span>{{l}}</span></sc-for></div>
+      </section>
+
+      <section aria-labelledby="games" style="flex: 2 1 360px; min-width: 0; border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 14px">
+        <h2 id="games" style="margin: 0; font-size: 17px; font-weight: 700">게임 구성</h2>
+        <ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px">
+          <sc-for list="{{games}}" as="g" hint-placeholder-count="4">
+            <li style="display: flex; flex-direction: column; gap: 6px">
+              <div style="display: flex; justify-content: space-between; font-size: 14px"><a href="Game.dc.html" style="font-weight: 700; color: #1F2328">{{g.name}}</a><span>방송 시간 {{g.share}} · 평균 {{g.avg}}</span></div>
+              <div aria-hidden="true" style="height: 8px; border-radius: 999px; background: #EFECE6; overflow: hidden; display: flex"><span style="{{g.bar}}"></span></div>
+            </li>
+          </sc-for>
+        </ol>
+      </section>
+    </div>
+
+    <section aria-labelledby="ctags" style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 14px">
+      <div>
+        <h2 id="ctags" style="margin: 0; font-size: 17px; font-weight: 700">자주 쓰는 태그</h2>
+        <p style="margin: 4px 0 0; font-size: 13px; color: #6B6560">기간 동안 방송에 단 태그와 그 태그를 단 방송의 평균 시청자</p>
+      </div>
+      <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 10px">
+        <sc-for list="{{ctags}}" as="t" hint-placeholder-count="6">
+          <li style="display: flex; flex-direction: column; gap: 2px; border: 1px solid #E4E0D8; border-radius: 12px; padding: 10px 14px; min-width: 120px">
+            <span style="font-weight: 700">#{{t.name}}</span>
+            <span style="font-size: 13px; color: #3D3A36">{{t.times}}회 · 평균 {{t.avg}}</span>
+          </li>
+        </sc-for>
+      </ul>
+    </section>
+
+    <section aria-labelledby="time" style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 14px">
+      <div>
+        <h2 id="time" style="margin: 0; font-size: 17px; font-weight: 700">방송 시간대</h2>
+        <p style="margin: 4px 0 0; font-size: 13px; color: #6B6560">요일·시간대별 방송한 비율</p>
+      </div>
+      <div style="overflow-x: auto">
+        <div style="min-width: 680px; display: flex; flex-direction: column; gap: 3px">
+          <div aria-hidden="true" style="display: grid; grid-template-columns: 28px repeat(24, minmax(0, 1fr)); gap: 3px; font-size: 11px; color: #7A746D"><span></span><sc-for list="{{hours}}" as="h" hint-placeholder-count="24"><span style="text-align: center">{{h}}</span></sc-for></div>
+          <sc-for list="{{heat}}" as="row" hint-placeholder-count="7">
+            <div style="display: grid; grid-template-columns: 28px repeat(24, minmax(0, 1fr)); gap: 3px; align-items: center">
+              <span style="font-size: 12px; font-weight: 600; color: #3D3A36">{{row.day}}</span>
+              <sc-for list="{{row.cells}}" as="c" hint-placeholder-count="24"><span title="{{c.tip}}" style="{{c.style}}"></span></sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="log" style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 12px">
+      <h2 id="log" style="margin: 0; font-size: 17px; font-weight: 700">방송 기록</h2>
+      <div style="overflow-x: auto">
+        <table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px">
+          <thead><tr style="color: #57524C; font-size: 12px; text-align: left; border-bottom: 1px solid #E4E0D8">
+            <th scope="col" style="padding: 10px 8px; font-weight: 600">날짜</th>
+            <th scope="col" style="padding: 10px 8px; font-weight: 600">제목</th>
+            <th scope="col" style="padding: 10px 8px; font-weight: 600">게임</th>
+            <th scope="col" style="padding: 10px 8px; font-weight: 600; text-align: right">방송 시간</th>
+            <th scope="col" style="padding: 10px 8px; font-weight: 600; text-align: right">평균</th>
+            <th scope="col" style="padding: 10px 8px; font-weight: 600; text-align: right">최고</th>
+          </tr></thead>
+          <tbody>
+            <sc-for list="{{log}}" as="r" hint-placeholder-count="6">
+              <tr style="border-bottom: 1px solid #EFECE6">
+                <td style="padding: 12px 8px; white-space: nowrap">{{r.date}}</td>
+                <td style="padding: 12px 8px; color: #3D3A36; max-width: 320px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.title}}</td>
+                <td style="padding: 12px 8px"><a href="Game.dc.html" style="color: #1F2328">{{r.game}}</a></td>
+                <td style="padding: 12px 8px; text-align: right; color: #3D3A36">{{r.dur}}</td>
+                <td style="padding: 12px 8px; text-align: right; font-weight: 700">{{r.avg}}</td>
+                <td style="padding: 12px 8px; text-align: right; color: #3D3A36">{{r.peak}}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <button type="button" style="align-self: center; height: 44px; padding: 0 20px; border: 1px solid #D6D1C7; border-radius: 10px; background: #FFFFFF; font-size: 14px; font-weight: 600; color: #1F2328">기록 더 보기</button>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2350}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { period: '30d' }; }
+  renderVals() {
+    const s = this.state;
+    const seg = (on) => on
+      ? 'height: 38px; padding: 0 16px; border: 0; border-radius: 9px; background: #FFFFFF; color: #1F2328; font-size: 13px; font-weight: 700; box-shadow: 0 1px 3px rgba(15,23,42,0.12)'
+      : 'height: 38px; padding: 0 16px; border: 0; border-radius: 9px; background: transparent; color: #57524C; font-size: 13px; font-weight: 600';
+    const periods = [['7d', '7일'], ['30d', '30일'], ['90d', '90일']].map(([id, label]) => ({ label, on: s.period === id, style: seg(s.period === id), pick: () => this.setState({ period: id }) }));
+    const by = {
+      '7d': [['3,920명', '지난 7일보다 ▲ 8%', true], ['8,140명', '11월 14일', null], ['26시간 40분', '지난 7일보다 ▼ 4%', false], ['6회', '지난 7일과 같음', null]],
+      '30d': [['3,610명', '지난 30일보다 ▲ 21%', true], ['9,880명', '11월 2일', null], ['112시간 10분', '지난 30일보다 ▲ 6%', true], ['24회', '지난 30일보다 ▲ 2회', true]],
+      '90d': [['3,100명', '지난 90일보다 ▲ 37%', true], ['9,880명', '11월 2일', null], ['318시간', '지난 90일보다 ▲ 12%', true], ['71회', '지난 90일보다 ▲ 9회', true]],
+    };
+    const labels = ['평균 시청자', '최고 시청자', '기록된 방송 시간', '방송 횟수'];
+    const kpis = by[s.period].map(([value, delta, up], i) => ({ label: labels[i], value, delta, deltaStyle: `font-size: 13px; font-weight: 600; color: ${up === true ? '#047857' : up === false ? '#B91C1C' : '#6B6560'}` }));
+    const n = s.period === '7d' ? 7 : s.period === '30d' ? 30 : 90;
+    const avg = Array.from({ length: n }, (_, i) => 2600 + i * (1200 / n) + Math.round(Math.sin(i * 1.3) * 420));
+    const peak = avg.map((v, i) => v * 1.9 + Math.round(Math.cos(i) * 600));
+    const P = (a) => a.map((v, i) => `${Math.round(i * 900 / (a.length - 1))},${Math.round(198 - v / 11000 * 194)}`).join(' ');
+    const chart = { avg: P(avg), peak: P(peak), labels: s.period === '7d' ? ['11/10', '11/12', '11/14', '11/16'] : s.period === '30d' ? ['10/18', '10/25', '11/1', '11/8', '11/16'] : ['8/19', '9/16', '10/14', '11/16'] };
+    const games = [['마인크래프트', 46, '4,120명'], ['토크', 28, '3,380명'], ['리그 오브 레전드', 17, '2,940명'], ['피크', 9, '3,710명']].map(([name, share, a]) => ({ name, share: `${share}%`, avg: a, bar: `width: ${share}%; background: #3D3A36` }));
+    const scale = ['#EAF5EE', '#BFE3CB', '#7CC59A', '#2F9E63', '#13693F'];
+    const hours = Array.from({ length: 24 }, (_, h) => (h % 3 === 0 ? String(h) : ''));
+    const heat = ['월', '화', '수', '목', '금', '토', '일'].map((day, d) => ({ day, cells: Array.from({ length: 24 }, (_, h) => {
+      const on = d !== 2 && (h >= 20 || h <= 1);
+      const v = on ? (d >= 4 ? 4 : 3) : (d === 5 && h >= 15 && h <= 18 ? 2 : 0);
+      return { tip: `${day} ${h}시`, style: `display: block; height: 22px; border-radius: 4px; background: ${scale[v]}` };
+    }) }));
+    const log = [['11월 16일 (일)', '마크 서버 2부 건축 이어서', '마인크래프트', '4시간 20분', '4,310명', '6,020명'], ['11월 15일 (토)', '주말 저녁 수다', '토크', '3시간', '3,540명', '5,180명'], ['11월 14일 (금)', '공포게임 같이 해요', '피크', '2시간 40분', '4,880명', '8,140명'], ['11월 13일 (목)', '솔랭 올리기', '리그 오브 레전드', '3시간 10분', '2,960명', '4,020명'], ['11월 11일 (화)', '마크 서버 1부', '마인크래프트', '5시간', '3,990명', '5,770명']].map(([date, title, game, dur, avg, pk]) => ({ date, title, game, dur, avg, peak: pk }));
+    const ctags = [['버츄얼', 24, '3,610명'], ['마크', 11, '4,120명'], ['소통', 9, '3,380명'], ['합방', 4, '5,240명'], ['신입', 3, '2,870명'], ['공포', 2, '4,880명']].map(([name, times, avg]) => ({ name, times, avg }));
+    return { ctags, periods, kpis, chart, games, hours, heat, log };
+  }
+}
+</script>
+</body>
+</html>
