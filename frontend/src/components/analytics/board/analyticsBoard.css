@@ -147,9 +147,12 @@
 /* ② 흐름과 해석: 넓은 그래프 + 오른쪽 브리핑 */
 .ab-layout { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
 .ab-span-2 { grid-column: span 2; }
+.ab-span-3 { grid-column: 1 / -1; }
 .ab-insight { margin: 4px 0 0; font-size: 15px; font-weight: 600; color: var(--ab-ink); line-height: 1.5; }
 .ab-section h2 + .ab-insight { margin-top: 4px; }
-.ab-section-head h2 { font-size: 13px; font-weight: 700; color: var(--ab-sub); }
+/* 섹션 제목은 작은 회색 라벨, 그 아래 해석 한 줄이 주인공이다. */
+.ab .ab-section h2 { font-size: 13px; font-weight: 700; color: var(--ab-sub); }
+.ab-section > h2 + .ab-note, .ab-section > div > h2 + .ab-note { margin-top: -4px; }
 .ab-brief { gap: 14px; }
 .ab-brief h2 { font-size: 13px; color: var(--ab-sub); }
 .ab-brief .ab-lede { margin: 0; font-size: 14px; line-height: 1.7; }
@@ -171,7 +174,7 @@
 .ab-share-legend li { display: inline-flex; align-items: center; gap: 6px; }
 .ab-share-legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
 .ab-share-legend b { color: var(--ab-ink); }
-.ab-comp { font-size: 11px !important; font-weight: 700 !important; padding: 1px 6px; border-radius: 4px; }
+.ab-comp { font-size: 11px !important; font-weight: 700 !important; font-style: normal; padding: 1px 6px; border-radius: 4px; }
 .ab-comp-여유 { background: #E8F6EF; color: var(--ab-up) !important; }
 .ab-comp-보통 { background: var(--ab-track); color: var(--ab-text) !important; }
 .ab-comp-혼잡 { background: #FDEEEE; color: var(--ab-down) !important; }

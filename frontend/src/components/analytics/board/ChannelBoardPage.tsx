@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { AnalyticsChannelBoard, ChannelPeriod } from '../../../../../shared/analyticsBoard';
-import { ComboChart, HBars, Lede, PlatformIcon, Seg, asOfLabel, gamePath, linkProps, num, people, platformLine, tagPath, useHourlyData } from './boardParts';
+import { ComboChart, Lede, PlatformIcon, Seg, ShareBar, Sparkline, asOfLabel, gamePath, linkProps, num, people, platformLine, tagPath, useHourlyData } from './boardParts';
 import './analyticsBoard.css';
 
 const SCALE = ['#EEF4FF', '#C9DAFB', '#8FB1F2', '#4A7FE0', '#1D4FB8'];
@@ -39,6 +39,20 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
   const cuts = [0.2, 0.4, 0.6, 0.8].map((q) => filled[Math.min(filled.length - 1, Math.floor(filled.length * q))] ?? 0);
   const step = (v: number) => cuts.filter((cut) => v > cut).length;
   const ch = data?.channel;
+  const knownDays = (data?.trend || []).filter((d) => d.avg !== null);
+  const bestDay = knownDays.length ? knownDays.reduce((a, b) => ((b.avg || 0) > (a.avg || 0) ? b : a)) : null;
+  const bestGame = (data?.games || []).some((g) => g.avg !== null);
+  // 방송 습관: 가장 자주 방송한 요일들과 3시간 구간.
+  const habit = (() => {
+    const heat = data?.heat || [];
+    if (!heat.length) return '';
+    const byDay = heat.map((row) => row.reduce((s, v) => s + v, 0));
+    const byHour = Array.from({ length: 24 }, (_, h) => heat.reduce((s, row) => s + row[h], 0));
+    if (!byHour.some((v) => v > 0)) return '';
+    const start = byHour.reduce((best, _, h) => (byHour[h] + byHour[(h + 1) % 24] + byHour[(h + 2) % 24] > byHour[best] + byHour[(best + 1) % 24] + byHour[(best + 2) % 24] ? h : best), 0);
+    const topDays = byDay.map((v, d) => ({ v, d })).sort((a, b) => b.v - a.v).slice(0, 2).filter((x) => x.v > 0).map((x) => DAYS[x.d]);
+    return `주로 ${topDays.join('·')}요일, ${start}~${(start + 3) % 24}시에 방송해요`;
+  })();
 
   return <div className="ab">
     <main className="ab-main">
@@ -72,37 +86,58 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
         </div>
 
         {data.kpis.broadcasts === 0 ? <p className="ab-empty">이 기간에는 집계 범위 안에서 기록된 방송이 없어요. <a {...linkProps('/analytics/method', onNavigate)}>집계 기준</a></p> : <>
-          <dl className="ab-kv ab-kpis">
-            <div><dt>평균 시청자</dt><dd className="ab-kv-large">{data.kpis.avg !== null ? people(data.kpis.avg) : '—'}</dd><Delta now={data.kpis.avg} before={data.kpis.prev?.avg} /></div>
-            <div><dt>최고 시청자</dt><dd className="ab-kv-large">{data.kpis.peak !== null ? people(data.kpis.peak) : '—'}</dd>{data.kpis.peakDate && <span className="ab-note">{data.kpis.peakDate.slice(5).replace('-', '월 ')}일</span>}</div>
-            <div><dt>기록된 방송 시간</dt><dd className="ab-kv-large">{hours(data.kpis.minutes)}</dd><Delta now={data.kpis.minutes} before={data.kpis.prev?.minutes} /></div>
-            <div><dt>방송 횟수</dt><dd className="ab-kv-large">{num(data.kpis.broadcasts)}회</dd><Delta now={data.kpis.broadcasts} before={data.kpis.prev?.broadcasts} unit="회" /></div>
-          </dl>
+          {/* ① 한눈에 */}
+          <section className="ab-kpis-grid" aria-label="기간 요약">
+            <article className="ab-kpi ab-kpi-hero">
+              <header>평균 시청자</header>
+              <div className="ab-kpi-value"><strong>{data.kpis.avg !== null ? num(data.kpis.avg) : '—'}</strong>{data.kpis.avg !== null && <span>명</span>}</div>
+              <Delta now={data.kpis.avg} before={data.kpis.prev?.avg} />
+              <Sparkline values={data.trend.map((d) => d.avg)} />
+            </article>
+            <article className="ab-kpi">
+              <header>최고 시청자</header>
+              <div className="ab-kpi-value"><strong>{data.kpis.peak !== null ? num(data.kpis.peak) : '—'}</strong>{data.kpis.peak !== null && <span>명</span>}</div>
+              {data.kpis.peakDate && <p>{Number(data.kpis.peakDate.slice(5, 7))}월 {Number(data.kpis.peakDate.slice(8, 10))}일 방송</p>}
+            </article>
+            <article className="ab-kpi">
+              <header>기록된 방송 시간</header>
+              <div className="ab-kpi-value"><strong>{Math.floor(data.kpis.minutes / 60)}</strong><span>시간</span></div>
+              <Delta now={data.kpis.minutes} before={data.kpis.prev?.minutes} />
+            </article>
+            <article className="ab-kpi">
+              <header>방송 횟수</header>
+              <div className="ab-kpi-value"><strong>{num(data.kpis.broadcasts)}</strong><span>회</span></div>
+              <p>한 번에 평균 <b>{hours(Math.round(data.kpis.minutes / Math.max(1, data.kpis.broadcasts) / 10) * 10)}</b></p>
+            </article>
+          </section>
 
           <Lede text={data.summary} />
 
-          <div className="ab-cols">
-            <section className="ab-section" aria-labelledby="ab-ch-trend" style={{ flex: '3 1 560px' }}>
-              <h2 id="ab-ch-trend">시청자 추이</h2>
+          {/* ② 흐름 + 무엇을 하나 */}
+          <div className="ab-layout">
+            <section className="ab-section ab-span-2" aria-labelledby="ab-ch-trend">
+              <div><h2 id="ab-ch-trend">시청자 추이</h2>{bestDay && <p className="ab-insight">{Number(bestDay.date.slice(5, 7))}월 {Number(bestDay.date.slice(8, 10))}일에 가장 많이 봤어요 · 하루 평균 {people(bestDay.avg)}</p>}</div>
               <div className="ab-legend"><span><i style={{ width: 10, height: 10, background: 'var(--ab-bar)', borderRadius: 2 }} />하루 평균</span><span><i style={{ width: 14, height: 2, background: 'var(--ab-accent)' }} />하루 최고</span></div>
               <ComboChart height={200} maxBarWidth={days === 7 ? 32 : days === 30 ? 16 : 8} items={data.trend.map((d, i) => ({ key: d.date, bar: d.avg, line: d.peak, tip: d.avg === null ? `${d.date} 방송 기록 없음` : `${d.date} · 평균 ${people(d.avg)} · 최고 ${people(d.peak)}`, label: days === 7 || (data.trend.length - 1 - i) % (days === 30 ? 7 : 15) === 0 ? d.date.slice(5).replace('-', '/') : '' }))} />
             </section>
-            <section className="ab-section" aria-labelledby="ab-ch-games" style={{ flex: '2 1 320px' }}>
-              <h2 id="ab-ch-games">게임 구성</h2>
-              <p className="ab-note">방송 시간 비율 · 그 콘텐츠에서의 평균 시청자</p>
-              <HBars rows={data.games.map((g) => ({ key: g.name, name: g.isGame ? <a {...linkProps(gamePath(g.name), onNavigate)}>{g.name}</a> : <span>{g.name}</span>, value: g.share, text: `${g.share}%${g.avg !== null ? ` · ${people(g.avg)}` : ''}` }))} />
+            <section className="ab-section ab-brief" aria-labelledby="ab-ch-games">
+              <h2 id="ab-ch-games">무엇을 방송하나</h2>
+              {data.games[0] && <p className="ab-insight" style={{ marginTop: -6 }}>방송 시간의 {data.games[0].share}%를 「{data.games[0].name}」에 썼어요</p>}
+              <ShareBar items={data.games.slice(0, 4).map((g) => ({ key: g.name, label: g.name, value: g.share }))} other={Math.max(0, 100 - data.games.slice(0, 4).reduce((s, g) => s + g.share, 0))} />
+              {bestGame && <div className="ab-brief-block"><h3>콘텐츠별 평균 시청자</h3>
+                <ol className="ab-mini-list">{[...data.games].filter((g) => g.avg !== null).sort((a, b) => (b.avg || 0) - (a.avg || 0)).slice(0, 4).map((g) => <li key={g.name}>{g.isGame ? <a {...linkProps(gamePath(g.name), onNavigate)}>{g.name}</a> : <span>{g.name}</span>}<b>{people(g.avg)}</b></li>)}</ol></div>}
             </section>
           </div>
 
           {data.tags?.length > 0 && <section className="ab-section" aria-labelledby="ab-ch-tags">
-            <h2 id="ab-ch-tags">자주 쓰는 태그</h2>
+            <div><h2 id="ab-ch-tags">자주 쓰는 태그</h2><p className="ab-insight">#{data.tags[0].tag} 태그를 가장 자주 달았어요 ({data.tags[0].broadcasts}회)</p></div>
             <p className="ab-note">기간 동안 방송에 단 태그 · 그 태그를 단 방송의 평균 시청자</p>
             <ul className="ab-chips">{data.tags.map((t) => <li key={t.tag}><a {...linkProps(tagPath(t.tag), onNavigate)}>#{t.tag} <small>{t.broadcasts}회{t.avg !== null ? ` · 평균 ${people(t.avg)}` : ''}</small></a></li>)}</ul>
           </section>}
 
           <section className="ab-section" aria-labelledby="ab-ch-heat">
-            <h2 id="ab-ch-heat">방송 시간대</h2>
-            <p className="ab-note">요일·시간대별로 방송한 비율</p>
+            <div><h2 id="ab-ch-heat">방송 시간대</h2>{habit && <p className="ab-insight">{habit}</p>}</div>
+            <p className="ab-note">요일·시간대별로 방송한 비율 · 진할수록 자주 방송해요</p>
             <div className="ab-scroll"><div className="ab-heat">
               <div className="ab-heat-row" aria-hidden="true"><span />{Array.from({ length: 24 }, (_, h) => <span key={h} style={{ textAlign: 'center' }}>{h % 3 === 0 ? h : ''}</span>)}</div>
               {data.heat.map((row, d) => <div className="ab-heat-row" key={DAYS[d]}><b>{DAYS[d]}</b>{row.map((v, h) => <i key={h} title={`${DAYS[d]} ${h}시 · 방송 시간의 ${v}%`} style={{ background: v ? SCALE[step(v)] : 'var(--ab-track)' }} />)}</div>)}
