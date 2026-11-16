@@ -35,7 +35,8 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
   useEffect(() => {
     if (!data || data.coverageDays === undefined || data.coverageDays >= days) return;
     const fallback = ([30, 7] as const).find((d) => d < days && data.coverageDays >= d) || 7;
-    if (fallback !== days) setDays(fallback);
+    // 화면 기간과 주소의 ?days 값을 함께 바꿔, 공유한 주소도 실제로 보이는 기간을 가리키게 한다.
+    if (fallback !== days) pickDays(fallback);
   }, [data, days]);
   const pickDays = (next: ChannelPeriod) => {
     setDays(next);
