@@ -4,7 +4,8 @@ import { activityStreamerPath } from '../../../../../shared/activitySeo';
 
 const HOUR = 3600000;
 export const PLATFORM_ICON = {
-  CHZZK: { src: '/icons/chzzk/chzzk%20Icon_02.png', w: 18, h: 18, name: '치지직' },
+  // 파일 이름에 공백이 있는 원본은 운영 정적 파일 경로에서 찾지 못해, 같은 공식 원본인 chzzk_icon.png를 쓴다.
+  CHZZK: { src: '/icons/chzzk_icon.png', w: 18, h: 18, name: '치지직' },
   SOOP: { src: '/icons/soop/soop_symbol_blue.svg', w: 24, h: 14, name: 'SOOP' },
 } as const;
 

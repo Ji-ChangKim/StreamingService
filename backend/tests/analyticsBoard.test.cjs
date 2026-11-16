@@ -86,12 +86,17 @@ test('게임 분류와 같은 게임 묶기', () => {
   assert.equal(board.isGameCategory('토크'), false);
   assert.equal(board.isGameCategory('종합 게임'), false);
   assert.equal(board.isGameCategory('마인크래프트'), true);
+  assert.equal(board.categoryLabel('talk'), '토크');
 });
-
 test('통계 첫 화면은 정각 회차만 쓰고 플랫폼·게임·채널·태그를 계산한다', async () => {
   stubChzzk();
   const db = fixture();
+  // 분류가 없는 방송은 게임 순위·게임 외 콘텐츠 어디에도 넣지 않는다.
+  db.prepare(`INSERT INTO analytics_broadcast_snapshots (run_id, stream_id, channel_key, channel_name, title, category_id, category_name, viewers) VALUES ('CHZZK:2026-11-16T12:00:00.000Z', 'nocat', 'CHZZK:${'e'.repeat(32)}', 'E', 't', 'unknown', '카테고리 미제공', 50)`).run();
   const data = await board.getAnalyticsBoard(binding(db), 'ALL', 'https://vdebut.live', () => {}, NOW);
+  assert.ok(!data.nonGame.some((g) => g.name.includes('미제공')));
+  assert.ok(!data.games.now.some((g) => g.name.includes('미제공')));
+  assert.equal(data.channels.find((c) => c.channelName === 'E' || c.name === 'E').category, '카테고리 없음');
   assert.equal(data.asOf, '2026-11-16T12:00:00.000Z');
   assert.equal(data.nextAt, '2026-11-16T13:00:00.000Z');
   const card = data.platforms[0];

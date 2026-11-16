@@ -12,7 +12,10 @@ const DAYS = ['월', '화', '수', '목', '금', '토', '일'];
 export function GameBoardPage({ name, onNavigate }: { name: string; onNavigate: (path: string) => void }) {
   const { data, error, loading, missing } = useHourlyData<AnalyticsGameBoard>(`/api/analytics/board/game?name=${encodeURIComponent(name)}`);
   useEffect(() => { document.title = `${data?.name || name} 방송 통계 · 시청자·방송 수·시간대 | VDébut`; }, [data, name]);
-  const heatMax = Math.max(1, ...(data?.heat.flat() || [0]));
+  // 대회 같은 한두 시간의 큰 값이 색을 독차지하지 않도록, 기록 있는 칸을 다섯 구간(분위)으로 나눠 칠한다.
+  const filled = (data?.heat.flat() || []).filter((v) => v > 0).sort((a, b) => a - b);
+  const cuts = [0.2, 0.4, 0.6, 0.8].map((q) => filled[Math.min(filled.length - 1, Math.floor(filled.length * q))] ?? 0);
+  const step = (v: number) => (v <= 0 ? 0 : cuts.filter((cut) => v > cut).length);
   const topMax = Math.max(1, ...(data?.top.map((t) => t.peak) || [0]));
 
   return <div className="ab">
@@ -55,7 +58,7 @@ export function GameBoardPage({ name, onNavigate }: { name: string; onNavigate: 
           <p className="ab-note">요일·시간대별 평균 시청자 · 최근 4주</p>
           <div className="ab-scroll"><div className="ab-heat">
             <div className="ab-heat-row" aria-hidden="true"><span />{Array.from({ length: 24 }, (_, h) => <span key={h} style={{ textAlign: 'center' }}>{h % 3 === 0 ? h : ''}</span>)}</div>
-            {data.heat.map((row, d) => <div className="ab-heat-row" key={DAYS[d]}><b>{DAYS[d]}</b>{row.map((v, h) => <i key={h} title={`${DAYS[d]} ${h}시 · 평균 ${people(v)}`} style={{ background: SCALE[v ? Math.min(4, Math.floor(v / heatMax * 4.999)) : 0] }} />)}</div>)}
+            {data.heat.map((row, d) => <div className="ab-heat-row" key={DAYS[d]}><b>{DAYS[d]}</b>{row.map((v, h) => <i key={h} title={`${DAYS[d]} ${h}시 · 평균 ${people(v)}`} style={{ background: v ? SCALE[step(v)] : 'var(--ab-track)' }} />)}</div>)}
           </div></div>
           <div className="ab-scale"><span>적음</span>{SCALE.map((c) => <i key={c} style={{ background: c }} />)}<span>많음</span></div>
         </section>

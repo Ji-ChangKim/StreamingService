@@ -10,7 +10,10 @@ const DAY = 24 * HOUR;
 const KST = 9 * HOUR;
 const HOURLY = `r.state IN ('available','partial') AND substr(r.scheduled_at, 15, 2) = '00'`;
 const NON_GAME = /토크|talk|캠방|노래|음악|music|먹방|쿡방|요리|그림|아트|art|asmr|운동|피트니스|여행|야외|일상|스포츠|교육|시사|주식|경제|댄스|라디오|chatting|버추얼|virtual|카테고리 미제공|unknown/i;
-const NOT_A_GAME_TITLE = /^(종합\s*게임|기타\s*게임|게임\s*기타|게임)$/;
+const NOT_A_GAME_TITLE = /^(종합\s*게임|기타\s*게임|게임\s*기타|게임|카테고리 미제공|카테고리 미지정|unknown|none)$/i;
+// 플랫폼이 영문 분류 값만 준 경우 화면 이름으로 바꾼다.
+const CATEGORY_LABELS: Record<string, string> = { talk: '토크', music: '음악/노래', art: '그림', mukbang: '먹방', asmr: 'ASMR', sports: '스포츠', cooking: '요리', travel: '여행' };
+export const categoryLabel = (name: string) => CATEGORY_LABELS[name.trim().toLowerCase()] || name.trim();
 const GAME_ALIASES: Record<string, string> = { lol: '리그 오브 레전드', '리그오브레전드': '리그 오브 레전드', leagueoflegends: '리그 오브 레전드', pubg: '배틀그라운드', '배그': '배틀그라운드', minecraft: '마인크래프트', valorant: '발로란트', tft: '전략적 팀 전투' };
 const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -57,7 +60,7 @@ function mergeCategories(rows: CategoryRow[], runCount: Record<Platform, number>
   for (const row of rows) {
     // '종합 게임'처럼 특정 게임이 아닌 분류는 게임 순위와 게임 외 콘텐츠 어디에도 넣지 않는다.
     if (NOT_A_GAME_TITLE.test(row.category_name.trim()) || isGameCategory(row.category_name) !== games || !runCount[row.platform]) continue;
-    const name = games ? gameName(row.category_name) : row.category_name.trim();
+    const name = games ? gameName(row.category_name) : categoryLabel(row.category_name);
     const entry = merged.get(name) || { name, viewers: 0, broadcasts: 0 };
     entry.viewers += row.v / runCount[row.platform];
     entry.broadcasts += row.n / runCount[row.platform];
@@ -100,7 +103,7 @@ async function readRegistered(db: D1Database): Promise<Map<string, Registered>> 
 
 function toChannel(row: { platform: Platform; channelKey: string; name: string; category: string; viewers: number; liveUrl: string | null; imageUrl: string | null }, registered: Map<string, Registered>): BoardChannel {
   const info = registered.get(row.channelKey.toLowerCase());
-  return { channelKey: row.channelKey, name: row.name, platform: row.platform, affiliation: info?.affiliation || '', category: row.category, isGame: isGameCategory(row.category), viewers: row.viewers, liveUrl: row.liveUrl, imageUrl: row.imageUrl, isVtuber: Boolean(info?.isVtuber) };
+  return { channelKey: row.channelKey, name: row.name, platform: row.platform, affiliation: info?.affiliation || '', category: NOT_A_GAME_TITLE.test(row.category.trim()) && /미제공|미지정|unknown|none/i.test(row.category) ? '카테고리 없음' : categoryLabel(row.category), isGame: isGameCategory(row.category), viewers: row.viewers, liveUrl: row.liveUrl, imageUrl: row.imageUrl, isVtuber: Boolean(info?.isVtuber) };
 }
 
 // 태그는 아직 저장하지 않아 정각마다 치지직 인기 방송을 한 번 읽어 쓴다(치지직만, 정의서 6.4).
@@ -208,7 +211,7 @@ export async function getAnalyticsBoard(db: D1Database, platform: BoardPlatform,
   const summaryParts: string[] = [];
   if (top) summaryParts.push(`지금 가장 많이 보는 게임은 「${top.name}」로, 방송 ${won(top.broadcasts)}개에 ${won(top.viewers)}명이 보고 있어요.`);
   if (card?.usualDelta !== null && card?.usualDelta !== undefined && Math.abs(card.usualDelta) >= 5) summaryParts.push(`치지직 시청자는 평소 이 시간보다 ${Math.abs(card.usualDelta)}% ${card.usualDelta > 0 ? '많아요' : '적어요'}.`);
-  const roomy = gamesNow.slice(0, 10).find((game) => game.competition === '여유');
+  const roomy = gamesNow.slice(1, 10).find((game) => game.competition === '여유');
   if (roomy) summaryParts.push(`상위 10개 게임 중 방송당 시청자가 가장 여유로운 곳은 「${roomy.name}」예요.`);
 
   return {
@@ -292,7 +295,7 @@ export async function getAnalyticsTagBoard(db: D1Database, tag: string, origin: 
   const games = new Map<string, number>();
   const withTags = new Map<string, { tag: string; broadcasts: number }>();
   for (const row of rows) {
-    const game = isGameCategory(row.category) ? gameName(row.category) : row.category;
+    const game = isGameCategory(row.category) ? gameName(row.category) : categoryLabel(row.category);
     games.set(game, (games.get(game) || 0) + 1);
     for (const other of new Set(row.tags.map(normalizeBoardTag))) {
       if (!other || other === key) continue;
