@@ -16,6 +16,11 @@
 .vd-ins-stats > div { border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px; }
 .vd-ins-stats span { font-size: 12px; color: #94A3B8; }
 .vd-ins-stats b { display: block; font-size: 22px; font-weight: 800; margin-top: 6px; color: #0F172A; }
+.vd-ins-delta { display: inline-block; margin-top: 6px; font-style: normal; font-size: 12px; font-weight: 750; padding: 2px 8px; border-radius: 999px; }
+.vd-ins-delta.up3 { background: #1E40AF; color: #fff; }
+.vd-ins-delta.up2 { background: #DBE7FB; color: #1D4ED8; }
+.vd-ins-delta.up1 { background: #EEF4FF; color: #3B82F6; }
+.vd-ins-delta.down2 { background: #F1F5F9; color: #64748B; }
 .vd-ins-stats small { font-size: 13px; font-weight: 600; color: #475569; margin-left: 2px; }
 .vd-ins-two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .vd-ins-sub { font-size: 14px; font-weight: 700; margin: 0 0 12px; color: #0F172A; }

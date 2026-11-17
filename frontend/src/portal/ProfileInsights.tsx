@@ -123,7 +123,27 @@ function Summary({ data, days, setDays, openRecord }: { data: AnalyticsChannelBo
   </section>;
 }
 
-// ③ 데뷔 후 성장: 데뷔일부터 주차별 평균 시청자. 데뷔가 90일 안이고 두 주 이상 기록이 있을 때만.
+// ③ 데뷔 후 성장: 데뷔일부터 주차별 평균 시청자. 데뷔 주는 첫 방송 효과로 몰리는 때라 기준에서 빼고,
+// 둘째 주(없으면 그다음 기록된 주)를 기준으로 최근 주와 비교한다. 데뷔 주 뒤로 두 주 이상 기록이 있을 때만 보인다.
+// 6단계: +20%↑ 크게 늘었어요 / +10%↑ 늘었어요 / +5%↑ 조금 늘었어요 / ±5% 비슷해요 / 그 아래는 숫자만 담담하게(빨간색·'줄었어요' 없음).
+export function growthTone(change: number): 'up3' | 'up2' | 'up1' | 'flat' | 'down1' | 'down2' {
+  if (change >= 20) return 'up3';
+  if (change >= 10) return 'up2';
+  if (change >= 5) return 'up1';
+  if (change > -5) return 'flat';
+  if (change > -10) return 'down1';
+  return 'down2';
+}
+function growthHeading(change: number, last: number): string {
+  switch (growthTone(change)) {
+    case 'up3': return t('데뷔 둘째 주보다 시청자가 {0}% 크게 늘었어요', [change]);
+    case 'up2': return t('데뷔 둘째 주보다 시청자가 {0}% 늘었어요', [change]);
+    case 'up1': return t('데뷔 둘째 주보다 시청자가 조금 늘었어요 ({0}%)', [change]);
+    case 'flat': return t('데뷔 후 시청자가 꾸준히 비슷해요');
+    case 'down1': return t('최근 주 평균 시청자는 {0}명, 둘째 주와 거의 비슷해요', [num(last)]);
+    default: return t('최근 주 평균 시청자는 {0}명이에요 · 둘째 주보다 {1}% 적어요', [num(last), Math.abs(change)]);
+  }
+}
 function Growth({ data, profile }: { data: AnalyticsChannelBoard; profile: PortalProfile }) {
   const at = debutTime(profile);
   if (at === null) return null;
@@ -136,26 +156,33 @@ function Growth({ data, profile }: { data: AnalyticsChannelBoard; profile: Porta
   }
   const series = weeks.map((list) => (list && list.length ? Math.round(list.reduce((a, b) => a + b, 0) / list.length) : null));
   const known = series.map((v, i) => ({ v, i })).filter((x): x is { v: number; i: number } => x.v !== null);
-  if (known.length < 2 || known[0].v < 10) return null;
-  const first = known[0], last = known[known.length - 1];
-  const change = Math.round((last.v - first.v) / first.v * 100);
+  const debutWeek = known.find((p) => p.i === 0) || null;
+  const after = known.filter((p) => p.i >= 1);
+  if (after.length < 2 || after[0].v < 10) return null;
+  const base = after[0], last = after[after.length - 1];
+  const change = Math.round((last.v - base.v) / base.v * 100);
+  const tone = growthTone(change);
   const max = Math.max(...known.map((x) => x.v)) * 1.15;
   const w = 640, h = 180, x = (i: number) => 40 + (i / Math.max(1, series.length - 1)) * (w - 70), y = (v: number) => h - 20 - (v / max) * (h - 40);
-  const line = known.map((p) => `${x(p.i)},${y(p.v)}`).join(' ');
+  const line = after.map((p) => `${x(p.i)},${y(p.v)}`).join(' ');
+  const weekLabel = (i: number) => (i === 0 ? t('데뷔 주') : `${i + 1}${t('주')}`);
   return <section className="content-panel vd-ins" aria-labelledby="ins-grow">
     <span className="vd-ins-eyebrow">GROWTH · {t('데뷔 후 {0}주', [series.length])}</span>
-    <h2 id="ins-grow">{change >= 5 ? t('첫 주보다 시청자가 {0}% 늘었어요', [change]) : change <= -5 ? t('첫 주보다 시청자가 {0}% 줄었어요', [Math.abs(change)]) : t('데뷔 후 시청자가 꾸준히 비슷해요')}</h2>
+    <h2 id="ins-grow">{growthHeading(change, last.v)}</h2>
     <div className="vd-ins-stats three">
-      <div><span>{t('첫 주 평균 시청자')}</span><b>{num(first.v)}<small>{t('명')}</small></b></div>
-      <div><span>{t('최근 주 평균 시청자')}</span><b>{num(last.v)}<small>{t('명')}</small></b></div>
-      <div><span>{t('기록된 주')}</span><b>{known.length}<small>{t('주')}</small></b></div>
+      <div><span>{t('데뷔 주 평균 시청자')}</span><b>{debutWeek ? num(debutWeek.v) : '–'}{debutWeek && <small>{t('명')}</small>}</b></div>
+      <div><span>{base.i === 1 ? t('둘째 주 평균 시청자') : t('{0}주 평균 시청자', [base.i + 1])}</span><b>{num(base.v)}<small>{t('명')}</small></b></div>
+      <div><span>{t('최근 주 평균 시청자')}</span><b>{num(last.v)}<small>{t('명')}</small></b>{tone !== 'flat' && tone !== 'down1' && <em className={`vd-ins-delta ${tone}`}>{change > 0 ? '+' : ''}{change}%</em>}</div>
     </div>
-    <svg viewBox={`0 0 ${w} ${h + 10}`} className="vd-ins-chart" role="img" aria-label={t('주차별 평균 시청자: {0}', [known.map((p) => `${p.i + 1}${t('주')} ${p.v}`).join(', ')])}>
+    <svg viewBox={`0 0 ${w} ${h + 10}`} className="vd-ins-chart" role="img" aria-label={t('주차별 평균 시청자: {0}', [known.map((p) => `${weekLabel(p.i)} ${p.v}`).join(', ')])}>
+      {debutWeek && <line x1={x(0)} y1={y(debutWeek.v)} x2={x(base.i)} y2={y(base.v)} stroke="#BFD3F8" strokeWidth="2" strokeDasharray="5 5" />}
       <polyline points={line} fill="none" stroke="#2563EB" strokeWidth="3" strokeLinejoin="round" />
-      {known.map((p) => <circle key={p.i} cx={x(p.i)} cy={y(p.v)} r={p === last ? 5 : 4} fill="#2563EB" />)}
-      {known.map((p) => <text key={`l${p.i}`} x={x(p.i)} y={h + 6} textAnchor="middle" fontSize="15" fill="#94A3B8">{p.i + 1}{t('주')}</text>)}
+      {debutWeek && <circle cx={x(0)} cy={y(debutWeek.v)} r={4} fill="#fff" stroke="#93C5FD" strokeWidth="2" />}
+      {after.map((p) => <circle key={p.i} cx={x(p.i)} cy={y(p.v)} r={p === last ? 5 : 4} fill="#2563EB" />)}
+      {known.map((p) => <text key={`l${p.i}`} x={x(p.i)} y={h + 6} textAnchor="middle" fontSize="15" fill="#94A3B8">{weekLabel(p.i)}</text>)}
       <text x={x(last.i)} y={y(last.v) - 12} textAnchor="middle" fontSize="17" fontWeight="700" fill="#2563EB">{num(last.v)}</text>
     </svg>
+    <p className="vd-ins-note">{t('데뷔 주는 첫 방송을 보러 온 시청자가 몰리는 때라 비교 기준에서 빼고, 둘째 주부터 비교해요.')}</p>
   </section>;
 }
 
