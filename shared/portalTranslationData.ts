@@ -887,6 +887,9 @@ X(트위터) 데뷔 공지 확인하기|||X（Twitter）のデビュー告知を
 데뷔 완료|||デビュー完了|||Debut completed
 데뷔일|||デビュー日|||Debut date
 역사적인 첫 방송 다시보기|||記念すべき初配信アーカイブ|||Debut stream archive
+버튜버 DB|||VTuber DB|||VTuber DB
+버튜버 DB · 데뷔일·소속·방송 기록|||VTuber DB・デビュー日・所属・配信記録|||VTuber DB · Debuts, agencies and stream records
+VDébut에 등록된 버튜버를 한곳에 모았어요. 데뷔일, 소속, 주로 하는 방송과 방송 기록을 보고 마음에 드는 버튜버를 찾아보세요.|||VDébutに登録されたVTuberを一か所に集めました。デビュー日、所属、主な配信内容や配信記録を見て、気になるVTuberを見つけてください。|||Every VTuber registered on VDébut, in one place. Check debut dates, agencies, what they stream and their stream records to find someone you'll love.
 이번 주 데뷔 일정|||今週のデビュー日程|||This week's debuts
 {0} ~ {1}, 한국 시간 기준으로 {2}명이 데뷔해요.|||{0}〜{1}（韓国時間）に{2}人がデビューします。|||{2} VTubers debut between {0} and {1} (Korean time).
 이번 주에는 아직 등록된 데뷔 일정이 없어요. 데뷔 캘린더에서 다른 주 일정을 살펴보세요.|||今週はまだ登録されたデビュー日程がありません。デビューカレンダーで他の週の日程をご覧ください。|||No debuts are registered for this week yet. Check other weeks on the debut calendar.

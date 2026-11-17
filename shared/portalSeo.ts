@@ -12,7 +12,7 @@ export function portalPageSeo(url: URL, profile?: { displayName: string; descrip
   const development = url.hostname !== 'vdebut.live';
   const titles: Record<string, string> = {
     '/': '신규 버튜버 데뷔 캘린더 · 데뷔 일정과 소개', '/upload': '데뷔 일정 등록',
-    '/creators': '버튜버 탐색 · 소개와 방송 콘텐츠', '/creators/register': '버튜버 소개 등록',
+    '/creators': '버튜버 DB · 데뷔일·소속·방송 기록', '/creators/register': '버튜버 소개 등록',
     '/me/favorites': '관심 버튜버', '/about': '버튜버와 팬의 소개팅', '/guide': '이용 가이드',
     '/contact': '문의·정보 정정', '/admin': '등록·문의 검토', '/privacy': '개인정보처리방침', '/terms': '이용약관',
   };
@@ -23,7 +23,7 @@ export function portalPageSeo(url: URL, profile?: { displayName: string; descrip
   const title = profile ? text('{0} · 소개와 데뷔 일정 | VDébut', [profile.displayName]) : `${text((missingProfile ? '버튜버 소개를 찾을 수 없어요' : titles[path]) || (path.startsWith('/submissions/') ? '접수 상태 확인' : '페이지를 찾을 수 없어요'))} | VDébut`;
   const descriptions: Record<string, string> = {
     '/': HOME_INTRO, '/guide': GUIDE_INTRO, '/about': '데뷔 일정과 방송 소개로 버튜버와 팬의 첫 만남을 연결합니다.',
-    '/creators': '주요 콘텐츠와 방송 언어, 데뷔 일정을 살펴보세요. 관심 있는 버튜버는 하트로 저장할 수 있어요.',
+    '/creators': 'VDébut에 등록된 버튜버를 한곳에 모았어요. 데뷔일, 소속, 주로 하는 방송과 방송 기록을 보고 마음에 드는 버튜버를 찾아보세요.',
     '/upload': '방송 채널과 데뷔 일정을 등록하세요. 날짜와 시간이 미정인 일정도 신청할 수 있으며, 운영자 검토 후 공개됩니다.',
     '/creators/register': '활동명, 방송 채널과 나의 소개를 등록하세요. 데뷔 일정 없이도 소개를 신청할 수 있습니다.',
     '/contact': '일정 변경, 소개 수정·삭제, 권리 침해와 부적절한 콘텐츠를 관련 페이지 주소와 함께 알려주세요.',
