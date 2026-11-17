@@ -54,7 +54,6 @@ import {
   getAnalyticsMethodology,
   getCurrentContentDrilldown,
 } from './services/analyticsService';
-import { collectChzzkLiveSnapshot } from './services/chzzkCollector';
 import { getLiveDiscovery } from './services/liveDiscoveryService';
 import { getLiveHistory, getCreatorHistory } from './services/liveHistoryService';
 import { getBroadcastStatistics, getStreamerBroadcastHistory } from './services/broadcastStatisticsService';
@@ -1589,12 +1588,8 @@ export default {
           .catch((err) => console.error('[Scheduled Cron] Profile sync error:', err))
       );
 
-      // 3. 치지직 실시간 라이브 스냅샷 정기 수집
-      ctx.waitUntil(
-        collectChzzkLiveSnapshot(env.DB)
-          .then((res) => console.log('[Scheduled Cron] Chzzk live snapshot collected:', res.collectedCount, 'lives /', res.vtuberMatchCount, 'matched'))
-          .catch((err) => console.error('[Scheduled Cron] Chzzk live snapshot error:', err))
-      );
+      // 3. (중단 2026-11-17) 예전 치지직 매시간 수집(analytics_live_snapshots)은 10분 방송 기록과 내용이 겹치고 정리 없이 쌓여
+      //    무료 플랜의 쓰기·저장 한도를 소모했다. 이 자료를 쓰는 화면이 없어 수집을 멈춘다(기획문서 38번 6항).
 
       // 4. 디스코드 모닝 데뷔 브리핑 발송 (KST 오전 9시 = UTC 00시)
       const nowUtc = new Date();
