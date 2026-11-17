@@ -57,7 +57,7 @@ function CardAvatar({ profile, className = '', size = 80, eager = false }: { pro
 // 타사 스트리밍 플랫폼 공식 브랜딩 로고 (치지직 공식 국문 기본형, SOOP 공식 로고, YouTube 공식 로고)
 function PlatformBrandLogo({ platformId, alt = '' }: { platformId: string; alt?: string }) {
   if (platformId === 'CHZZK') {
-    return <img className="platform-brand-img is-chzzk" src="/icons/chzzk/chzzklogo_kor(Black).png" alt={alt || '치지직'} />;
+    return <img className="platform-brand-img is-chzzk" src="/icons/chzzk/chzzklogo_kor_black.png" alt={alt || '치지직'} />;
   }
   if (platformId === 'SOOP') {
     return <img className="platform-brand-img is-soop" src="/icons/soop/soop_logo_blue.svg" alt={alt || 'SOOP'} />;

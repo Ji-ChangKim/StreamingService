@@ -7,7 +7,7 @@ import { publicResponseCache } from './services/publicResponseCache';
 import { normalizeStreamerQuery } from '../../shared/statisticsStreamerSearch';
 const STATIC_IMAGE_CACHE_CONTROL = 'public, max-age=2592000, stale-while-revalidate=86400';
 import { Hono } from 'hono';
-import { portalApi, readPublicPortalProfiles, readPublicPortalProfileBySlug, portalAdminStreamers, deletePortalProfile } from './services/portalService';
+import { portalApi, readPublicPortalProfiles, readPublicPortalProfilesBetween, readPublicPortalProfileBySlug, portalAdminStreamers, deletePortalProfile } from './services/portalService';
 import { renderPortalPage, portalSitemap } from './services/portalPageService';
 import { portalPageSeo } from '../../shared/portalSeo';
 import { publicBroadcastPayload } from '../../shared/contentReview';
@@ -59,6 +59,7 @@ import { getLiveDiscovery } from './services/liveDiscoveryService';
 import { getLiveHistory, getCreatorHistory } from './services/liveHistoryService';
 import { getBroadcastStatistics, getStreamerBroadcastHistory } from './services/broadcastStatisticsService';
 import { boardCacheSeconds, getAnalyticsBoard, getAnalyticsChannelBoard, getAnalyticsGameBoard, getAnalyticsTagBoard } from './services/analyticsBoardService';
+import type { AnalyticsBoard } from '../../shared/analyticsBoard';
 import { getBroadcastActivity, getActivityBroadcastPage, readActivityCursor } from './services/broadcastActivityService';
 import { activityPeriod, validActivityRange } from '../../shared/broadcastActivity';
 import { collectBroadcastStatistics, pruneStatisticsCollections } from './services/broadcastStatisticsCollection';
@@ -66,6 +67,7 @@ import { searchStatisticsStreamers } from './services/statisticsStreamerSearchSe
 import { registerExternalStreamerToD1 } from './services/externalPlatformSearchService';
 import { ensureStreamerRegistered } from './services/onDemandStreamerService';
 import { activitySitemapEntries, renderActivityPage } from './services/activityPageService';
+import { boardInitialBody, boardPageTitle, methodInitialBody, renderBoardPage } from './services/analyticsBoardPage';
 import { prunePersonalData } from './services/personalDataRetention';
 import { activityNoindex } from '../../shared/activitySeo';
 import { cheerApi, resetWeeklyCheers, WEEKLY_RESET_CRON } from './services/cheerService';
@@ -135,6 +137,16 @@ app.use('*', async (c, next) => {
   if (c.req.method === 'GET' && path !== '/' && path.endsWith('/') && !path.startsWith('/api/') && !path.startsWith('/assets/')) return c.redirect(`${sitePath(path)}${url.search}`, 308);
   // 개발 통계도 전용 렌더러로 보내 실제 초기 본문과 올바른 제목을 제공한다.
   if (c.req.method === 'GET' && !path.startsWith('/api/') && !path.startsWith('/analytics') && !/\.[a-z0-9]+$/i.test(path)) {
+    // 홈·소개 목록·소개 상세의 첫 HTML은 데이터베이스를 읽어 만들므로 정상 응답을 엣지에 잠시 저장한다.
+    // 홈·목록은 1분(목록 API와 같은 주기), 상세는 5분. 관리자 변경 직후 확인은 no-cache 요청으로 저장본을 건너뛴다.
+    const cachePath = sitePath(path);
+    const edgeSeconds = cachePath === '/' || cachePath === '/creators' ? 60 : /^\/creator\/[^/]+$/.test(path) ? 300 : 0;
+    const pageCache = edgeSeconds && !seo.development && typeof caches !== 'undefined' ? (caches as any).default as Cache : undefined;
+    const pageKey = new Request(url.toString(), { method: 'GET' });
+    if (pageCache && !/no-cache|no-store/i.test(c.req.header('Cache-Control') || '')) {
+      const hit = await pageCache.match(pageKey).catch(() => undefined);
+      if (hit) { const cached = new Response(hit.body, hit); cached.headers.set('Cache-Control', 'public, max-age=0, must-revalidate'); cached.headers.set('X-VD-Cache', 'HIT'); return cached; }
+    }
     let profile;
     if (/^\/creator\/[^/]+$/.test(path)) {
       let slug = ''; try { slug = decodeURIComponent(path.slice('/creator/'.length)); } catch { /* 찾을 수 없는 주소로 처리한다. */ }
@@ -143,12 +155,11 @@ app.use('*', async (c, next) => {
     }
     // 소개 목록의 초기 HTML에도 공개 소개 링크를 제공한다. 실패하면 기존 화면 로딩으로 이어간다.
     let profiles: Awaited<ReturnType<typeof readPublicPortalProfiles>> = [];
-    // 목록 첫 HTML은 전체 소개를 읽어 만들므로 정상 응답을 엣지에 1분 저장한다(목록 API와 같은 주기).
-    const creatorsCache = sitePath(path) === '/creators' && !seo.development && typeof caches !== 'undefined' ? (caches as any).default as Cache : undefined;
-    const creatorsKey = new Request(url.toString(), { method: 'GET' });
-    if (creatorsCache && !/no-cache|no-store/i.test(c.req.header('Cache-Control') || '')) {
-      const hit = await creatorsCache.match(creatorsKey).catch(() => undefined);
-      if (hit) { const cached = new Response(hit.body, hit); cached.headers.set('Cache-Control', 'public, max-age=0, must-revalidate'); cached.headers.set('X-VD-Cache', 'HIT'); return cached; }
+    if (cachePath === '/') {
+      // 홈은 이번 주·다음 주·최근 2주 데뷔만 필요하므로 전체 목록 대신 그 기간만 읽는다.
+      const now = Date.now();
+      try { profiles = await readPublicPortalProfilesBetween(c.env.DB, new Date(now - 22 * 86400000).toISOString(), new Date(now + 15 * 86400000).toISOString()); }
+      catch (error) { console.error('[Portal] Initial home schedule failed', String(error)); }
     }
     if (sitePath(path) === '/creators') {
       try { profiles = await readPublicPortalProfiles(c.env.DB); } catch (error) { console.error('[Portal] Initial creator list failed', String(error)); }
@@ -163,9 +174,10 @@ app.use('*', async (c, next) => {
     c.header('Cache-Control', seo.privatePage || missing ? 'no-store' : 'public, max-age=0, must-revalidate');
     const html = renderPortalPage(await response.text(), url, profile, profiles);
     const page: Response = c.html(missing ? html.replace(/content="index, follow"/g, 'content="noindex, nofollow"') : autoChannel ? html.replace(/content="index, follow"/g, 'content="noindex, follow"') : html, missing ? 404 : 200);
-    if (creatorsCache && page.status === 200 && profiles.length) {
-      const stored = new Response(page.clone().body, page); stored.headers.set('Cache-Control', 'public, s-maxage=60');
-      c.executionCtx.waitUntil(creatorsCache.put(creatorsKey, stored).catch(() => undefined));
+    // 목록 읽기에 실패한 응답(빈 목록)은 저장하지 않는다.
+    if (pageCache && page.status === 200 && (cachePath !== '/creators' || profiles.length)) {
+      const stored = new Response(page.clone().body, page); stored.headers.set('Cache-Control', `public, s-maxage=${edgeSeconds}`);
+      c.executionCtx.waitUntil(pageCache.put(pageKey, stored).catch(() => undefined));
     }
     return page;
   }
@@ -1252,6 +1264,24 @@ app.get('/api/analytics/current-content', async (c) => {
 });
 
 // 방송 통계 개편 화면 응답. 10분 회차 단위 키로 엣지에 저장해 다음 회차(수집 여유 2분)까지 재사용한다.
+// 통계 첫 HTML용 보드 자료: /api/analytics/board와 같은 캐시 키(10분 슬롯)를 써서 한 번 계산한 결과를 함께 쓴다.
+async function loadBoardCached(c: any, platform: 'ALL' | 'CHZZK' | 'SOOP'): Promise<AnalyticsBoard> {
+  const key = new URL('/api/analytics/board', c.req.url);
+  key.searchParams.set('platform', platform);
+  key.searchParams.set('slot', new Date(Math.floor(Date.now() / 600000) * 600000).toISOString());
+  key.searchParams.set('v', '4');
+  const cache = typeof caches === 'undefined' ? undefined : (caches as any).default as Cache;
+  const cacheKey = new Request(key.toString());
+  if (cache) {
+    const hit = await cache.match(cacheKey).catch(() => undefined);
+    if (hit && Number(hit.headers.get('X-VD-Cache-Until')) > Date.now()) return await hit.json() as AnalyticsBoard;
+  }
+  const data = await getAnalyticsBoard(c.env.DB, platform, new URL(c.req.url).origin, (p) => c.executionCtx.waitUntil(p));
+  const seconds = boardCacheSeconds(data.asOf);
+  if (cache) c.executionCtx.waitUntil(cache.put(cacheKey, new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'X-VD-Cache-Until': String(Date.now() + seconds * 1000), 'Cache-Control': `public, s-maxage=${seconds}` } })).catch(() => undefined));
+  return data;
+}
+
 async function analyticsBoardResponse(c: any, key: URL, load: () => Promise<{ asOf: string | null } | null>): Promise<Response> {
   key.searchParams.set('slot', new Date(Math.floor(Date.now() / 600000) * 600000).toISOString());
   key.searchParams.set('v', '4');
@@ -1402,7 +1432,32 @@ const renderActivityPageResponse = async (c: any) => {
       c.header('Cache-Control', 'no-store');
       return c.html(publicErrorPage(url, '방송 통계를 불러오지 못했어요', 503), 503);
     }
-  } else if (!['/analytics', '/analytics/chzzk', '/analytics/soop', '/analytics/method'].includes(url.pathname)) {
+  } else if (['/analytics', '/analytics/chzzk', '/analytics/soop', '/analytics/method'].includes(url.pathname)) {
+    // 대표 통계 주소: 예전 활동 집계(무거운 계산·표 나열) 대신 화면과 같은 새 통계를 글로 담는다(첫 응답 3초 → 캐시된 보드 자료).
+    try {
+      const shellRequest = c.env.PORTAL_ENABLED === 'true' ? new Request(new URL(url.hostname === 'vdebut.live' ? '/portal.html' : '/dev.html', c.req.url), c.req.raw) : c.req.raw;
+      const assetPromise = getAssetFromKV({ request: shellRequest, waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, {
+        ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}'),
+        ...(c.env.PORTAL_ENABLED === 'true' ? {} : { mapRequestToAsset: serveSinglePageApp }),
+      });
+      const extraQuery = [...url.searchParams.keys()].some((name) => !['lang', 'gclid', 'fbclid'].includes(name) && !name.startsWith('utm_'));
+      const noindex = url.hostname !== 'vdebut.live' || extraQuery;
+      if (noindex) c.header('X-Robots-Tag', 'noindex, follow');
+      if (url.pathname === '/analytics/method') {
+        c.header('Cache-Control', 'public, max-age=60, s-maxage=3600');
+        return c.html(renderBoardPage(await (await assetPromise).text(), url.pathname, '방송 통계 집계 기준 | VDébut', '치지직·SOOP 방송 통계를 무엇을, 얼마나 자주, 어떤 기준으로 계산하는지 정리했어요.', methodInitialBody(), noindex));
+      }
+      const platform = url.pathname === '/analytics/chzzk' ? 'CHZZK' : url.pathname === '/analytics/soop' ? 'SOOP' : 'ALL';
+      const [asset, board] = await Promise.all([assetPromise, loadBoardCached(c, platform)]);
+      const description = board.summary || '치지직·SOOP에서 지금 어떤 방송을 얼마나 보고 있는지 10분마다 모아 보여 줘요. 실시간 시청자, 인기 게임, 채널·태그 순위를 확인하세요.';
+      c.header('Cache-Control', 'public, max-age=60, s-maxage=120');
+      return c.html(renderBoardPage(await asset.text(), url.pathname, boardPageTitle(platform), description, boardInitialBody(board, platform), noindex));
+    } catch (error) {
+      console.error('[Statistics] Board page failed', String(error));
+      c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex');
+      return c.html(publicErrorPage(url, '방송 통계를 불러오지 못했어요', 503), 503);
+    }
+  } else if (!url.pathname.startsWith('/analytics/streamer/')) {
     c.header('X-Robots-Tag', 'noindex');
     return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404);
   }

@@ -7,7 +7,7 @@ import { readProfileChannelMedia } from './portalChannelMedia';
 import { cleanWikiParticipation } from '../../../shared/wikiParticipation';
 import { broadcastNewDebutToDiscord } from './discordBotService';
 import { portalProfileEvent } from './unifiedEventService';
-export { readPortalProfiles, readPortalProfileBySlug, readPublicPortalProfiles, readPublicPortalProfileBySlug } from './portalProfileRepository';
+export { readPortalProfiles, readPortalProfileBySlug, readPublicPortalProfiles, readPublicPortalProfilesBetween, readPublicPortalProfileBySlug } from './portalProfileRepository';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { verifyAdminLogin, validateAdminToken } from './adminAuthService';

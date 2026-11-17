@@ -19,6 +19,7 @@ export async function portalApi<T>(path: string, options: RequestInit = {}): Pro
 
 // 정상 응답의 빈 목록과 JSON 손상·응답 형식 오류를 구분한다.
 // 목록은 60초 캐시를 쓰고, 관리자 변경 직후의 새로고침(fresh)은 캐시를 건너뛰어 다시 저장한다.
+// 주소를 바꾸면 서버 첫 HTML의 preload 주소(backend/src/services/portalPageService.ts)도 같이 바꿔야 한다.
 export async function fetchPublicProfiles(signal?: AbortSignal, fresh = false): Promise<PortalProfile[]> {
   const data = await portalApi<{ profiles?: PortalProfile[] }>('/profiles?version=3', { signal, ...(fresh ? { cache: 'no-cache' as RequestCache } : {}) });
   if (!Array.isArray(data.profiles)) throw new Error('소개를 불러오지 못했어요');

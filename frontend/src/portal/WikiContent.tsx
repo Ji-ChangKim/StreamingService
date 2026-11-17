@@ -33,7 +33,7 @@ function Platform({ id }: { id: string }) {
 // 플랫폼 필터 바: 공식 가이드라인 준수 로고(밝은 배경용 원본) 렌더러
 function PlatformFilterContent({ id, label }: { id: string; label: string }) {
   if (id === 'CHZZK') {
-    return <img className="platform-filter-logo is-chzzk" src="/icons/chzzk/chzzklogo_kor(Black).png" alt="치지직" />;
+    return <img className="platform-filter-logo is-chzzk" src="/icons/chzzk/chzzklogo_kor_black.png" alt="치지직" />;
   }
   if (id === 'SOOP') {
     return <img className="platform-filter-logo is-soop" src="/icons/soop/soop_logo_blue.svg" alt="SOOP" />;
@@ -77,7 +77,7 @@ function MediaCard({ item, clip = false }: { item: PortalMedia; clip?: boolean }
 function Channels({ profile }: { profile: PortalProfile }) {
   const channels = [{ platform: profile.platform, channelUrl: profile.channelUrl }, ...(profile.additionalChannels || [])].filter((item, index, all) => portalWebUrl(item.channelUrl) && all.findIndex(other => other.channelUrl === item.channelUrl) === index);
   const links = [{ label: 'X / SNS', url: profile.xUrl }, { label: '공식 카페', url: profile.cafeUrl }, { label: '공식 홈페이지', url: profile.websiteUrl }].filter(item => item.url);
-  return <div className="channel-row">{channels.map(item => <a className={item.platform === 'CHZZK' ? 'chzzk-link' : ''} href={item.channelUrl} target="_blank" rel="noopener noreferrer" key={item.channelUrl}>{item.platform === 'CHZZK' ? <img className="chzzk-wordmark" src="/icons/chzzk/chzzklogo_kor(Black).png" alt="치지직" /> : <Platform id={item.platform} />}</a>)}{links.map(item => <a key={item.url} href={item.url} target="_blank" rel="noopener noreferrer">{t(item.label)}</a>)}</div>;
+  return <div className="channel-row">{channels.map(item => <a className={item.platform === 'CHZZK' ? 'chzzk-link' : ''} href={item.channelUrl} target="_blank" rel="noopener noreferrer" key={item.channelUrl}>{item.platform === 'CHZZK' ? <img className="chzzk-wordmark" src="/icons/chzzk/chzzklogo_kor_black.png" alt="치지직" /> : <Platform id={item.platform} />}</a>)}{links.map(item => <a key={item.url} href={item.url} target="_blank" rel="noopener noreferrer">{t(item.label)}</a>)}</div>;
 }
 
 // 상세 도감은 등록 정보와 이번 진입의 실제 플랫폼 응답으로만 채운다.

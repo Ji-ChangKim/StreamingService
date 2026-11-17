@@ -887,6 +887,13 @@ X(트위터) 데뷔 공지 확인하기|||X（Twitter）のデビュー告知を
 데뷔 완료|||デビュー完了|||Debut completed
 데뷔일|||デビュー日|||Debut date
 역사적인 첫 방송 다시보기|||記念すべき初配信アーカイブ|||Debut stream archive
+이번 주 데뷔 일정|||今週のデビュー日程|||This week's debuts
+{0} ~ {1}, 한국 시간 기준으로 {2}명이 데뷔해요.|||{0}〜{1}（韓国時間）に{2}人がデビューします。|||{2} VTubers debut between {0} and {1} (Korean time).
+이번 주에는 아직 등록된 데뷔 일정이 없어요. 데뷔 캘린더에서 다른 주 일정을 살펴보세요.|||今週はまだ登録されたデビュー日程がありません。デビューカレンダーで他の週の日程をご覧ください。|||No debuts are registered for this week yet. Check other weeks on the debut calendar.
+다음 주 데뷔 예정|||来週のデビュー予定|||Debuting next week
+{0} ~ {1}에 {2}명이 데뷔할 예정이에요.|||{0}〜{1}に{2}人がデビュー予定です。|||{2} VTubers are scheduled to debut between {0} and {1}.
+최근 데뷔한 버튜버|||最近デビューしたVTuber|||Recently debuted VTubers
+지난 2주 동안 첫 방송을 시작한 버튜버예요.|||この2週間で初配信を迎えたVTuberです。|||VTubers who held their first stream in the past two weeks.
 외부 링크와 책임 범위|||外部リンクと責任の範囲|||External links and responsibility
 운영 주체|||運営者|||Operator
 왜 만들었나요|||なぜ作ったのか|||Why we built it

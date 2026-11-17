@@ -148,3 +148,15 @@ test('프로필 일본어·영어판은 한국어판을 canonical로 가리키�
   assert.match(xml, /<loc>https:\/\/vdebut.live\/guide\?lang=ja<\/loc>/);
   assert.equal((xml.match(/<url>/g) || []).length, 9 * 3 + 1);
 });
+
+test('홈·소개 목록 첫 HTML은 목록 요청을 미리 시작하고, 홈에는 실제 데뷔 일정이 들어간다', () => {
+  const preload = /<link rel="preload" href="\/api\/v1\/portal\/profiles\?version=3" as="fetch" crossorigin="anonymous">/;
+  assert.match(renderPortalPage(template, new URL('https://vdebut.live/creators')), preload);
+  assert.doesNotMatch(renderPortalPage(template, new URL('https://vdebut.live/guide')), preload);
+  const soon = new Date(Date.now() + 2 * 86400000).toISOString();
+  const debut = { ...profile('soon-one', '곧데뷔', '노래와 게임을 주로 하는 버튜버예요.'), startAtUtc: soon, debutDate: soon.slice(0, 10), agency: '개인세' };
+  const home = renderPortalPage(template, new URL('https://vdebut.live/'), undefined, [debut]);
+  assert.match(home, preload);
+  assert.match(home, /href="\/creator\/soon-one">곧데뷔<\/a>/);
+  assert.doesNotMatch(home, /개인세/);
+});

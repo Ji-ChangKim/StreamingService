@@ -22,7 +22,10 @@ export function renderPortalPage(html: string, url: URL, profile?: PortalProfile
     .replace(/<link\b[^>]*rel="(?:canonical|alternate)"[^>]*>/g, '')
     .replace(/<script\b[^>]*type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>/g, '');
   html = html.replace('</head>', `<meta name="description" content="${esc(seo.description)}"><meta name="robots" content="${seo.robots}"><link rel="canonical" href="${esc(seo.canonical)}"><meta property="og:title" content="${esc(seo.title)}"><meta property="og:description" content="${esc(seo.description)}"><meta property="og:url" content="${esc(seo.canonical)}"><meta property="og:image" content="${esc(seo.image)}"><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(seo.title)}"><meta name="twitter:description" content="${esc(seo.description)}"><meta name="twitter:image" content="${esc(seo.image)}"><script type="application/ld+json">${activityJson(pageStructuredData(seo))}</script></head>`);
-  html = html.replace('</head>', `${alternates}${INITIAL_PAGE_LOADING_HEAD}</head>`);
+  // 홈·소개 목록은 화면이 전체 소개 목록을 받아야 그려진다. 자바스크립트가 뜨기를 기다리지 않고 목록 요청을 바로 시작한다.
+  // 주소는 frontend/src/portal/portalApi.ts의 fetchPublicProfiles와 같아야 같은 요청으로 재사용된다.
+  const preload = seo.path === '/' || seo.path === '/creators' ? '<link rel="preload" href="/api/v1/portal/profiles?version=3" as="fetch" crossorigin="anonymous">' : '';
+  html = html.replace('</head>', `${alternates}${preload}${INITIAL_PAGE_LOADING_HEAD}</head>`);
   const languageQuery = seo.language === 'ko' ? '' : `?lang=${seo.language}`;
   const body = `<main><h1>${esc(profile?.displayName || seo.title.split(' | ')[0])}</h1>${profile ? '' : `<p>${esc(seo.description)}</p>`}<nav><a href="/${languageQuery}">${text('데뷔 캘린더')}</a> · <a href="/creators${languageQuery}">${text('버튜버 찾기')}</a> · <a href="/analytics${languageQuery}">${text('방송 통계')}</a> · <a href="/guide${languageQuery}">${text('이용 가이드')}</a></nav>${profile?.channelUrl ? `<p><a href="${esc(profile.channelUrl)}" rel="noopener noreferrer">${text('공식 방송 채널')}</a></p>` : ''}${portalEditorialBody(seo.path, seo.language, profile, profiles.filter(isPublicProfile))}</main>`;
   html = html.replace(/<div id="root">[\s\S]*?<\/div>/, initialPageRoot(body, text('화면을 불러오고 있어요'), seo.language));

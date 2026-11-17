@@ -80,8 +80,10 @@ test('운영·개발·비공개·잘못된 URL의 셸과 검색 설정을 분리
     const devAnalyticsHtml = await devAnalytics.text();
     assert.equal(devAnalytics.status, 200);
     assert.match(devAnalytics.headers.get('X-Robots-Tag'), /noindex/);
-    assert.match(devAnalyticsHtml, /<title>치지직·SOOP 방송 활동 통계/);
-    assert.match(devAnalyticsHtml, /id="activity-bootstrap"/);
+    assert.match(devAnalyticsHtml, /<title>방송 통계 · 치지직·SOOP 실시간 시청자와 인기 게임 순위/);
+    // 새 통계 첫 화면은 예전 대시보드 자료(activity-bootstrap) 대신 글로 된 요약을 싣는다.
+    assert.match(devAnalyticsHtml, /<h1>방송 통계<\/h1>/);
+    assert.doesNotMatch(devAnalyticsHtml, /id="activity-bootstrap"/);
     assert.doesNotMatch(devAnalyticsHtml, /페이지를 찾을 수 없어요|GTM-KWX992HR/);
     assert.equal((await call('/missing-page')).status, 404); assert.equal((await call('/creator/missing')).status, 404);
     assert.equal((await call('/analytics/missing', {}, 'dev.vdebut.live')).status, 404);

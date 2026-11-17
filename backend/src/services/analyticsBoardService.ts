@@ -18,6 +18,14 @@ const LIVE = `r.state IN ('available','partial')`;
 const SLOT = 10 * 60000;
 const NON_GAME = /토크|talk|캠방|노래|음악|music|먹방|쿡방|요리|그림|아트|art|asmr|운동|피트니스|여행|야외|일상|스포츠|교육|시사|주식|경제|댄스|라디오|chatting|버추얼|virtual|카테고리 미제공|unknown/i;
 const NOT_A_GAME_TITLE = /^(종합\s*게임|기타\s*게임|게임\s*기타|게임|카테고리 미제공|카테고리 미지정|미분류|unknown|none)$/i;
+// 이름 끝 글자의 받침에 맞춰 조사를 고른다(한글이 아니면 받침 없음으로 본다).
+function finalConsonant(name: string): number {
+  const code = name.trim().charCodeAt(name.trim().length - 1) - 0xAC00;
+  return code >= 0 && code <= 11171 ? code % 28 : 0;
+}
+const copula = (name: string) => (finalConsonant(name) ? '이에요' : '예요');
+const instrumental = (name: string) => { const jong = finalConsonant(name); return jong && jong !== 8 ? '으로' : '로'; };
+
 // 플랫폼이 영문 분류 값만 준 경우 화면 이름으로 바꾼다.
 const CATEGORY_LABELS: Record<string, string> = { talk: '토크', music: '음악/노래', art: '그림', mukbang: '먹방', asmr: 'ASMR', sports: '스포츠', cooking: '요리', travel: '여행' };
 export const categoryLabel = (name: string) => CATEGORY_LABELS[name.trim().toLowerCase()] || name.trim();
@@ -303,10 +311,10 @@ export async function getAnalyticsBoard(db: D1Database, platform: BoardPlatform,
   const card = platformCards[0];
   const top = gamesNow[0];
   const summaryParts: string[] = [];
-  if (top) summaryParts.push(`지금 가장 많이 보는 게임은 「${top.name}」로, 방송 ${won(top.broadcasts)}개에 ${won(top.viewers)}명이 보고 있어요.`);
+  if (top) summaryParts.push(`지금 가장 많이 보는 게임은 「${top.name}」${instrumental(top.name)}, 방송 ${won(top.broadcasts)}개에 ${won(top.viewers)}명이 보고 있어요.`);
   if (card?.usualDelta !== null && card?.usualDelta !== undefined && Math.abs(card.usualDelta) >= 5) summaryParts.push(`치지직 시청자는 평소 이 시간보다 ${Math.abs(card.usualDelta)}% ${card.usualDelta > 0 ? '많아요' : '적어요'}.`);
   const roomy = gamesNow.slice(1, 10).find((game) => game.competition === '여유');
-  if (roomy) summaryParts.push(`상위 10개 게임 중 방송당 시청자가 가장 여유로운 곳은 「${roomy.name}」예요.`);
+  if (roomy) summaryParts.push(`상위 10개 게임 중 방송당 시청자가 가장 여유로운 곳은 「${roomy.name}」${copula(roomy.name)}.`);
 
   return {
     availability,

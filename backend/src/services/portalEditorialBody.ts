@@ -1,6 +1,8 @@
 import { type PortalProfile, PORTAL_PLATFORMS, portalWebUrl } from '../../../shared/portal';
 import { ABOUT_CARDS, ABOUT_INTRO, ABOUT_SECTIONS, CONTACT_SECTIONS, POLICY_CONTACT_EMAIL, PRIVACY_INTRO, PRIVACY_SECTIONS, TERMS_SECTIONS, type PolicySection } from '../../../shared/portalPolicyContent';
-import { PORTAL_GUIDES } from '../../../shared/portalEditorial';
+import { PORTAL_GUIDES, currentDebutWeek, profileExcerpt } from '../../../shared/portalEditorial';
+import { profileAgencyName } from '../../../shared/profilePresentation';
+import { portalDay } from '../../../shared/portal';
 import { translatePortalText } from '../../../shared/portalTranslations';
 import '../../../shared/portalTranslationData'; // 서버 초기 HTML은 세 언어 사전을 항상 사용한다.
 import { escapeActivityHtml } from './activityPageService';
@@ -35,13 +37,46 @@ function creatorListBody(profiles: PortalProfile[], language: 'ko' | 'ja' | 'en'
   return `<section><h2>${esc(translatePortalText('공개된 버튜버 소개 {0}명', language, [profiles.length]))}</h2><ul>${items}</ul></section>`;
 }
 
+// 홈 첫 HTML: 캘린더가 화면에 그리는 실제 데뷔 일정(이번 주·다음 주·최근 2주)을 글로도 제공한다.
+const KST = 'Asia/Seoul';
+function debutLine(profile: PortalProfile, language: 'ko' | 'ja' | 'en', link: (to: string) => string): string {
+  const esc = escapeActivityHtml;
+  const text = (source: string) => esc(translatePortalText(source, language));
+  const when = profile.dateState === 'FIXED' && Number.isFinite(Date.parse(profile.startAtUtc))
+    ? new Intl.DateTimeFormat(language, { timeZone: KST, month: 'long', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(profile.startAtUtc))
+    : `${new Intl.DateTimeFormat(language, { timeZone: 'UTC', month: 'long', day: 'numeric', weekday: 'short' }).format(new Date(`${profile.debutDate}T00:00:00Z`))} · ${text('시간 미정')}`;
+  const platform = PORTAL_PLATFORMS.find((item) => item.id === profile.platform)?.label || '';
+  const agency = profileAgencyName(profile.agency);
+  const where = [platform && translatePortalText(platform, language), agency].filter(Boolean).join(' / ');
+  const line = profileExcerpt(profile, 80);
+  return `<li><time>${esc(when)}</time> <a href="${link(`/creator/${encodeURIComponent(profile.slug)}`)}">${esc(profile.displayName)}</a>${where ? ` · ${esc(where)}` : ''}${line && line !== profile.displayName ? ` — ${esc(line)}` : ''}</li>`;
+}
+
+export function homeDebutBody(profiles: PortalProfile[], language: 'ko' | 'ja' | 'en', link: (to: string) => string, now = Date.now()): string {
+  const esc = escapeActivityHtml;
+  const text = (source: string, values: unknown[] = []) => esc(translatePortalText(source, language, values));
+  const range = (from: string, to: string) => { const f = new Intl.DateTimeFormat(language, { timeZone: 'UTC', month: 'long', day: 'numeric' }); return [f.format(new Date(`${from}T00:00:00Z`)), f.format(new Date(`${to}T00:00:00Z`))]; };
+  const list = (items: PortalProfile[]) => `<ul>${items.map((profile) => debutLine(profile, language, link)).join('')}</ul>`;
+  const thisWeek = currentDebutWeek(profiles, KST, now);
+  const nextWeek = currentDebutWeek(profiles, KST, now + 7 * 86400000);
+  const recentFrom = new Date(Date.parse(`${thisWeek.from}T00:00:00Z`) - 14 * 86400000).toISOString().slice(0, 10);
+  const recent = profiles.filter((profile) => { const day = portalDay(profile, KST); return Boolean(day && day >= recentFrom && day < thisWeek.from); })
+    .sort((a, b) => portalDay(b, KST).localeCompare(portalDay(a, KST))).slice(0, 12);
+  const [tf, tt] = range(thisWeek.from, thisWeek.to); const [nf, nt] = range(nextWeek.from, nextWeek.to);
+  return `<section><h2>${text('이번 주 데뷔 일정')}</h2>${thisWeek.profiles.length
+    ? `<p>${text('{0} ~ {1}, 한국 시간 기준으로 {2}명이 데뷔해요.', [tf, tt, thisWeek.profiles.length])}</p>${list(thisWeek.profiles)}`
+    : `<p>${text('이번 주에는 아직 등록된 데뷔 일정이 없어요. 데뷔 캘린더에서 다른 주 일정을 살펴보세요.')}</p>`}</section>`
+    + (nextWeek.profiles.length ? `<section><h2>${text('다음 주 데뷔 예정')}</h2><p>${text('{0} ~ {1}에 {2}명이 데뷔할 예정이에요.', [nf, nt, nextWeek.profiles.length])}</p>${list(nextWeek.profiles)}</section>` : '')
+    + (recent.length ? `<section><h2>${text('최근 데뷔한 버튜버')}</h2><p>${text('지난 2주 동안 첫 방송을 시작한 버튜버예요.')}</p>${list(recent)}</section>` : '');
+}
+
 // 처음 받는 HTML에서도 화면과 같은 안내 글과 검토된 소개를 읽을 수 있게 한다.
 export function portalEditorialBody(path: string, language: 'ko' | 'ja' | 'en', profile?: PortalProfile, profiles: PortalProfile[] = []): string {
   const esc = escapeActivityHtml;
   const text = (source: string) => esc(translatePortalText(source, language));
   const link = (to: string) => esc(`${to}${language === 'ko' ? '' : `?lang=${language}`}`);
   if (path === '/guide') return PORTAL_GUIDES.map((guide) => `<article id="${guide.id}"><h2>${text(guide.title)}</h2>${guide.paragraphs.map((paragraph) => `<p>${text(paragraph)}</p>`).join('')}<a href="${link(guide.to)}">${text(guide.action)}</a></article>`).join('');
-  if (path === '/') return `<section><h2>${text('첫 방송을 만나고 준비하는 방법')}</h2>${PORTAL_GUIDES.filter((guide) => ['save', 'introduction', 'announcement'].includes(guide.id)).map((guide) => `<article><h3>${text(guide.title)}</h3><p>${text(guide.paragraphs[0])}</p><a href="${link('/guide')}#${guide.id}">${text('자세히 읽기')}</a></article>`).join('')}</section>`;
+  if (path === '/') return `${homeDebutBody(profiles, language, link)}<section><h2>${text('첫 방송을 만나고 준비하는 방법')}</h2>${PORTAL_GUIDES.filter((guide) => ['save', 'introduction', 'announcement'].includes(guide.id)).map((guide) => `<article><h3>${text(guide.title)}</h3><p>${text(guide.paragraphs[0])}</p><a href="${link('/guide')}#${guide.id}">${text('자세히 읽기')}</a></article>`).join('')}</section>`;
   if (path === '/privacy') return `<p>${text(PRIVACY_INTRO)}</p>${policyBody(PRIVACY_SECTIONS, language)}<p><a href="mailto:${POLICY_CONTACT_EMAIL}">${POLICY_CONTACT_EMAIL}</a></p>`;
   if (path === '/terms') return policyBody(TERMS_SECTIONS, language);
   if (path === '/about') return `<section><h2>${text(ABOUT_INTRO.heading)}</h2><p>${text(ABOUT_INTRO.text)}</p></section>${ABOUT_CARDS.map((card) => `<section><h3>${text(card.title)}</h3><p>${text(card.text)}</p><a href="${link(card.to)}">${text(card.link)}</a></section>`).join('')}${policyBody(ABOUT_SECTIONS, language)}`;
