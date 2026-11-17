@@ -56,7 +56,11 @@ export function isRookieStreamer(debutDate?: string | null, title?: string, tags
 }
 
 // 외부 플랫폼의 응답을 제한 시간 안에 읽는다.
-async function fetchPlatformJson<T>(url: string): Promise<T> {
+// 무료 플랜은 한 번 실행에 외부 호출이 50번까지다. 10분 수집은 치지직 목록 2번 + SOOP 등록 채널 40곳까지만 확인하고,
+// 나머지 SOOP 채널과 등록 치지직 버튜버는 5분마다 도는 등록 채널 확인(trackedChannelCollection)이 나눠 확인한다.
+export const SOOP_MAIN_LIMIT = 40;
+
+export async function fetchPlatformJson<T>(url: string): Promise<T> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 6500);
   try {
@@ -77,7 +81,7 @@ function isViewerCount(value: unknown): value is number {
 }
 
 // 플랫폼이 제공한 한국 시각을 명시적인 시간대와 함께 정규화한다.
-function parseStartTime(value?: string): string | null {
+export function parseStartTime(value?: string): string | null {
   if (!value) return null;
   const normalized = value.replace(' ', 'T');
   const time = /Z$|[+-]\d{2}:\d{2}$/.test(normalized) ? normalized : `${normalized}+09:00`;
@@ -209,7 +213,7 @@ export async function getSoopStatisticsSource(db: D1Database): Promise<Statistic
     const result = await db.prepare(`SELECT c.id, c.channel_name, c.channel_url, i.profile_image_url, i.debut_date
       FROM streamerChannel c
       LEFT JOIN streamerChannel_info i ON i.channel_id = c.id
-      WHERE c.platform = 'SOOP' ORDER BY c.id LIMIT 150`).all<RegisteredChannel>();
+      WHERE c.platform = 'SOOP' ORDER BY c.id LIMIT ${SOOP_MAIN_LIMIT}`).all<RegisteredChannel>();
     
     // 15개 단위 청크로 분할하여 안전하게 병렬 조회 (소켓 과부하 및 타임아웃 방지)
     const chunkSize = 15;

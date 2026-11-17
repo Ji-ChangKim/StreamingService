@@ -68,6 +68,7 @@ import { ensureStreamerRegistered } from './services/onDemandStreamerService';
 import { activitySitemapEntries, renderActivityPage, escapeActivityHtml } from './services/activityPageService';
 import { boardInitialBody, boardPageTitle, methodInitialBody, renderBoardPage } from './services/analyticsBoardPage';
 import { prunePersonalData } from './services/personalDataRetention';
+import { collectTrackedChannels, pruneChannelSamples, TRACK_CRON } from './services/trackedChannelCollection';
 import { cachedBoard, matchPageCopy, putPageCopy } from './services/edgeCache';
 import { activityNoindex } from '../../shared/activitySeo';
 import { cheerApi, resetWeeklyCheers, WEEKLY_RESET_CRON } from './services/cheerService';
@@ -1559,6 +1560,13 @@ export default {
   async scheduled(event: any, env: Bindings, ctx: any) {
     const scheduledTime = event?.scheduledTime || Date.now();
     // 매주 월요일 00:00(KST) 주간 응원 수 초기화 전용 크론은 다른 수집 작업과 분리한다.
+    // 5분마다 등록 버튜버 채널을 나눠서 확인한다(자기 외부 호출 한도를 따로 쓰도록 별도 예약).
+    if (event?.cron === TRACK_CRON) {
+      if (env.DB) ctx.waitUntil(collectTrackedChannels(env.DB, scheduledTime)
+        .then((report) => console.log('[Scheduled Cron] Tracked channels:', JSON.stringify(report)))
+        .catch((err) => console.error('[Scheduled Cron] Tracked channels error:', err)));
+      return;
+    }
     if (event?.cron === WEEKLY_RESET_CRON) {
       if (env.DB) ctx.waitUntil(resetWeeklyCheers(env.DB).then(() => console.log('[Scheduled Cron] Weekly cheers reset')).catch((err) => console.error('[Scheduled Cron] Weekly cheers reset error:', err)));
       return;
@@ -1572,7 +1580,7 @@ export default {
     }
     if (env.DB && new Date().getUTCMinutes() < 10) {
       // 보관 기간 정리(매시간 1회): 방송 통계 90일, 처리 끝난 문의·신청의 연락 정보 1년. 개인정보처리방침과 같은 기준이다.
-      ctx.waitUntil(Promise.all([pruneStatisticsCollections(env.DB), prunePersonalData(env.DB)])
+      ctx.waitUntil(Promise.all([pruneStatisticsCollections(env.DB), prunePersonalData(env.DB), pruneChannelSamples(env.DB)])
         .catch((err) => console.error('[Scheduled Cron] Retention cleanup error:', err)));
       // 1. 신청서 3단계 자동 심사 및 캘린더 자동 반영 파이프라인 (매시간 1회 자동 실행)
       ctx.waitUntil(

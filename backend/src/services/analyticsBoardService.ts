@@ -5,6 +5,8 @@ import { profileAgencyName } from '../../../shared/profilePresentation';
 import { getChzzkStatisticsSource } from './broadcastStatisticsSources';
 import { snapshotTagsReady } from './broadcastStatisticsCollection';
 export { resetSnapshotTagsCheck } from './broadcastStatisticsCollection';
+import { channelSamplesReady } from './trackedChannelCollection';
+export { resetChannelSamplesCheck } from './trackedChannelCollection';
 import type { TagTrendPoint } from '../../../shared/analyticsBoard';
 import { extractSoopUserId } from './soopCollector';
 
@@ -452,7 +454,28 @@ async function readTagTrend(db: D1Database, key: string, asOf: string): Promise<
   return { trend: { today: hoursOf(today), yesterday: hoursOf(kstDate(Date.parse(`${today}T00:00:00Z`) - DAY)), d7: daysBack(7), d30: daysBack(30) }, tagCoverageDays: Math.max(0, Math.floor((Date.parse(asOf) - Date.parse(start.first as string)) / DAY)) };
 }
 
-interface ChannelRow { scheduled_at: string; stream_id: string; channel_name: string | null; image_url: string | null; live_url: string | null; title: string; category_name: string; viewers: number; tags?: string | null }
+interface ChannelRow { scheduled_at: string; stream_id: string; channel_name: string | null; image_url: string | null; live_url: string | null; title: string; category_name: string; viewers: number; tags?: string | null;
+  weight?: number; // 이 기록이 대표하는 방송 시간(분). 상위 100 회차 10분, 등록 채널 직접 기록은 다음 확인까지의 간격(최대 40분)
+  vp?: boolean; // 시청자 계산에 쓰는 점(상위 100은 정각 회차, 직접 기록은 모든 점)
+}
+const SAMPLE_MAX_WEIGHT = 40;
+
+// 상위 100 회차 기록과 등록 채널 직접 기록을 시간순 한 줄로 합친다. 같은 방송을 10분 안에 양쪽에서 잡았으면 회차 기록만 쓴다.
+export function mergeChannelRows(snapshots: ChannelRow[], samples: ChannelRow[]): ChannelRow[] {
+  const snap = snapshots.map((row) => ({ ...row, weight: 10, vp: row.scheduled_at.slice(14, 16) === '00' }));
+  const byStream = new Map<string, number[]>();
+  for (const row of snap) { const list = byStream.get(row.stream_id) || []; list.push(Date.parse(row.scheduled_at)); byStream.set(row.stream_id, list); }
+  const kept = samples.filter((row) => !(byStream.get(row.stream_id) || []).some((at) => Math.abs(at - Date.parse(row.scheduled_at)) <= 10 * 60000))
+    .sort((a, b) => a.scheduled_at.localeCompare(b.scheduled_at));
+  const weighted = kept.map((row, index) => {
+    const next = kept.slice(index + 1).find((other) => other.stream_id === row.stream_id);
+    const gap = next ? (Date.parse(next.scheduled_at) - Date.parse(row.scheduled_at)) / 60000 : SAMPLE_MAX_WEIGHT / 2;
+    return { ...row, weight: Math.max(5, Math.min(SAMPLE_MAX_WEIGHT, Math.round(gap))), vp: true };
+  });
+  return [...snap, ...weighted].sort((a, b) => a.scheduled_at.localeCompare(b.scheduled_at));
+}
+const weightOf = (row: ChannelRow) => row.weight ?? 10;
+const viewerPoint = (row: ChannelRow) => row.vp ?? row.scheduled_at.slice(14, 16) === '00';
 
 // 치지직 팔로워 수(공개 정보). 실패하면 표시하지 않는다.
 async function readChzzkFollowers(id: string): Promise<number | null> {
@@ -472,7 +495,8 @@ export async function getAnalyticsChannelBoard(db: D1Database, channelKey: strin
   const from = new Date(now - days * DAY).toISOString();
   const prevFrom = new Date(now - 2 * days * DAY).toISOString();
   const withTags = await snapshotTagsReady(db);
-  const [rowsResult, latestRun, registered, followers, coverageDays] = await Promise.all([
+  const withSamples = await channelSamplesReady(db, now);
+  const [rowsResult, latestRun, registered, followers, coverageDays, samplesResult] = await Promise.all([
     db.prepare(`SELECT r.scheduled_at, s.stream_id, s.channel_name, s.image_url, s.live_url, s.title, s.category_name, s.viewers${withTags ? ', s.tags' : ''}
       FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id = s.run_id
       WHERE s.channel_key = ? COLLATE NOCASE AND r.state IN ('available','partial') AND r.scheduled_at >= ? ORDER BY r.scheduled_at`).bind(key, prevFrom).all<ChannelRow>(),
@@ -480,16 +504,17 @@ export async function getAnalyticsChannelBoard(db: D1Database, channelKey: strin
     readRegisteredOne(db, platform, id.toLowerCase()),
     platform === 'CHZZK' ? readChzzkFollowers(id) : Promise.resolve(null),
     readCoverageDays(db, now),
+    withSamples ? db.prepare(`SELECT sampled_at AS scheduled_at, stream_id, channel_name, NULL AS image_url, NULL AS live_url, title, category_name, viewers, tags
+      FROM analytics_channel_samples WHERE channel_key = ? AND sampled_at >= ? ORDER BY sampled_at`).bind(key, prevFrom).all<ChannelRow>() : Promise.resolve({ results: [] as ChannelRow[] }),
   ]);
-  const all = rowsResult.results || [];
+  const all = mergeChannelRows(rowsResult.results || [], samplesResult.results || []);
   const info = registered;
   if (!all.length && !info) return null;
-  const isHourlyAt = (iso: string) => iso.slice(14, 16) === '00';
   const latestRow = all[all.length - 1];
 
   const summarize = (rows: ChannelRow[]) => {
-    const hourly = rows.filter((row) => isHourlyAt(row.scheduled_at)).map((row) => row.viewers);
-    return { avg: hourly.length ? Math.round(hourly.reduce((a, b) => a + b, 0) / hourly.length) : null, peak: hourly.length ? Math.max(...hourly) : null, minutes: rows.length * 10, broadcasts: new Set(rows.map((row) => row.stream_id)).size };
+    const hourly = rows.filter(viewerPoint).map((row) => row.viewers);
+    return { avg: hourly.length ? Math.round(hourly.reduce((a, b) => a + b, 0) / hourly.length) : null, peak: hourly.length ? Math.max(...hourly) : null, minutes: rows.reduce((sum, row) => sum + weightOf(row), 0), broadcasts: new Set(rows.map((row) => row.stream_id)).size };
   };
   const rows = all.filter((row) => row.scheduled_at >= from);
   const prevRows = all.filter((row) => row.scheduled_at < from);
@@ -497,12 +522,12 @@ export async function getAnalyticsChannelBoard(db: D1Database, channelKey: strin
   // 앞 기간 전체가 수집 범위 안에 있을 때만 비교한다(정의서 5.12). 90일은 보관 기간과 같아 비교하지 않는다.
   const prevReady = days < 90 && coverageDays >= days * 2;
   const prev = prevReady && prevRows.length ? summarize(prevRows) : null;
-  const peakRow = rows.filter((row) => isHourlyAt(row.scheduled_at)).sort((a, b) => b.viewers - a.viewers)[0];
+  const peakRow = rows.filter(viewerPoint).sort((a, b) => b.viewers - a.viewers)[0];
 
   const today = kstDate(now);
   const trend = Array.from({ length: days }, (_, index) => {
     const date = kstDate(Date.parse(`${today}T00:00:00Z`) - (days - 1 - index) * DAY);
-    const values = rows.filter((row) => isHourlyAt(row.scheduled_at) && kstDate(row.scheduled_at) === date).map((row) => row.viewers);
+    const values = rows.filter((row) => viewerPoint(row) && kstDate(row.scheduled_at) === date).map((row) => row.viewers);
     return { date, avg: values.length ? Math.round(values.reduce((a, b) => a + b, 0) / values.length) : null, peak: values.length ? Math.max(...values) : null };
   });
 
@@ -511,24 +536,25 @@ export async function getAnalyticsChannelBoard(db: D1Database, channelKey: strin
     const game = isGameCategory(row.category_name);
     const name = isUncategorized(row.category_name) ? '카테고리 없음' : game ? gameName(row.category_name) : categoryLabel(row.category_name);
     const entry = byCategory.get(name) || { name, isGame: game, samples: 0, hourly: [] };
-    entry.samples += 1;
-    if (isHourlyAt(row.scheduled_at)) entry.hourly.push(row.viewers);
+    entry.samples += weightOf(row);
+    if (viewerPoint(row)) entry.hourly.push(row.viewers);
     byCategory.set(name, entry);
   }
-  const games = [...byCategory.values()].sort((a, b) => b.samples - a.samples).slice(0, 6).map((entry) => ({ name: entry.name, isGame: entry.isGame, share: Math.round(entry.samples / Math.max(1, rows.length) * 100), avg: entry.hourly.length ? Math.round(entry.hourly.reduce((a, b) => a + b, 0) / entry.hourly.length) : null }));
+  const games = [...byCategory.values()].sort((a, b) => b.samples - a.samples).slice(0, 6).map((entry) => ({ name: entry.name, isGame: entry.isGame, share: Math.round(entry.samples / Math.max(1, rows.reduce((sum, row) => sum + weightOf(row), 0)) * 100), avg: entry.hourly.length ? Math.round(entry.hourly.reduce((a, b) => a + b, 0) / entry.hourly.length) : null }));
 
   const counts = Array.from({ length: 7 }, () => Array(24).fill(0) as number[]);
-  for (const row of rows) counts[(kstWeekday(row.scheduled_at) + 6) % 7][kstHour(row.scheduled_at)] += 1;
-  const heat = counts.map((line) => line.map((count) => Math.round(count / Math.max(1, rows.length) * 1000) / 10));
+  for (const row of rows) counts[(kstWeekday(row.scheduled_at) + 6) % 7][kstHour(row.scheduled_at)] += weightOf(row);
+  const totalWeight = Math.max(1, rows.reduce((sum, row) => sum + weightOf(row), 0));
+  const heat = counts.map((line) => line.map((count) => Math.round(count / totalWeight * 1000) / 10));
 
   const streams = new Map<string, ChannelRow[]>();
   for (const row of rows) { const list = streams.get(row.stream_id) || []; list.push(row); streams.set(row.stream_id, list); }
   const log = [...streams.entries()].map(([streamId, list]) => {
-    const hourly = list.filter((row) => isHourlyAt(row.scheduled_at)).map((row) => row.viewers);
+    const hourly = list.filter(viewerPoint).map((row) => row.viewers);
     const minutesBy = new Map<string, number>();
-    for (const row of list) minutesBy.set(row.category_name, (minutesBy.get(row.category_name) || 0) + 1);
+    for (const row of list) minutesBy.set(row.category_name, (minutesBy.get(row.category_name) || 0) + weightOf(row));
     const category = [...minutesBy.entries()].sort((a, b) => b[1] - a[1])[0][0];
-    return { streamId, date: list[0].scheduled_at, title: list[list.length - 1].title, category: isGameCategory(category) ? gameName(category) : categoryLabel(category), isGame: isGameCategory(category), minutes: list.length * 10, avg: hourly.length ? Math.round(hourly.reduce((a, b) => a + b, 0) / hourly.length) : null, peak: hourly.length ? Math.max(...hourly) : null };
+    return { streamId, date: list[0].scheduled_at, title: list[list.length - 1].title, category: isGameCategory(category) ? gameName(category) : categoryLabel(category), isGame: isGameCategory(category), minutes: list.reduce((sum, row) => sum + weightOf(row), 0), avg: hourly.length ? Math.round(hourly.reduce((a, b) => a + b, 0) / hourly.length) : null, peak: hourly.length ? Math.max(...hourly) : null };
   }).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 100);
 
   // 자주 쓰는 태그: 그 태그를 단 방송 수와 그 방송들의 평균 시청자(정의서 T6).

@@ -55,8 +55,8 @@ database_name = "vdebut-db"
 database_id = "888a8c04-5657-4bff-9b50-5002a47ac7c7"
 
 [triggers]
-crons = ["*/10 * * * *", "0 22 * * *"]
+crons = ["*/10 * * * *", "0 22 * * *", "2-57/5 * * * *"]
 
 # 환경별 트리거를 명시해 운영 배포 시 기존 예약 작업을 보존한다.
 [env.production.triggers]
-crons = ["*/10 * * * *", "0 22 * * *"]
+crons = ["*/10 * * * *", "0 22 * * *", "2-57/5 * * * *"]
