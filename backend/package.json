@@ -8,7 +8,7 @@
     "deploy:dev": "wrangler deploy --env dev",
     "deploy:live": "npx --yes wrangler@4.151.0 deploy --env production",
     "db:migrate:dev": "wrangler d1 migrations apply v-debut-hub-db-dev --local",
-    "db:migrate:live": "wrangler d1 migrations apply v-debut-hub-db-live --remote",
+    "db:migrate:live": "wrangler d1 migrations apply vdebut-db --remote",
     "db:sync:live-to-dev": "node scripts/sync_live_to_dev.js"
   },
   "dependencies": {
