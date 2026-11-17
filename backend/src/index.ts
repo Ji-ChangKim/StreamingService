@@ -69,6 +69,7 @@ import { ensureStreamerRegistered } from './services/onDemandStreamerService';
 import { activitySitemapEntries, renderActivityPage } from './services/activityPageService';
 import { boardInitialBody, boardPageTitle, methodInitialBody, renderBoardPage } from './services/analyticsBoardPage';
 import { prunePersonalData } from './services/personalDataRetention';
+import { cachedBoard, matchPageCopy, putPageCopy } from './services/edgeCache';
 import { activityNoindex } from '../../shared/activitySeo';
 import { cheerApi, resetWeeklyCheers, WEEKLY_RESET_CRON } from './services/cheerService';
 
@@ -151,18 +152,26 @@ app.use('*', async (c, next) => {
     if (/^\/creator\/[^/]+$/.test(path)) {
       let slug = ''; try { slug = decodeURIComponent(path.slice('/creator/'.length)); } catch { /* 찾을 수 없는 주소로 처리한다. */ }
       try { profile = (await readPublicPortalProfileBySlug(c.env.DB, slug)) || undefined; }
-      catch { c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex, nofollow'); return c.html(publicErrorPage(url, '소개를 불러오지 못했어요', 503), 503); }
+      catch {
+        // 데이터베이스가 막혀도(무료 한도·장애) 하루 안에 저장한 정상 사본이 있으면 그것을 보여 준다.
+        const copy = await matchPageCopy(pageCache, url.toString()); if (copy) return copy;
+        c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex, nofollow'); return c.html(publicErrorPage(url, '소개를 불러오지 못했어요', 503), 503);
+      }
     }
     // 소개 목록의 초기 HTML에도 공개 소개 링크를 제공한다. 실패하면 기존 화면 로딩으로 이어간다.
     let profiles: Awaited<ReturnType<typeof readPublicPortalProfiles>> = [];
+    let degraded = false; // 홈·목록 자료를 읽지 못했으면 빈 화면을 저장하지 않고 사본을 먼저 찾는다.
     if (cachePath === '/') {
       // 홈은 이번 주·다음 주·최근 2주 데뷔만 필요하므로 전체 목록 대신 그 기간만 읽는다.
       const now = Date.now();
       try { profiles = await readPublicPortalProfilesBetween(c.env.DB, new Date(now - 22 * 86400000).toISOString(), new Date(now + 15 * 86400000).toISOString()); }
-      catch (error) { console.error('[Portal] Initial home schedule failed', String(error)); }
+      catch (error) { degraded = true; console.error('[Portal] Initial home schedule failed', String(error)); }
     }
     if (sitePath(path) === '/creators') {
-      try { profiles = await readPublicPortalProfiles(c.env.DB); } catch (error) { console.error('[Portal] Initial creator list failed', String(error)); }
+      try { profiles = await readPublicPortalProfiles(c.env.DB); } catch (error) { degraded = true; console.error('[Portal] Initial creator list failed', String(error)); }
+    }
+    if (degraded) {
+      const copy = await matchPageCopy(pageCache, url.toString()); if (copy) return copy;
     }
     const missing = (!seo.known && !isActivityPath(path)) || (path.startsWith('/creator/') && !profile);
     const response = await getAssetFromKV({ request: new Request(new URL(seo.development ? '/dev.html' : '/portal.html', c.req.url), c.req.raw), waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, { ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}') });
@@ -174,10 +183,11 @@ app.use('*', async (c, next) => {
     c.header('Cache-Control', seo.privatePage || missing ? 'no-store' : 'public, max-age=0, must-revalidate');
     const html = renderPortalPage(await response.text(), url, profile, profiles);
     const page: Response = c.html(missing ? html.replace(/content="index, follow"/g, 'content="noindex, nofollow"') : autoChannel ? html.replace(/content="index, follow"/g, 'content="noindex, follow"') : html, missing ? 404 : 200);
-    // 목록 읽기에 실패한 응답(빈 목록)은 저장하지 않는다.
-    if (pageCache && page.status === 200 && (cachePath !== '/creators' || profiles.length)) {
+    // 자료를 읽지 못한 응답은 저장하지 않는다. 정상 응답은 짧은 저장본과 하루짜리 사본(장애 대비)을 함께 둔다.
+    if (pageCache && page.status === 200 && !degraded) {
       const stored = new Response(page.clone().body, page); stored.headers.set('Cache-Control', `public, s-maxage=${edgeSeconds}`);
       c.executionCtx.waitUntil(pageCache.put(pageKey, stored).catch(() => undefined));
+      putPageCopy(pageCache, url.toString(), page, (p) => c.executionCtx.waitUntil(p));
     }
     return page;
   }
@@ -1264,46 +1274,22 @@ app.get('/api/analytics/current-content', async (c) => {
 });
 
 // 방송 통계 개편 화면 응답. 10분 회차 단위 키로 엣지에 저장해 다음 회차(수집 여유 2분)까지 재사용한다.
-// 통계 첫 HTML용 보드 자료: /api/analytics/board와 같은 캐시 키(10분 슬롯)를 써서 한 번 계산한 결과를 함께 쓴다.
+// 통계 첫 HTML용 보드 자료: /api/analytics/board와 같은 캐시 키를 써서 한 번 계산한 결과를 함께 쓴다.
+const boardCache = () => (typeof caches === 'undefined' ? undefined : (caches as any).default as Cache);
 async function loadBoardCached(c: any, platform: 'ALL' | 'CHZZK' | 'SOOP'): Promise<AnalyticsBoard> {
   const key = new URL('/api/analytics/board', c.req.url);
   key.searchParams.set('platform', platform);
-  key.searchParams.set('slot', new Date(Math.floor(Date.now() / 600000) * 600000).toISOString());
-  key.searchParams.set('v', '4');
-  const cache = typeof caches === 'undefined' ? undefined : (caches as any).default as Cache;
-  const cacheKey = new Request(key.toString());
-  if (cache) {
-    const hit = await cache.match(cacheKey).catch(() => undefined);
-    if (hit && Number(hit.headers.get('X-VD-Cache-Until')) > Date.now()) return await hit.json() as AnalyticsBoard;
-  }
-  const data = await getAnalyticsBoard(c.env.DB, platform, new URL(c.req.url).origin, (p) => c.executionCtx.waitUntil(p));
-  const seconds = boardCacheSeconds(data.asOf);
-  if (cache) c.executionCtx.waitUntil(cache.put(cacheKey, new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'X-VD-Cache-Until': String(Date.now() + seconds * 1000), 'Cache-Control': `public, s-maxage=${seconds}` } })).catch(() => undefined));
+  const { data } = await cachedBoard(boardCache(), key, () => getAnalyticsBoard(c.env.DB, platform, new URL(c.req.url).origin, (p) => c.executionCtx.waitUntil(p)), boardCacheSeconds, (p) => c.executionCtx.waitUntil(p));
+  if (!data) throw new Error('집계된 기록이 없어요.');
   return data;
 }
 
+// 통계 API: 슬롯이 바뀌면 직전 결과를 바로 주고 최신 계산은 뒤에서 한다. 계산이 실패해도 직전 결과가 있으면 그것을 준다.
 async function analyticsBoardResponse(c: any, key: URL, load: () => Promise<{ asOf: string | null } | null>): Promise<Response> {
-  key.searchParams.set('slot', new Date(Math.floor(Date.now() / 600000) * 600000).toISOString());
-  key.searchParams.set('v', '4');
-  const cache = typeof caches === 'undefined' ? undefined : (caches as any).default as Cache;
-  const cacheKey = new Request(key.toString());
-  if (cache) {
-    const hit = await cache.match(cacheKey).catch(() => undefined);
-    if (hit && Number(hit.headers.get('X-VD-Cache-Until')) > Date.now()) {
-      const response = new Response(hit.body, hit);
-      response.headers.set('Cache-Control', 'public, max-age=60');
-      response.headers.set('X-VD-Cache', 'HIT');
-      return response;
-    }
-  }
   try {
-    const data = await load();
+    const { data, state } = await cachedBoard(boardCache(), key, load, boardCacheSeconds, (p) => c.executionCtx.waitUntil(p));
     if (!data) { c.header('Cache-Control', 'public, max-age=60'); return c.json({ error: '집계된 기록이 없어요.' }, 404); }
-    const seconds = boardCacheSeconds(data.asOf);
-    const body = JSON.stringify(data);
-    const headers = { 'Content-Type': 'application/json; charset=utf-8', 'X-VD-Cache-Until': String(Date.now() + seconds * 1000) };
-    if (cache) c.executionCtx.waitUntil(cache.put(cacheKey, new Response(body, { headers: { ...headers, 'Cache-Control': `public, s-maxage=${seconds}` } })).catch(() => undefined));
-    return new Response(body, { headers: { ...headers, 'Cache-Control': 'public, max-age=60', 'X-VD-Cache': 'MISS' } });
+    return new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=60', 'X-VD-Cache': state } });
   } catch (error) {
     console.error('[Board] request failed', String(error));
     c.header('Cache-Control', 'no-store');
@@ -1502,6 +1488,8 @@ const activityPageHandler = async (c: any) => {
     if (hit) { const response = new Response(hit.body, hit); response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate'); response.headers.set('X-VD-Cache', 'HIT'); return response; }
   }
   const response: Response = await renderActivityPageResponse(c);
+  if (response.status === 503) { const copy = await matchPageCopy(cache, cacheKey.url); if (copy) return copy; }
+  if (cache && c.req.method === 'GET' && response.status === 200) putPageCopy(cache, cacheKey.url, response, (p) => c.executionCtx.waitUntil(p));
   if (cache && c.req.method === 'GET' && response.status === 200) {
     const stored = new Response(response.clone().body, response);
     stored.headers.set('Cache-Control', `public, max-age=0, s-maxage=${ACTIVITY_PAGE_EDGE_SECONDS}`);

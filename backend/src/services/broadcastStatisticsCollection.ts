@@ -92,10 +92,13 @@ async function collectPlatform(db: D1Database, platform: CollectedPlatform, slot
   }
 }
 
-// 대시보드의 최대 조회 기간에 맞춰 수집 자료를 90일 보관한다. 한 번에 최대 100회차를 정리한다.
+// 대시보드의 최대 조회 기간에 맞춰 수집 자료를 90일 보관한다.
+// 무료 플랜의 하루 쓰기 한도(10만 행)를 지키려고 한 시간에 최대 12회차만 지운다. 수집 속도(10분마다 2개 플랫폼 = 시간당 12회차)와 같아
+// 평소에는 하루 수집량만큼만 지우고, 밀린 기록이 있어도 한 번에 몰아 지우지 않는다(회차 하나 = 스냅숏 약 100~150행 연쇄 삭제).
+export const PRUNE_RUNS_PER_HOUR = 12;
 export async function pruneStatisticsCollections(db: D1Database, now = Date.now()): Promise<void> {
   await db.prepare(`DELETE FROM analytics_broadcast_runs WHERE run_id IN
-    (SELECT run_id FROM analytics_broadcast_runs WHERE scheduled_at < ? ORDER BY scheduled_at LIMIT 100)`)
+    (SELECT run_id FROM analytics_broadcast_runs WHERE scheduled_at < ? ORDER BY scheduled_at LIMIT ${PRUNE_RUNS_PER_HOUR})`)
     .bind(new Date(now - 90 * 24 * 3600000).toISOString()).run();
 }
 
