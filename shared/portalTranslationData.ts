@@ -1077,6 +1077,96 @@ VDébut은 치지직, SOOP, YouTube와 제휴한 서비스가 아니에요. 공�
 공식 채널로 확인할 수 없는 정보, 사칭, 다른 사람의 권리를 침해하는 이미지나 글은 공개하지 않아요. 일정이 바뀌었거나 틀린 정보가 있으면 문의 화면으로 알려 주세요. 확인하고 바로 고칠게요.|||公式チャンネルで確認できない情報、なりすまし、他の人の権利を侵害する画像や文章は公開しません。日程が変わったり間違った情報があったりしたら、お問い合わせ画面からお知らせください。確認してすぐに修正します。|||We don't publish information that can't be confirmed through official channels, impersonation, or images and text that infringe others' rights. If a schedule changes or something is wrong, tell us through the contact page and we'll check and fix it right away.
 누가 운영하나요|||誰が運営しているのか|||Who runs it
 VDébut은 개인이 운영하는 독립 서비스예요. 운영 비용을 위해 광고가 보일 수 있어요. 돈을 받고 보여 주는 소개나 순서는 반드시 '광고'로 표시하고, 표시 없이 공개 여부나 순서를 바꾸지 않아요.|||VDébutは個人が運営する独立したサービスです。運営費のために広告が表示されることがあります。報酬を受けて表示する紹介や表示順には必ず「広告」と表示し、表示なしに公開可否や表示順を変えることはありません。|||VDébut is an independent service run by an individual. Ads may appear to cover running costs. Any profile or placement shown in exchange for payment is always labeled 'Ad', and we never change whether or in what order profiles are shown without that label.
+4h 이상|||4h以上|||4h+
+SOOP에서 데뷔 공지 보기|||SOOPでデビュー告知を見る|||See the debut notice on SOOP
+X에 올리기|||Xに投稿|||Post on X
+X에서 데뷔 공지 보기|||Xでデビュー告知を見る|||See the debut notice on X
+YouTube에서 데뷔 공지 보기|||YouTubeでデビュー告知を見る|||See the debut notice on YouTube
+{0} {1} 소속 {2} 버튜버예요.|||{0}は{1}所属の{2} VTuberです。|||{0} is a {2} VTuber with {1}.
+{0} — 데뷔일·방송 기록 | VDébut|||{0} — デビュー日・配信記録 | VDébut|||{0} — debut date & stream record | VDébut
+{0} 공식 홈페이지에서 데뷔 공지 보기|||{0}公式サイトでデビュー告知を見る|||See the debut notice on the {0} website
+{0} 다시보기|||{0} アーカイブ|||{0} replay
+{0} 데뷔 예정이에요|||{0}にデビュー予定です|||Debuting on {0}
+{0} 방송 때 평소보다 {1}배 더 많이 봐요|||{0}の配信は普段の{1}倍見られています|||{0} streams draw {1}× the usual viewers
+{0} 방송이 {1}보다 {2} 더 길고, 시청자도 {3}배 많아요.|||{0}の配信は{1}より{2}長く、視聴者も{3}倍です。|||{0} streams run {2} longer than {1} ones, with {3}× the viewers.
+{0} 방송이 {1}보다 {2} 더 길어요.|||{0}の配信は{1}より{2}長いです。|||{0} streams run {2} longer than {1} ones.
+{0} 방송이 {1}보다 {2} 더 길어요. 시청자는 {3}에 {4}배 많아요.|||{0}の配信は{1}より{2}長いです。視聴者は{3}に{4}倍多いです。|||{0} streams run {2} longer than {1} ones. Viewers are {4}× higher on {3}.
+{0} 소개 페이지 공유하기|||{0}の紹介ページを共有|||Share {0}'s page
+{0} 채널 가기|||{0}チャンネルへ|||Go to {0} channel
+{0} 채널 미리 가기|||{0}チャンネルを先に見る|||Visit the {0} channel early
+{0}~{1}시|||{0}〜{1}時|||{0}:00–{1}:00
+{0}명이 보고 있어요|||{0}人が視聴中|||{0} watching now
+{0}번 방송 · {1}시간 · 공개 방송 기록 기준|||{0}回配信 · {1}時間 · 公開配信記録より|||{0} streams · {1} h · from public stream records
+{0}시간 {1}분 남았어요. 채널을 미리 팔로우해 두면 좋아요.|||あと{0}時間{1}分です。チャンネルを先にフォローしておきましょう。|||{0} h {1} min to go. Follow the channel ahead of time.
+{0}에 첫 방송을 해요|||{0}に初配信です|||First stream on {0}
+{0}에서 더 보기|||{0}でもっと見る|||More on {0}
+{0}에서 방송 보기|||{0}で配信を見る|||Watch on {0}
+{0}요일은 보통 쉬어요|||{0}曜日はたいてい休みです|||Usually off on {0}
+{0}일 전|||{0}日前|||{0} days ago
+{0}주|||{0}週目|||Week {0}
+{0}주 전|||{0}週間前|||{0} weeks ago
+가장 길게 쉰 기간|||最長の休み|||Longest break
+공식 팬카페에서 데뷔 공지 보기|||公式ファンカフェでデビュー告知を見る|||See the debut notice on the fan cafe
+공식 홈페이지에서 데뷔 공지 보기|||公式サイトでデビュー告知を見る|||See the debut notice on the official website
+공유|||共有|||Share
+관심 목록에 담아 두면 일정이 정해졌을 때 다시 찾기 쉬워요.|||お気に入りに入れておくと、日程が決まったときに見つけやすいです。|||Save it to find the date easily once it's set.
+관심 목록에 담았어요. 데뷔 일정은 관심 목록에서 다시 볼 수 있어요.|||お気に入りに追加しました。デビュー日程はお気に入りから確認できます。|||Saved. You can find the debut date in your favorites.
+데뷔 준비 중|||デビュー準備中|||Getting ready to debut
+데뷔 후 열려요|||デビュー後に公開|||Opens after debut
+데뷔까지 D-{0}|||デビューまでD-{0}|||D-{0} to debut
+둘째 주|||2週目|||Week 2
+등록 정보|||登録情報|||Registered info
+링크 복사|||リンクをコピー|||Copy link
+링크를 보내면 이름과 데뷔 정보가 담긴 카드로 보여요.|||リンクを送ると、名前とデビュー情報のカードで表示されます。|||Shared links show a card with the name and debut info.
+링크를 복사하지 못했어요. 주소창의 주소를 복사해 주세요.|||リンクをコピーできませんでした。アドレスバーのURLをコピーしてください。|||Couldn't copy the link. Please copy it from the address bar.
+링크를 복사했어요|||リンクをコピーしました|||Link copied
+마지막 방송은 {0}였어요|||最後の配信は{0}でした|||Last stream: {0}
+마지막으로 쉰 날|||最後の休み|||Last day off
+방송 요약, 방송 패턴, 콘텐츠별 반응이 이곳에 차례로 보여요.|||配信まとめ・配信パターン・コンテンツ別の反応が順に表示されます。|||Stream summary, patterns and content reactions will appear here.
+보통 {0}요일 {1}시쯤 방송해요.|||たいてい{0}曜日の{1}時ごろに配信します。|||Usually streams on {0} around {1}:00.
+분|||分|||min
+쉰 날|||休み|||Day off
+시간대별 방송|||時間帯別の配信|||Streams by hour
+시청자는 {0}에 {1}배 많아요.|||視聴者は{0}に{1}倍多いです。|||Viewers are {1}× higher on {0}.
+안내|||お知らせ|||Note
+어제|||昨日|||Yesterday
+어제 {0}|||昨日 {0}|||yesterday {0}
+영상으로 먼저 만나 보세요|||まずは動画で会ってみましょう|||Meet them on video first
+오늘 {0}|||今日 {0}|||today {0}
+오늘 {0}에 첫 방송을 해요|||今日{0}に初配信です|||First stream today at {0}
+오늘 데뷔해요|||今日デビュー|||Debuting today
+일 방송 / {0}일|||日配信 / {0}日|||days streamed / {0}
+일정이나 소개가 바뀌었다면 알려 주세요. 공식 채널로 확인한 뒤 고칠게요.|||日程や紹介が変わったら教えてください。公式チャンネルで確認して直します。|||If the schedule or profile changed, let us know. We'll check official channels and fix it.
+일째|||日目|||days
+주 7일 중|||週7日のうち|||of 7 days
+주 평균|||週平均|||weekly avg
+주로 방송하는 때|||主な配信時間|||Usual stream time
+주말|||週末|||weekends
+주말 (토·일)|||週末(土・日)|||Weekends (Sat–Sun)
+지금 방송 중|||配信中|||Live now
+지금은 방송하지 않아요|||今は配信していません|||Not live now
+진할수록 오래 방송했어요|||濃いほど長く配信|||Darker = longer
+첫 만남 전에 미리 만나 보세요|||デビュー前に会ってみましょう|||Meet them before the debut
+첫 방송|||初配信|||First stream
+첫 방송이 끝나면 방송 기록이 쌓이기 시작해요.|||初配信が終わると配信記録がたまり始めます。|||Stream records start after the first stream.
+최고 {0}명 · 30일|||最高{0}人 · 30日|||Peak {0} · 30 days
+최근 30일|||直近30日|||Last 30 days
+최근 4주|||直近4週|||Last 4 weeks
+최근 4주 날짜별 방송 시간|||直近4週の日別配信時間|||Daily stream time, last 4 weeks
+최근 4주 방송 달력|||直近4週の配信カレンダー|||Stream calendar, last 4 weeks
+최근 7일 방송|||直近7日の配信|||Streams, last 7 days
+최근 {0}일 동안 {1}번 방송했어요|||直近{0}日で{1}回配信しました|||{1} streams in the last {0} days
+최근 {0}일은 {1}와 {2} 방송을 반반씩 했어요|||直近{0}日は{1}と{2}を半々で配信しました|||Last {0} days: half {1}, half {2}
+최근 {0}일은 주로 {1} 방송을 했어요|||直近{0}日は主に{1}を配信しました|||Last {0} days: mostly {1}
+최근 주|||直近の週|||Latest week
+치지직에서 데뷔 공지 보기|||CHZZKでデビュー告知を見る|||See the debut notice on CHZZK
+평일|||平日|||weekdays
+평일 (월~금)|||平日(月〜金)|||Weekdays (Mon–Fri)
+평일과 주말의 방송 길이와 시청자가 비슷해요.|||平日と週末の配信時間と視聴者は同じくらいです。|||Weekday and weekend streams are similar in length and viewers.
+평일엔 주 {0}일, 주말엔 주 {1}일 방송해요|||平日は週{0}日、週末は週{1}日配信|||Streams {0} weekdays and {1} weekend days a week
+프로필 정보 펼치기|||プロフィールを開く|||Show profile info
+한 주에 쉬는 날|||週の休み|||Days off per week
+채널 미리 보기|||チャンネルを見る|||Preview the channel
 `.trim().split('\n');
 
 export const PORTAL_TRANSLATIONS: Record<string, readonly [string, string]> = { ...PROFILE_CONTENT_TRANSLATIONS, ...Object.fromEntries(rows.map((row) => {
