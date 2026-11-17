@@ -58,7 +58,8 @@ test('방송 중인 채널만 저장하고, 이번 회차 상위 100에 있는 �
   const fetcher = async (url) => { called.push(url); return url.includes(A) ? liveDetail('a', 120) : { code: 200, content: { status: 'CLOSE' } }; };
   tracked.resetChannelSamplesCheck();
   const report = await tracked.collectTrackedChannels(db, Date.parse('2026-11-17T11:02:00Z'), fetcher);
-  assert.deepEqual(report, { checked: 1, live: 1 });
+  assert.equal(report.checked, 1); assert.equal(report.live, 1);
+  assert.deepEqual(report.chzzkTargets, [`CHZZK:${A}`, `CHZZK:${B}`]); // 팔로워 확인 대상은 상위 100 채널도 포함
   assert.equal(called.length, 1); assert.match(called[0], new RegExp(A));
   const rows = raw.prepare('SELECT channel_key, viewers, started_at, tags FROM analytics_channel_samples').all();
   assert.equal(rows.length, 1); assert.equal(rows[0].viewers, 120); assert.equal(rows[0].started_at, '2026-11-17T11:00:00.000Z');
@@ -84,4 +85,48 @@ test('채널 통계는 직접 기록을 합쳐 방송 시간·시청자를 계�
   assert.equal(merged.length, 3);
   assert.deepEqual(merged.map((row) => row.weight), [10, 30, 20]); // 회차 10분, 다음 확인까지 30분, 마지막은 기본 20분
   assert.ok(merged.every((row) => row.vp));
+});
+
+const rollup = loadTypeScript(path.join(root, 'backend/src/services/channelRollup.ts'));
+
+test('하루 요약: 등록 채널만, 회차 기록과 직접 기록을 합쳐 만들고, 다시 만들어도 숫자가 두 번 더해지지 않는다', async () => {
+  const raw = fixture();
+  raw.exec(fs.readFileSync(path.join(root, 'backend/migrations/0066_channel_rollups.sql'), 'utf8'));
+  // 11/17(한국) 20:00~21:00 상위 100 정각 회차에 에이(A), 다른 채널(Z)은 등록되지 않음
+  raw.exec(`INSERT INTO analytics_broadcast_runs (run_id, platform, scheduled_at, started_at, attempt_id, state, scope) VALUES
+      ('r20','CHZZK','2026-11-17T11:00:00.000Z','2026-11-17T11:00:00.000Z','x','available','t'),('r21','CHZZK','2026-11-17T12:00:00.000Z','2026-11-17T12:00:00.000Z','y','available','t');
+    INSERT INTO analytics_broadcast_snapshots (run_id, stream_id, channel_key, channel_name, title, category_id, category_name, viewers) VALUES
+      ('r20','s1','CHZZK:${A}','에이','노래','m','음악/노래',300),('r21','s1','CHZZK:${A}','에이','노래','m','음악/노래',500),
+      ('r20','z1','CHZZK:${'f'.repeat(32)}','남','게임','g','게임',9000);
+    INSERT INTO analytics_channel_samples (channel_key, sampled_at, platform, stream_id, channel_name, title, category_name, viewers) VALUES
+      ('CHZZK:${B}','2026-11-17T13:02:00.000Z','CHZZK','b1','비','게임','게임',90),('CHZZK:${B}','2026-11-17T13:32:00.000Z','CHZZK','b1','비','게임','게임',110);`);
+  const db = binding(raw);
+  rollup.resetRollupsCheck();
+  const first = await rollup.buildDailyRollup(db, '2026-11-17');
+  const again = await rollup.buildDailyRollup(db, '2026-11-17');
+  assert.deepEqual(first, again);
+  assert.equal(first.channels, 2); // 등록 안 된 채널 Z는 빠짐
+  const streams = raw.prepare('SELECT channel_key, stream_id, minutes, viewer_points, viewer_sum, viewer_peak, top_category FROM analytics_channel_streams ORDER BY channel_key').all();
+  assert.equal(streams.length, 2);
+  const a = streams.find((s) => s.stream_id === 's1');
+  assert.equal(a.minutes, 20); assert.equal(a.viewer_points, 2); assert.equal(a.viewer_sum, 800); assert.equal(a.viewer_peak, 500); assert.equal(a.top_category, '음악/노래');
+  const b = streams.find((s) => s.stream_id === 'b1');
+  assert.equal(b.minutes, 50); assert.equal(b.viewer_sum, 200);
+  const daily = raw.prepare(`SELECT minutes, hours FROM analytics_channel_daily WHERE channel_key = 'CHZZK:${A}'`).get();
+  assert.equal(daily.minutes, 20); assert.equal(JSON.parse(daily.hours)[20], 10); // 한국 시간 20시
+});
+
+test('팔로워 수: 오늘 확인 안 한 치지직 채널만 몇 곳씩 확인하고, 요약을 다시 만들어도 지워지지 않는다', async () => {
+  const raw = fixture();
+  raw.exec(fs.readFileSync(path.join(root, 'backend/migrations/0066_channel_rollups.sql'), 'utf8'));
+  const db = binding(raw);
+  rollup.resetRollupsCheck();
+  const now = Date.parse('2026-11-17T05:00:00Z');
+  let calls = 0;
+  const fetcher = async () => { calls += 1; return { content: { followerCount: 1234 } }; };
+  assert.equal(await rollup.recordFollowers(db, [`CHZZK:${A}`, `CHZZK:${B}`], now, fetcher), 2);
+  assert.equal(await rollup.recordFollowers(db, [`CHZZK:${A}`, `CHZZK:${B}`], now, fetcher), 0); // 오늘 이미 확인
+  assert.equal(calls, 2);
+  await rollup.buildDailyRollup(db, '2026-11-17');
+  assert.equal(raw.prepare(`SELECT followers FROM analytics_channel_daily WHERE channel_key = 'CHZZK:${A}'`).get().followers, 1234);
 });

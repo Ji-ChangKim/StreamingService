@@ -6,7 +6,7 @@ import { activityChannelKey } from '../../../shared/broadcastActivity';
 import { fetchPlatformJson, parseStartTime, SOOP_MAIN_LIMIT } from './broadcastStatisticsSources';
 
 export const TRACK_CRON = '2-57/5 * * * *';
-export const TRACK_BATCH = 45;
+export const TRACK_BATCH = 40; // + 팔로워 확인 4곳 = 한 번 실행에 외부 호출 44번(한도 50)
 const SLOT_MS = 5 * 60 * 1000;
 const READY_TTL_MS = 10 * 60 * 1000;
 
@@ -86,26 +86,29 @@ export async function readChannelLive(key: string, sampledAt: string, fetcher: F
 }
 
 // 5분 예약 실행 본체. 반환값은 로그용.
-export async function collectTrackedChannels(db: D1Database, scheduledTime: number, fetcher: Fetcher = fetchPlatformJson): Promise<{ checked: number; live: number; skipped?: string }> {
+export async function collectTrackedChannels(db: D1Database, scheduledTime: number, fetcher: Fetcher = fetchPlatformJson): Promise<{ checked: number; live: number; skipped?: string; chzzkTargets?: string[] }> {
   if (!(await channelSamplesReady(db, scheduledTime))) return { checked: 0, live: 0, skipped: 'table-missing' };
   const sampledAt = new Date(Math.floor(scheduledTime / 60000) * 60000).toISOString();
   // 이번 회차 상위 100에 이미 잡힌 치지직 채널은 확인하지 않는다(같은 방송을 두 번 세지 않게, 호출 절약).
   const latestTop = await db.prepare(`SELECT s.channel_key FROM analytics_broadcast_snapshots s
     WHERE s.run_id = (SELECT run_id FROM analytics_broadcast_runs WHERE platform = 'CHZZK' AND state IN ('available','partial') ORDER BY scheduled_at DESC LIMIT 1)`).all<{ channel_key: string }>();
   const inTop = new Set((latestTop.results || []).map((row) => row.channel_key.toLowerCase()));
-  const targets = (await readTrackTargets(db)).filter((key) => !inTop.has(key.toLowerCase()));
+  const allTargets = await readTrackTargets(db);
+  const targets = allTargets.filter((key) => !inTop.has(key.toLowerCase()));
   const batch = trackBatch(targets, scheduledTime);
   const samples: ChannelSample[] = [];
   for (let index = 0; index < batch.length; index += 6) {
     const results = await Promise.all(batch.slice(index, index + 6).map((key) => readChannelLive(key, sampledAt, fetcher)));
     for (const sample of results) if (sample) samples.push(sample);
   }
-  if (samples.length) {
-    await db.batch(samples.map((s) => db.prepare(`INSERT OR IGNORE INTO analytics_channel_samples
-      (channel_key, sampled_at, platform, stream_id, channel_name, title, category_name, viewers, started_at, tags) VALUES (?,?,?,?,?,?,?,?,?,?)`)
-      .bind(s.channelKey, s.sampledAt, s.platform, s.streamId, s.channelName, s.title.slice(0, 300), s.categoryName.slice(0, 120), Math.round(s.viewers), s.startedAt, s.tags.length ? JSON.stringify(s.tags.slice(0, 20)) : null)));
+  // 쿼리 수 한도를 아끼려고 10행씩 한 쿼리로 저장한다(행당 바인딩 10개 × 10행 = 100개 이하).
+  for (let index = 0; index < samples.length; index += 10) {
+    const rows = samples.slice(index, index + 10);
+    await db.prepare(`INSERT OR IGNORE INTO analytics_channel_samples
+      (channel_key, sampled_at, platform, stream_id, channel_name, title, category_name, viewers, started_at, tags) VALUES ${rows.map(() => '(?,?,?,?,?,?,?,?,?,?)').join(',')}`)
+      .bind(...rows.flatMap((s) => [s.channelKey, s.sampledAt, s.platform, s.streamId, s.channelName, s.title.slice(0, 300), s.categoryName.slice(0, 120), Math.round(s.viewers), s.startedAt, s.tags.length ? JSON.stringify(s.tags.slice(0, 20)) : null])).run();
   }
-  return { checked: batch.length, live: samples.length };
+  return { checked: batch.length, live: samples.length, chzzkTargets: allTargets.filter((key) => key.startsWith('CHZZK:')) }; // 팔로워는 상위 100에 있는 채널도 확인
 }
 
 // 90일 지난 기록 정리(한 시간에 최대 2,000행: 하루 기록량보다 넉넉히 크고 쓰기 한도에는 작게). WITHOUT ROWID라 기본키로 지운다.

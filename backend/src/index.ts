@@ -69,6 +69,8 @@ import { activitySitemapEntries, renderActivityPage, escapeActivityHtml } from '
 import { boardInitialBody, boardPageTitle, methodInitialBody, renderBoardPage } from './services/analyticsBoardPage';
 import { prunePersonalData } from './services/personalDataRetention';
 import { collectTrackedChannels, pruneChannelSamples, TRACK_CRON } from './services/trackedChannelCollection';
+import { buildDailyRollup, kstDay, recordFollowers } from './services/channelRollup';
+import { fetchPlatformJson } from './services/broadcastStatisticsSources';
 import { cachedBoard, matchPageCopy, putPageCopy } from './services/edgeCache';
 import { activityNoindex } from '../../shared/activitySeo';
 import { cheerApi, resetWeeklyCheers, WEEKLY_RESET_CRON } from './services/cheerService';
@@ -1562,8 +1564,20 @@ export default {
     // 매주 월요일 00:00(KST) 주간 응원 수 초기화 전용 크론은 다른 수집 작업과 분리한다.
     // 5분마다 등록 버튜버 채널을 나눠서 확인한다(자기 외부 호출 한도를 따로 쓰도록 별도 예약).
     if (event?.cron === TRACK_CRON) {
-      if (env.DB) ctx.waitUntil(collectTrackedChannels(env.DB, scheduledTime)
-        .then((report) => console.log('[Scheduled Cron] Tracked channels:', JSON.stringify(report)))
+      if (!env.DB) return;
+      const at = new Date(scheduledTime);
+      // 매일 07:02(한국 시간) 슬롯은 전날 채널 요약을 만든다(자기 실행 한도를 온전히 쓰도록 이 슬롯은 직접 기록을 쉬어 간다).
+      if (at.getUTCHours() === 22 && at.getUTCMinutes() < 5) {
+        ctx.waitUntil(buildDailyRollup(env.DB, kstDay(scheduledTime - 86400000))
+          .then((report) => console.log('[Scheduled Cron] Channel rollup:', JSON.stringify(report)))
+          .catch((err) => console.error('[Scheduled Cron] Channel rollup error:', err)));
+        return;
+      }
+      ctx.waitUntil(collectTrackedChannels(env.DB, scheduledTime)
+        .then(async (report) => {
+          const followers = report.chzzkTargets ? await recordFollowers(env.DB, report.chzzkTargets, scheduledTime, (url) => fetchPlatformJson(url)) : 0;
+          console.log('[Scheduled Cron] Tracked channels:', JSON.stringify({ checked: report.checked, live: report.live, skipped: report.skipped, followers }));
+        })
         .catch((err) => console.error('[Scheduled Cron] Tracked channels error:', err)));
       return;
     }
