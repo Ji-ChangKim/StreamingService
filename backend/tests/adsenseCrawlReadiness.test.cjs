@@ -128,3 +128,23 @@ test('개인정보처리방침에 운영 주체·보호책임자·시행일이 �
   assert.match(renderPortalPage(template, new URL('https://vdebut.live/privacy?lang=en')), /Privacy officer: VDébut operator/);
   assert.match(renderPortalPage(template, new URL('https://vdebut.live/privacy?lang=ja')), /個人情報保護責任者：VDébut運営者/);
 });
+
+test('프로필 일본어·영어판은 한국어판을 canonical로 가리키고 사이트맵에는 한국어판만 싣는다', () => {
+  const { portalSitemap } = load('../src/services/portalPageService.ts');
+  const rich = profile('rich-one', '리치', '노래와 종합 게임을 주로 하며 매주 금요일 밤 팬들과 함께 신곡 커버를 공개합니다.');
+  const ja = renderPortalPage(template, new URL('https://vdebut.live/creator/rich-one?lang=ja'), rich);
+  assert.match(ja, /<link rel="canonical" href="https:\/\/vdebut.live\/creator\/rich-one">/);
+  assert.doesNotMatch(ja, /hreflang/);
+  assert.match(ja, /<html lang="ja">/); // 방문자 화면 언어는 그대로
+  const ko = renderPortalPage(template, new URL('https://vdebut.live/creator/rich-one'), rich);
+  assert.doesNotMatch(ko, /hreflang/);
+  // 안내 페이지는 그대로 세 언어 연결을 유지한다.
+  const guideJa = renderPortalPage(template, new URL('https://vdebut.live/guide?lang=ja'));
+  assert.match(guideJa, /<link rel="canonical" href="https:\/\/vdebut.live\/guide\?lang=ja">/);
+  assert.match(guideJa, /hreflang="en"/);
+  const xml = portalSitemap([rich]);
+  assert.match(xml, /<loc>https:\/\/vdebut.live\/creator\/rich-one<\/loc>/);
+  assert.doesNotMatch(xml, /creator\/rich-one\?lang=/);
+  assert.match(xml, /<loc>https:\/\/vdebut.live\/guide\?lang=ja<\/loc>/);
+  assert.equal((xml.match(/<url>/g) || []).length, 9 * 3 + 1);
+});

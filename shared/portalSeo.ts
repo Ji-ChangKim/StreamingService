@@ -16,6 +16,7 @@ export function portalPageSeo(url: URL, profile?: { displayName: string; descrip
     '/me/favorites': '관심 버튜버', '/about': '버튜버와 팬의 소개팅', '/guide': '이용 가이드',
     '/contact': '문의·정보 정정', '/admin': '등록·문의 검토', '/privacy': '개인정보처리방침', '/terms': '이용약관',
   };
+  const profilePage = /^\/creator\/[^/]+$/.test(path);
   const known = Boolean(titles[path]) || /^\/submissions\/[^/]+$/.test(path) || /^\/creator\/[^/]+$/.test(path);
   const missingProfile = /^\/creator\/[^/]+$/.test(path) && !profile;
   const privatePage = path === '/admin' || path.startsWith('/me/') || path.startsWith('/submissions/');
@@ -33,8 +34,10 @@ export function portalPageSeo(url: URL, profile?: { displayName: string; descrip
   const description = profile ? profileExcerpt(profile, 160) : text(missingProfile ? '다른 버튜버의 소개와 데뷔 일정을 살펴보세요.' : descriptions[path] || (path.startsWith('/submissions/') ? '접수 번호와 비공개 확인 키로 문의 처리 상태를 확인하세요.' : known ? '등록 신청과 문의 내용을 확인하고 검토합니다.' : '주소를 확인하거나 데뷔 캘린더에서 새로운 만남을 찾아보세요.'));
   return { path, known, development, privatePage, title, description, language,
     robots: development || privatePage || !known || missingProfile || options.unavailable ? 'noindex, nofollow' : 'index, follow',
-    canonical: siteCanonical(path, language),
-    alternates: privatePage || !known || missingProfile || options.unavailable ? [] : siteAlternates(path),
+    // 프로필 소개글은 번역하지 않으므로 일본어·영어판은 한국어판과 본문이 같다.
+    // 복제 페이지로 보이지 않게 원본(한국어판)을 canonical로 가리키고 언어 연결(hreflang)은 내지 않는다.
+    canonical: siteCanonical(path, profilePage ? 'ko' : language),
+    alternates: privatePage || !known || missingProfile || options.unavailable || profilePage ? [] : siteAlternates(path),
     // 개인 배너나 프로필 사진을 공유 이미지로 사용하고 자료가 없으면 서비스 이미지를 사용한다.
     image: portalWebUrl(profile?.bannerUrl || '') || portalWebUrl(profile?.avatarUrl || '') || 'https://vdebut.live/og-image.png' };
 }

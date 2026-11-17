@@ -33,6 +33,9 @@ export function renderPortalPage(html: string, url: URL, profile?: PortalProfile
 // 운영 공개 목록에 승인된 신규 소개도 포함하고 비공개 주소는 제외한다.
 export function portalSitemap(profiles: PortalProfile[]): string {
   // 얇은 소개는 보강 전까지 사이트맵에 넣지 않는다.
-  const paths = [...PORTAL_INDEX_PATHS, ...profiles.filter((profile) => isPublicProfile(profile) && !isThinProfile(profile)).map((profile) => `/creator/${encodeURIComponent(profile.slug)}`)];
-  return [...new Set(paths)].flatMap((path) => (['ko', 'ja', 'en'] as const).map((language) => sitemapEntry(path, language, true))).join('');
+  const profilePaths = profiles.filter((profile) => isPublicProfile(profile) && !isThinProfile(profile)).map((profile) => `/creator/${encodeURIComponent(profile.slug)}`);
+  // 안내 페이지는 본문까지 번역돼 있어 세 언어를 모두 싣는다. 프로필은 소개글이 원문 그대로라 한국어판만 싣는다.
+  const pages = [...new Set(PORTAL_INDEX_PATHS)].flatMap((path) => (['ko', 'ja', 'en'] as const).map((language) => sitemapEntry(path, language, true)));
+  const creators = [...new Set(profilePaths)].map((path) => sitemapEntry(path, 'ko'));
+  return [...pages, ...creators].join('');
 }
