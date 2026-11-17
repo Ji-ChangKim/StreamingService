@@ -56,9 +56,8 @@ export function isRookieStreamer(debutDate?: string | null, title?: string, tags
 }
 
 // 외부 플랫폼의 응답을 제한 시간 안에 읽는다.
-// 무료 플랜은 한 번 실행에 외부 호출이 50번까지다. 10분 수집은 치지직 목록 2번 + SOOP 등록 채널 40곳까지만 확인하고,
-// 나머지 SOOP 채널과 등록 치지직 버튜버는 5분마다 도는 등록 채널 확인(trackedChannelCollection)이 나눠 확인한다.
-export const SOOP_MAIN_LIMIT = 40;
+// 10분 수집이 확인하는 SOOP 등록 채널 수(id 순). 나머지 SOOP 채널과 등록 치지직 버튜버는 5분마다 도는 등록 채널 확인(trackedChannelCollection)이 확인한다.
+export const SOOP_MAIN_LIMIT = 150;
 
 export async function fetchPlatformJson<T>(url: string): Promise<T> {
   const controller = new AbortController();

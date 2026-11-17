@@ -1,12 +1,13 @@
 // 등록 버튜버 직접 기록(기획문서 38번 1항·40번).
 // 치지직 상위 100개 수집에 잡히지 않는 등록 버튜버 채널을 5분마다 나눠서 확인하고, 방송 중일 때만 analytics_channel_samples에 남긴다.
-// - 무료 플랜 한 번 실행의 외부 호출 한도(50번) 안에서 TRACK_BATCH곳씩 차례로 확인한다.
+// - 한 번 실행에 TRACK_BATCH곳까지 확인한다(넘으면 차례로 나눠 돈다).
 // - 테이블(마이그레이션 0065)이 없으면 아무것도 하지 않는다(외부 호출도 하지 않음).
 import { activityChannelKey } from '../../../shared/broadcastActivity';
 import { fetchPlatformJson, parseStartTime, SOOP_MAIN_LIMIT } from './broadcastStatisticsSources';
 
 export const TRACK_CRON = '2-57/5 * * * *';
-export const TRACK_BATCH = 40; // + 팔로워 확인 4곳 = 한 번 실행에 외부 호출 44번(한도 50)
+// Workers Paid(실행당 외부 호출 1,000번): 등록 채널 전부(현재 약 250곳)를 5분마다 확인한다. 대상이 늘면 이 수만큼씩 나눠 돈다.
+export const TRACK_BATCH = 400;
 const SLOT_MS = 5 * 60 * 1000;
 const READY_TTL_MS = 10 * 60 * 1000;
 
@@ -97,8 +98,8 @@ export async function collectTrackedChannels(db: D1Database, scheduledTime: numb
   const targets = allTargets.filter((key) => !inTop.has(key.toLowerCase()));
   const batch = trackBatch(targets, scheduledTime);
   const samples: ChannelSample[] = [];
-  for (let index = 0; index < batch.length; index += 6) {
-    const results = await Promise.all(batch.slice(index, index + 6).map((key) => readChannelLive(key, sampledAt, fetcher)));
+  for (let index = 0; index < batch.length; index += 8) {
+    const results = await Promise.all(batch.slice(index, index + 8).map((key) => readChannelLive(key, sampledAt, fetcher)));
     for (const sample of results) if (sample) samples.push(sample);
   }
   // 쿼리 수 한도를 아끼려고 10행씩 한 쿼리로 저장한다(행당 바인딩 10개 × 10행 = 100개 이하).

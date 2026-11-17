@@ -2,7 +2,7 @@
 // 방송별 몫(analytics_channel_streams)과 채널×날(analytics_channel_daily)을 만든다.
 // - 대상은 등록 버튜버 채널만(버튜버 DB·랭킹·프로필용). 상위 100의 다른 채널은 원본 90일로 충분하다.
 // - 같은 날을 다시 만들어도 덮어쓰기라 숫자가 두 번 더해지지 않는다.
-// - 무료 플랜 한도: 쿼리당 바인딩 100개 이하로 여러 행을 묶어 쓰고, 실행당 쿼리 수를 작게 유지한다.
+// - D1 쿼리당 바인딩 100개 이하로 여러 행을 묶어 쓴다.
 import { mergeChannelRows } from './analyticsBoardService';
 import { channelSamplesReady, readTrackTargets } from './trackedChannelCollection';
 import { activityChannelKey } from '../../../shared/broadcastActivity';
@@ -95,7 +95,7 @@ export async function buildDailyRollup(db: D1Database, day: string, now = Date.n
 }
 
 // 팔로워 수(치지직): 오늘 아직 확인하지 않은 등록 채널을 한 번에 몇 곳씩 확인한다(직접 기록 실행에 붙여 외부 호출 한도를 나눠 씀).
-export const FOLLOWER_BATCH = 4;
+export const FOLLOWER_BATCH = 60; // 하루 1회/채널. 몇 번의 실행 안에 등록 치지직 채널 전부를 확인한다
 export async function recordFollowers(db: D1Database, chzzkKeys: string[], now: number, fetcher: (url: string) => Promise<any>): Promise<number> {
   if (!chzzkKeys.length || !(await rollupsReady(db, now))) return 0;
   const day = kstDay(now);
