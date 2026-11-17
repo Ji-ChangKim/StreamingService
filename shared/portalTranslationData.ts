@@ -919,11 +919,14 @@ X(트위터) 데뷔 공지 확인하기|||X（Twitter）のデビュー告知を
 공개 방송 기록 기준|||公開された配信記録に基づきます|||Based on public stream records
 방송 기록 자세히 보기|||配信記録を詳しく見る|||See full stream records
 데뷔 후 {0}주|||デビュー後{0}週|||{0} weeks since debut
+데뷔 둘째 주보다 시청자가 {0}배로 늘었어요|||デビュー2週目より視聴者が{0}倍に増えました|||Viewers have grown {0}× since debut week 2
+데뷔 둘째 주보다 시청자가 {0}%나 늘었어요|||デビュー2週目より視聴者が{0}%も増えました|||Viewers are up a whopping {0}% from debut week 2
 데뷔 둘째 주보다 시청자가 {0}% 크게 늘었어요|||デビュー2週目より視聴者が{0}%大きく増えました|||Viewers are up a big {0}% from debut week 2
 데뷔 둘째 주보다 시청자가 {0}% 늘었어요|||デビュー2週目より視聴者が{0}%増えました|||Viewers are up {0}% from debut week 2
 데뷔 둘째 주보다 시청자가 조금 늘었어요 ({0}%)|||デビュー2週目より視聴者が少し増えました({0}%)|||Viewers are up a little from debut week 2 ({0}%)
 최근 주 평균 시청자는 {0}명, 둘째 주와 거의 비슷해요|||直近週の平均視聴者は{0}人、2週目とほぼ同じです|||Latest-week average is {0} viewers, about the same as week 2
 최근 주 평균 시청자는 {0}명이에요 · 둘째 주보다 {1}% 적어요|||直近週の平均視聴者は{0}人です · 2週目より{1}%少なめです|||Latest-week average is {0} viewers · {1}% fewer than week 2
+최근 주 평균 시청자는 {0}명이에요 · 둘째 주의 {1}% 수준이에요|||直近週の平均視聴者は{0}人です · 2週目の{1}%ほどです|||Latest-week average is {0} viewers · about {1}% of week 2
 데뷔 주 평균 시청자|||デビュー週の平均視聴者|||Debut-week average viewers
 둘째 주 평균 시청자|||2週目の平均視聴者|||Week-2 average viewers
 {0}주 평균 시청자|||{0}週目の平均視聴者|||Week-{0} average viewers

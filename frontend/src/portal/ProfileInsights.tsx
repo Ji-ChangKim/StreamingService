@@ -125,23 +125,31 @@ function Summary({ data, days, setDays, openRecord }: { data: AnalyticsChannelBo
 
 // ③ 데뷔 후 성장: 데뷔일부터 주차별 평균 시청자. 데뷔 주는 첫 방송 효과로 몰리는 때라 기준에서 빼고,
 // 둘째 주(없으면 그다음 기록된 주)를 기준으로 최근 주와 비교한다. 데뷔 주 뒤로 두 주 이상 기록이 있을 때만 보인다.
-// 6단계: +20%↑ 크게 늘었어요 / +10%↑ 늘었어요 / +5%↑ 조금 늘었어요 / ±5% 비슷해요 / 그 아래는 숫자만 담담하게(빨간색·'줄었어요' 없음).
-export function growthTone(change: number): 'up3' | 'up2' | 'up1' | 'flat' | 'down1' | 'down2' {
+// 9단계(위아래로 크게 움직인 경우까지):
+// +100%↑ ○배로 / +50%↑ ○%나 / +20%↑ 크게 / +10%↑ 늘었어요 / +5%↑ 조금 / ±5% 비슷해요
+// −5~−10% 거의 비슷 / −10~−50% ○% 적어요 / −50%↓ 둘째 주의 ○% 수준 — 줄어든 쪽은 숫자만 담담하게(빨간색·'줄었어요' 없음).
+export function growthTone(change: number): 'up5' | 'up4' | 'up3' | 'up2' | 'up1' | 'flat' | 'down1' | 'down2' | 'down3' {
+  if (change >= 100) return 'up5';
+  if (change >= 50) return 'up4';
   if (change >= 20) return 'up3';
   if (change >= 10) return 'up2';
   if (change >= 5) return 'up1';
   if (change > -5) return 'flat';
   if (change > -10) return 'down1';
-  return 'down2';
+  if (change > -50) return 'down2';
+  return 'down3';
 }
-function growthHeading(change: number, last: number): string {
+function growthHeading(change: number, last: number, base: number): string {
   switch (growthTone(change)) {
+    case 'up5': return t('데뷔 둘째 주보다 시청자가 {0}배로 늘었어요', [String(Math.floor(last / base * 10) / 10)]);
+    case 'up4': return t('데뷔 둘째 주보다 시청자가 {0}%나 늘었어요', [change]);
     case 'up3': return t('데뷔 둘째 주보다 시청자가 {0}% 크게 늘었어요', [change]);
     case 'up2': return t('데뷔 둘째 주보다 시청자가 {0}% 늘었어요', [change]);
     case 'up1': return t('데뷔 둘째 주보다 시청자가 조금 늘었어요 ({0}%)', [change]);
     case 'flat': return t('데뷔 후 시청자가 꾸준히 비슷해요');
     case 'down1': return t('최근 주 평균 시청자는 {0}명, 둘째 주와 거의 비슷해요', [num(last)]);
-    default: return t('최근 주 평균 시청자는 {0}명이에요 · 둘째 주보다 {1}% 적어요', [num(last), Math.abs(change)]);
+    case 'down2': return t('최근 주 평균 시청자는 {0}명이에요 · 둘째 주보다 {1}% 적어요', [num(last), Math.abs(change)]);
+    default: return t('최근 주 평균 시청자는 {0}명이에요 · 둘째 주의 {1}% 수준이에요', [num(last), Math.round(last / base * 100)]);
   }
 }
 function Growth({ data, profile }: { data: AnalyticsChannelBoard; profile: PortalProfile }) {
@@ -168,11 +176,11 @@ function Growth({ data, profile }: { data: AnalyticsChannelBoard; profile: Porta
   const weekLabel = (i: number) => (i === 0 ? t('데뷔 주') : `${i + 1}${t('주')}`);
   return <section className="content-panel vd-ins" aria-labelledby="ins-grow">
     <span className="vd-ins-eyebrow">GROWTH · {t('데뷔 후 {0}주', [series.length])}</span>
-    <h2 id="ins-grow">{growthHeading(change, last.v)}</h2>
+    <h2 id="ins-grow">{growthHeading(change, last.v, base.v)}</h2>
     <div className="vd-ins-stats three">
       <div><span>{t('데뷔 주 평균 시청자')}</span><b>{debutWeek ? num(debutWeek.v) : '–'}{debutWeek && <small>{t('명')}</small>}</b></div>
       <div><span>{base.i === 1 ? t('둘째 주 평균 시청자') : t('{0}주 평균 시청자', [base.i + 1])}</span><b>{num(base.v)}<small>{t('명')}</small></b></div>
-      <div><span>{t('최근 주 평균 시청자')}</span><b>{num(last.v)}<small>{t('명')}</small></b>{tone !== 'flat' && tone !== 'down1' && <em className={`vd-ins-delta ${tone}`}>{change > 0 ? '+' : ''}{change}%</em>}</div>
+      <div><span>{t('최근 주 평균 시청자')}</span><b>{num(last.v)}<small>{t('명')}</small></b>{(tone.startsWith('up') || tone === 'down2') && <em className={`vd-ins-delta ${tone}`}>{tone === 'up5' ? `×${Math.floor(last.v / base.v * 10) / 10}` : `${change > 0 ? '+' : ''}${change}%`}</em>}</div>
     </div>
     <svg viewBox={`0 0 ${w} ${h + 10}`} className="vd-ins-chart" role="img" aria-label={t('주차별 평균 시청자: {0}', [known.map((p) => `${weekLabel(p.i)} ${p.v}`).join(', ')])}>
       {debutWeek && <line x1={x(0)} y1={y(debutWeek.v)} x2={x(base.i)} y2={y(base.v)} stroke="#BFD3F8" strokeWidth="2" strokeDasharray="5 5" />}
