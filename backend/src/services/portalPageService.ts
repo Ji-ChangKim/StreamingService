@@ -25,7 +25,7 @@ export function renderPortalPage(html: string, url: URL, profile?: PortalProfile
   html = html.replace('</head>', `${alternates}${INITIAL_PAGE_LOADING_HEAD}</head>`);
   const languageQuery = seo.language === 'ko' ? '' : `?lang=${seo.language}`;
   const body = `<main><h1>${esc(profile?.displayName || seo.title.split(' | ')[0])}</h1>${profile ? '' : `<p>${esc(seo.description)}</p>`}<nav><a href="/${languageQuery}">${text('데뷔 캘린더')}</a> · <a href="/creators${languageQuery}">${text('버튜버 찾기')}</a> · <a href="/analytics${languageQuery}">${text('방송 통계')}</a> · <a href="/guide${languageQuery}">${text('이용 가이드')}</a></nav>${profile?.channelUrl ? `<p><a href="${esc(profile.channelUrl)}" rel="noopener noreferrer">${text('공식 방송 채널')}</a></p>` : ''}${portalEditorialBody(seo.path, seo.language, profile, profiles.filter(isPublicProfile))}</main>`;
-  html = html.replace(/<div id="root">[\s\S]*?<\/div>/, initialPageRoot(body, text('화면을 불러오고 있어요')));
+  html = html.replace(/<div id="root">[\s\S]*?<\/div>/, initialPageRoot(body, text('화면을 불러오고 있어요'), seo.language));
   // 소개 상세는 전체 목록을 기다리지 않도록 이 버튜버의 공개 정보를 첫 HTML에 함께 보낸다.
   return profile ? html.replace('</body>', `<script type="application/json" id="vd-initial-profile">${activityJson(publicProfileView(profile))}</script></body>`) : html;
 }

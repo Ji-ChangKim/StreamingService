@@ -42,10 +42,11 @@ export function renderActivityPage(html: string, url: URL, filters: ActivityFilt
   html = html.replace(/<link\b[^>]*rel="(?:canonical|alternate)"[^>]*>/g, '');
   html = html.replace(/<script\b[^>]*type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>/g, '');
   html = html.replace('</head>', `<meta name="description" content="${esc(seo.description)}"><link rel="canonical" href="${esc(seo.canonical)}"><meta name="robots" content="${noindex ? 'noindex,follow' : 'index,follow'}"><meta property="og:title" content="${esc(seo.title)}"><meta property="og:description" content="${esc(seo.description)}"><meta property="og:url" content="${esc(seo.canonical)}"><meta property="og:type" content="website"><meta property="og:image" content="${esc(seo.image)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(seo.title)}"><meta name="twitter:description" content="${esc(seo.description)}"><meta name="twitter:image" content="${esc(seo.image)}"><script type="application/ld+json">${activityJson(pageStructuredData(seo))}</script></head>`);
+  const pageLanguage = language === 'ja' || language === 'en' ? language : 'ko';
   const start = html.indexOf('<div id="root">');
   const end = html.lastIndexOf('</div>');
   if (start < 0 || end < start) throw new Error('통계 초기 본문을 찾을 수 없습니다.');
-  return html.slice(0, start).replace('</head>', `${INITIAL_PAGE_LOADING_HEAD}</head>`) + initialPageRoot(activityInitialBody(data, url.searchParams.get('lang') === 'ja' ? 'ja' : url.searchParams.get('lang') === 'en' ? 'en' : 'ko'), '화면을 불러오고 있어요') + `<script id="activity-bootstrap" type="application/json">${activityJson({ filters, data: { ...data, broadcasts: data.broadcasts.slice(0, 25) } })}</script>` + html.slice(end + 6);
+  return html.slice(0, start).replace('</head>', `${INITIAL_PAGE_LOADING_HEAD}</head>`) + initialPageRoot(activityInitialBody(data, pageLanguage), '화면을 불러오고 있어요', pageLanguage) + `<script id="activity-bootstrap" type="application/json">${activityJson({ filters, data: { ...data, broadcasts: data.broadcasts.slice(0, 25) } })}</script>` + html.slice(end + 6);
 }
 
 // 실제 수집 기록이 있는 채널만 개인 통계 사이트맵에 포함한다.

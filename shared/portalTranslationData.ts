@@ -887,6 +887,33 @@ X(트위터) 데뷔 공지 확인하기|||X（Twitter）のデビュー告知を
 데뷔 완료|||デビュー完了|||Debut completed
 데뷔일|||デビュー日|||Debut date
 역사적인 첫 방송 다시보기|||記念すべき初配信アーカイブ|||Debut stream archive
+방송 통계 정보|||配信統計について|||About broadcast statistics
+방송 통계는 치지직·SOOP이 공개한 라이브 방송 목록을 정해진 간격으로 모아 계산한 참고 자료입니다. 수집 시점 사이의 변화나 플랫폼이 제공하지 않는 정보는 반영되지 않으며, 플랫폼의 공식 수치와 다를 수 있습니다.|||配信統計は、CHZZK・SOOPが公開しているライブ配信一覧を一定間隔で集めて計算した参考資料です。収集時点の間の変化やプラットフォームが提供しない情報は反映されず、公式の数値と異なる場合があります。|||Broadcast statistics are reference figures calculated from the public live lists of CHZZK and SOOP, collected at fixed intervals. Changes between collections and data the platforms do not provide are not reflected, so figures may differ from official numbers.
+외부 링크와 책임 범위|||外部リンクと責任の範囲|||External links and responsibility
+VDébut은 방송 채널, 데뷔 공지, 영상 등 외부 사이트로 연결합니다. 외부 사이트의 내용과 운영은 각 사이트의 책임이며, 이용 전에 해당 사이트의 약관을 확인해 주세요.|||VDébutは配信チャンネル、デビュー告知、動画などの外部サイトにリンクします。外部サイトの内容と運営は各サイトの責任であり、利用前に各サイトの規約をご確認ください。|||VDébut links to external sites such as broadcast channels, debut announcements and videos. Each external site is responsible for its own content and operation; please check its terms before use.
+VDébut은 정확한 정보를 제공하려고 노력하지만, 등록 정보와 통계의 완전성을 보증하지 않습니다. 잘못된 정보는 문의 화면으로 알려 주시면 확인 후 고칩니다.|||VDébutは正確な情報の提供に努めていますが、登録情報や統計の完全性を保証するものではありません。誤った情報はお問い合わせ画面からお知らせいただければ、確認のうえ修正します。|||VDébut strives to provide accurate information but does not guarantee the completeness of registered information or statistics. If you find an error, let us know through the contact page and we will check and fix it.
+서비스 변경과 약관 개정|||サービスの変更と規約の改定|||Service changes and amendments
+서비스 기능은 운영 상황에 따라 바뀌거나 중단될 수 있습니다. 약관이 바뀌면 이 페이지에 변경 내용과 시행일을 안내합니다.|||サービスの機能は運営状況により変更・終了することがあります。規約を変更する場合は、このページで変更内容と施行日をお知らせします。|||Features may change or be discontinued depending on operations. If these terms change, this page will show the changes and the new effective date.
+이 이용약관은 2026년 11월 17일부터 시행합니다.|||この利用規約は2026年11月17日から施行します。|||These terms take effect on November 17, 2026.
+이런 내용을 접수해요|||受け付けている内容|||What you can contact us about
+데뷔 일정·소개 정보 정정, 소개 삭제 요청, 등록 접수 확인, 사칭·채널 정보 오류, 이미지·소개글 권리 침해, 부적절한 콘텐츠 신고, 기능 제안과 그 밖의 문의를 받습니다.|||デビュー日程・紹介情報の訂正、紹介の削除依頼、登録受付の確認、なりすまし・チャンネル情報の誤り、画像・紹介文の権利侵害、不適切なコンテンツの報告、機能の提案、その他のお問い合わせを受け付けています。|||We accept corrections to debut schedules and profiles, profile removal requests, registration status checks, impersonation or channel errors, image and text rights issues, reports of inappropriate content, feature suggestions and other inquiries.
+접수 방법|||受付方法|||How to contact us
+이 화면의 양식으로 접수하면 비공개 확인 키가 발급되고, 접수 상태 확인 화면에서 처리 결과와 답변을 볼 수 있습니다. 양식을 쓰기 어렵다면 이메일로 보내 주셔도 됩니다.|||この画面のフォームで送信すると非公開の確認キーが発行され、受付状況の確認画面で処理結果と回答を確認できます。フォームが使いにくい場合はメールでもお送りいただけます。|||Submitting the form on this page issues a private access key, which you can use on the request status page to see the result and our reply. You can also email us if the form does not suit you.
+빠르게 처리하려면|||スムーズな対応のために|||For a faster response
+고칠 페이지 주소와 확인할 수 있는 공식 출처(방송국 공지, 공식 SNS 게시물 등)를 함께 적어 주세요. 신고에 필요하지 않은 개인정보는 적지 마세요.|||修正が必要なページのURLと、確認できる公式の出典（配信チャンネルの告知、公式SNSの投稿など）を一緒にお書きください。報告に不要な個人情報は書かないでください。|||Include the address of the page to fix and a verifiable official source (a channel notice, an official social media post, etc.). Please do not include personal information the report does not need.
+처리 순서|||対応の流れ|||How we handle requests
+운영자가 접수 내용을 공식 채널과 공지로 확인한 뒤 반영합니다. 본인 확인이 필요한 요청은 공식 채널에서 확인할 수 있는 방법을 안내드릴 수 있습니다. 처리 결과는 확인 키 또는 답장 이메일로 알려 드립니다.|||運営者が公式チャンネルと告知で内容を確認したうえで反映します。本人確認が必要な依頼には、公式チャンネルで確認できる方法をご案内することがあります。結果は確認キーまたは返信メールでお知らせします。|||The operator checks each request against official channels and announcements before applying it. For requests that need identity confirmation, we may suggest a way to confirm through your official channel. Results are shared via your access key or a reply email.
+운영 주체|||運営者|||Operator
+VDébut은 개인이 운영하는 독립 서비스입니다. 이메일: ru_0120@naver.com|||VDébutは個人が運営する独立したサービスです。メール: ru_0120@naver.com|||VDébut is an independent service run by an individual. Email: ru_0120@naver.com
+왜 만들었나요|||なぜ作ったのか|||Why we built it
+새로운 버튜버의 데뷔 소식은 방송국 공지와 SNS에 흩어져 있어, 팬은 첫 방송을 놓치기 쉽고 신입 버튜버는 첫 시청자를 만나기 어렵습니다. VDébut은 데뷔 일정과 소개를 한곳에 모아 이 첫 만남을 돕기 위해 만들었습니다.|||新人VTuberのデビュー情報は配信チャンネルの告知やSNSに散らばっていて、ファンは初配信を見逃しやすく、新人VTuberは最初の視聴者に出会いにくいものです。VDébutはデビュー日程と紹介を一か所に集め、この最初の出会いを手助けするために作りました。|||News of new VTuber debuts is scattered across channel notices and social media, so fans easily miss first streams and new VTubers struggle to meet their first viewers. VDébut gathers debut schedules and profiles in one place to help that first meeting happen.
+정보는 어디에서 오나요|||情報の出どころ|||Where the information comes from
+데뷔 일정과 소개는 버튜버 본인이나 팬이 등록하고, 운영자가 공식 방송 채널과 데뷔 공지를 확인한 뒤 공개합니다. 소개에는 등록된 원문과 공식 출처 링크를 함께 표시합니다.|||デビュー日程と紹介はVTuber本人やファンが登録し、運営者が公式の配信チャンネルとデビュー告知を確認してから公開します。紹介には登録された原文と公式の出典リンクを表示します。|||Debut schedules and profiles are submitted by VTubers or fans and published after the operator checks the official channel and debut announcement. Profiles show the submitted text together with links to official sources.
+방송 통계는 치지직·SOOP이 공개한 라이브 방송 목록을 10분마다 모아 계산합니다. 어떤 기준으로 계산하는지는 방송 통계의 집계 기준 페이지에 정리해 두었습니다.|||配信統計は、CHZZK・SOOPが公開しているライブ配信一覧を10分ごとに集めて計算しています。計算の基準は配信統計の集計基準ページにまとめています。|||Broadcast statistics are calculated from the public live lists of CHZZK and SOOP, collected every 10 minutes. The method is explained on the statistics methodology page.
+공개 기준|||公開基準|||Publishing standards
+공식 채널로 확인할 수 없는 정보, 사칭, 권리를 침해하는 이미지나 글은 공개하지 않습니다. 일정이 바뀌거나 정보가 틀렸다면 문의 화면으로 알려 주세요. 확인 후 고칩니다.|||公式チャンネルで確認できない情報、なりすまし、権利を侵害する画像や文章は公開しません。日程の変更や誤りはお問い合わせ画面からお知らせください。確認のうえ修正します。|||We do not publish information that cannot be confirmed through official channels, impersonation, or images and text that infringe rights. If a schedule changes or something is wrong, tell us through the contact page and we will fix it after checking.
+운영|||運営|||Operation
+VDébut은 개인이 운영하는 독립 서비스이며, 운영 비용을 위해 광고가 표시될 수 있습니다. 광고는 소개 공개 여부나 순서에 영향을 주지 않습니다.|||VDébutは個人が運営する独立したサービスで、運営費のために広告が表示されることがあります。広告は紹介の公開可否や表示順に影響しません。|||VDébut is an independent service run by an individual, and ads may be shown to cover running costs. Ads do not affect whether or in what order profiles are shown.
 `.trim().split('\n');
 
 export const PORTAL_TRANSLATIONS: Record<string, readonly [string, string]> = { ...PROFILE_CONTENT_TRANSLATIONS, ...Object.fromEntries(rows.map((row) => {

@@ -1,5 +1,5 @@
 import { type PortalProfile, PORTAL_PLATFORMS, portalWebUrl } from '../../../shared/portal';
-import { ABOUT_CARDS, ABOUT_INTRO, POLICY_CONTACT_EMAIL, PRIVACY_INTRO, PRIVACY_SECTIONS, TERMS_SECTIONS, type PolicySection } from '../../../shared/portalPolicyContent';
+import { ABOUT_CARDS, ABOUT_INTRO, ABOUT_SECTIONS, CONTACT_SECTIONS, POLICY_CONTACT_EMAIL, PRIVACY_INTRO, PRIVACY_SECTIONS, TERMS_SECTIONS, type PolicySection } from '../../../shared/portalPolicyContent';
 import { PORTAL_GUIDES } from '../../../shared/portalEditorial';
 import { translatePortalText } from '../../../shared/portalTranslations';
 import '../../../shared/portalTranslationData'; // 서버 초기 HTML은 세 언어 사전을 항상 사용한다.
@@ -44,7 +44,8 @@ export function portalEditorialBody(path: string, language: 'ko' | 'ja' | 'en', 
   if (path === '/') return `<section><h2>${text('첫 방송을 만나고 준비하는 방법')}</h2>${PORTAL_GUIDES.filter((guide) => ['save', 'introduction', 'announcement'].includes(guide.id)).map((guide) => `<article><h3>${text(guide.title)}</h3><p>${text(guide.paragraphs[0])}</p><a href="${link('/guide')}#${guide.id}">${text('자세히 읽기')}</a></article>`).join('')}</section>`;
   if (path === '/privacy') return `<p>${text(PRIVACY_INTRO)}</p>${policyBody(PRIVACY_SECTIONS, language)}<p><a href="mailto:${POLICY_CONTACT_EMAIL}">${POLICY_CONTACT_EMAIL}</a></p>`;
   if (path === '/terms') return policyBody(TERMS_SECTIONS, language);
-  if (path === '/about') return `<section><h2>${text(ABOUT_INTRO.heading)}</h2><p>${text(ABOUT_INTRO.text)}</p></section>${ABOUT_CARDS.map((card) => `<section><h3>${text(card.title)}</h3><p>${text(card.text)}</p><a href="${link(card.to)}">${text(card.link)}</a></section>`).join('')}`;
+  if (path === '/about') return `<section><h2>${text(ABOUT_INTRO.heading)}</h2><p>${text(ABOUT_INTRO.text)}</p></section>${ABOUT_CARDS.map((card) => `<section><h3>${text(card.title)}</h3><p>${text(card.text)}</p><a href="${link(card.to)}">${text(card.link)}</a></section>`).join('')}${policyBody(ABOUT_SECTIONS, language)}`;
+  if (path === '/contact') return `${policyBody(CONTACT_SECTIONS, language)}<p><a href="mailto:${POLICY_CONTACT_EMAIL}">${POLICY_CONTACT_EMAIL}</a></p>`;
   if (path === '/creators') return creatorListBody(profiles, language, link);
   if (!profile) return '';
   const notice = portalWebUrl(profile.noticeUrl || '');
