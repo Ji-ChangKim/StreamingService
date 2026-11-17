@@ -168,3 +168,5 @@
 .vd-ins .vd-pat-cmp{margin:0 0 22px}
 .vd-ins>.vd-ins-eyebrow+h2{margin-top:10px}
 .vd-mobile-links details summary small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;color:#94A3B8}
+/* 옆으로 넘기는 클립 줄이 본문 칸을 넓히지 않게(모바일 가로 넘침 방지). */
+.wiki-design .wiki-main{grid-template-columns:minmax(0,1fr)}
