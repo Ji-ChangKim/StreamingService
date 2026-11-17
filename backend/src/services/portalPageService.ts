@@ -7,6 +7,7 @@ import { portalPageSeo } from '../../../shared/portalSeo';
 import { translatePortalText } from '../../../shared/portalTranslations';
 import '../../../shared/portalTranslationData'; // 서버 초기 HTML은 세 언어 사전을 항상 사용한다.
 import { escapeActivityHtml, activityJson } from './activityPageService';
+import { activityChannelKey } from '../../../shared/broadcastActivity';
 import { INITIAL_PAGE_LOADING_HEAD, initialPageRoot } from './initialPageLoading';
 import { isPublicProfile, isThinProfile, publicProfileView } from '../../../shared/contentReview';
 
@@ -25,7 +26,10 @@ export function renderPortalPage(html: string, url: URL, profile?: PortalProfile
   html = html.replace('</head>', `<meta name="description" content="${esc(seo.description)}"><meta name="robots" content="${seo.robots}"><link rel="canonical" href="${esc(seo.canonical)}"><meta property="og:title" content="${esc(seo.title)}"><meta property="og:description" content="${esc(seo.description)}"><meta property="og:url" content="${esc(seo.canonical)}"><meta property="og:image" content="${esc(seo.image)}"><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(seo.title)}"><meta name="twitter:description" content="${esc(seo.description)}"><meta name="twitter:image" content="${esc(seo.image)}"><script type="application/ld+json">${activityJson(pageStructuredData(seo))}</script></head>`);
   // 홈·소개 목록은 화면이 전체 소개 목록을 받아야 그려진다. 자바스크립트가 뜨기를 기다리지 않고 목록 요청을 바로 시작한다.
   // 주소는 frontend/src/portal/portalApi.ts의 fetchPublicProfiles와 같아야 같은 요청으로 재사용된다.
-  const preload = seo.path === '/' || seo.path === '/creators' ? '<link rel="preload" href="/api/v1/portal/profiles?version=3" as="fetch" crossorigin="anonymous">' : '';
+  // 버튜버 상세는 위쪽 상태 카드·숫자 4개가 채널 통계(7·30일)를 기다린다. 주소는 frontend/src/portal/ProfileInsights.tsx의 loadBoard와 같아야 한다.
+  const channelKey = profile && (profile.platform === 'CHZZK' || profile.platform === 'SOOP') ? activityChannelKey(profile.platform, profile.channelUrl) : null;
+  const preload = seo.path === '/' || seo.path === '/creators' ? '<link rel="preload" href="/api/v1/portal/profiles?version=3" as="fetch" crossorigin="anonymous">'
+    : channelKey ? [7, 30].map((days) => `<link rel="preload" href="/api/analytics/board/channel?key=${esc(encodeURIComponent(channelKey))}&amp;days=${days}" as="fetch" crossorigin="anonymous">`).join('') : '';
   html = html.replace('</head>', `${alternates}${preload}${INITIAL_PAGE_LOADING_HEAD}</head>`);
   const languageQuery = seo.language === 'ko' ? '' : `?lang=${seo.language}`;
   const body = `<main><h1>${esc(profile?.displayName || seo.title.split(' | ')[0])}</h1>${profile ? '' : `<p>${esc(seo.description)}</p>`}<nav><a href="/${languageQuery}">${text('데뷔 캘린더')}</a> · <a href="/analytics${languageQuery}">${text('방송 통계')}</a> · <a href="/creators${languageQuery}">${text('버튜버 DB')}</a> · <a href="/guide${languageQuery}">${text('이용 가이드')}</a></nav>${profile?.channelUrl ? `<p><a href="${esc(profile.channelUrl)}" rel="noopener noreferrer">${text('공식 방송 채널')}</a></p>` : ''}${portalEditorialBody(seo.path, seo.language, profile, profiles.filter(isPublicProfile), channel30)}</main>`;
