@@ -1,5 +1,6 @@
 import { pageStructuredData } from '../../../shared/siteSeo';
 import { sitemapEntry } from './sitemapEntry';
+import { readBoardAvailability } from './analyticsBoardService';
 import { STATISTICS_GUIDE } from '../../../shared/portalEditorial';
 import { translatePortalText } from '../../../shared/portalTranslations';
 import '../../../shared/portalTranslationData'; // 서버 초기 HTML은 세 언어 사전을 항상 사용한다.
@@ -54,5 +55,9 @@ export function renderActivityPage(html: string, url: URL, filters: ActivityFilt
 export async function activitySitemapEntries(db: D1Database): Promise<string> {
   const row = await db.prepare(`SELECT MAX(observed_at) AS modified FROM analytics_broadcast_runs WHERE state IN ('available','partial')`).first<{ modified: string | null }>();
   const modified = row?.modified || '';
-  return ['/analytics', '/analytics/chzzk', '/analytics/soop'].map((path) => sitemapEntry(path, 'ko', false, modified)).join('');
+  // SOOP 화면은 데이터가 준비됐을 때만 싣는다(준비 중 안내뿐인 페이지 제외). 집계 기준은 내용이 거의 바뀌지 않아 수정 시각 없이 싣는다.
+  let soopReady = false;
+  try { soopReady = (await readBoardAvailability(db, Date.now())).platformReady.SOOP; } catch { /* 판단할 수 없으면 싣지 않는다. */ }
+  const boards = ['/analytics', '/analytics/chzzk', ...(soopReady ? ['/analytics/soop'] : [])];
+  return boards.map((path) => sitemapEntry(path, 'ko', false, modified)).join('') + sitemapEntry('/analytics/method', 'ko');
 }

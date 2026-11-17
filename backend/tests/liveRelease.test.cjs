@@ -200,3 +200,24 @@ test('공개 소개 목록은 60초 캐시, 정적 이미지는 30일 캐시를 
     assert.match(image.headers.get('cache-control') || '', /max-age=2592000/);
   } finally { db.sqlite.close(); }
 });
+
+test('준비 안 된 SOOP 통계는 검색·사이트맵에서 빼고, 집계 기준은 싣고, 게임·태그 화면은 자기 제목과 검색 제외 메타를 쓴다', async () => {
+  const { db, call } = await setup();
+  try {
+    const soop = await call('/analytics/soop');
+    const soopHtml = await soop.text();
+    assert.equal(soop.status, 200);
+    assert.match(soop.headers.get('X-Robots-Tag') || '', /noindex/);
+    assert.match(soopHtml, /<meta name="robots" content="noindex,follow">/);
+    const sitemap = await (await call('/sitemap.xml')).text();
+    assert.match(sitemap, /<loc>https:\/\/vdebut.live\/analytics\/method<\/loc>/);
+    assert.doesNotMatch(sitemap, /<loc>https:\/\/vdebut.live\/analytics\/soop<\/loc>/);
+    const game = await call(`/analytics/game/${encodeURIComponent('리그 오브 레전드')}`);
+    const gameHtml = await game.text();
+    assert.match(gameHtml, /<title>리그 오브 레전드 방송 통계/);
+    assert.match(gameHtml, /<meta name="robots" content="noindex,follow">/);
+    assert.doesNotMatch(gameHtml, /<title>신규 버튜버 데뷔 캘린더/);
+    const tagHtml = await (await call(`/analytics/tag/${encodeURIComponent('버튜버')}`)).text();
+    assert.match(tagHtml, /<title>#버튜버 태그 방송 통계/);
+  } finally { db.sqlite.close(); }
+});

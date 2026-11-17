@@ -66,7 +66,7 @@ import { collectBroadcastStatistics, pruneStatisticsCollections } from './servic
 import { searchStatisticsStreamers } from './services/statisticsStreamerSearchService';
 import { registerExternalStreamerToD1 } from './services/externalPlatformSearchService';
 import { ensureStreamerRegistered } from './services/onDemandStreamerService';
-import { activitySitemapEntries, renderActivityPage } from './services/activityPageService';
+import { activitySitemapEntries, renderActivityPage, escapeActivityHtml } from './services/activityPageService';
 import { boardInitialBody, boardPageTitle, methodInitialBody, renderBoardPage } from './services/analyticsBoardPage';
 import { prunePersonalData } from './services/personalDataRetention';
 import { cachedBoard, matchPageCopy, putPageCopy } from './services/edgeCache';
@@ -1412,7 +1412,14 @@ const renderActivityPageResponse = async (c: any) => {
       });
       c.header('X-Robots-Tag', 'noindex, follow');
       c.header('Cache-Control', 'public, max-age=60, s-maxage=600');
-      return c.html(await asset.text());
+      // 자료 조회 없이 제목·설명·검색 제외 메타만 이 주소에 맞춘다(홈 제목이 그대로 남지 않게, 헤더와 메타의 검색 신호를 같게).
+      const [, , kind, rawName] = url.pathname.split('/');
+      let name = rawName; try { name = decodeURIComponent(rawName); } catch { /* 원문 그대로 쓴다. */ }
+      const isTag = kind === 'tag';
+      const title = isTag ? `#${name} 태그 방송 통계 · 시청자와 방송 수 | VDébut` : `${name} 방송 통계 · 시청자·방송 수·상위 채널 | VDébut`;
+      const description = isTag ? `#${name} 태그를 단 방송의 시청자와 방송 수, 함께 쓰인 태그를 10분마다 보여 줘요.` : `${name} 방송의 실시간 시청자와 방송 수, 경쟁 정도, 최근 7일 상위 채널을 10분마다 보여 줘요.`;
+      const body = `<main><h1>${escapeActivityHtml(isTag ? `#${name} 태그 방송 통계` : `${name} 방송 통계`)}</h1><p>${escapeActivityHtml(description)}</p><p><a href="/analytics">방송 통계</a> · <a href="/analytics/method">집계 기준</a></p></main>`;
+      return c.html(renderBoardPage(await asset.text(), url.pathname, title, description, body, true));
     } catch (error) {
       console.error('[Statistics] Board shell failed', String(error));
       c.header('Cache-Control', 'no-store');
@@ -1436,8 +1443,11 @@ const renderActivityPageResponse = async (c: any) => {
       const platform = url.pathname === '/analytics/chzzk' ? 'CHZZK' : url.pathname === '/analytics/soop' ? 'SOOP' : 'ALL';
       const [asset, board] = await Promise.all([assetPromise, loadBoardCached(c, platform)]);
       const description = board.summary || '치지직·SOOP에서 지금 어떤 방송을 얼마나 보고 있는지 10분마다 모아 보여 줘요. 실시간 시청자, 인기 게임, 채널·태그 순위를 확인하세요.';
+      // 데이터가 준비되지 않은 플랫폼 화면(준비 중 안내뿐)은 미완성 페이지로 보이지 않게 검색에서 뺀다(정의서 5.12).
+      const unready = platform === 'SOOP' && !board.availability?.platformReady?.SOOP;
+      if (unready && !noindex) c.header('X-Robots-Tag', 'noindex, follow');
       c.header('Cache-Control', 'public, max-age=60, s-maxage=120');
-      return c.html(renderBoardPage(await asset.text(), url.pathname, boardPageTitle(platform), description, boardInitialBody(board, platform), noindex));
+      return c.html(renderBoardPage(await asset.text(), url.pathname, boardPageTitle(platform), description, boardInitialBody(board, platform), noindex || unready));
     } catch (error) {
       console.error('[Statistics] Board page failed', String(error));
       c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex');
