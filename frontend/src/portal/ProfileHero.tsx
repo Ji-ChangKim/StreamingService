@@ -9,7 +9,8 @@ import type { ProfileDetailResponse } from '../../../shared/profileDetails';
 import { profileAgencyName } from '../../../shared/profilePresentation';
 import { sizedImageUrl } from './imageDelivery';
 import { t, getPortalLanguage, portalLanguagePath } from './portalLocale';
-import { contentTags, debutTime, habitOf } from './ProfileInsights';
+import { contentTags, debutTime, habitOf, profileChannelKey } from './ProfileInsights';
+import { profileHeroStats, type ProfileHeroStats } from '../../../shared/profileHeroStats';
 import './profileHero.css';
 
 const DAY = 86_400_000;
@@ -49,13 +50,22 @@ function ChannelButton({ profile, label, primary }: { profile: PortalProfile; la
   return <a className={`vd-btn ${primary ? 'primary' : ''}`} href={url} target="_blank" rel="noopener noreferrer">{icon && <img src={icon} alt="" />}{label}</a>;
 }
 
+function readInitialHeroStats(key: string | null): ProfileHeroStats | null {
+  if (!key || typeof document === 'undefined') return null;
+  try {
+    const text = document.getElementById('vd-initial-hero')?.textContent;
+    const stats = text ? JSON.parse(text) as ProfileHeroStats : null;
+    return stats && stats.key.toLowerCase() === key.toLowerCase() ? stats : null;
+  } catch { return null; }
+}
+
 type Phase = 'live' | 'upcoming' | 'today' | 'unconfirmed' | 'off' | 'none';
 
-export function StatusCard({ profile, detail, board, now, saved, save }: { profile: PortalProfile; detail?: ProfileDetailResponse; board: AnalyticsChannelBoard | null; now: number; saved: boolean; save: () => void }) {
+export function StatusCard({ profile, detail, stats, now, saved, save }: { profile: PortalProfile; detail?: ProfileDetailResponse; stats: ProfileHeroStats | null; now: number; saved: boolean; save: () => void }) {
   const at = debutTime(profile);
   const broadcast = detail?.broadcast;
   const platform = platformLabel(profile.platform);
-  const last = board?.log[0]?.date ? Date.parse(board.log[0].date) : null;
+  const last = stats?.lastAt ? Date.parse(stats.lastAt) : null;
   const fixed = profile.dateState === 'FIXED' && at !== null;
   const phase: Phase = broadcast?.state === 'LIVE' ? 'live'
     : fixed && at! > now ? (kstDay(at!) === kstDay(now) ? 'today' : 'upcoming')
@@ -94,7 +104,7 @@ export function StatusCard({ profile, detail, board, now, saved, save }: { profi
     </div>;
   }
   if (phase === 'off') {
-    const habit = board && board.kpis.broadcasts >= 5 ? habitOf(board.heat) : null;
+    const habit = stats && stats.broadcasts30 >= 5 ? habitOf(stats.heat) : null;
     return <div className="vd-status off"><span className="lbl"><i />{t('지금은 방송하지 않아요')}</span>
       <p className="ttl">{t('마지막 방송은 {0}였어요', [pastLabel(last!, now)])}</p>
       {habit && <p className="sub">{t('보통 {0}요일 {1}시쯤 방송해요.', [habit.days, habit.start])}</p>}
@@ -109,7 +119,7 @@ export function StatusCard({ profile, detail, board, now, saved, save }: { profi
 }
 
 // 핵심 숫자 4개. 데뷔 전에는 데뷔 정보, 방송 기록이 있으면 방송 숫자.
-function Kpis({ profile, week, month, now }: { profile: PortalProfile; week: AnalyticsChannelBoard | null; month: AnalyticsChannelBoard | null; now: number }) {
+function Kpis({ profile, stats, now }: { profile: PortalProfile; stats: ProfileHeroStats | null; now: number }) {
   const at = debutTime(profile);
   const before = at === null || at > now;
   const cells: Array<[string, string, string, string]> = [];
@@ -121,9 +131,9 @@ function Kpis({ profile, week, month, now }: { profile: PortalProfile; week: Ana
     if (contentTags(profile).length) cells.push([t('주요 콘텐츠'), contentTags(profile).slice(0, 2).join('·'), '', t('등록 정보')]);
   } else {
     if (at !== null) cells.push([t('데뷔'), String(Math.floor((now - at) / DAY) + 1), t('일째'), fmt(at, { year: 'numeric', month: 'long', day: 'numeric' })]);
-    if (week && week.kpis.broadcasts > 0) cells.push([t('최근 7일 방송'), num(week.kpis.broadcasts), t('회'), t('{0}시간', [num(week.kpis.minutes / 60)])]);
-    if (month && month.kpis.avg !== null) cells.push([t('평균 시청자'), num(month.kpis.avg), t('명'), month.kpis.peak !== null ? t('최고 {0}명 · 30일', [num(month.kpis.peak)]) : t('최근 30일')]);
-    const habit = month && month.kpis.broadcasts >= 5 ? habitOf(month.heat) : null;
+    if (stats && stats.week.broadcasts > 0) cells.push([t('최근 7일 방송'), num(stats.week.broadcasts), t('회'), t('{0}시간', [num(stats.week.minutes / 60)])]);
+    if (stats && stats.avg !== null) cells.push([t('평균 시청자'), num(stats.avg), t('명'), stats.peak !== null ? t('최고 {0}명 · 30일', [num(stats.peak)]) : t('최근 30일')]);
+    const habit = stats && stats.broadcasts30 >= 5 ? habitOf(stats.heat) : null;
     if (habit) cells.push([t('주로 방송하는 때'), habit.days, '', t('{0}~{1}시', [habit.start, (habit.start + 3) % 24])]);
     if (cells.length < 3) {
       if (profile.languages?.length) cells.push([t('방송 언어'), profile.languages.join('·'), '', platformLabel(profile.platform)]);
@@ -163,8 +173,10 @@ function ShareButton({ profile, toast }: { profile: PortalProfile; toast: (text:
   </div>;
 }
 
-export function ProfileHero({ profile, detail, week, month, now, favorites, toggle, toast }: { profile: PortalProfile; detail?: ProfileDetailResponse; week: AnalyticsChannelBoard | null; month: AnalyticsChannelBoard | null; now: number; favorites: string[]; toggle: (slug: string) => void; toast: (text: string) => void }) {
+export function ProfileHero({ profile, detail, month, now, favorites, toggle, toast }: { profile: PortalProfile; detail?: ProfileDetailResponse; month: AnalyticsChannelBoard | null; now: number; favorites: string[]; toggle: (slug: string) => void; toast: (text: string) => void }) {
   const saved = favorites.includes(profile.slug);
+  // 첫 HTML에 실려 온 통계가 있으면 바로 쓰고, 30일 통계를 받으면 같은 계산으로 바꾼다(숫자가 튀지 않음).
+  const stats = month ? profileHeroStats(month, now) : readInitialHeroStats(profileChannelKey(profile));
   const save = () => { toggle(profile.slug); if (!saved) toast(t('관심 목록에 담았어요. 데뷔 일정은 관심 목록에서 다시 볼 수 있어요.')); };
   const affiliation = profileAffiliation(profile);
   const live = detail?.broadcast.state === 'LIVE';
@@ -178,8 +190,8 @@ export function ProfileHero({ profile, detail, week, month, now, favorites, togg
         </div>
         <p className="vd-hero-meta"><span>{platformLabel(profile.platform)}</span>{affiliation && <><span className="dot">/</span><span>{affiliation}</span></>}</p>
       </div>
-      <StatusCard profile={profile} detail={detail} board={month} now={now} saved={saved} save={save} />
+      <StatusCard profile={profile} detail={detail} stats={stats} now={now} saved={saved} save={save} />
     </div>
-    <Kpis profile={profile} week={week} month={month} now={now} />
+    <Kpis profile={profile} stats={stats} now={now} />
   </section>;
 }

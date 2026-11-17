@@ -61,7 +61,6 @@ export function WikiProfileContent({ profile, detail, loading, report, now, favo
     window.history.replaceState(window.history.state, '', url.toString());
   };
   const key = profileChannelKey(profile);
-  const week = useChannelBoard(key, 7);
   const month = useChannelBoard(key, 30);
   const details = profile.details;
   // 값이 없는 줄은 '미공개' 대신 숨긴다.
@@ -70,7 +69,7 @@ export function WikiProfileContent({ profile, detail, loading, report, now, favo
   const factList = <><dl>{facts.map(([label, value]) => <div key={label}><dt>{t(label || '')}</dt><dd>{value}</dd></div>)}</dl>{(details?.fandomName || details?.oshiMark) && <div className="fan-facts">{details?.fandomName && <div><span>{t("팬덤명")}</span><strong>{details.fandomName}</strong></div>}{details?.oshiMark && <div><span>{t("오시마크")}</span><strong>{details.oshiMark}</strong></div>}</div>}{details?.fanArtTag && <div className="fan-tag">{details.fanArtTag}</div>}</>;
   return <>
     <div className="breadcrumb"><button onClick={back}>{t("버튜버 DB")}</button><span>{t("/")}</span><span>{profile.displayName}</span></div>
-    <ProfileHero profile={profile} detail={detail} week={week} month={month} now={now} favorites={favorites} toggle={toggle} toast={toast} />
+    <ProfileHero profile={profile} detail={detail} month={month} now={now} favorites={favorites} toggle={toggle} toast={toast} />
     <div className="vd-mobile-links"><OfficialLinks profile={profile} upcoming={upcoming} />{facts.length > 0 && <details><summary>{t('프로필 정보 펼치기')} ▾<small>{facts.slice(0, 4).map(([label]) => t(label)).join('·')}</small></summary><section className="spec-panel vd-keep">{factList}</section></details>}</div>
     <div className="wiki-columns"><div className="wiki-main"><nav className="wiki-tabs" aria-label={t("상세 보기")}>
       <button aria-pressed={tab === 'intro'} onClick={() => setTab('intro')}>{t('소개')}</button>

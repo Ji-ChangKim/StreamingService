@@ -8,6 +8,7 @@ import { translatePortalText } from '../../../shared/portalTranslations';
 import '../../../shared/portalTranslationData'; // 서버 초기 HTML은 세 언어 사전을 항상 사용한다.
 import { escapeActivityHtml, activityJson } from './activityPageService';
 import { activityChannelKey } from '../../../shared/broadcastActivity';
+import { profileHeroStats } from '../../../shared/profileHeroStats';
 import { INITIAL_PAGE_LOADING_HEAD, initialPageRoot } from './initialPageLoading';
 import { isPublicProfile, isThinProfile, publicProfileView } from '../../../shared/contentReview';
 
@@ -35,7 +36,9 @@ export function renderPortalPage(html: string, url: URL, profile?: PortalProfile
   const body = `<main><h1>${esc(profile?.displayName || seo.title.split(' | ')[0])}</h1>${profile ? '' : `<p>${esc(seo.description)}</p>`}<nav><a href="/${languageQuery}">${text('데뷔 캘린더')}</a> · <a href="/analytics${languageQuery}">${text('방송 통계')}</a> · <a href="/creators${languageQuery}">${text('버튜버 DB')}</a> · <a href="/guide${languageQuery}">${text('이용 가이드')}</a></nav>${profile?.channelUrl ? `<p><a href="${esc(profile.channelUrl)}" rel="noopener noreferrer">${text('공식 방송 채널')}</a></p>` : ''}${portalEditorialBody(seo.path, seo.language, profile, profiles.filter(isPublicProfile), channel30)}</main>`;
   html = html.replace(/<div id="root">[\s\S]*?<\/div>/, initialPageRoot(body, text('화면을 불러오고 있어요'), seo.language));
   // 소개 상세는 전체 목록을 기다리지 않도록 이 버튜버의 공개 정보를 첫 HTML에 함께 보낸다.
-  return profile ? html.replace('</body>', `<script type="application/json" id="vd-initial-profile">${activityJson(publicProfileView(profile))}</script></body>`) : html;
+  // 위쪽 상태 카드·숫자 4개에 쓸 통계도 함께 보내 화면이 통계 요청을 기다리지 않게 한다(약 1KB).
+  const heroStats = profile && channel30 && channel30.kpis.broadcasts > 0 ? `<script type="application/json" id="vd-initial-hero">${activityJson(profileHeroStats(channel30, Date.now()))}</script>` : '';
+  return profile ? html.replace('</body>', `<script type="application/json" id="vd-initial-profile">${activityJson(publicProfileView(profile))}</script>${heroStats}</body>`) : html;
 }
 
 // 운영 공개 목록에 승인된 신규 소개도 포함하고 비공개 주소는 제외한다.
