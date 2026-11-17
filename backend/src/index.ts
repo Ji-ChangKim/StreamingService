@@ -138,9 +138,9 @@ app.use('*', async (c, next) => {
   // 개발 통계도 전용 렌더러로 보내 실제 초기 본문과 올바른 제목을 제공한다.
   if (c.req.method === 'GET' && !path.startsWith('/api/') && !path.startsWith('/analytics') && !/\.[a-z0-9]+$/i.test(path)) {
     // 홈·소개 목록·소개 상세의 첫 HTML은 데이터베이스를 읽어 만들므로 정상 응답을 엣지에 잠시 저장한다.
-    // 홈·목록은 1분(목록 API와 같은 주기), 상세는 5분. 관리자 변경 직후 확인은 no-cache 요청으로 저장본을 건너뛴다.
+    // 목록은 1분(목록 API와 같은 주기), 홈(데뷔 일정)·상세는 5분. 관리자 변경 직후 확인은 no-cache 요청으로 저장본을 건너뛴다.
     const cachePath = sitePath(path);
-    const edgeSeconds = cachePath === '/' || cachePath === '/creators' ? 60 : /^\/creator\/[^/]+$/.test(path) ? 300 : 0;
+    const edgeSeconds = cachePath === '/creators' ? 60 : cachePath === '/' || /^\/creator\/[^/]+$/.test(path) ? 300 : 0;
     const pageCache = edgeSeconds && !seo.development && typeof caches !== 'undefined' ? (caches as any).default as Cache : undefined;
     const pageKey = new Request(url.toString(), { method: 'GET' });
     if (pageCache && !/no-cache|no-store/i.test(c.req.header('Cache-Control') || '')) {

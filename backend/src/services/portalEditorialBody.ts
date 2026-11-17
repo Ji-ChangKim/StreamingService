@@ -27,7 +27,8 @@ function creatorListBody(profiles: PortalProfile[], language: 'ko' | 'ja' | 'en'
   if (!profiles.length) return '';
   const summary = (profile: PortalProfile) => {
     const source = (profile.headline || profile.description || '').replace(/\s+/g, ' ').trim();
-    return source.length > 90 ? `${source.slice(0, 90)}…` : source;
+    const chars = Array.from(source); // 이모지가 반으로 갈리지 않게 글자 단위로 자른다.
+    return chars.length > 90 ? `${chars.slice(0, 90).join('')}…` : source;
   };
   const items = profiles.map((profile) => {
     const platform = PORTAL_PLATFORMS.find((item) => item.id === profile.platform)?.label || '';

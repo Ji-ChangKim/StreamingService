@@ -160,3 +160,10 @@ test('홈·소개 목록 첫 HTML은 목록 요청을 미리 시작하고, 홈�
   assert.match(home, /href="\/creator\/soon-one">곧데뷔<\/a>/);
   assert.doesNotMatch(home, /개인세/);
 });
+
+test('요약을 자를 때 이모지를 반으로 가르지 않는다(깨진 문자 방지)', () => {
+  const text = `${'가'.repeat(89)}🩵뒤에 더 있어요`;
+  const html = renderPortalPage(template, new URL('https://vdebut.live/creators'), undefined, [profile('emoji-one', '이모지', text)]);
+  assert.doesNotMatch(html, /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:^|[^\uD800-\uDBFF])[\uDC00-\uDFFF]/);
+  assert.match(html, /🩵…/);
+});

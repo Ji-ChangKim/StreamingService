@@ -8,7 +8,9 @@ export const GUIDE_INTRO = '첫 방송을 찾고 저장하는 방법부터 나�
 // 문장 요약을 만들어 내지 않고 입력된 한 줄 소개 또는 원문의 앞부분만 보여준다.
 export function profileExcerpt(profile: Pick<PortalProfile, 'headline' | 'description'>, limit = 140): string {
   const source = (profile.headline?.trim() || profile.description.trim()).replace(/\s+/g, ' ');
-  return source.slice(0, limit) + (source.length > limit ? '…' : '');
+  // 글자(코드 포인트) 단위로 자른다. UTF-16 단위로 자르면 이모지가 반으로 갈려 깨진 문자가 HTML에 남는다.
+  const chars = Array.from(source);
+  return chars.slice(0, limit).join('') + (chars.length > limit ? '…' : '');
 }
 
 // 날짜가 정해진 등록 일정만 선택한 시간대의 이번 주에 포함한다.
