@@ -303,3 +303,6 @@
 .vd .vd-policy { word-break: keep-all; overflow-wrap: break-word; }
 .vd .vd-policy p { text-wrap: pretty; }
 .vd .vd-policy p strong { color: #0f172a; font-weight: 700; }
+/* 어절 단위 줄바꿈은 한국어 전용. 띄어쓰기가 없는 일본어는 기본 줄바꿈으로 되돌린다. */
+html:lang(ja) .vd .vd-policy, html:lang(ja) .vd .vd-info-sections, html:lang(ja) .vd .vd-heading,
+html:lang(ja) .vd .vd-section, html:lang(ja) .vd .vd-about-intro, html:lang(ja) .vd .vd-info-cards { word-break: normal; line-break: strict; }
