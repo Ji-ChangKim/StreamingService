@@ -121,11 +121,12 @@ export async function searchStatisticsStreamers(
   if (keys.length) {
     try {
       const since = new Date(Date.now() - 30 * 86400000).toISOString();
-      const rows = await db.prepare(`SELECT s.channel_key AS channelKey, COUNT(DISTINCT s.stream_id) AS broadcasts
-        FROM analytics_broadcast_runs r JOIN analytics_broadcast_snapshots s ON s.run_id = r.run_id
-        WHERE r.state IN ('available','partial') AND substr(r.scheduled_at, 15, 2) = '00' AND r.scheduled_at >= ?
-          AND lower(s.channel_key) IN (${keys.map(() => '?').join(',')})
-        GROUP BY lower(s.channel_key)`).bind(since, ...keys.map((k) => k.toLowerCase())).all<{ channelKey: string; broadcasts: number }>();
+      // 채널 키 색인(대소문자 무시, 0063)으로 검색된 채널의 기록만 읽는다. lower()를 씌우면 색인을 못 써 30일 기록 전체를 훑는다.
+      const rows = await db.prepare(`SELECT s.channel_key COLLATE NOCASE AS channelKey, COUNT(DISTINCT s.stream_id) AS broadcasts
+        FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id = s.run_id
+        WHERE s.channel_key COLLATE NOCASE IN (${keys.map(() => '?').join(',')})
+          AND r.state IN ('available','partial') AND substr(r.scheduled_at, 15, 2) = '00' AND r.scheduled_at >= ?
+        GROUP BY channelKey`).bind(...keys, since).all<{ channelKey: string; broadcasts: number }>();
       const recorded = new Map((rows.results || []).map((row) => [row.channelKey.toLowerCase(), row.broadcasts]));
       for (const s of allStreamers) s.recordedBroadcasts = s.channelKey ? recorded.get(s.channelKey.toLowerCase()) || 0 : 0;
     } catch (err) {

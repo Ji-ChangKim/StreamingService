@@ -1401,6 +1401,30 @@ const renderActivityPageResponse = async (c: any) => {
     try { channel = decodeURIComponent(url.pathname.slice('/analytics/streamer/'.length)); } catch { return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404); }
     if (!/^(CHZZK:[a-f0-9]{32}|SOOP:[a-z0-9_]{1,50})$/i.test(channel)) return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404);
     channel = `${channel.split(':')[0].toUpperCase()}:${channel.split(':')[1].toLowerCase()}`;
+    // 화면은 새 채널 통계(/api/analytics/board/channel)를 쓰므로, 첫 HTML은 예전 활동 집계 없이 이름 확인만 한다(검색 제외 페이지).
+    try {
+      const [platform, id] = channel.split(':');
+      const seen = await c.env.DB.prepare('SELECT channel_name FROM analytics_broadcast_snapshots WHERE channel_key = ? COLLATE NOCASE ORDER BY run_id DESC LIMIT 1').bind(channel).first() as { channel_name: string | null } | null;
+      const registered = seen ? null : await c.env.DB.prepare('SELECT channel_name FROM streamerChannel WHERE platform = ? AND lower(channel_url) LIKE ? LIMIT 1').bind(platform, `%/${id}`).first() as { channel_name: string | null } | null;
+      const name = (seen?.channel_name || registered?.channel_name || url.searchParams.get('name') || '').trim().slice(0, 80);
+      if (!seen && !registered && !url.searchParams.has('name')) { c.header('X-Robots-Tag', 'noindex'); return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404); }
+      const shellRequest = c.env.PORTAL_ENABLED === 'true' ? new Request(new URL(url.hostname === 'vdebut.live' ? '/portal.html' : '/dev.html', c.req.url), c.req.raw) : c.req.raw;
+      const asset = await getAssetFromKV({ request: shellRequest, waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, {
+        ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}'),
+        ...(c.env.PORTAL_ENABLED === 'true' ? {} : { mapRequestToAsset: serveSinglePageApp }),
+      });
+      const platformName = platform === 'CHZZK' ? '치지직' : 'SOOP';
+      const display = name || id;
+      const description = `${display}의 최근 방송 기록과 시청자, 주로 한 콘텐츠를 10분마다 모은 공개 방송 기록으로 보여 줘요.`;
+      const body = `<main><h1>${escapeActivityHtml(`${display} 방송 통계`)}</h1><p>${escapeActivityHtml(`${platformName} · ${description}`)}</p><p><a href="/analytics">방송 통계</a> · <a href="/analytics/method">집계 기준</a></p></main>`;
+      c.header('X-Robots-Tag', 'noindex, follow');
+      c.header('Cache-Control', 'public, max-age=60, s-maxage=600');
+      return c.html(renderBoardPage(await asset.text(), url.pathname, `${display} 방송 통계 · ${platformName} | VDébut`, description, body, true));
+    } catch (error) {
+      console.error('[Statistics] Channel page failed', String(error));
+      c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex');
+      return c.html(publicErrorPage(url, '방송 통계를 불러오지 못했어요', 503), 503);
+    }
   } else if (/^\/analytics\/(game|tag)\/[^/]{1,240}$/.test(url.pathname)) {
     // 게임·태그 하위 화면은 화면에서 자료를 읽으므로 무거운 활동 집계 없이 앱 껍데기만 돌려준다.
     // 노출 기준(정의서 7.1)을 서버에서 판정하기 전까지 검색 제외한다.

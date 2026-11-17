@@ -221,3 +221,17 @@ test('준비 안 된 SOOP 통계는 검색·사이트맵에서 빼고, 집계 �
     assert.match(tagHtml, /<title>#버튜버 태그 방송 통계/);
   } finally { db.sqlite.close(); }
 });
+
+test('채널 통계 첫 HTML은 예전 활동 집계 없이 이름만 확인하고, 기록·등록·이름이 없으면 404', async () => {
+  const { db, call } = await setup();
+  try {
+    const key = `CHZZK:${'e'.repeat(32)}`;
+    assert.equal((await call(`/analytics/streamer/${encodeURIComponent(key)}`)).status, 404);
+    const named = await call(`/analytics/streamer/${encodeURIComponent(key)}?name=${encodeURIComponent('테스트 채널')}`);
+    const html = await named.text();
+    assert.equal(named.status, 200);
+    assert.match(html, /<title>테스트 채널 방송 통계 · 치지직/);
+    assert.match(named.headers.get('X-Robots-Tag') || '', /noindex/);
+    assert.doesNotMatch(html, /id="activity-bootstrap"/);
+  } finally { db.sqlite.close(); }
+});
