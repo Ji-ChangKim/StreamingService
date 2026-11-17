@@ -38,6 +38,7 @@ export function useProfileDetail(slug: string) {
   const retry = useCallback(() => setAttempt((value) => value + 1), []);
   useEffect(() => {
     let active = true;
+    if (!slug) return; // 빈 식별자는 조회하지 않는다(상세가 아닌 화면에서 같은 훅을 쓸 때)
     detailRequest(slug, attempt > 0)
       .then((data) => { if (active) setResult(data === 'missing' ? { slug, missing: true } : { slug, data }); })
       .catch(() => { if (active) setResult({ slug, error: true }); });

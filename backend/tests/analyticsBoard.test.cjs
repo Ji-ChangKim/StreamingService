@@ -49,7 +49,8 @@ function fixture() {
   db.exec(`CREATE TABLE streamerChannel (id INTEGER, platform TEXT, channel_name TEXT, channel_url TEXT);
     CREATE TABLE streamerChannel_info (channel_id INTEGER, slug TEXT, agency_name TEXT, display_name TEXT, profile_image_url TEXT);
     INSERT INTO streamerChannel VALUES (1, 'CHZZK', 'A', 'https://chzzk.naver.com/${'a'.repeat(32)}'), (2, 'CHZZK', 'B', 'https://chzzk.naver.com/${'b'.repeat(32)}'), (3, 'SOOP', 'S', 'https://www.sooplive.co.kr/station/soopone');
-    INSERT INTO streamerChannel_info VALUES (1, 'channel-a', '스텔라이브', '에이', 'https://img.test/a.png'), (2, NULL, '개인세', NULL, NULL), (3, 'soop-one', '', NULL, NULL);`);
+    INSERT INTO streamerChannel_info VALUES (1, 'channel-a', '스텔라이브', '에이', 'https://img.test/a.png'), (2, NULL, '개인세', NULL, NULL), (3, 'soop-one', '', NULL, NULL);
+    ALTER TABLE streamerChannel_info ADD COLUMN description TEXT; ALTER TABLE streamerChannel_info ADD COLUMN debut_time TEXT;`);
   const run = db.prepare(`INSERT INTO analytics_broadcast_runs (run_id, platform, scheduled_at, started_at, attempt_id, state, scope, viewer_total, channel_total) VALUES (?, ?, ?, ?, ?, 'available', 'test', ?, ?)`);
   const snap = db.prepare(`INSERT INTO analytics_broadcast_snapshots (run_id, stream_id, channel_key, channel_name, title, category_id, category_name, viewers) VALUES (?, ?, ?, ?, '방송', ?, ?, ?)`);
   const latest = Date.parse('2026-11-16T12:00:00.000Z');
@@ -174,7 +175,7 @@ test('스트리머 검색은 방송 통계 기록이 있는 채널을 앞에 두
   db.exec(`ALTER TABLE streamerChannel_info ADD COLUMN id INTEGER; UPDATE streamerChannel_info SET id = channel_id;
     UPDATE streamerChannel_info SET display_name = '에이 공식' WHERE channel_id = 2;
     INSERT INTO streamerChannel VALUES (9, 'CHZZK', '에이', 'https://chzzk.naver.com/${'9'.repeat(32)}');
-    INSERT INTO streamerChannel_info VALUES (9, NULL, '', '에이', NULL, 9);`);
+    INSERT INTO streamerChannel_info (channel_id, slug, agency_name, display_name, profile_image_url, id) VALUES (9, NULL, '', '에이', NULL, 9);`);
   const result = await searchStatisticsStreamers(binding(db), '에이', false, 'ALL');
   const names = result.streamers.map((s) => `${s.name}:${s.recordedBroadcasts}`);
   assert.equal(result.streamers[0].channelKey, LOL_A, '이름이 같고 기록이 있는 채널이 1위');

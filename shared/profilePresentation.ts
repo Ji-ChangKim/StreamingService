@@ -97,3 +97,11 @@ function profileDebutOrder(profile: PortalProfile): number {
 export function profileLinkKey(value: string): string {
   try { const url = new URL(portalWebUrl(value)); [...url.searchParams.keys()].filter((key) => key.startsWith('utm_')).forEach((key) => url.searchParams.delete(key)); return `${url.hostname.replace(/^www\./, '')}${url.pathname.replace(/\/$/, '')}${url.search}`; } catch { return ''; }
 }
+
+// 이름 끝 글자 받침에 맞춘 주제 조사(한국어 화면만). 한글이 아니면 '은(는)' 대신 조사 없이 쓴다.
+export function topicName(name: string, language: string): string {
+  if (language !== 'ko') return name;
+  const code = name.trim().charCodeAt(name.trim().length - 1) - 0xAC00;
+  if (code < 0 || code > 11171) return `${name}은(는)`;
+  return `${name}${code % 28 ? '은' : '는'}`;
+}

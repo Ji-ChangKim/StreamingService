@@ -58,7 +58,7 @@ import { getLiveDiscovery } from './services/liveDiscoveryService';
 import { getLiveHistory, getCreatorHistory } from './services/liveHistoryService';
 import { getBroadcastStatistics, getStreamerBroadcastHistory } from './services/broadcastStatisticsService';
 import { boardCacheSeconds, getAnalyticsBoard, getAnalyticsChannelBoard, getAnalyticsGameBoard, getAnalyticsTagBoard } from './services/analyticsBoardService';
-import type { AnalyticsBoard } from '../../shared/analyticsBoard';
+import type { AnalyticsBoard, AnalyticsChannelBoard } from '../../shared/analyticsBoard';
 import { getBroadcastActivity, getActivityBroadcastPage, readActivityCursor } from './services/broadcastActivityService';
 import { activityPeriod, validActivityRange } from '../../shared/broadcastActivity';
 import { collectBroadcastStatistics, pruneStatisticsCollections } from './services/broadcastStatisticsCollection';
@@ -68,6 +68,7 @@ import { ensureStreamerRegistered } from './services/onDemandStreamerService';
 import { activitySitemapEntries, renderActivityPage, escapeActivityHtml } from './services/activityPageService';
 import { boardInitialBody, boardPageTitle, methodInitialBody, renderBoardPage } from './services/analyticsBoardPage';
 import { prunePersonalData } from './services/personalDataRetention';
+import { activityChannelKey } from '../../shared/broadcastActivity';
 import { collectTrackedChannels, pruneChannelSamples, TRACK_CRON } from './services/trackedChannelCollection';
 import { buildDailyRollup, kstDay, recordFollowers } from './services/channelRollup';
 import { fetchPlatformJson } from './services/broadcastStatisticsSources';
@@ -183,7 +184,16 @@ app.use('*', async (c, next) => {
     if (autoChannel) c.header('X-Robots-Tag', 'noindex, follow');
     if (seo.privatePage || missing) c.header('X-Robots-Tag', 'noindex, nofollow');
     c.header('Cache-Control', seo.privatePage || missing ? 'no-store' : 'public, max-age=0, must-revalidate');
-    const html = renderPortalPage(await response.text(), url, profile, profiles);
+    // 버튜버 상세 첫 HTML에 최근 30일 방송 기록 요약을 넣는다(화면과 같은 채널 통계, 10분 캐시 공유). 실패해도 페이지는 그린다.
+    let channel30: AnalyticsChannelBoard | null = null;
+    const profileKey = profile && (profile.platform === 'CHZZK' || profile.platform === 'SOOP') ? activityChannelKey(profile.platform, profile.channelUrl) : null;
+    if (profileKey) {
+      try {
+        const key = new URL('/api/analytics/board/channel', c.req.url); key.searchParams.set('key', profileKey); key.searchParams.set('days', '30');
+        channel30 = (await cachedBoard(boardCache(), key, () => getAnalyticsChannelBoard(c.env.DB, profileKey, 30), boardCacheSeconds, (p) => c.executionCtx.waitUntil(p))).data as AnalyticsChannelBoard | null;
+      } catch (error) { console.warn('[Portal] Profile channel summary failed', String(error)); }
+    }
+    const html = renderPortalPage(await response.text(), url, profile, profiles, channel30);
     const page: Response = c.html(missing ? html.replace(/content="index, follow"/g, 'content="noindex, nofollow"') : autoChannel ? html.replace(/content="index, follow"/g, 'content="noindex, follow"') : html, missing ? 404 : 200);
     // 자료를 읽지 못한 응답은 저장하지 않는다. 정상 응답은 짧은 저장본과 하루짜리 사본(장애 대비)을 함께 둔다.
     if (pageCache && page.status === 200 && !degraded) {
@@ -1403,6 +1413,16 @@ const renderActivityPageResponse = async (c: any) => {
     try { channel = decodeURIComponent(url.pathname.slice('/analytics/streamer/'.length)); } catch { return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404); }
     if (!/^(CHZZK:[a-f0-9]{32}|SOOP:[a-z0-9_]{1,50})$/i.test(channel)) return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404);
     channel = `${channel.split(':')[0].toUpperCase()}:${channel.split(':')[1].toLowerCase()}`;
+    // 등록 버튜버의 채널 통계는 버튜버 상세의 '방송 기록' 탭이 대표 주소다(기획 39·40번 C안). 공개 소개가 있으면 그리로 보낸다.
+    try {
+      const [platformKey, idKey] = channel.split(':');
+      const mapped = await c.env.DB.prepare('SELECT slug FROM portal_profile_channels WHERE channel_key = ? LIMIT 1').bind(channel).first().catch(() => null) as { slug: string } | null;
+      const legacy = mapped ? null : await c.env.DB.prepare(`SELECT i.slug FROM streamerChannel c JOIN streamerChannel_info i ON i.channel_id = c.id
+        WHERE c.platform = ? AND lower(c.channel_url) LIKE ? AND i.slug IS NOT NULL AND i.slug != ''
+          AND NOT (i.description = i.display_name || ' 스트리머의 채널입니다.' AND i.debut_time = '00:00') LIMIT 1`).bind(platformKey, `%/${idKey}`).first() as { slug: string } | null;
+      const slug = mapped?.slug || legacy?.slug;
+      if (slug && await readPublicPortalProfileBySlug(c.env.DB, slug)) return c.redirect(`/creator/${encodeURIComponent(slug)}?tab=record`, 301);
+    } catch (error) { console.warn('[Statistics] Channel profile lookup failed', String(error)); }
     // 화면은 새 채널 통계(/api/analytics/board/channel)를 쓰므로, 첫 HTML은 예전 활동 집계 없이 이름 확인만 한다(검색 제외 페이지).
     try {
       const [platform, id] = channel.split(':');

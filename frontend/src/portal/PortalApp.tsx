@@ -8,6 +8,7 @@ import { CalendarPage } from './CalendarPage';
 import { PortalGuide } from './PortalLearning';
 import { PortalLink, PortalState } from './PortalUi';
 import { readInitialProfile, usePortalProfiles } from './portalApi';
+import { useProfileDetail } from './useProfileDetail';
 import { ErrorBoundary } from '../components/common/ErrorBoundary';
 import { portalPageSeo } from '../../../shared/portalSeo';
 import './portal.css';
@@ -43,11 +44,16 @@ export function PortalApp() {
   const segments = path.split('/').filter(Boolean);
   const isAnalytics = isActivityPath(path);
   const isCreator = segments[0] === 'creator' && segments.length === 2;
-  const needsProfiles = path === '/' || path === '/creators' || path === '/me/favorites' || isCreator;
+  // 상세는 전체 목록(약 380KB)을 받지 않는다. 첫 HTML에 담긴 소개나 그 한 명의 상세 조회만 쓴다.
+  const needsProfiles = path === '/' || path === '/creators' || path === '/me/favorites';
   const { profiles, loading, error, refresh } = usePortalProfiles(needsProfiles, path);
   let slug = ''; try { slug = isCreator ? decodeURIComponent(segments[1]) : ''; } catch { /* 잘못된 식별자는 찾을 수 없음으로 표시한다. */ }
   // 목록을 받기 전에는 첫 HTML에 담긴 같은 소개로 먼저 그린다.
-  const profile = profiles.find((p) => p.slug === slug) || (isCreator ? readInitialProfile(slug) : undefined);
+  const knownProfile = profiles.find((p) => p.slug === slug) || (isCreator ? readInitialProfile(slug) : undefined);
+  // 앱 안에서 이동해 목록·첫 HTML이 없으면 그 한 명만 조회한다(상세 화면도 같은 1분 캐시를 함께 쓴다).
+  const single = useProfileDetail(isCreator && !knownProfile ? slug : '');
+  const profile = knownProfile || single.data?.profile;
+  const creatorLoading = isCreator && !profile && !single.missing && !single.error;
   const navigate = useCallback((to: string) => { window.history.pushState({}, '', portalLanguagePath(to)); setLocation(`${window.location.pathname}${window.location.search}${window.location.hash}`); setMenu(false); window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
   // 첫 화면이 뜬 뒤 쉬는 시간에 소개·통계 화면 코드를 미리 받아 이동을 빠르게 한다.
   useEffect(() => { warmPortalRoutes(); }, []);
@@ -57,16 +63,16 @@ export function PortalApp() {
     document.documentElement.lang = language;
     if (isAnalytics) return;
     const seoUrl = new URL(window.location.href); seoUrl.searchParams.set('lang', language);
-    const seo = portalPageSeo(seoUrl, profile, { unavailable: needsProfiles && (Boolean(error) || loading) });
+    const seo = portalPageSeo(seoUrl, profile, { unavailable: (needsProfiles && (Boolean(error) || loading)) || (isCreator && !profile && !single.missing) });
     applyPageSeo(seo);
-  }, [location, path, profile, isAnalytics, language, error, loading, needsProfiles]);
+  }, [location, path, profile, isAnalytics, language, error, loading, needsProfiles, isCreator, single.missing]);
   const dataProps = { profiles, loading, error, refresh, onNavigate: navigate };
   let content;
   if (path === '/') content = <CalendarPage {...dataProps} />;
   else if (path === '/upload' || path === '/creators/register') content = <RegistrationPage key={path} profileOnly={path === '/creators/register'} onNavigate={navigate} />;
   else if (path === '/creators' || path === '/me/favorites') content = <DirectoryPage key={path} {...dataProps} favoritesOnly={path === '/me/favorites'} />;
   else if (segments[0] === 'submissions' && segments.length === 2) content = <SubmissionStatusPage key={segments[1]} id={segments[1]} onNavigate={navigate} />;
-  else if (isCreator) content = profile ? <ProfilePage profile={profile} profiles={profiles} onNavigate={navigate} /> : loading ? <PortalState loading title={t("소개를 불러오는 중이에요")} /> : error ? <PortalState pageHeading error title={t("소개를 불러오지 못했어요")} description={t("잠시 후 다시 시도해 주세요. 문제가 계속되면 문의 화면으로 알려주세요.")} action={<button type="button" onClick={refresh} className="vd-button">{t("다시 시도")}</button>} /> : !profile ? <PortalState pageHeading title={t("버튜버 소개를 찾을 수 없어요")} description={t("주소를 확인하거나 공개된 다른 소개를 살펴보세요.")} action={<PortalLink to="/creators" onNavigate={navigate} className="vd-button vd-primary">{t("다른 버튜버 만나보기")}</PortalLink>} /> : <ProfilePage profile={profile} profiles={profiles} onNavigate={navigate} />;
+  else if (isCreator) content = profile ? <ProfilePage profile={profile} profiles={profiles} onNavigate={navigate} /> : creatorLoading ? <PortalState loading title={t("소개를 불러오는 중이에요")} /> : single.error ? <PortalState pageHeading error title={t("소개를 불러오지 못했어요")} description={t("잠시 후 다시 시도해 주세요. 문제가 계속되면 문의 화면으로 알려주세요.")} action={<button type="button" onClick={single.retry} className="vd-button">{t("다시 시도")}</button>} /> : !profile ? <PortalState pageHeading title={t("버튜버 소개를 찾을 수 없어요")} description={t("주소를 확인하거나 공개된 다른 소개를 살펴보세요.")} action={<PortalLink to="/creators" onNavigate={navigate} className="vd-button vd-primary">{t("다른 버튜버 만나보기")}</PortalLink>} /> : <ProfilePage profile={profile} profiles={profiles} onNavigate={navigate} />;
   else if (isAnalytics) content = <PortalStatistics path={path} onNavigate={navigate} />;
   else if (path === '/about') content = <PortalAbout onNavigate={navigate} />;
   else if (path === '/guide') content = <PortalGuide onNavigate={navigate} />;

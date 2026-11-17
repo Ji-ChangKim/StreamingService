@@ -172,10 +172,13 @@ async function readRegistered(db: D1Database): Promise<Map<string, Registered>> 
 async function readRegisteredOne(db: D1Database, platform: Platform, id: string): Promise<Registered | null> {
   const urls = platform === 'CHZZK' ? [`https://chzzk.naver.com/${id}`, `https://chzzk.naver.com/live/${id}`]
     : [`https://www.sooplive.co.kr/station/${id}`, `https://ch.sooplive.co.kr/${id}`, `https://bj.afreecatv.com/${id}`, `https://play.sooplive.co.kr/${id}`];
-  const row = await db.prepare(`SELECT i.slug, i.agency_name, i.display_name, i.profile_image_url FROM streamerChannel c LEFT JOIN streamerChannel_info i ON i.channel_id = c.id
+  const row = await db.prepare(`SELECT i.slug, i.agency_name, i.display_name, i.profile_image_url, i.description, i.debut_time FROM streamerChannel c LEFT JOIN streamerChannel_info i ON i.channel_id = c.id
     WHERE c.platform = ? AND lower(c.channel_url) IN (${inList(urls)}) LIMIT 1`).bind(platform, ...urls.map((u) => u.toLowerCase()))
-    .first<{ slug: string | null; agency_name: string | null; display_name: string | null; profile_image_url: string | null }>();
-  return row ? { affiliation: profileAgencyName(row.agency_name || ''), isVtuber: Boolean(row.slug), slug: row.slug || null, name: row.display_name || null, imageUrl: row.profile_image_url || null } : null;
+    .first<{ slug: string | null; agency_name: string | null; display_name: string | null; profile_image_url: string | null; description: string | null; debut_time: string | null }>();
+  // 통계·검색으로 자동 등록된 채널 기록은 버튜버 소개가 아니므로 소개 주소를 주지 않는다(서버 주소 이동 규칙과 같음).
+  const auto = Boolean(row && row.description === `${row.display_name} 스트리머의 채널입니다.` && row.debut_time === '00:00');
+  const slug = row?.slug && !auto ? row.slug : null;
+  return row ? { affiliation: profileAgencyName(row.agency_name || ''), isVtuber: Boolean(slug), slug, name: row.display_name || null, imageUrl: row.profile_image_url || null } : null;
 }
 
 function toChannel(row: { platform: Platform; channelKey: string; name: string; category: string; viewers: number; liveUrl: string | null; imageUrl: string | null }, registered: Map<string, Registered>): BoardChannel {

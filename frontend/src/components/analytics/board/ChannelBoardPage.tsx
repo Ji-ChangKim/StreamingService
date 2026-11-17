@@ -25,12 +25,15 @@ function Delta({ now, before, unit = '%', off }: { now: number | null; before: n
 }
 
 // 채널 페이지(정의서 7.4): 이 채널은 언제, 무엇을, 얼마나 방송했고 얼마나 봤나.
-export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: string; onNavigate: (path: string) => void }) {
-  const [days, setDays] = useState<ChannelPeriod>(readDays);
+// embedded: 버튜버 상세의 '방송 기록' 탭 안에 넣을 때. 경로·채널 머리(이름·버튼)·문서 제목·주소의 ?days를 건드리지 않는다.
+export function ChannelBoardPage({ channelKey, onNavigate, embedded = false }: { channelKey: string; onNavigate: (path: string) => void; embedded?: boolean }) {
+  const [days, setDays] = useState<ChannelPeriod>(() => (embedded ? 30 : readDays()));
   const [logCount, setLogCount] = useState(20);
   const { data, error, loading, missing } = useHourlyData<AnalyticsChannelBoard>(`/api/analytics/board/channel?key=${encodeURIComponent(channelKey)}&days=${days}`);
-  useEffect(() => { if (data) document.title = `${data.channel.name} 방송 통계 · ${data.channel.platform === 'CHZZK' ? '치지직' : 'SOOP'} | VDébut`; }, [data]);
+  useEffect(() => { if (data && !embedded) document.title = `${data.channel.name} 방송 통계 · ${data.channel.platform === 'CHZZK' ? '치지직' : 'SOOP'} | VDébut`; }, [data]);
   useEffect(() => { setLogCount(20); }, [days, channelKey]);
+  // 순위 등에서 앱 안으로 들어온 등록 버튜버는 상세의 '방송 기록' 탭으로 옮긴다(서버 주소 이동과 같은 규칙).
+  useEffect(() => { if (!embedded && data?.channel.profileSlug) onNavigate(`/creator/${encodeURIComponent(data.channel.profileSlug)}?tab=record`); }, [embedded, data?.channel.profileSlug]);
   // 아직 데이터가 모자란 기간으로 들어오면 볼 수 있는 가장 긴 기간으로 바꾼다.
   useEffect(() => {
     if (!data || data.coverageDays === undefined || data.coverageDays >= days) return;
@@ -40,6 +43,7 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
   }, [data, days]);
   const pickDays = (next: ChannelPeriod) => {
     setDays(next);
+    if (embedded) return;
     const url = new URL(window.location.href);
     if (next === 30) url.searchParams.delete('days'); else url.searchParams.set('days', String(next));
     window.history.replaceState(window.history.state, '', url.toString());
@@ -73,12 +77,13 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
     return { days: `${days}요일`, hours: `${start}~${(start + 3) % 24}시` };
   })();
 
-  return <div className="ab">
+  return <div className={embedded ? 'ab ab-embedded' : 'ab'}>
     <main className="ab-main">
-      <nav className="ab-crumb" aria-label="경로"><a {...linkProps('/analytics', onNavigate)}>방송 통계</a> / 채널</nav>
+      {!embedded && <nav className="ab-crumb" aria-label="경로"><a {...linkProps('/analytics', onNavigate)}>방송 통계</a> / 채널</nav>}
       {loading && !data && <div className="ab-empty">불러오고 있어요</div>}
       {error && !data && <div className="ab-error">{error}</div>}
-      {missing && (() => {
+      {missing && embedded && <section className="ab-section ab-callout"><div><h2>방송 기록</h2><p className="ab-insight">아직 쌓인 방송 기록이 없어요</p></div><p className="ab-lede">방송을 켜면 5분마다 기록해요. 기록이 쌓이면 평균·최고 시청자, 방송 시간대, 방송 목록을 이곳에서 볼 수 있어요.</p><p className="ab-note"><a {...linkProps('/analytics/method', onNavigate)}>집계 기준 보기</a></p></section>}
+      {missing && !embedded && (() => {
         // 통계 기록이 아직 없는 채널: 검색에서 넘겨준 이름으로 안내하고 공식 채널로 이어 준다.
         const platform = channelKey.toUpperCase().startsWith('SOOP:') ? 'SOOP' : 'CHZZK';
         const id = channelKey.slice(channelKey.indexOf(':') + 1);
@@ -106,7 +111,7 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
         </>;
       })()}
       {data && ch && <>
-        <section className="ab-channel-head">
+        {!embedded && <section className="ab-channel-head">
           {ch.imageUrl ? <img className="ab-avatar ab-avatar-lg" src={ch.imageUrl} alt="" referrerPolicy="no-referrer" /> : <span className="ab-avatar ab-avatar-lg" aria-hidden="true" />}
           <div className="ab-channel-id">
             <span className="ab-eyebrow">Channel</span>
@@ -124,7 +129,7 @@ export function ChannelBoardPage({ channelKey, onNavigate }: { channelKey: strin
               {ch.profileSlug && <a className="ab-watch ab-btn" {...linkProps(`/creator/${encodeURIComponent(ch.profileSlug)}`, onNavigate)}>소개 보기</a>}
             </div>
           </div>
-        </section>
+        </section>}
 
         <div className="ab-section-head" style={{ marginBottom: -24 }}>
           <span className="ab-note">{asOfLabel(data.asOf)}</span>

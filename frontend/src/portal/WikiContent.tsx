@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, lazy, Suspense } from 'react';
 import { Heart, Search, X, RotateCcw } from 'lucide-react';
 import { sizedImageUrl } from './imageDelivery';
 import { PORTAL_PLATFORMS, portalWebUrl, type PortalMedia, type PortalProfile } from '../../../shared/portal';
@@ -6,15 +6,17 @@ import type { ProfileDetailResponse } from '../../../shared/profileDetails';
 import { profileMediaSource } from '../../../shared/profileMedia';
 import { portalSchedule, downloadPortalSchedule } from './PortalUi';
 import { t, usePortalLocale, portalLanguagePath, getPortalLanguage } from './portalLocale';
-import { profileDebutPhase } from '../../../shared/profilePresentation';
+import { profileDebutPhase, profileAgencyName } from '../../../shared/profilePresentation';
+import { DebutStory, OfficialLinks, ProfileInsights, profileChannelKey } from './ProfileInsights';
 import { WikiGuestbook } from './WikiParticipation';
-import { WikiActivity } from './WikiActivity';
+// 방송 기록 탭: 채널 통계 화면을 그대로 넣는다(누를 때만 코드를 받는다).
+const EmbeddedChannelBoard = lazy(() => import('../components/analytics/board/ChannelBoardPage').then((m) => ({ default: m.ChannelBoardPage })));
 import { WikiCreatorCardContent } from './WikiCardVariants';
 import './wikiContent.css';
 import './wikiCardVariants.css';
 
 // 상세 본문 메뉴는 추천 영상과 방송·활동 기록으로 구성한다.
-type Tab = 'videos' | 'history';
+type Tab = 'intro' | 'record';
 const platforms = PORTAL_PLATFORMS;
 const dayMs = 86_400_000;
 
@@ -81,9 +83,17 @@ function Channels({ profile }: { profile: PortalProfile }) {
 }
 
 // 상세 도감은 등록 정보와 이번 진입의 실제 플랫폼 응답으로만 채운다.
-export function WikiProfileContent({ profile, detail, loading, report, now, favorites, toggle, back, toast }: { profile: PortalProfile; detail?: ProfileDetailResponse; loading: boolean; report: () => void; now: number; favorites: string[]; toggle: (slug: string) => void; back: () => void; toast: (text: string) => void }) {
-  const [tab, setTab] = useState<Tab>('videos');
-  useEffect(() => { setTab('videos'); }, [profile.slug]);
+export function WikiProfileContent({ profile, detail, loading, report, now, favorites, toggle, back, toast, navigate }: { navigate?: (path: string) => void; profile: PortalProfile; detail?: ProfileDetailResponse; loading: boolean; report: () => void; now: number; favorites: string[]; toggle: (slug: string) => void; back: () => void; toast: (text: string) => void }) {
+  const initialTab = (): Tab => (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('tab') === 'record' ? 'record' : 'intro');
+  const [tab, setTabState] = useState<Tab>(initialTab);
+  useEffect(() => { setTabState(initialTab()); }, [profile.slug]);
+  // 탭을 주소에 남겨 방송 통계에서 바로 '방송 기록'으로 들어오고, 공유한 주소도 같은 탭을 연다.
+  const setTab = (next: Tab) => {
+    setTabState(next);
+    const url = new URL(window.location.href);
+    if (next === 'record') url.searchParams.set('tab', 'record'); else url.searchParams.delete('tab');
+    window.history.replaceState(window.history.state, '', url.toString());
+  };
   const start = Date.parse(profile.startAtUtc);
   const upcoming = profileDebutPhase(profile, now) === 'UPCOMING' && detail?.broadcast.state !== 'LIVE';
   const remaining = Number.isFinite(start) ? Math.max(0, start - now) : 0;
@@ -93,21 +103,25 @@ export function WikiProfileContent({ profile, detail, loading, report, now, favo
   const videos = detail?.channelMedia.videos.items || [];
   const clips = detail?.channelMedia.clips.items || [];
   const details = profile.details;
-  const facts = [['데뷔일', dateLabel(profile)], ['공식 그룹', group(profile)], ['종족', details?.species], ['생일 / 별자리', [details?.birthday, details?.zodiac].filter(Boolean).join(' / ')], ['신장 / 혈액형', [details?.height, details?.bloodType].filter(Boolean).join(' / ')], ['MBTI', details?.mbti]];
+  // 값이 없는 줄은 '미공개' 대신 숨긴다.
+  const facts = [['데뷔일', dateLabel(profile)], ['소속', profileAgencyName(profile.agency)], ['공식 그룹', group(profile)], ['플랫폼', t(PORTAL_PLATFORMS.find((p) => p.id === profile.platform)?.label || profile.platform)], ['방송 언어', profile.languages?.join(' · ')], ['주요 콘텐츠', profile.tags?.slice(0, 3).join(' · ')], ['종족', details?.species], ['생일 / 별자리', [details?.birthday, details?.zodiac].filter(Boolean).join(' / ')], ['신장 / 혈액형', [details?.height, details?.bloodType].filter(Boolean).join(' / ')], ['MBTI', details?.mbti]].filter(([, value]) => Boolean(value)) as [string, string][];
+  const charms = [{ title: '이런 콘텐츠를 만나요', text: details?.contentSummary }, { title: '함께하는 방송', text: details?.broadcastStyle || profile.regularSchedule }, { title: '팬과 함께 쓰는 이야기', text: details?.fanMessage || profile.fanGuide }].filter((item) => Boolean(item.text));
   return <>
-    <div className="breadcrumb"><button onClick={back}>{t("전체 버튜버")}</button><span>{t("/")}</span><span>{profile.displayName}</span></div>
-    <article className="wiki-header"><div className="wiki-cover" style={{ backgroundImage: `url("${profile.bannerUrl || '/images/spotlight_stage_bg.webp'}")` }}><span className="cover-label">{t("버튜버 도감")}</span><div className="cover-actions"><Favorite profile={profile} favorites={favorites} toggle={toggle} /><button onClick={async () => { try { await navigator.clipboard.writeText(`https://vdebut.live${portalLanguagePath(`/creator/${profile.slug}`)}`); toast(t('공유할 주소를 복사했어요.')); } catch { toast(t('주소를 복사하지 못했어요.')); } }}>{t("주소 공유")}</button></div></div>
+    <div className="breadcrumb"><button onClick={back}>{t("버튜버 DB")}</button><span>{t("/")}</span><span>{profile.displayName}</span></div>
+    <article className="wiki-header"><div className="wiki-cover" style={{ backgroundImage: `url("${profile.bannerUrl || '/images/spotlight_stage_bg.webp'}")` }}><span className="cover-label">{t("버튜버 DB")}</span><div className="cover-actions"><Favorite profile={profile} favorites={favorites} toggle={toggle} /><button onClick={async () => { try { await navigator.clipboard.writeText(`https://vdebut.live${portalLanguagePath(`/creator/${profile.slug}`)}`); toast(t('공유할 주소를 복사했어요.')); } catch { toast(t('주소를 복사하지 못했어요.')); } }}>{t("주소 공유")}</button></div></div>
       <div className="wiki-identity"><div className={`wiki-avatar ${live ? 'is-live' : ''}`}><Avatar profile={profile} eager />{live && <b>{t("● LIVE")}</b>}</div><div className="identity-copy"><div className="name-row"><h1>{profile.displayName}</h1>{group(profile) && <span className="group-pill">{group(profile)}</span>}</div>{(details?.contentSummary || (profile.headline && !group(profile))) && <p>{details?.contentSummary || profile.headline}</p>}<div className="credit-row">{details?.illustrator && <span>{t("일러스트")}<b>{details.illustrator}</b></span>}{details?.rigger && <span>{t("리깅")}<b>{details.rigger}</b></span>}{!details?.illustrator && !details?.rigger && <span className="debut-meta">{dateLabel(profile)}{t("데뷔")}</span>}</div></div></div>
       <Channels profile={profile} />
     </article>
-    <div className="wiki-columns"><div className="wiki-main"><nav className="wiki-tabs" aria-label={t("도감 메뉴")}>{([{ id: 'videos', label: '추천 영상' }, { id: 'history', label: '방송 · 활동 기록' }] as const).map(item => <button key={item.id} aria-pressed={tab === item.id} onClick={() => setTab(item.id)}>{t(item.label)}</button>)}</nav>
-      {tab === 'videos' && <>
+    <div className="wiki-columns"><div className="wiki-main"><nav className="wiki-tabs" aria-label={t("상세 보기")}>{([{ id: 'intro', label: '소개' }, { id: 'record', label: '방송 기록' }] as const).map(item => <button key={item.id} aria-pressed={tab === item.id} onClick={() => setTab(item.id)}>{t(item.label)}</button>)}</nav>
+      {tab === 'intro' && <>
         {upcoming ? <section className="countdown"><div><span className="eyebrow">{t("FIRST HELLO")}</span><h2>{t("첫 만남까지, 조금만 기다려요")}</h2><div className="timer">{Number.isFinite(start) ? <>{t("D-")}{Math.floor(remaining / dayMs)} <span>{timeParts}</span></> : t('데뷔 일정을 기다리고 있어요')}</div><p>{dateLabel(profile)}{profile.dateState === 'FIXED' && t("· KST")}</p></div><button onClick={() => { if (profile.dateState === 'FIXED') downloadPortalSchedule(profile); else { if (!favorites.includes(profile.slug)) toggle(profile.slug); toast(t('관심 목록에서 데뷔 일정을 다시 볼 수 있어요.')); } }}>{t("데뷔 일정 저장")}</button></section> : live && <a className="live-banner" href={broadcast.url || profile.channelUrl} target="_blank" rel="noopener noreferrer"><img src={broadcast.thumbnailUrl || profile.avatarUrl} alt="" /><div><span className="live-tag">{t("LIVE")}</span><h2>{broadcast.title}</h2>{broadcast.viewers !== undefined && <p>{t("시청자 {0}명", [broadcast.viewers.toLocaleString()])}</p>}</div><span className="live-action">{t("방송 보기")}</span></a>}
-        <section className="content-panel"><div className="section-title"><div><h2>{t(upcoming ? '첫 만남을 미리 만나보세요' : '추천 영상')}</h2></div><span>{t(upcoming ? '티저 · 데뷔 영상' : '채널의 최근 영상')}</span></div>{loading ? <div className="skeleton-media"><span /><span /></div> : videos.length && !upcoming ? <div className="video-grid">{videos.map(item => <MediaCard key={item.url} item={item} />)}</div> : upcoming && profile.media?.length ? <div className="video-grid">{profile.media.slice(0, 2).map(item => <MediaCard key={item.url} item={item} />)}</div> : <div className="soft-empty"><p>{t(detail?.channelMedia.videos.state === 'UNAVAILABLE' ? '지금은 영상을 불러오지 못했어요.' : '새로운 영상이 올라오면 이곳에서 만나요.')}</p></div>}</section>
-        {upcoming ? <WikiGuestbook profile={profile} /> : <><section className="content-panel"><div className="section-title"><div><h2>{t("최신 클립")}</h2></div><span>{t("새로운 순간부터")}</span></div>{loading ? <div className="skeleton-media"><span /><span /></div> : clips.length ? <div className="clip-grid">{clips.map(item => <MediaCard key={item.url} item={item} clip />)}</div> : <div className="soft-empty"><p>{t(detail?.channelMedia.clips.state === 'UNAVAILABLE' ? '지금은 클립을 불러오지 못했어요.' : '아직 공개된 클립이 없어요.')}</p></div>}</section><section className="content-panel"><div className="section-title"><div><h2>{t("조금 더 알아가기")}</h2></div></div><div className="charm-grid">{[{ title: '이런 콘텐츠를 만나요', text: details?.contentSummary }, { title: '함께하는 방송', text: details?.broadcastStyle || profile.regularSchedule }, { title: '팬과 함께 쓰는 이야기', text: details?.fanMessage || profile.fanGuide }].map(item => <article key={item.title}><h3>{t(item.title)}</h3><p>{item.text || t('아직 알려진 이야기가 없어요.')}</p></article>)}</div></section></>}
+        <DebutStory profile={profile} now={now} />
+        <ProfileInsights profile={profile} openRecord={() => setTab('record')} />
+        {(loading || videos.length > 0 || (upcoming && Boolean(profile.media?.length))) && <section className="content-panel"><div className="section-title"><div><h2>{t(upcoming ? '첫 만남을 미리 만나보세요' : '추천 영상')}</h2></div><span>{t(upcoming ? '티저 · 데뷔 영상' : '채널의 최근 영상')}</span></div>{loading ? <div className="skeleton-media"><span /><span /></div> : videos.length && !upcoming ? <div className="video-grid">{videos.map(item => <MediaCard key={item.url} item={item} />)}</div> : upcoming && profile.media?.length ? <div className="video-grid">{profile.media.slice(0, 2).map(item => <MediaCard key={item.url} item={item} />)}</div> : <div className="soft-empty"><p>{t(detail?.channelMedia.videos.state === 'UNAVAILABLE' ? '지금은 영상을 불러오지 못했어요.' : '새로운 영상이 올라오면 이곳에서 만나요.')}</p></div>}</section>}
+        {upcoming ? <WikiGuestbook profile={profile} /> : <>{(loading || clips.length > 0) && <section className="content-panel"><div className="section-title"><div><h2>{t("최신 클립")}</h2></div><span>{t("새로운 순간부터")}</span></div>{loading ? <div className="skeleton-media"><span /><span /></div> : clips.length ? <div className="clip-grid">{clips.map(item => <MediaCard key={item.url} item={item} clip />)}</div> : <div className="soft-empty"><p>{t(detail?.channelMedia.clips.state === 'UNAVAILABLE' ? '지금은 클립을 불러오지 못했어요.' : '아직 공개된 클립이 없어요.')}</p></div>}</section>}{charms.length > 0 && <section className="content-panel"><div className="section-title"><div><h2>{t("조금 더 알아가기")}</h2></div></div><div className="charm-grid">{charms.map(item => <article key={item.title}><h3>{t(item.title)}</h3><p>{item.text}</p></article>)}</div></section>}</>}
       </>}
-      {tab === 'history' && <><section className="content-panel"><div className="section-title"><div><h2>{t("지금까지의 발자취")}</h2></div></div><div className="timeline"><div><span /><time>{dateLabel(profile)}</time><h3>{t("첫 방송, 이야기의 시작")}</h3><p>{t('{0} 데뷔', [profile.displayName])}</p>{profile.noticeUrl && <a href={profile.noticeUrl} target="_blank" rel="noopener noreferrer">{t("공식 데뷔 공지")}</a>}</div>{profile.notices?.map(item => <div key={item.url}><span /><h3>{item.title}</h3><a href={item.url} target="_blank" rel="noopener noreferrer">{t("공식 소식")}</a></div>)}</div></section><WikiActivity profile={profile} /></>}
-    </div><aside className="wiki-aside"><section className="spec-panel"><div className="section-title"><div><h2>{t("프로필 정보")}</h2></div><span>{t("PROFILE")}</span></div><dl>{facts.map(([label, value]) => <div key={label}><dt>{t(label || '')}</dt><dd className={!value ? 'unknown' : ''}>{value || t('미공개')}</dd></div>)}</dl><div className="fan-facts"><div><span>{t("팬덤명")}</span><strong>{details?.fandomName || t('미공개')}</strong></div><div><span>{t("오시마크")}</span><strong>{details?.oshiMark || t('미공개')}</strong></div></div>{details?.fanArtTag && <div className="fan-tag">{details.fanArtTag}</div>}{profile.cafeUrl && <a className="community-link" href={profile.cafeUrl} target="_blank" rel="noopener noreferrer">{t("공식 팬카페")}</a>}</section><section className="contribute-panel"><h2>{t("한 페이지씩,")}<br />{t("함께 채우는 이야기")}</h2><p>{t('{0}의 새로운 이야기를 알고 있나요?', [profile.displayName])}</p><button onClick={report}>{t("정보 제보 및 수정하기")}</button><small>{t("공식 출처를 확인하고 담아요.")}</small></section></aside></div>
+      {tab === 'record' && <><section className="content-panel"><div className="section-title"><div><h2>{t("지금까지의 발자취")}</h2></div></div><div className="timeline"><div><span /><time>{dateLabel(profile)}</time><h3>{t("첫 방송, 이야기의 시작")}</h3><p>{t('{0} 데뷔', [profile.displayName])}</p>{profile.noticeUrl && <a href={profile.noticeUrl} target="_blank" rel="noopener noreferrer">{t("공식 데뷔 공지")}</a>}</div>{profile.notices?.map(item => <div key={item.url}><span /><h3>{item.title}</h3><a href={item.url} target="_blank" rel="noopener noreferrer">{t("공식 소식")}</a></div>)}</div></section>{profileChannelKey(profile) ? <Suspense fallback={<div className="skeleton-media"><span /></div>}><EmbeddedChannelBoard channelKey={profileChannelKey(profile)!} onNavigate={navigate || (() => undefined)} embedded /></Suspense> : <section className="content-panel"><p className="soft-empty">{t('이 플랫폼은 아직 방송 기록을 모으지 않아요. 치지직·SOOP 채널의 방송을 기록하고 있어요.')}</p></section>}</>}
+    </div><aside className="wiki-aside"><section className="spec-panel"><div className="section-title"><div><h2>{t("프로필 정보")}</h2></div><span>{t("PROFILE")}</span></div><dl>{facts.map(([label, value]) => <div key={label}><dt>{t(label || '')}</dt><dd>{value}</dd></div>)}</dl>{(details?.fandomName || details?.oshiMark) && <div className="fan-facts">{details?.fandomName && <div><span>{t("팬덤명")}</span><strong>{details.fandomName}</strong></div>}{details?.oshiMark && <div><span>{t("오시마크")}</span><strong>{details.oshiMark}</strong></div>}</div>}{details?.fanArtTag && <div className="fan-tag">{details.fanArtTag}</div>}</section><OfficialLinks profile={profile} /><section className="contribute-panel"><h2>{t("한 페이지씩,")}<br />{t("함께 채우는 이야기")}</h2><p>{t('{0}의 새로운 이야기를 알고 있나요?', [profile.displayName])}</p><button onClick={report}>{t("정보 제보 및 수정하기")}</button><small>{t("공식 출처를 확인하고 담아요.")}</small></section></aside></div>
   </>;
 }
 

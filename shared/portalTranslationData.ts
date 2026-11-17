@@ -887,6 +887,75 @@ X(트위터) 데뷔 공지 확인하기|||X（Twitter）のデビュー告知を
 데뷔 완료|||デビュー完了|||Debut completed
 데뷔일|||デビュー日|||Debut date
 역사적인 첫 방송 다시보기|||記念すべき初配信アーカイブ|||Debut stream archive
+치지직|||CHZZK|||CHZZK
+월|||月|||Mon
+화|||火|||Tue
+수|||水|||Wed
+목|||木|||Thu
+금|||金|||Fri
+토|||土|||Sat
+일|||日|||Sun
+{0} {1}에서 데뷔했어요 · 오늘로 {2}일째예요|||{0}に{1}でデビューしました・今日で{2}日目です|||Debuted on {1} on {0} · Day {2} today
+{0} {1}에서 데뷔할 예정이에요|||{0}に{1}でデビュー予定です|||Debuting on {1} on {0}
+{0} {1} 방송을 주로 하는 {2} 버튜버예요.|||{0}は{1}の配信を中心に活動する{2}のVTuberです。|||{0} is a {2} VTuber who mainly streams {1}.
+{0} {1} 버튜버예요.|||{0}は{1}のVTuberです。|||{0} is a {1} VTuber.
+{0}(한국 시간)에 첫 방송을 했어요.|||{0}（韓国時間）に初配信を行いました。|||The first stream was on {0} (Korean time).
+첫 방송은 {0}(한국 시간)이에요.|||初配信は{0}（韓国時間）です。|||The first stream is on {0} (Korean time).
+{0}로 방송해요.|||{0}で配信しています。|||Streams in {0}.
+{0} 소속이에요.|||{0}所属です。|||Part of {0}.
+기간|||期間|||Period
+{0}일|||{0}日|||{0} days
+최근 {0}일|||直近{0}日|||Last {0} days
+{0}일 동안 {1}번 방송했어요|||{0}日間で{1}回配信しました|||Streamed {1} times in {0} days
+주로 {0}시에 켜요|||主に{0}時に配信を始めます|||usually starts at {0}:00
+방송|||配信|||Streams
+방송 시간|||配信時間|||Stream time
+평균 시청자|||平均視聴者|||Average viewers
+최고 시청자|||最高視聴者|||Peak viewers
+회|||回|||times
+시간|||時間|||h
+주로 한 콘텐츠|||主な配信内容|||Main content
+요일별 방송 시간|||曜日別の配信時間|||Stream time by weekday
+공개 방송 기록 기준|||公開された配信記録に基づきます|||Based on public stream records
+방송 기록 자세히 보기|||配信記録を詳しく見る|||See full stream records
+데뷔 후 {0}주|||デビュー後{0}週|||{0} weeks since debut
+첫 주보다 시청자가 {0}% 늘었어요|||初週より視聴者が{0}%増えました|||Viewers are up {0}% from the first week
+첫 주보다 시청자가 {0}% 줄었어요|||初週より視聴者が{0}%減りました|||Viewers are down {0}% from the first week
+데뷔 후 시청자가 꾸준히 비슷해요|||デビュー後、視聴者数は安定しています|||Viewers have stayed steady since debut
+첫 주 평균 시청자|||初週の平均視聴者|||First-week average viewers
+최근 주 평균 시청자|||直近週の平均視聴者|||Latest-week average viewers
+기록된 주|||記録された週|||Weeks recorded
+주차별 평균 시청자: {0}|||週ごとの平均視聴者: {0}|||Average viewers by week: {0}
+주로 {0}요일 {1}~{2}시에 방송해요|||主に{0}曜日の{1}〜{2}時に配信しています|||Usually streams on {0}, {1}:00–{2}:00
+방송 시간표|||配信スケジュール|||Stream schedule
+요일별 시간대 방송 빈도|||曜日・時間帯別の配信頻度|||How often they stream by weekday and hour
+평균 방송 길이|||平均配信時間|||Average stream length
+{0}시간 {1}분|||{0}時間{1}分|||{0}h {1}m
+{0}분|||{0}分|||{0}m
+최근 방송|||最近の配信|||Latest stream
+대체로 쉬는 날|||主な休みの日|||Usual day off
+방송의 {0}%는 {1}지만, {2} 방송 때 {3}배 더 많이 봐요|||配信の{0}%は{1}ですが、{2}の配信では視聴者が{3}倍に増えます|||{0}% of streams are {1}, but {2} streams get {3}× more viewers
+주로 {0} 방송을 해요|||主に{0}を配信しています|||Mostly streams {0}
+콘텐츠|||配信内容|||Content
+방송 시간 비중|||配信時間の割合|||Share of stream time
+평소 대비|||普段と比べて|||Vs. usual
+{0}시간|||{0}時間|||{0}h
+배|||倍|||×
+비슷|||同程度|||Similar
+평소 = 이 채널의 최근 30일 평균 시청자({0}명)|||普段 = このチャンネルの直近30日の平均視聴者（{0}人）|||Usual = this channel's 30-day average viewers ({0})
+공식 링크|||公式リンク|||Official links
+방송 보러 가기|||配信を見る|||Watch streams
+공지·일정|||お知らせ・予定|||News & schedule
+소식|||お知らせ|||Updates
+바로가기|||開く|||Open
+상세 보기|||詳細|||Details
+방송 기록|||配信記録|||Stream records
+이 플랫폼은 아직 방송 기록을 모으지 않아요. 치지직·SOOP 채널의 방송을 기록하고 있어요.|||このプラットフォームの配信記録はまだ集めていません。CHZZK・SOOPのチャンネルを記録しています。|||We don't collect stream records for this platform yet. We record CHZZK and SOOP channels.
+데뷔 이야기|||デビューの話|||Debut story
+최근 방송 기록|||最近の配信記録|||Recent stream records
+최근 30일 동안 {0}번, 모두 {1}시간 방송했어요.|||直近30日間で{0}回、合計{1}時間配信しました。|||Streamed {0} times for {1} hours in the last 30 days.
+평균 시청자는 {0}명, 가장 많을 때는 {1}명이었어요.|||平均視聴者は{0}人、最も多い時は{1}人でした。|||Average viewers were {0}, with a peak of {1}.
+가장 많이 한 콘텐츠는 「{0}」({1}%)예요.|||最も多く配信した内容は「{0}」（{1}%）です。|||Most streamed content was “{0}” ({1}%).
 버튜버 DB|||VTuber DB|||VTuber DB
 버튜버 DB · 데뷔일·소속·방송 기록|||VTuber DB・デビュー日・所属・配信記録|||VTuber DB · Debuts, agencies and stream records
 VDébut에 등록된 버튜버를 한곳에 모았어요. 데뷔일, 소속, 주로 하는 방송과 방송 기록을 보고 마음에 드는 버튜버를 찾아보세요.|||VDébutに登録されたVTuberを一か所に集めました。デビュー日、所属、主な配信内容や配信記録を見て、気になるVTuberを見つけてください。|||Every VTuber registered on VDébut, in one place. Check debut dates, agencies, what they stream and their stream records to find someone you'll love.

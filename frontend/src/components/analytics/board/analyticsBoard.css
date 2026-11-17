@@ -357,3 +357,7 @@
   .ab-method dl { grid-template-columns: 1fr; gap: 4px; }
   .ab-method dd { margin-bottom: 10px; }
 }
+
+/* 버튜버 상세 '방송 기록' 탭에 넣은 채널 통계 */
+.ab.ab-embedded { background: transparent; }
+.ab.ab-embedded .ab-main { max-width: none; padding: 0; }

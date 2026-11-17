@@ -37,6 +37,8 @@ export function StreamerSearch({ onNavigate }: { onNavigate: (path: string) => v
   // 기록이 없는 채널도 이름을 들고 가서 채널 페이지가 '아직 기록 없음' 안내를 이름과 함께 보여 준다.
   const go = (streamer: StatisticsStreamer) => {
     setOpen(false);
+    // VDébut에 소개가 있는 버튜버는 상세의 '방송 기록' 탭이 대표 주소다.
+    if (streamer.profileSlug) { onNavigate(`/creator/${encodeURIComponent(streamer.profileSlug)}?tab=record`); return; }
     const path = activityStreamerPath(streamer.channelKey || `${streamer.platform}:${streamer.id}`);
     onNavigate((streamer.recordedBroadcasts || 0) > 0 ? path : `${path}?name=${encodeURIComponent(streamer.name)}`);
   };
