@@ -121,7 +121,9 @@ test('개인정보처리방침에 운영 주체·보호책임자·시행일이 �
   const ko = renderPortalPage(template, new URL('https://vdebut.live/privacy'));
   assert.match(ko, /운영 주체 및 개인정보 보호책임자/);
   assert.match(ko, /개인정보 보호책임자: VDébut 운영자 \(이메일 ru_0120@naver.com\)/);
-  assert.match(ko, /2026년 11월 12일부터 시행/);
+  assert.match(ko, /2026년 11월 17일부터 시행/);
+  assert.match(ko, /개인정보침해신고센터/);
+  assert.match(ko, /Cloudflare, Inc\. \(미국\)/);
   assert.doesNotMatch(ko, /비영리|비상업/);
   assert.match(renderPortalPage(template, new URL('https://vdebut.live/privacy?lang=en')), /Privacy officer: VDébut operator/);
   assert.match(renderPortalPage(template, new URL('https://vdebut.live/privacy?lang=ja')), /個人情報保護責任者：VDébut運営者/);

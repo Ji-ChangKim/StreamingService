@@ -61,11 +61,12 @@ import { getBroadcastStatistics, getStreamerBroadcastHistory } from './services/
 import { boardCacheSeconds, getAnalyticsBoard, getAnalyticsChannelBoard, getAnalyticsGameBoard, getAnalyticsTagBoard } from './services/analyticsBoardService';
 import { getBroadcastActivity, getActivityBroadcastPage, readActivityCursor } from './services/broadcastActivityService';
 import { activityPeriod, validActivityRange } from '../../shared/broadcastActivity';
-import { collectBroadcastStatistics } from './services/broadcastStatisticsCollection';
+import { collectBroadcastStatistics, pruneStatisticsCollections } from './services/broadcastStatisticsCollection';
 import { searchStatisticsStreamers } from './services/statisticsStreamerSearchService';
 import { registerExternalStreamerToD1 } from './services/externalPlatformSearchService';
 import { ensureStreamerRegistered } from './services/onDemandStreamerService';
 import { activitySitemapEntries, renderActivityPage } from './services/activityPageService';
+import { prunePersonalData } from './services/personalDataRetention';
 import { activityNoindex } from '../../shared/activitySeo';
 import { cheerApi, resetWeeklyCheers, WEEKLY_RESET_CRON } from './services/cheerService';
 
@@ -1494,6 +1495,9 @@ export default {
       );
     }
     if (env.DB && new Date().getUTCMinutes() < 10) {
+      // 보관 기간 정리(매시간 1회): 방송 통계 90일, 처리 끝난 문의·신청의 연락 정보 1년. 개인정보처리방침과 같은 기준이다.
+      ctx.waitUntil(Promise.all([pruneStatisticsCollections(env.DB), prunePersonalData(env.DB)])
+        .catch((err) => console.error('[Scheduled Cron] Retention cleanup error:', err)));
       // 1. 신청서 3단계 자동 심사 및 캘린더 자동 반영 파이프라인 (매시간 1회 자동 실행)
       ctx.waitUntil(
         runAutoReviewPipeline(env.DB)

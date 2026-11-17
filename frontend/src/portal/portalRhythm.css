@@ -299,3 +299,7 @@
 .vd .vd-about-intro p, .vd .vd-info-cards p { text-wrap: pretty; }
 .vd .vd-heading, .vd .vd-section { word-break: keep-all; overflow-wrap: break-word; }
 .vd .vd-heading p, .vd .vd-section p { text-wrap: pretty; }
+/* 개인정보처리방침·이용약관: 한국어 어절 단위 줄바꿈 */
+.vd .vd-policy { word-break: keep-all; overflow-wrap: break-word; }
+.vd .vd-policy p { text-wrap: pretty; }
+.vd .vd-policy p strong { color: #0f172a; font-weight: 700; }
