@@ -1,0 +1,314 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/hasinyang/home",
+  "raw": {
+    "vods": [
+      {
+        "station_no": 26652775,
+        "bbs_no": 98890699,
+        "title_no": 212320789,
+        "title_name": "[웰컴버추얼] 제철 꾼구마",
+        "user_nick": "꾼구마",
+        "user_id": "hasinyang",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/hasinyang/hasinyang.jpg",
+        "reg_date": "2026-11-11 16:45:58",
+        "reg_date_humans": "22 시간 전",
+        "auth_no": 101,
+        "file_type": "REVIEW",
+        "ucc": {
+          "thumb": "//videoimg.sooplive.com/php/SnapshotLoad.php?rowKey=20261111_8086FA31_298511113_3_r",
+          "ucc_type": "21",
+          "file_type": "REVIEW",
+          "total_file_duration": 11245583,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED",
+          "paid_ppv": false
+        },
+        "count": {
+          "read_cnt": 1957
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 26652775,
+        "bbs_no": 98890699,
+        "title_no": 212309441,
+        "title_name": "[웰컴버추얼] 반갑슴니더",
+        "user_nick": "꾼구마",
+        "user_id": "hasinyang",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/hasinyang/hasinyang.jpg",
+        "reg_date": "2026-11-11 13:38:32",
+        "reg_date_humans": "1 일 전",
+        "auth_no": 101,
+        "file_type": "REVIEW",
+        "ucc": {
+          "thumb": "//videoimg.sooplive.com/php/SnapshotLoad.php?rowKey=20261111_DB62FE33_298511113_1_r",
+          "ucc_type": "21",
+          "file_type": "REVIEW",
+          "total_file_duration": 2283333,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED",
+          "paid_ppv": false
+        },
+        "count": {
+          "read_cnt": 1016
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "is_manager": false
+      }
+    ],
+    "boards": [
+      {
+        "station_no": 26652775,
+        "bbs_no": 130173533,
+        "title_no": 211770933,
+        "title_name": "[웰컴버추얼] 11월 11일 1시에 만나요!",
+        "content": "     \n",
+        "user_nick": "꾼구마",
+        "user_id": "hasinyang",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/hasinyang/hasinyang.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/5/26652775/64001793820367464.png",
+        "reg_date": "2026-11-05 04:27:27",
+        "count": {
+          "read_cnt": 346,
+          "comment_cnt": 0
+        },
+        "is_pin": false,
+        "is_hit": true,
+        "is_notice": true,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 26652775,
+        "bbs_no": 130173533,
+        "title_no": 212322193,
+        "title_name": "배민상품권이랑 빼빼로 다 보냈습니당",
+        "content": "다들 봐주셔서 감사합니다!!",
+        "user_nick": "꾼구마",
+        "user_id": "hasinyang",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 104,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/hasinyang/hasinyang.jpg",
+        "thumb": null,
+        "reg_date": "2026-11-11 17:06:33",
+        "count": {
+          "read_cnt": 44,
+          "comment_cnt": 2
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 26652775,
+        "bbs_no": 130173533,
+        "title_no": 212321313,
+        "title_name": "194개 방셀 구매하신분들!",
+        "content": "↑ 머리 ↑ ↑ 의상 ↑ 머리랑 의상 번호로 골라서 알려주시면 감사하게씁니당댓글에 남겨주세용!",
+        "user_nick": "꾼구마",
+        "user_id": "hasinyang",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/hasinyang/hasinyang.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/5/26652775/86571794383535740.png",
+        "reg_date": "2026-11-11 16:54:21",
+        "count": {
+          "read_cnt": 69,
+          "comment_cnt": 7
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 26652775,
+        "bbs_no": 130173533,
+        "title_no": 212310567,
+        "title_name": "배민 만원권 핀볼을 위한 게시글",
+        "content": "댓글로 비난 한사바리씩 남겨보시죠14시 7분까지 ~.~",
+        "user_nick": "꾼구마",
+        "user_id": "hasinyang",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 104,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/hasinyang/hasinyang.jpg",
+        "thumb": null,
+        "reg_date": "2026-11-11 14:02:41",
+        "count": {
+          "read_cnt": 176,
+          "comment_cnt": 72
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 26652775,
+        "bbs_no": 130173533,
+        "title_no": 212298287,
+        "title_name": "[이벤트] 소소한 데뷔방송 이벤트",
+        "content": "안녕하세요! 소소하게 이벤트 하나 준비했습니다11월 11일 제 데뷔방송에서 채팅쳐주시는분들중에다섯분정도 핀볼돌려서 배민 만원권 드리려고합니당또 마침 빼빼로데이기도 하니까 방송중에 ...",
+        "user_nick": "꾼구마",
+        "user_id": "hasinyang",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/hasinyang/hasinyang.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/5/26652775/53811794353765199.png",
+        "reg_date": "2026-11-11 08:47:59",
+        "count": {
+          "read_cnt": 254,
+          "comment_cnt": 0
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      }
+    ],
+    "user_vods": [
+      {
+        "station_no": 26080712,
+        "bbs_no": 99038019,
+        "title_no": 212310407,
+        "title_name": "[캐치]뉴걸의 브라끈 튕기기(?)",
+        "user_nick": "[샤생팬]계식",
+        "user_id": "rnmrnm",
+        "worker_nick": null,
+        "worker_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/rn/rnmrnm/rnmrnm.jpg",
+        "reg_date": "2026-11-11 13:58:40",
+        "reg_date_humans": "1 일 전",
+        "auth_no": 101,
+        "ucc": {
+          "thumb": "//iflv14.sooplive.com/clip/20261111/783/5e114ec8-4d9d-46c9-b7ad-84e7e96c506a/21806783_r.jpg",
+          "ucc_type": "21",
+          "file_type": "CATCH",
+          "total_file_duration": 21000,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED",
+          "catchInfo": {
+            "resolution_type": "vertical",
+            "thumb": "http://iflv14.sooplive.com/clip/20261111/783/5e114ec8-4d9d-46c9-b7ad-84e7e96c506a/21806783_v.jpg"
+          }
+        },
+        "count": {
+          "read_cnt": 71
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "badge": {
+          "user_id": "rnmrnm",
+          "bj_id": "hasinyang",
+          "is_manager": 0,
+          "is_top_fan": 0,
+          "is_fan": 0,
+          "is_subscribe": 0,
+          "is_support": 0
+        }
+      },
+      {
+        "station_no": 30744284,
+        "bbs_no": 118502717,
+        "title_no": 212310375,
+        "title_name": "[캐치]헨타이!",
+        "user_nick": "꾼구마한모금",
+        "user_id": "castorp0620",
+        "worker_nick": null,
+        "worker_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ca/castorp0620/castorp0620.jpg",
+        "reg_date": "2026-11-11 13:57:55",
+        "reg_date_humans": "1 일 전",
+        "auth_no": 101,
+        "ucc": {
+          "thumb": "//iflv14.sooplive.com/clip/20261111/777/bb79abc8-9844-437e-978a-223d94516595/21806777_r.jpg",
+          "ucc_type": "21",
+          "file_type": "CATCH",
+          "total_file_duration": 13003,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED",
+          "catchInfo": {
+            "resolution_type": "vertical",
+            "thumb": "http://iflv14.sooplive.com/clip/20261111/777/bb79abc8-9844-437e-978a-223d94516595/21806777_v.jpg"
+          }
+        },
+        "count": {
+          "read_cnt": 46
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "badge": {
+          "user_id": "castorp0620",
+          "bj_id": "hasinyang",
+          "is_manager": 0,
+          "is_top_fan": 0,
+          "is_fan": 0,
+          "is_subscribe": 1,
+          "is_support": 0
+        }
+      }
+    ],
+    "user_boards": [],
+    "catchstorys": [],
+    "playlists": [],
+    "sooptore": {
+      "broadcast_live": [],
+      "curation_product": []
+    },
+    "banners": [],
+    "is_adsence": true,
+    "adballoon_event": {
+      "end_yn": true,
+      "percent": -1
+    }
+  }
+}

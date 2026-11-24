@@ -1,0 +1,7 @@
+# 읽기·배포 검증용 임시 복사본과 내려받은 라이브러리는 프로젝트 변경에 포함하지 않는다.
+workflow-cleanup/
+failed-cli-template/
+live-worker/node_modules/
+dev-worker-check/node_modules/
+package/
+*.tgz

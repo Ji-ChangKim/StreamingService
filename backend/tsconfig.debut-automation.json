@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/debutAutomationWorker.ts", "src/debutAutomation/**/*.ts"],
+  "compilerOptions": { "noEmit": true }
+}

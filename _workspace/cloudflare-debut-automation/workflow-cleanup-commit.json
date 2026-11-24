@@ -1,0 +1,6 @@
+{
+  "commit": "3d1ba1d184e6150b8c1862c935ea84c100ac30d5",
+  "parent": "e101e44ad107afd1fa5632dc5e3e72be74a08af1",
+  "file": ".github/workflows/cron_crawler.yml",
+  "blob": "81e41a85cbe99344c71a05521b582bc6fc6170e0"
+}

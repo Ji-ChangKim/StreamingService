@@ -1,0 +1,156 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/kovexo0209/station",
+  "checkedAt": "2026-11-12T05:52:37.613Z",
+  "raw": {
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/ko/kovexo0209/kovexo0209.jpg",
+    "station": {
+      "display": {
+        "main_type": "1110",
+        "title_type": "IMAGE",
+        "title_text": "",
+        "profile_text": "밥주세요",
+        "skin_type": 0,
+        "skin_no": 0,
+        "title_skin_image": "",
+        "ai_profile_conf_yn": "N",
+        "ai_profile_str": null
+      },
+      "groups": [],
+      "menus": [
+        {
+          "bbs_no": 51993713,
+          "station_no": 17800080,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 104,
+          "rnum": 1,
+          "line": 1,
+          "indention": 0,
+          "name": "General Board",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "upd": {
+        "station_no": 17800080,
+        "user_id": "kovexo0209",
+        "asp_code": 0,
+        "fan_cnt": 41,
+        "today0_visit_cnt": 0,
+        "today1_visit_cnt": 16,
+        "total_visit_cnt": 1831,
+        "today0_ok_cnt": 0,
+        "today1_ok_cnt": 0,
+        "today0_fav_cnt": 0,
+        "today1_fav_cnt": 0,
+        "total_ok_cnt": 120,
+        "total_view_cnt": 3309
+      },
+      "vods": [
+        {
+          "bbs_no": 51993711,
+          "station_no": 17800080,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 108,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 다시보기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 51993712,
+          "station_no": 17800080,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 109,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 하이라이트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "broad_start": "2026-11-11 14:00:06",
+      "grade": 0,
+      "jointime": "2017-01-31 15:43:48",
+      "station_name": "이누땅",
+      "station_no": 17800080,
+      "station_title": "",
+      "total_broad_time": 288267,
+      "user_id": "kovexo0209",
+      "user_nick": "이월이",
+      "active_no": 1
+    },
+    "broad": null,
+    "starballoon_top": [
+      {
+        "user_id": "hkm104704",
+        "user_nick": "경민히",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/hk/hkm104704/hkm104704.jpg"
+      },
+      {
+        "user_id": "mun7140",
+        "user_nick": "디즈니상",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/mu/mun7140/mun7140.jpg"
+      },
+      {
+        "user_id": "nkovexo0209",
+        "user_nick": "제주산까마귀",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/nk/nkovexo0209/nkovexo0209.jpg"
+      },
+      {
+        "user_id": "rudtn724",
+        "user_nick": "갱튜",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ru/rudtn724/rudtn724.jpg"
+      },
+      {
+        "user_id": "nsyan0508",
+        "user_nick": "나옹_2",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ns/nsyan0508/nsyan0508.jpg"
+      },
+      {
+        "user_id": "dngywn1234",
+        "user_nick": "♡효구리♡",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/dn/dngywn1234/dngywn1234.jpg"
+      },
+      {
+        "user_id": "kwhdydtn125",
+        "user_nick": "뇽투",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/kw/kwhdydtn125/kwhdydtn125.jpg"
+      },
+      {
+        "user_id": "nainai7",
+        "user_nick": "WWE염불",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/na/nainai7/nainai7.jpg"
+      }
+    ],
+    "sticker_top": [],
+    "subscription": {
+      "total": 3,
+      "tier1": 3,
+      "tier2": 0
+    },
+    "is_best_bj": false,
+    "is_partner_bj": false,
+    "is_ppv_bj": false,
+    "is_af_supporters_bj": false,
+    "is_shopfreeca_bj": false,
+    "is_favorite": false,
+    "is_subscription": false,
+    "is_owner": false,
+    "is_manager": false,
+    "is_notice": false,
+    "is_adsence": true,
+    "is_mobile_push": false,
+    "subscribe_visible": "on",
+    "country": "KR",
+    "current_timestamp": "2026-11-12 14:52:37"
+  }
+}

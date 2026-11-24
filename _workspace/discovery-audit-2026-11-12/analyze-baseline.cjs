@@ -1,0 +1,13 @@
+const fs=require('node:fs'),path=require('node:path'),esbuild=require('../../frontend/node_modules/esbuild');
+esbuild.buildSync({stdin:{contents:`export * from './backend/src/debutAutomation/policy';export * from './backend/src/debutAutomation/sources';export * from './backend/src/debutAutomation/network';export * from './backend/src/debutAutomation/store';export * from './backend/src/debutAutomation/profileEnrichment';export * from './backend/src/debutAutomation/agency';export * from './shared/contentReview';export * from './shared/portal';export * from './shared/profileDetails';`,resolveDir:path.resolve(__dirname,'../..'),loader:'ts'},outfile:path.join(__dirname,'automation.cjs'),bundle:true,platform:'node',format:'cjs',target:'node22',logLevel:'silent'});
+const A=require('./automation.cjs');
+const read=n=>fs.readFileSync(path.join(__dirname,n),'utf8');
+const profiles=JSON.parse(read('public-before.json')).profiles;
+const soop=A.parseSoop(JSON.parse(read('soop-calendar.json')),'2026-11-01','2026-11-30','https://welcomevirtual.sooplive.com/');
+const sheet=A.parseSheet(read('sheet.csv'),'2026-11-01','2026-11-30');
+const known=new Map(profiles.map(p=>[A.portalChannelKey(p.channelUrl,p.platform),p]));
+const comparison=[...soop,...sheet].map(s=>{const p=known.get(s.channelKey);return {source:s.source,id:s.id,name:s.name,platform:s.platform,date:s.date,time:s.time,kind:s.kind,channel:s.channelUrl,exists:!!p,slug:p?.slug,siteName:p?.displayName,siteDate:p?.debutDate,siteTime:p?.debutTime,identical:!!p&&p.debutDate===s.date&&p.debutTime===s.time,primaryUrl:s.primaryUrl,xUrl:s.xUrl};});
+const notices=['x-debutbot.html','x-krfollower.html','x-vvw.html'].flatMap(n=>A.noticeLinks(read(n)).map(url=>({source:n,url})));
+fs.writeFileSync(path.join(__dirname,'source-comparison.json'),JSON.stringify({soop:soop.length,sheet:sheet.length,comparison,notices},null,2));
+console.log(JSON.stringify({profiles:profiles.length,target:profiles.filter(p=>p.debutDate>='2026-11-01'&&p.debutDate<='2026-11-11').length,soop:soop.length,sheet:sheet.length,notices:notices.length},null,2));
+for(const p of comparison)console.log(JSON.stringify(p));

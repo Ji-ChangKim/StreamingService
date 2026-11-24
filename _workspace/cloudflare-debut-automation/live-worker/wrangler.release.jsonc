@@ -1,0 +1,46 @@
+{
+  "name": "streaming",
+  "main": "src/index.js",
+  "compatibility_date": "2024-01-01",
+  "workers_dev": true,
+  "preview_urls": true,
+  "keep_vars": true,
+  "rules": [
+    {
+      "type": "Text",
+      "globs": [
+        "**/__STATIC_CONTENT_MANIFEST"
+      ],
+      "fallthrough": true
+    }
+  ],
+  "routes": [
+    {
+      "pattern": "vdebut.live",
+      "custom_domain": true
+    },
+    {
+      "pattern": "dev.vdebut.live",
+      "custom_domain": true
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "*/10 * * * *",
+      "0 15 * * SUN"
+    ]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "vdebut-db",
+      "database_id": "888a8c04-5657-4bff-9b50-5002a47ac7c7"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "__STATIC_CONTENT",
+      "id": "31072a94e15c4fc181966cccd35a4254"
+    }
+  ]
+}

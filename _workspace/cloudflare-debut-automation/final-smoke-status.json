@@ -1,0 +1,82 @@
+[
+  {
+    "results": [
+      {
+        "slot": "smoke:2026-11-12T03:44",
+        "status": "COMPLETED",
+        "published": 0,
+        "verified": 0
+      },
+      {
+        "slot": "smoke:2026-11-12T03:43",
+        "status": "COMPLETED",
+        "published": 1,
+        "verified": 1
+      },
+      {
+        "slot": "smoke:2026-11-12T03:40",
+        "status": "COMPLETED",
+        "published": 0,
+        "verified": 0
+      },
+      {
+        "slot": "smoke:2026-11-12T03:39",
+        "status": "COMPLETED",
+        "published": 0,
+        "verified": 0
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1704
+      },
+      "duration": 0.1704,
+      "changes": 0,
+      "last_row_id": 12,
+      "changed_db": false,
+      "size_after": 905990144,
+      "rows_read": 4,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "id": "soop:699",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "hanieum-soop"
+      },
+      {
+        "id": "soop:761",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "ham2ko-soop"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.0844
+      },
+      "duration": 0.0844,
+      "changes": 0,
+      "last_row_id": 12,
+      "changed_db": false,
+      "size_after": 905990144,
+      "rows_read": 4,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

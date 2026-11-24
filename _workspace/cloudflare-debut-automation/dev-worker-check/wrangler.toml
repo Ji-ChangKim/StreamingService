@@ -1,0 +1,26 @@
+name = "dev-worker-check"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+workers_dev = false
+preview_urls = false
+
+[[routes]]
+pattern = "dev.vdebut.live/*"
+zone_name = "vdebut.live"
+
+[triggers]
+crons = [ "0 15 * * SUN" ]
+
+[[d1_databases]]
+binding = "DB"
+database_id = "888a8c04-5657-4bff-9b50-5002a47ac7c7"
+database_name = "vdebut-db"
+
+[vars]
+DISCORD_APPLICATION_ID = "1547493885733900351"
+DISCORD_PUBLIC_KEY = "5f3ac194f940bbe736f80fcc269b1df45da5cc86b60fe6b85a34a6705572f285"
+PORTAL_ENABLED = "true"
+
+[[kv_namespaces]]
+id = "76e68b5f5bee4b7694761dffbaebcb78"
+binding = "__STATIC_CONTENT"

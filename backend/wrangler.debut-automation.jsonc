@@ -1,0 +1,134 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "vdebut-discovery",
+  "main": "src/debutAutomationWorker.ts",
+  "compatibility_date": "2026-11-12",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": false,
+  "preview_urls": false,
+  "triggers": {
+    "crons": [
+      "0 1 * * MON",
+      "0 1 * * WED",
+      "0 1 * * SUN"
+    ]
+  },
+  "limits": {
+    "cpu_ms": 5000,
+    "subrequests": 400
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "vdebut-db",
+      "database_id": "888a8c04-5657-4bff-9b50-5002a47ac7c7"
+    }
+  ],
+  "services": [
+    {
+      "binding": "SITE",
+      "service": "streaming"
+    }
+  ],
+  "vars": {
+    "AUTOMATION_VERSION": "2026-11-18.4",
+    "SMOKE_TEST_UNTIL": "",
+    "BACKFILL_FROM": "",
+    "BACKFILL_TO": "",
+    "BACKFILL_UNTIL": "",
+    "SEARCH_PROVIDER": "TAVILY",
+    "SEARCH_STORAGE_RIGHTS_APPROVED": "true",
+    "TAVILY_TEST_AT": "",
+    "TAVILY_TEST_CREDIT_CEILING": "0",
+    "TAVILY_MONTHLY_LIMIT": "64"
+  },
+  "env": {
+    "test1800": {
+      "name": "vdebut-discovery",
+      "secrets": {
+        "required": [
+          "TAVILY_API_KEY"
+        ]
+      },
+      "vars": {
+        "AUTOMATION_VERSION": "2026-11-18.4",
+        "SMOKE_TEST_UNTIL": "",
+        "BACKFILL_FROM": "",
+        "BACKFILL_TO": "",
+        "BACKFILL_UNTIL": "",
+        "SEARCH_PROVIDER": "TAVILY",
+        "SEARCH_STORAGE_RIGHTS_APPROVED": "true",
+        "TAVILY_TEST_AT": "",
+        "TAVILY_TEST_CREDIT_CEILING": "0",
+        "TAVILY_MONTHLY_LIMIT": "64"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "vdebut-db",
+          "database_id": "888a8c04-5657-4bff-9b50-5002a47ac7c7"
+        }
+      ],
+      "services": [
+        {
+          "binding": "SITE",
+          "service": "streaming"
+        }
+      ],
+      "triggers": {
+        "crons": [
+          "0 1 * * MON",
+          "0 1 * * WED",
+          "0 1 * * SUN"
+        ]
+      }
+    },
+    "search": {
+      "name": "vdebut-discovery",
+      "secrets": {
+        "required": [
+          "NAVER_SEARCH_CLIENT_ID",
+          "NAVER_SEARCH_CLIENT_SECRET"
+        ]
+      },
+      "vars": {
+        "AUTOMATION_VERSION": "2026-11-18.4",
+        "SMOKE_TEST_UNTIL": "",
+        "BACKFILL_FROM": "",
+        "BACKFILL_TO": "",
+        "BACKFILL_UNTIL": "",
+        "SEARCH_PROVIDER": "NAVER_HUB",
+        "SEARCH_STORAGE_RIGHTS_APPROVED": "false",
+        "TAVILY_TEST_AT": "",
+        "TAVILY_TEST_CREDIT_CEILING": "0",
+        "TAVILY_MONTHLY_LIMIT": "64"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "vdebut-db",
+          "database_id": "888a8c04-5657-4bff-9b50-5002a47ac7c7"
+        }
+      ],
+      "services": [
+        {
+          "binding": "SITE",
+          "service": "streaming"
+        }
+      ],
+      "triggers": {
+        "crons": [
+          "0 1 * * MON",
+          "0 1 * * WED",
+          "0 1 * * SUN"
+        ]
+      }
+    }
+  }
+}

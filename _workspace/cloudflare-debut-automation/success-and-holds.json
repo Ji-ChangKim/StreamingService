@@ -1,0 +1,103 @@
+[
+  {
+    "results": [
+      {
+        "slot": "smoke:2026-11-12T03:40",
+        "status": "RUNNING",
+        "summary": "{}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:39",
+        "status": "COMPLETED",
+        "summary": "{\"runId\":\"ab6ddb1b-ebe6-4a0f-836a-0ddb80374139\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:39\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":5,\"downloadBytes\":630139,\"dbCalls\":61,\"dbRowsRead\":2756,\"dbRowsWritten\":12,\"publicVerified\":false,\"errors\":[]}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:38",
+        "status": "COMPLETED_WITH_HOLDS",
+        "summary": "{\"runId\":\"43dd98a7-2119-420b-aed1-86c975387445\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:38\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED_WITH_HOLDS\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":13,\"published\":[{\"name\":\"묘해¸\",\"slug\":\"ssohan-soop\",\"date\":\"2026-11-19\",\"time\":\"16:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"시즈즈\",\"slug\":\"seizes-soop\",\"date\":\"2026-11-23\",\"time\":\"17:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"온비\",\"slug\":\"onbi22-soop\",\"date\":\"2026-11-25\",\"time\":\"15:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"키리에♥\",\"slug\":\"kyrie01234-soop\",\"date\":\"2026-11-29\",\"time\":\"17:00\",\"kind\":\"PLATFORM_DEBUT\"}],\"updated\":[\"haenarong-soop\",\"sujiai-soop\",\"hasinyang-soop\",\"d00328-soop\",\"di6ixx-soop\",\"lanbee-soop\"],\"unchanged\":0,\"held\":[{\"id\":\"soop:715\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"},{\"id\":\"soop:699\",\"reason\":\"IMAGE_HOST_HOLD\"},{\"id\":\"soop:761\",\"reason\":\"IMAGE_HOST_HOLD\"}],\"failed\":[],\"remaining\":0,\"externalRequests\":31,\"downloadBytes\":14719357,\"dbCalls\":140,\"dbRowsRead\":5397,\"dbRowsWritten\":134,\"publicVerified\":true,\"errors\":[]}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:37",
+        "status": "PARTIAL",
+        "summary": "{\"runId\":\"d00f3a9c-07d9-4a0a-8e0c-45a7a9ce6ac1\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:37\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":18,\"published\":[{\"name\":\"공이연\",\"slug\":\"02yeon-soop\",\"date\":\"2026-11-15\",\"time\":\"12:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"까망까맹\",\"slug\":\"dbrlshd123-soop\",\"date\":\"2026-11-06\",\"time\":\"13:00\",\"kind\":\"PLATFORM_DEBUT\"}],\"updated\":[\"nju123-soop\",\"kyykys12-soop\",\"gingmallang-soop\",\"ghostwitch-soop\",\"hue1115-soop\",\"koming-soop\",\"kissingyou-soop\",\"shinittan-soop\",\"soda-soop\",\"yorune-soop\",\"hanui-soop\",\"haita-soop\",\"iwol-soop\",\"hamoye-soop\"],\"unchanged\":0,\"held\":[{\"id\":\"soop:707\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"},{\"id\":\"soop:685\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"}],\"failed\":[],\"remaining\":0,\"externalRequests\":39,\"downloadBytes\":13285823,\"dbCalls\":186,\"dbRowsRead\":6912,\"dbRowsWritten\":180,\"publicVerified\":true,\"errors\":[\"DETAIL_BUDGET_DEFERRED\"]}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.2452
+      },
+      "duration": 0.2452,
+      "changes": 0,
+      "last_row_id": 10,
+      "changed_db": false,
+      "size_after": 905973760,
+      "rows_read": 4,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "id": "soop:761",
+        "seed": "{\"id\":\"soop:761\",\"channelKey\":\"SOOP:ham2ko\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/ham2ko\",\"name\":\"은재_\",\"date\":\"2026-12-06\",\"time\":\"18:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}"
+      },
+      {
+        "id": "soop:699",
+        "seed": "{\"id\":\"soop:699\",\"channelKey\":\"SOOP:twpriy\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/twpriy\",\"name\":\"한이음\",\"date\":\"2026-11-25\",\"time\":\"12:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.227
+      },
+      "duration": 0.227,
+      "changes": 0,
+      "last_row_id": 10,
+      "changed_db": false,
+      "size_after": 905973760,
+      "rows_read": 39,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "month": "2026-11",
+        "runs": 10,
+        "reserved_external": 400,
+        "reserved_reads": 300000,
+        "reserved_writes": 7000
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.098
+      },
+      "duration": 0.098,
+      "changes": 0,
+      "last_row_id": 10,
+      "changed_db": false,
+      "size_after": 905973760,
+      "rows_read": 1,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

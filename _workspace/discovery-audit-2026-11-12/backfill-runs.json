@@ -1,0 +1,50 @@
+[
+  {
+    "slot": "backfill:2026-11-01:2026-11-11:2026-11-12T06:13",
+    "id": "2f7ef0a7-9a5c-46aa-ba98-a0f948ab90fa",
+    "status": "PARTIAL",
+    "started_at": "2026-11-12T06:13:52.856Z",
+    "finished_at": "2026-11-12T06:14:31.395Z",
+    "summary": "{\"runId\":\"2f7ef0a7-9a5c-46aa-ba98-a0f948ab90fa\",\"mode\":\"BACKFILL\",\"slot\":\"backfill:2026-11-01:2026-11-11:2026-11-12T06:13\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-01\",\"to\":\"2026-11-11\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"registered-enrichment\",\"status\":\"OK\",\"count\":0,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":15,\"checked\":13,\"published\":[],\"updated\":[\"bayu-soop\",\"geumyeonnam-soop\",\"haso-soop\"],\"unchanged\":10,\"held\":[],\"failed\":[],\"remaining\":7,\"externalRequests\":38,\"downloadBytes\":11362728,\"dbCalls\":95,\"dbRowsRead\":2213,\"dbRowsWritten\":154,\"publicVerified\":true,\"errors\":[\"DETAIL_BUDGET_DEFERRED\"]}"
+  },
+  {
+    "slot": "backfill:2026-11-01:2026-11-11:2026-11-12T06:14",
+    "id": "fdbc7dee-556a-4e0b-95fe-d1286d12c3d6",
+    "status": "PARTIAL",
+    "started_at": "2026-11-12T06:14:52.593Z",
+    "finished_at": "2026-11-12T06:14:59.348Z",
+    "summary": "{\"runId\":\"fdbc7dee-556a-4e0b-95fe-d1286d12c3d6\",\"mode\":\"BACKFILL\",\"slot\":\"backfill:2026-11-01:2026-11-11:2026-11-12T06:14\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-01\",\"to\":\"2026-11-11\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"registered-enrichment\",\"status\":\"OK\",\"count\":0,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":14,\"published\":[],\"updated\":[\"iwol-soop\",\"d00328-soop\",\"di6ixx-soop\"],\"unchanged\":10,\"held\":[],\"failed\":[],\"remaining\":9,\"externalRequests\":40,\"downloadBytes\":12656690,\"dbCalls\":78,\"dbRowsRead\":2261,\"dbRowsWritten\":117,\"publicVerified\":true,\"errors\":[\"EXTERNAL_BUDGET_EXCEEDED\"]}"
+  },
+  {
+    "slot": "backfill:2026-11-01:2026-11-11:2026-11-12T06:15",
+    "id": "14631c6c-3e8b-45b6-ae1e-5ddf87b77aec",
+    "status": "COMPLETED",
+    "started_at": "2026-11-12T06:15:51.915Z",
+    "finished_at": "2026-11-12T06:16:30.370Z",
+    "summary": "{\"runId\":\"14631c6c-3e8b-45b6-ae1e-5ddf87b77aec\",\"mode\":\"BACKFILL\",\"slot\":\"backfill:2026-11-01:2026-11-11:2026-11-12T06:15\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-01\",\"to\":\"2026-11-11\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"registered-enrichment\",\"status\":\"OK\",\"count\":0,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":9,\"published\":[],\"updated\":[\"shinittan-soop\",\"yorune-soop\"],\"unchanged\":7,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":30,\"downloadBytes\":8459888,\"dbCalls\":41,\"dbRowsRead\":1949,\"dbRowsWritten\":42,\"publicVerified\":true,\"errors\":[]}"
+  },
+  {
+    "slot": "backfill:2026-11-01:2026-11-11:2026-11-12T06:16",
+    "id": "541b364a-2049-432f-8e78-50178f04ad11",
+    "status": "COMPLETED",
+    "started_at": "2026-11-12T06:16:52.279Z",
+    "finished_at": "2026-11-12T06:16:56.800Z",
+    "summary": "{\"runId\":\"541b364a-2049-432f-8e78-50178f04ad11\",\"mode\":\"BACKFILL\",\"slot\":\"backfill:2026-11-01:2026-11-11:2026-11-12T06:16\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-01\",\"to\":\"2026-11-11\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"registered-enrichment\",\"status\":\"OK\",\"count\":0,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":0,\"downloadBytes\":0,\"dbCalls\":17,\"dbRowsRead\":1362,\"dbRowsWritten\":7,\"publicVerified\":false,\"errors\":[]}"
+  },
+  {
+    "slot": "backfill:2026-11-01:2026-11-11:2026-11-12T06:17",
+    "id": "86405ca7-e46d-43d5-a624-b9147a12b1bf",
+    "status": "COMPLETED",
+    "started_at": "2026-11-12T06:17:52.120Z",
+    "finished_at": "2026-11-12T06:17:55.420Z",
+    "summary": "{\"runId\":\"86405ca7-e46d-43d5-a624-b9147a12b1bf\",\"mode\":\"BACKFILL\",\"slot\":\"backfill:2026-11-01:2026-11-11:2026-11-12T06:17\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-01\",\"to\":\"2026-11-11\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"registered-enrichment\",\"status\":\"OK\",\"count\":0,\"reason\":\"\"}],\"discovered\":0,\"discoveredCandidates\":[],\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":0,\"downloadBytes\":0,\"dbCalls\":16,\"dbRowsRead\":1362,\"dbRowsWritten\":6,\"publicVerified\":false,\"errors\":[]}"
+  },
+  {
+    "slot": "backfill:2026-11-01:2026-11-11:2026-11-12T06:18",
+    "id": "3409a567-176f-45dd-b316-c543f7329b2f",
+    "status": "COMPLETED",
+    "started_at": "2026-11-12T06:18:52.227Z",
+    "finished_at": "2026-11-12T06:18:55.892Z",
+    "summary": "{\"runId\":\"3409a567-176f-45dd-b316-c543f7329b2f\",\"mode\":\"BACKFILL\",\"slot\":\"backfill:2026-11-01:2026-11-11:2026-11-12T06:18\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-01\",\"to\":\"2026-11-11\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"registered-enrichment\",\"status\":\"OK\",\"count\":0,\"reason\":\"\"}],\"discovered\":0,\"discoveredCandidates\":[],\"sourceChanges\":0,\"seedDeferred\":0,\"enrichmentDeferred\":0,\"checked\":1,\"published\":[],\"updated\":[],\"unchanged\":1,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":2,\"downloadBytes\":468867,\"dbCalls\":21,\"dbRowsRead\":1369,\"dbRowsWritten\":16,\"publicVerified\":false,\"errors\":[]}"
+  }
+]

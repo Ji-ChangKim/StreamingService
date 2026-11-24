@@ -1,0 +1,16 @@
+{
+  "slug": "aran-anura",
+  "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/cd3b3bc8f8fe774cfcb375b31cc51beb",
+  "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=cd3b3bc8f8fe774cfcb375b31cc51beb",
+  "checkedAt": "2026-11-12T05:53:47.993Z",
+  "raw": {
+    "success": true,
+    "platform": "CHZZK",
+    "channelId": "cd3b3bc8f8fe774cfcb375b31cc51beb",
+    "creatorName": "아란 아누라",
+    "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMTJfOTUg/MDAxNzkxNzk5NjExMjc4.NUccLEbnAl-aUzLwzuD1y8MffTnbO5RMWncOU6mtkeYg.dTmddIHn73rQNj2lm4FGniMVxjGYciHRVMMN5aSvLRUg.PNG/image.png",
+    "channelUrl": "https://chzzk.naver.com/cd3b3bc8f8fe774cfcb375b31cc51beb",
+    "description": "아스텔라 제국의 2황자이자, 마도학자",
+    "verified": false
+  }
+}

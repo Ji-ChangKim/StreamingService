@@ -1,0 +1,232 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/hyesung0410/home",
+  "raw": {
+    "vods": [
+      {
+        "station_no": 32932189,
+        "bbs_no": 127727797,
+        "title_no": 212101023,
+        "title_name": "웰컴 버추얼 1일차 30/33/100",
+        "user_nick": "혜성²",
+        "user_id": "hyesung0410",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/hy/hyesung0410/hyesung0410.jpg",
+        "reg_date": "2026-11-09 00:09:45",
+        "reg_date_humans": "3 일 전",
+        "auth_no": 101,
+        "file_type": "REVIEW",
+        "ucc": {
+          "thumb": "//videoimg.sooplive.com/php/SnapshotLoad.php?rowKey=20261108_9C073209_298454029_1_r",
+          "ucc_type": "21",
+          "file_type": "REVIEW",
+          "total_file_duration": 7969867,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED",
+          "paid_ppv": false
+        },
+        "count": {
+          "read_cnt": 2028
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 32932189,
+        "bbs_no": 127727797,
+        "title_no": 210265345,
+        "title_name": "웰컴 버추얼 지원완! 테스트 방송",
+        "user_nick": "혜성²",
+        "user_id": "hyesung0410",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/hy/hyesung0410/hyesung0410.jpg",
+        "reg_date": "2026-10-19 22:11:33",
+        "reg_date_humans": "3 주일 전",
+        "auth_no": 101,
+        "file_type": "REVIEW",
+        "ucc": {
+          "thumb": "//videoimg.sooplive.com/php/SnapshotLoad.php?rowKey=20261019_CF4DECBE_297966237_1_r",
+          "ucc_type": "21",
+          "file_type": "REVIEW",
+          "total_file_duration": 4356684,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED",
+          "paid_ppv": false
+        },
+        "count": {
+          "read_cnt": 136
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "is_manager": false
+      }
+    ],
+    "boards": [
+      {
+        "station_no": 32932189,
+        "bbs_no": 127727801,
+        "title_no": 211068963,
+        "title_name": "대뷔기념 애청자 이벤트 (11월 22일)",
+        "content": "애청자 20명당 배민 만원상품권 핀볼EX) 애청자160명-> 배민 만원핀볼 8번 돌리기만관부!팬가입도 해줘~(안해도 되지만 해주면 기뻐!)남는거 한개라도 고마워~해야하는거1.즐겨찾...",
+        "user_nick": "혜성²",
+        "user_id": "hyesung0410",
+        "bj_id": "hyesung0410",
+        "worker_nick": "혜성²",
+        "worker_id": "hyesung0410",
+        "login_id": null,
+        "board_type": 104,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/hy/hyesung0410/hyesung0410.jpg",
+        "thumb": null,
+        "reg_date": "2026-10-28 22:20:46",
+        "count": {
+          "read_cnt": 649,
+          "comment_cnt": 157
+        },
+        "is_pin": true,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 32932189,
+        "bbs_no": 127727801,
+        "title_no": 212210573,
+        "title_name": "화,목 휴방공지",
+        "content": "머리가 너무아프고 몸살걸린거 같아서 퇴근하고 상태보고 킬게요.컨디션 관리 못해서 죄송합니다.+생리통인듯 합니다.못킬거같아요.",
+        "user_nick": "혜성²",
+        "user_id": "hyesung0410",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 104,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/hy/hyesung0410/hyesung0410.jpg",
+        "thumb": null,
+        "reg_date": "2026-11-10 09:18:58",
+        "count": {
+          "read_cnt": 35,
+          "comment_cnt": 0
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 32932189,
+        "bbs_no": 127727801,
+        "title_no": 211757811,
+        "title_name": "애청자 100명! 야호~♡",
+        "content": "",
+        "user_nick": "혜성²",
+        "user_id": "hyesung0410",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/hy/hyesung0410/hyesung0410.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/9/32932189/26031793807983035.jpeg",
+        "reg_date": "2026-11-05 00:59:50",
+        "count": {
+          "read_cnt": 55,
+          "comment_cnt": 0
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 32932189,
+        "bbs_no": 127727801,
+        "title_no": 211111341,
+        "title_name": "첫방송 이벤트",
+        "content": "     \n",
+        "user_nick": "혜성²",
+        "user_id": "hyesung0410",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/hy/hyesung0410/hyesung0410.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/9/32932189/42701793241270337.png",
+        "reg_date": "2026-10-29 11:36:10",
+        "count": {
+          "read_cnt": 155,
+          "comment_cnt": 0
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 32932189,
+        "bbs_no": 127730431,
+        "title_no": 206985019,
+        "title_name": "프로필",
+        "content": "\n안녕하세요!혜성이 입니다!나이: 영원한 꽃같은 나이! 만23살!MBTI: infp\n 저는 핥는 임티를 좋아합니다! 후훗!저는 조근조근 소통 방송을 할것입니다!게임도 하는데 공겜은...",
+        "user_nick": "혜성²",
+        "user_id": "hyesung0410",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/hy/hyesung0410/hyesung0410.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/9/32932189/71351790006513757.jpeg",
+        "reg_date": "2026-09-13 03:41:20",
+        "count": {
+          "read_cnt": 196,
+          "comment_cnt": 0
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      }
+    ],
+    "user_vods": [],
+    "user_boards": [],
+    "catchstorys": [],
+    "playlists": [],
+    "sooptore": {
+      "broadcast_live": [],
+      "curation_product": []
+    },
+    "banners": [
+      {
+        "url": "//stimg.sooplive.co.kr/STATION/9/32932189/50941792512233123.png",
+        "link": "https://www.sooplive.com/station/hyesung0410",
+        "action_type": 0,
+        "reg_date": "2026-10-21 01:04:05"
+      }
+    ],
+    "is_adsence": true,
+    "adballoon_event": {
+      "end_yn": true,
+      "percent": -1
+    }
+  }
+}

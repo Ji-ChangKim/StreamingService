@@ -1,0 +1,700 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/haihito/home",
+  "raw": {
+    "vods": [
+      {
+        "station_no": 31515252,
+        "bbs_no": 121698203,
+        "title_no": 212324055,
+        "title_name": "[아이딜] 아카이브 청초녀 등장!!",
+        "user_nick": "하이타",
+        "user_id": "haihito",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/haihito/haihito.jpg",
+        "reg_date": "2026-11-11 17:31:42",
+        "reg_date_humans": "21 시간 전",
+        "auth_no": 101,
+        "file_type": "REVIEW",
+        "ucc": {
+          "thumb": "//videoimg.sooplive.com/php/SnapshotLoad.php?rowKey=20261111_2D03DFEF_298510235_1_r&column=2&t=1794400580",
+          "ucc_type": "21",
+          "file_type": "REVIEW",
+          "total_file_duration": 19281434,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED",
+          "paid_ppv": false
+        },
+        "count": {
+          "read_cnt": 6458
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 31515252,
+        "bbs_no": 121698203,
+        "title_no": 212224231,
+        "title_name": "[아이딜] 모닝요정 하잇따 등장!!",
+        "user_nick": "하이타",
+        "user_id": "haihito",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/haihito/haihito.jpg",
+        "reg_date": "2026-11-10 15:25:40",
+        "reg_date_humans": "1 일 전",
+        "auth_no": 101,
+        "file_type": "REVIEW",
+        "ucc": {
+          "thumb": "//videoimg.sooplive.com/php/SnapshotLoad.php?rowKey=20261110_318EA46F_298486517_1_r&column=2&t=1794398563",
+          "ucc_type": "21",
+          "file_type": "REVIEW",
+          "total_file_duration": 11731484,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED",
+          "paid_ppv": false
+        },
+        "count": {
+          "read_cnt": 7586
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 31515252,
+        "bbs_no": 121698203,
+        "title_no": 212061727,
+        "title_name": "[아이딜] 아카이브 2기 하이타! 데뷔합니다",
+        "user_nick": "하이타",
+        "user_id": "haihito",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/haihito/haihito.jpg",
+        "reg_date": "2026-11-08 17:24:56",
+        "reg_date_humans": "3 일 전",
+        "auth_no": 101,
+        "file_type": "REVIEW",
+        "ucc": {
+          "thumb": "//videoimg.sooplive.com/php/SnapshotLoad.php?rowKey=20261108_1E91B629_298443365_1_r&column=2&t=1794397471",
+          "ucc_type": "21",
+          "file_type": "REVIEW",
+          "total_file_duration": 5089867,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED",
+          "paid_ppv": false
+        },
+        "count": {
+          "read_cnt": 13514
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "is_manager": false
+      }
+    ],
+    "boards": [
+      {
+        "station_no": 31515252,
+        "bbs_no": 121698207,
+        "title_no": 212256187,
+        "title_name": "팬 닉네임 추천 부탁드립니다♡",
+        "content": "안녕하세요. 잇따예요!!카페에서 팬 닉네임을 추천받고 있습니다!!댓글로 여러분의 아이디어를 남겨주시면제가 그 중에서 하나 선택해볼게요🫧🤍잇따에게 팬 닉네임 추천하러 가기\n잘 부탁드...",
+        "user_nick": "하이타",
+        "user_id": "haihito",
+        "bj_id": "haihito",
+        "worker_nick": "하이타",
+        "worker_id": "haihito",
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/haihito/haihito.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/2/31515252/24291794314663309.jpeg",
+        "reg_date": "2026-11-10 21:48:48",
+        "count": {
+          "read_cnt": 621,
+          "comment_cnt": 24
+        },
+        "is_pin": true,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 31515252,
+        "bbs_no": 121698207,
+        "title_no": 212397609,
+        "title_name": "쉬어가는 날~💭🫧",
+        "content": "좋은 아침이에요 (=^▽^)σ♡오늘은 잇따 휴방데이입니다!!밀렸던 일도 하고 낮잠도 자고끝내주는 하루를 보내겠사와요 :3뭔가 아숩지만 불금 점심은 제가 또야무지게 챙기러 올 테니까...",
+        "user_nick": "하이타",
+        "user_id": "haihito",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 104,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/haihito/haihito.jpg",
+        "thumb": null,
+        "reg_date": "2026-11-12 09:50:00",
+        "count": {
+          "read_cnt": 254,
+          "comment_cnt": 17
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 31515252,
+        "bbs_no": 121698207,
+        "title_no": 212337829,
+        "title_name": "오늘도 즐거웠어요!!",
+        "content": "처음 해보는 게 유독 많았던 하루였네요-!!여러분과 함께 즐겨서 더 재미있었어요💕저는 내일 하루 끝내주게 쉬고 나서금요일 점심 때 올 예정이에요!!불금 점심 시간을 책임지겠다!!오...",
+        "user_nick": "하이타",
+        "user_id": "haihito",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 104,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/haihito/haihito.jpg",
+        "thumb": null,
+        "reg_date": "2026-11-11 19:58:01",
+        "count": {
+          "read_cnt": 328,
+          "comment_cnt": 24
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 31515252,
+        "bbs_no": 121698207,
+        "title_no": 212259495,
+        "title_name": "내일도 올 거예요 ㅎ.ㅎ",
+        "content": "짜잔~ 요거 누구게~?!맞아요!! 왕하트 짱 잘하는 잇따입니다!!오늘 방송에서 하트 잘 되는 거 칭찬 받았다고자랑했었잖아요?! 정말이었단 말이지요 ㅎㅎ나 대두 아니양~ 요정도면 인...",
+        "user_nick": "하이타",
+        "user_id": "haihito",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/haihito/haihito.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/2/31515252/83971794316461556.png",
+        "reg_date": "2026-11-10 22:20:00",
+        "count": {
+          "read_cnt": 569,
+          "comment_cnt": 27
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 31515252,
+        "bbs_no": 121698207,
+        "title_no": 212138979,
+        "title_name": "내일 방송이 잇따!!",
+        "content": "안녕하세요!!아이딜 막내 장녀(?) 잇따입니다 o(о´∀`о)o저는 내일 12시에 이틀 차 방송을 합니다!!아침밥 야무지게 꼭 챙겨먹고 올게요..ㅎㅎ내일 봬요🫧무지무지 기대된당~\n",
+        "user_nick": "하이타",
+        "user_id": "haihito",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/haihito/haihito.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/2/31515252/88651794203547952.png",
+        "reg_date": "2026-11-09 14:55:40",
+        "count": {
+          "read_cnt": 1244,
+          "comment_cnt": 32
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      },
+      {
+        "station_no": 31515252,
+        "bbs_no": 121698207,
+        "title_no": 211432261,
+        "title_name": "[웰컴 버추얼] 11/8 오후 4시 '하이타' 데뷔",
+        "content": "   \n",
+        "user_nick": "하이타",
+        "user_id": "haihito",
+        "bj_id": null,
+        "worker_nick": null,
+        "worker_id": null,
+        "login_id": null,
+        "board_type": 103,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/haihito/haihito.jpg",
+        "thumb": "//stimg.sooplive.co.kr/NORMAL_BBS/2/31515252/85151793516893363.png",
+        "reg_date": "2026-11-01 18:00:00",
+        "count": {
+          "read_cnt": 3983,
+          "comment_cnt": 73
+        },
+        "is_pin": false,
+        "is_hit": false,
+        "is_notice": false,
+        "is_owner": false,
+        "is_manager": false
+      }
+    ],
+    "user_vods": [
+      {
+        "station_no": 26409707,
+        "bbs_no": 100511873,
+        "title_no": 212215667,
+        "title_name": "하이타) 어제 나나문 언니가 집합 시켜서 하늬 많이 혼났다 ㅋㅋㅋ",
+        "user_nick": "대나내",
+        "user_id": "kim97k",
+        "worker_nick": null,
+        "worker_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ki/kim97k/kim97k.jpg",
+        "reg_date": "2026-11-10 12:13:02",
+        "reg_date_humans": "2 일 전",
+        "auth_no": 101,
+        "ucc": {
+          "thumb": "//iflv14.sooplive.com/clip/20261110/341/2e0058e4-8f06-44a8-8dad-2e4406ade1f2/21787341_r.jpg",
+          "ucc_type": "21",
+          "file_type": "CATCH",
+          "total_file_duration": 42000,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED",
+          "catchInfo": {
+            "resolution_type": "vertical",
+            "thumb": "http://iflv14.sooplive.com/clip/20261110/341/2e0058e4-8f06-44a8-8dad-2e4406ade1f2/21787341_v.jpg"
+          }
+        },
+        "count": {
+          "read_cnt": 10272
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "badge": {
+          "user_id": "kim97k",
+          "bj_id": "haihito",
+          "is_manager": 0,
+          "is_top_fan": 0,
+          "is_fan": 0,
+          "is_subscribe": 0,
+          "is_support": 0
+        }
+      },
+      {
+        "station_no": 8427518,
+        "bbs_no": 102387741,
+        "title_no": 212056767,
+        "title_name": "[클립]아이딜 네 번째 멤버 하이타 등장!",
+        "user_nick": "월룩이",
+        "user_id": "ysk304",
+        "worker_nick": null,
+        "worker_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ys/ysk304/ysk304.jpg",
+        "reg_date": "2026-11-08 16:21:13",
+        "reg_date_humans": "3 일 전",
+        "auth_no": 101,
+        "ucc": {
+          "thumb": "//iflv14.sooplive.com/clip/20261108/331/4cd11120-03ae-4445-b89c-6e1aa485db93/44457331_r.jpg",
+          "ucc_type": "21",
+          "file_type": "CLIP",
+          "total_file_duration": 135065,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED"
+        },
+        "count": {
+          "read_cnt": 3956
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "badge": {
+          "user_id": "ysk304",
+          "bj_id": "haihito",
+          "is_manager": 0,
+          "is_top_fan": 0,
+          "is_fan": 0,
+          "is_subscribe": 0,
+          "is_support": 0
+        }
+      },
+      {
+        "station_no": 8427518,
+        "bbs_no": 102387741,
+        "title_no": 212057259,
+        "title_name": "[클립]뚝딱소녀 하이타",
+        "user_nick": "월룩이",
+        "user_id": "ysk304",
+        "worker_nick": null,
+        "worker_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ys/ysk304/ysk304.jpg",
+        "reg_date": "2026-11-08 16:27:54",
+        "reg_date_humans": "3 일 전",
+        "auth_no": 101,
+        "ucc": {
+          "thumb": "//iflv14.sooplive.com/clip/20261108/435/33fbede2-fbaa-4f47-8bc7-b620d0c67f75/44457435_r.jpg",
+          "ucc_type": "21",
+          "file_type": "CLIP",
+          "total_file_duration": 146065,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED"
+        },
+        "count": {
+          "read_cnt": 3139
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "badge": {
+          "user_id": "ysk304",
+          "bj_id": "haihito",
+          "is_manager": 0,
+          "is_top_fan": 0,
+          "is_fan": 0,
+          "is_subscribe": 0,
+          "is_support": 0
+        }
+      },
+      {
+        "station_no": 14801149,
+        "bbs_no": 70626883,
+        "title_no": 212318305,
+        "title_name": "[클립]시네티 첫 샤라웃 받은 하이타",
+        "user_nick": "주륵주륵르르",
+        "user_id": "gsghost",
+        "worker_nick": null,
+        "worker_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/gs/gsghost/gsghost.jpg",
+        "reg_date": "2026-11-11 16:07:25",
+        "reg_date_humans": "22 시간 전",
+        "auth_no": 101,
+        "ucc": {
+          "thumb": "//iflv14.sooplive.com/clip/20261111/401/94733a0c-4806-4be2-bd6d-0e9ea7f438b7/44523401_r.jpg",
+          "ucc_type": "21",
+          "file_type": "CLIP",
+          "total_file_duration": 69033,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED"
+        },
+        "count": {
+          "read_cnt": 613
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "badge": {
+          "user_id": "gsghost",
+          "bj_id": "haihito",
+          "is_manager": 0,
+          "is_top_fan": 0,
+          "is_fan": 0,
+          "is_subscribe": 0,
+          "is_support": 0
+        }
+      },
+      {
+        "station_no": 26481745,
+        "bbs_no": 105655469,
+        "title_no": 212061291,
+        "title_name": "[클립]하이타 - 숙명 (Official髭男dism) 라이브ㅣ아카이브 2기 아이딜 데뷔뱅",
+        "user_nick": "민트파이_",
+        "user_id": "chastity40",
+        "worker_nick": null,
+        "worker_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ch/chastity40/chastity40.jpg",
+        "reg_date": "2026-11-08 17:19:20",
+        "reg_date_humans": "3 일 전",
+        "auth_no": 101,
+        "ucc": {
+          "thumb": "//iflv14.sooplive.com/clip/20261108/481/8e944096-d882-4ad7-bb9d-919b2e59f53a/44458481_r.jpg",
+          "ucc_type": "21",
+          "file_type": "CLIP",
+          "total_file_duration": 300049,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED"
+        },
+        "count": {
+          "read_cnt": 541
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "badge": {
+          "user_id": "chastity40",
+          "bj_id": "haihito",
+          "is_manager": 0,
+          "is_top_fan": 0,
+          "is_fan": 0,
+          "is_subscribe": 0,
+          "is_support": 0
+        }
+      },
+      {
+        "station_no": 17502521,
+        "bbs_no": 99568955,
+        "title_no": 212056757,
+        "title_name": "하이타) 드디어 아카이브에 진짜 청초가 왔네 / 아카이브 2기생 데뷔뱅",
+        "user_nick": "힌시코기_",
+        "user_id": "xkwhehd",
+        "worker_nick": null,
+        "worker_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/xk/xkwhehd/xkwhehd.jpg",
+        "reg_date": "2026-11-08 16:21:09",
+        "reg_date_humans": "3 일 전",
+        "auth_no": 101,
+        "ucc": {
+          "thumb": "//iflv14.sooplive.com/clip/20261108/339/3a45b739-3893-4d92-9ad2-26e3759eb47d/21757339_r.jpg",
+          "ucc_type": "21",
+          "file_type": "CATCH",
+          "total_file_duration": 60000,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED",
+          "catchInfo": {
+            "resolution_type": "vertical",
+            "thumb": "http://iflv14.sooplive.com/clip/20261108/339/3a45b739-3893-4d92-9ad2-26e3759eb47d/21757339_v.jpg"
+          }
+        },
+        "count": {
+          "read_cnt": 525
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "badge": {
+          "user_id": "xkwhehd",
+          "bj_id": "haihito",
+          "is_manager": 0,
+          "is_top_fan": 0,
+          "is_fan": 1,
+          "is_subscribe": 1,
+          "is_support": 0
+        }
+      },
+      {
+        "station_no": 26481745,
+        "bbs_no": 105655469,
+        "title_no": 212316795,
+        "title_name": "[클립]이세계아이돌 미니엘범 2집 REBELS Official MV / 하이타님 반응(1)",
+        "user_nick": "민트파이_",
+        "user_id": "chastity40",
+        "worker_nick": null,
+        "worker_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ch/chastity40/chastity40.jpg",
+        "reg_date": "2026-11-11 15:45:19",
+        "reg_date_humans": "23 시간 전",
+        "auth_no": 101,
+        "ucc": {
+          "thumb": "//videoimg.sooplive.com/php/SnapshotLoad.php?rowKey=clip_20261111_993_fd9ab6dc-474f-4629-a55a-9d80053f9b8c_44522993_r&column=2&t=1794380202",
+          "ucc_type": "21",
+          "file_type": "CLIP",
+          "total_file_duration": 250033,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED"
+        },
+        "count": {
+          "read_cnt": 456
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "badge": {
+          "user_id": "chastity40",
+          "bj_id": "haihito",
+          "is_manager": 0,
+          "is_top_fan": 0,
+          "is_fan": 1,
+          "is_subscribe": 0,
+          "is_support": 0
+        }
+      },
+      {
+        "station_no": 9214945,
+        "bbs_no": 99495051,
+        "title_no": 212061271,
+        "title_name": "[클립]아이딜의 하이타 - 宿命",
+        "user_nick": "단이비.",
+        "user_id": "ymk123",
+        "worker_nick": null,
+        "worker_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ym/ymk123/ymk123.jpg",
+        "reg_date": "2026-11-08 17:18:51",
+        "reg_date_humans": "3 일 전",
+        "auth_no": 101,
+        "ucc": {
+          "thumb": "//iflv14.sooplive.com/clip/20261108/475/12275c2c-b211-48de-9e5c-4285c5cf0a6b/44458475_r.jpg",
+          "ucc_type": "21",
+          "file_type": "CLIP",
+          "total_file_duration": 286049,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED"
+        },
+        "count": {
+          "read_cnt": 346
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "badge": {
+          "user_id": "ymk123",
+          "bj_id": "haihito",
+          "is_manager": 0,
+          "is_top_fan": 0,
+          "is_fan": 0,
+          "is_subscribe": 0,
+          "is_support": 0
+        }
+      },
+      {
+        "station_no": 9214945,
+        "bbs_no": 99495051,
+        "title_no": 212059767,
+        "title_name": "[클립][아이딜] 아카이브 2기 하이타! 데뷔합니다",
+        "user_nick": "단이비.",
+        "user_id": "ymk123",
+        "worker_nick": null,
+        "worker_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ym/ymk123/ymk123.jpg",
+        "reg_date": "2026-11-08 17:00:39",
+        "reg_date_humans": "3 일 전",
+        "auth_no": 101,
+        "ucc": {
+          "thumb": "//iflv14.sooplive.com/clip/20261108/071/2b0aec1d-c56c-46ef-9185-e96f8a83cca2/44458071_r.jpg",
+          "ucc_type": "21",
+          "file_type": "CLIP",
+          "total_file_duration": 34099,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED"
+        },
+        "count": {
+          "read_cnt": 325
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "badge": {
+          "user_id": "ymk123",
+          "bj_id": "haihito",
+          "is_manager": 0,
+          "is_top_fan": 0,
+          "is_fan": 0,
+          "is_subscribe": 0,
+          "is_support": 0
+        }
+      },
+      {
+        "station_no": 17502521,
+        "bbs_no": 99568955,
+        "title_no": 212222559,
+        "title_name": "하이타) 우사기 랩 (치이카와) [아카이브 2기 아이딜]",
+        "user_nick": "힌시코기_",
+        "user_id": "xkwhehd",
+        "worker_nick": null,
+        "worker_id": null,
+        "board_type": 105,
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/xk/xkwhehd/xkwhehd.jpg",
+        "reg_date": "2026-11-10 14:59:09",
+        "reg_date_humans": "1 일 전",
+        "auth_no": 101,
+        "ucc": {
+          "thumb": "//iflv14.sooplive.com/clip/20261110/747/dc0add59-5e34-4f8c-ae3f-e8beae8afa3d/21788747_r.jpg",
+          "ucc_type": "21",
+          "file_type": "CATCH",
+          "total_file_duration": 60000,
+          "flag": "SUCCEED",
+          "grade": 0,
+          "category": 210000,
+          "vod_category": 820000,
+          "thumb_type": "SUCCEED",
+          "catchInfo": {
+            "resolution_type": "vertical",
+            "thumb": "http://iflv14.sooplive.com/clip/20261110/747/dc0add59-5e34-4f8c-ae3f-e8beae8afa3d/21788747_v.jpg"
+          }
+        },
+        "count": {
+          "read_cnt": 255
+        },
+        "is_vod_pin": false,
+        "is_owner": false,
+        "badge": {
+          "user_id": "xkwhehd",
+          "bj_id": "haihito",
+          "is_manager": 0,
+          "is_top_fan": 0,
+          "is_fan": 1,
+          "is_subscribe": 1,
+          "is_support": 0
+        }
+      }
+    ],
+    "user_boards": [],
+    "catchstorys": [],
+    "playlists": [],
+    "sooptore": {
+      "broadcast_live": [],
+      "curation_product": []
+    },
+    "banners": [],
+    "is_adsence": true,
+    "adballoon_event": {
+      "end_yn": true,
+      "percent": -1
+    }
+  }
+}

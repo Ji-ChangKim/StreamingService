@@ -1,0 +1,243 @@
+{
+  "before": 428,
+  "after": 435,
+  "newlyPublished": 7,
+  "existingUpdated": 22,
+  "unchangedExisting": 406,
+  "cohort": [
+    {
+      "name": "공이연",
+      "slug": "02yeon-soop",
+      "date": "2026-11-15",
+      "time": "12:00",
+      "kind": "PLATFORM_DEBUT",
+      "profileUrl": "https://vdebut.live/creator/02yeon-soop",
+      "channelUrl": "https://www.sooplive.com/station/02yeon",
+      "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/02/02yeon/02yeon.jpg",
+      "defaultCalendarVerified": true
+    },
+    {
+      "name": "까망까맹",
+      "slug": "dbrlshd123-soop",
+      "date": "2026-11-06",
+      "time": "13:00",
+      "kind": "PLATFORM_DEBUT",
+      "profileUrl": "https://vdebut.live/creator/dbrlshd123-soop",
+      "channelUrl": "https://www.sooplive.com/station/dbrlshd123",
+      "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/db/dbrlshd123/dbrlshd123.jpg",
+      "defaultCalendarVerified": true
+    },
+    {
+      "name": "묘해¸",
+      "slug": "ssohan-soop",
+      "date": "2026-11-19",
+      "time": "16:00",
+      "kind": "PLATFORM_DEBUT",
+      "profileUrl": "https://vdebut.live/creator/ssohan-soop",
+      "channelUrl": "https://www.sooplive.com/station/ssohan",
+      "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/ss/ssohan/ssohan.jpg",
+      "defaultCalendarVerified": true
+    },
+    {
+      "name": "시즈즈",
+      "slug": "seizes-soop",
+      "date": "2026-11-23",
+      "time": "17:00",
+      "kind": "PLATFORM_DEBUT",
+      "profileUrl": "https://vdebut.live/creator/seizes-soop",
+      "channelUrl": "https://www.sooplive.com/station/seizes",
+      "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/se/seizes/seizes.jpg",
+      "defaultCalendarVerified": true
+    },
+    {
+      "name": "온비",
+      "slug": "onbi22-soop",
+      "date": "2026-11-25",
+      "time": "15:00",
+      "kind": "PLATFORM_DEBUT",
+      "profileUrl": "https://vdebut.live/creator/onbi22-soop",
+      "channelUrl": "https://www.sooplive.com/station/onbi22",
+      "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/on/onbi22/onbi22.jpg",
+      "defaultCalendarVerified": true
+    },
+    {
+      "name": "키리에♥",
+      "slug": "kyrie01234-soop",
+      "date": "2026-11-29",
+      "time": "17:00",
+      "kind": "PLATFORM_DEBUT",
+      "profileUrl": "https://vdebut.live/creator/kyrie01234-soop",
+      "channelUrl": "https://www.sooplive.com/station/kyrie01234",
+      "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/ky/kyrie01234/kyrie01234.jpg",
+      "defaultCalendarVerified": true
+    },
+    {
+      "name": "은재_",
+      "slug": "ham2ko-soop",
+      "date": "2026-12-06",
+      "time": "18:00",
+      "kind": "PLATFORM_DEBUT",
+      "profileUrl": "https://vdebut.live/creator/ham2ko-soop",
+      "channelUrl": "https://www.sooplive.com/station/ham2ko",
+      "avatarUrl": "https://profile.img.sooplive.co.kr/LOGO/ha/ham2ko/ham2ko.jpg",
+      "defaultCalendarVerified": true
+    }
+  ],
+  "diffs": [
+    {
+      "slug": "koming-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "kissingyou-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "shinittan-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "soda-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "yorune-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "hanui-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "haita-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "iwol-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "haenarong-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "hamoye-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "hasinyang-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "sujiai-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "gingmallang-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "ghostwitch-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "lanbee-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "hanieum-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "leopyaco-chzzk",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "di6ixx-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "d00328-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "nju123-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "kyykys12-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    },
+    {
+      "slug": "hue1115-soop",
+      "changes": [
+        "contentReview",
+        "debutKind"
+      ]
+    }
+  ],
+  "verification": "공개 프로필·이벤트·실제 프론트 달력 색인·기본 KR 필터 대조 통과"
+}

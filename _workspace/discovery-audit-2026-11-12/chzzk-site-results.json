@@ -1,0 +1,178 @@
+[
+  {
+    "slug": "aran-anura",
+    "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/cd3b3bc8f8fe774cfcb375b31cc51beb",
+    "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=cd3b3bc8f8fe774cfcb375b31cc51beb",
+    "checkedAt": "2026-11-12T05:53:47.993Z",
+    "raw": {
+      "success": true,
+      "platform": "CHZZK",
+      "channelId": "cd3b3bc8f8fe774cfcb375b31cc51beb",
+      "creatorName": "아란 아누라",
+      "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMTJfOTUg/MDAxNzkxNzk5NjExMjc4.NUccLEbnAl-aUzLwzuD1y8MffTnbO5RMWncOU6mtkeYg.dTmddIHn73rQNj2lm4FGniMVxjGYciHRVMMN5aSvLRUg.PNG/image.png",
+      "channelUrl": "https://chzzk.naver.com/cd3b3bc8f8fe774cfcb375b31cc51beb",
+      "description": "아스텔라 제국의 2황자이자, 마도학자",
+      "verified": false
+    }
+  },
+  {
+    "slug": "irinajjyang",
+    "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/dbc5906d632b15ff5f226285eb68866d",
+    "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=dbc5906d632b15ff5f226285eb68866d",
+    "checkedAt": "2026-11-12T05:53:48.975Z",
+    "raw": {
+      "success": true,
+      "platform": "CHZZK",
+      "channelId": "dbc5906d632b15ff5f226285eb68866d",
+      "creatorName": "이리나쨩",
+      "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjExMDNfMTI5/MDAxNzkzNzE0MTkyMTAw.xdi0m-S_KeAcg7MPJWhzUfE61iHxvX2idrQ8W51ruD8g.aJYNLGRJwfzUL4llSSi_hkp9ZnSId16400wlt4WRUOUg.PNG/image.png",
+      "channelUrl": "https://chzzk.naver.com/dbc5906d632b15ff5f226285eb68866d",
+      "description": "※ 첫 방송일 11월 3일 ※\n나몽이들과의 저챗이 마냥 좋은 도라곤 입니다\n자세한 방송 일정과 공지는 팬카페에서!\n※ 문의 - irinajjyangs2@gmail.com ※\n",
+      "verified": false
+    }
+  },
+  {
+    "slug": "hakung-chzzk",
+    "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/df15cb831b80356e79aab8bdb49ac577",
+    "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=df15cb831b80356e79aab8bdb49ac577",
+    "checkedAt": "2026-11-12T05:53:50.157Z",
+    "raw": {
+      "success": true,
+      "platform": "CHZZK",
+      "channelId": "df15cb831b80356e79aab8bdb49ac577",
+      "creatorName": "하쿵Hakung",
+      "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMjZfMTAg/MDAxNzkyOTQyNTI4NzIy.eLLBQqhTBSXm52YiqjXovy3k-k8T2P0PacgXgckpPVYg.xLxgDROcNs_l-2MorlLHTcP9BH6NSVh155x0i9JI4lcg.PNG/image.png",
+      "channelUrl": "https://chzzk.naver.com/df15cb831b80356e79aab8bdb49ac577",
+      "description": "아침 11시 방송 월,목 휴방🤍\n문의: hakungs@naver.com",
+      "verified": false
+    }
+  },
+  {
+    "slug": "dosrang-chzzk",
+    "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/329c5b387269565dbd53f2976d36bb9a",
+    "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=329c5b387269565dbd53f2976d36bb9a",
+    "checkedAt": "2026-11-12T05:53:51.730Z",
+    "raw": {
+      "success": true,
+      "platform": "CHZZK",
+      "channelId": "329c5b387269565dbd53f2976d36bb9a",
+      "creatorName": "도스랑",
+      "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjExMDJfMjI5/MDAxNzkzNjAzNjk5ODM2.ZqlSxuHpXyif9V9f1IG3Ks_M-CdoudxUurxl9p_wdIIg.YbTfz3tN0AdKt4giFL7GUQUI9OiZW_qkondSH9htSdAg.PNG/image.png",
+      "channelUrl": "https://chzzk.naver.com/329c5b387269565dbd53f2976d36bb9a",
+      "description": "같이 재밌는 추억 만들어보자!",
+      "verified": false
+    }
+  },
+  {
+    "slug": "mai-chzzk",
+    "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/767f9cfb72885ff1c2979e5b2a1b6066",
+    "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=767f9cfb72885ff1c2979e5b2a1b6066",
+    "checkedAt": "2026-11-12T05:53:52.790Z",
+    "raw": {
+      "success": true,
+      "platform": "CHZZK",
+      "channelId": "767f9cfb72885ff1c2979e5b2a1b6066",
+      "creatorName": "마이 Mai",
+      "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjA5MDdfMzAw/MDAxNzg4NzE5MDM3MjY1.SAEW6owF1X3BYxsaHBJgVt1SsV_D8M6yaKKEhrawQzsg.-dKfryXzqDbRwn-1qgfj3lQ-aFc2jdO-DrkFBcsnG4wg.JPEG/image.jpg",
+      "channelUrl": "https://chzzk.naver.com/767f9cfb72885ff1c2979e5b2a1b6066",
+      "description": "🤍 maituyoi1@gmail.com 🤍🐢",
+      "verified": false
+    }
+  },
+  {
+    "slug": "choneul-chzzk",
+    "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/1ab2064f691dbdad417c0da07365a2b3",
+    "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=1ab2064f691dbdad417c0da07365a2b3",
+    "checkedAt": "2026-11-12T05:53:57.748Z",
+    "raw": {
+      "success": true,
+      "platform": "CHZZK",
+      "channelId": "1ab2064f691dbdad417c0da07365a2b3",
+      "creatorName": "초늘",
+      "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjAxMDlfMjgx/MDAxNzY3OTU5MTU0MDQ4.xyUO-Kok7QxCXEgruxTQDCZtJFPW069HqibF_W1kLRog.mMJjUcsAkF1AMnkEKMHuIdN5Ns3hetMGPNP7eXHdjSog.JPEG/image.jpg",
+      "channelUrl": "https://chzzk.naver.com/1ab2064f691dbdad417c0da07365a2b3",
+      "description": "똥꼬발라리 오리괭이입니다~!🦆🐱\n/ 비즈니스 문의 : dailycho03@gmail.com",
+      "verified": false
+    }
+  },
+  {
+    "slug": "asagiri-yuki",
+    "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/36c40736c07e554abd8ff99d86d27914",
+    "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=36c40736c07e554abd8ff99d86d27914",
+    "checkedAt": "2026-11-12T05:54:00.019Z",
+    "raw": {
+      "success": true,
+      "platform": "CHZZK",
+      "channelId": "36c40736c07e554abd8ff99d86d27914",
+      "creatorName": "아사기리 유키",
+      "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMDNfMjA1/MDAxNzkxMDIxMTIxMjc5.OTohsMkBRolkgVcHOJ9B83Wo9B9AKjz9vIqQOkB2QPQg.9JYwIWyhe1axdO8q14M-ir-kj5bKAvkXRDGFP2WEzdcg.PNG/image.png",
+      "channelUrl": "https://chzzk.naver.com/36c40736c07e554abd8ff99d86d27914",
+      "description": "이메일:asagiri.yuki.official@gmail.com",
+      "verified": false
+    }
+  },
+  {
+    "slug": "data-chzzk",
+    "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/4e6514ed6f0eb092742b82f4658acdfd",
+    "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=4e6514ed6f0eb092742b82f4658acdfd",
+    "checkedAt": "2026-11-12T05:54:00.564Z",
+    "raw": {
+      "success": true,
+      "platform": "CHZZK",
+      "channelId": "4e6514ed6f0eb092742b82f4658acdfd",
+      "creatorName": "다타",
+      "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjA5MjdfNDYg/MDAxNzkwNDg4ODM5MTUw.gl-XMQo0uLO13mTd-Czr1YESkQXcIZm0PVmSwfLcv0gg.c33UXdoHblWza4YR2A-rMC18-JtWz9vTXj2BxPUqpMUg.PNG/image.png",
+      "channelUrl": "https://chzzk.naver.com/4e6514ed6f0eb092742b82f4658acdfd",
+      "description": "종합게임 하는 슬라임",
+      "verified": false
+    }
+  },
+  {
+    "slug": "rien-chzzk",
+    "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/0c6c55d7e02084398dd285fced5b7d4b",
+    "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=0c6c55d7e02084398dd285fced5b7d4b",
+    "checkedAt": "2026-11-12T05:54:03.530Z",
+    "raw": {
+      "success": true,
+      "platform": "CHZZK",
+      "channelId": "0c6c55d7e02084398dd285fced5b7d4b",
+      "creatorName": "리엔 RIEN",
+      "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjExMDdfODQg/MDAxNzk0MDU0MDI0NDMw.xbugyP1bpkvaEi9Xv2waZ2X5EEg8n3EqVGaMlQGokJMg.q9teN_ZvaKi-jh4GB4lKvbs8bBQ6ZxbOhTK66LjNEiwg.GIF/image.gif",
+      "channelUrl": "https://chzzk.naver.com/0c6c55d7e02084398dd285fced5b7d4b",
+      "description": "리엔 RIEN의 공식 치지직 방송국입니다.",
+      "verified": false
+    }
+  },
+  {
+    "slug": "lime-chzzk",
+    "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/161af422f3977b3687459d58a1a52066",
+    "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=161af422f3977b3687459d58a1a52066",
+    "checkedAt": "2026-11-12T05:54:07.177Z",
+    "raw": {
+      "success": true,
+      "platform": "CHZZK",
+      "channelId": "161af422f3977b3687459d58a1a52066",
+      "creatorName": "라임찌Lime",
+      "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMzBfMjk3/MDAxNzkzMzY0NTI4NDI2.0IjZ_ZkIC-VgAI0rMmxOD_FRpBOquGWIrpztiu7CoEEg.W_MvpnISVJyBjM5wHX-py1TqAAQk3SdcEOuQ2X7585Ug.PNG/image.png",
+      "channelUrl": "https://chzzk.naver.com/161af422f3977b3687459d58a1a52066",
+      "description": "- 더 강력한 힘을 위해 신을 버리고 저주를 택한 퇴마사🔮",
+      "verified": false
+    }
+  },
+  {
+    "slug": "hanamaru-mei",
+    "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/4ef5180fb79d3cf53bcb4cb3ce0796bc",
+    "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=4ef5180fb79d3cf53bcb4cb3ce0796bc",
+    "checkedAt": "2026-11-12T05:54:07.660Z",
+    "raw": {
+      "success": true,
+      "platform": "CHZZK",
+      "channelId": "4ef5180fb79d3cf53bcb4cb3ce0796bc",
+      "creatorName": "하나마루 메이",
+      "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMzFfNTkg/MDAxNzkzMzc1ODU2MTky.yViPSQs8VnJ9QGicW1Kp9JTilpjLuFDsYztS6x7pVQ0g.pXu0ddfRzPub4TEfaY3Xoq6-ARAFeRoSLKG280hr7MEg.JPEG/image.jpg",
+      "channelUrl": "https://chzzk.naver.com/4ef5180fb79d3cf53bcb4cb3ce0796bc",
+      "description": "월 수 금 - 21:30 토 일 - 17:30 / \n3월 - LD로 변신 예정!!🐹🌻",
+      "verified": false
+    }
+  }
+]

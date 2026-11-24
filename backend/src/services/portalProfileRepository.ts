@@ -10,7 +10,7 @@ export function isAnalyticsAutoRegisteredRow(row: { description?: string | null;
 }
 
 // 기존 정보는 확인되지 않은 언어나 국가를 추측하지 않고 변환한다.
-function legacyProfile(row: LegacyRow): PortalProfile {
+export function legacyProfile(row: LegacyRow): PortalProfile {
   // 외부 채널 검색 등록 시 채운 저장 시각을 실제 데뷔 일정으로 오인하지 않는다.
   const registrationOnly = isAnalyticsAutoRegisteredRow(row);
   const dateUnknown = /\[일정 미정\]|\[날짜 미정\]|\[미정\]/.test(row.description || '') || !row.start_at_utc;

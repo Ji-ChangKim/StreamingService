@@ -1,0 +1,205 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/dbrlshd123/station",
+  "checkedAt": "2026-11-12T05:53:50.216Z",
+  "raw": {
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/db/dbrlshd123/dbrlshd123.jpg",
+    "station": {
+      "display": {
+        "main_type": "1110",
+        "title_type": "IMAGE",
+        "title_text": "",
+        "profile_text": "안녕하세요. 까망까맹입니다~",
+        "skin_type": 0,
+        "skin_no": 0,
+        "title_skin_image": "",
+        "ai_profile_conf_yn": "N",
+        "ai_profile_str": null
+      },
+      "groups": [],
+      "menus": [
+        {
+          "bbs_no": 130137445,
+          "station_no": 33473279,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 0,
+          "line": 0,
+          "indention": 0,
+          "name": "까망까맹 공지사항",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129988829,
+          "station_no": 33473279,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 104,
+          "rnum": 1,
+          "line": 1,
+          "indention": 0,
+          "name": "General Board",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "upd": {
+        "station_no": 33473279,
+        "user_id": "dbrlshd123",
+        "asp_code": 0,
+        "fan_cnt": 339,
+        "today0_visit_cnt": 0,
+        "today1_visit_cnt": 79,
+        "total_visit_cnt": 2300,
+        "today0_ok_cnt": 0,
+        "today1_ok_cnt": 4,
+        "today0_fav_cnt": 0,
+        "today1_fav_cnt": 8,
+        "total_ok_cnt": 112,
+        "total_view_cnt": 2028
+      },
+      "vods": [
+        {
+          "bbs_no": 129988825,
+          "station_no": 33473279,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 108,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 다시보기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 129988827,
+          "station_no": 33473279,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 109,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 하이라이트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "broad_start": "2026-11-12 01:54:35",
+      "grade": 0,
+      "jointime": "2026-10-28 18:45:02",
+      "station_name": "까망까맹",
+      "station_no": 33473279,
+      "station_title": "",
+      "total_broad_time": 110764,
+      "user_id": "dbrlshd123",
+      "user_nick": "까망까맹",
+      "active_no": 1
+    },
+    "broad": null,
+    "starballoon_top": [
+      {
+        "user_id": "nyanggaring",
+        "user_nick": "냥애웅",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ny/nyanggaring/nyanggaring.jpg"
+      },
+      {
+        "user_id": "dohnoya",
+        "user_nick": "도노야",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/do/dohnoya/dohnoya.jpg"
+      },
+      {
+        "user_id": "krainbow544",
+        "user_nick": "와우유동",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/kr/krainbow544/krainbow544.jpg"
+      },
+      {
+        "user_id": "joyoo4638",
+        "user_nick": "파란색파스타",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/jo/joyoo4638/joyoo4638.jpg"
+      },
+      {
+        "user_id": "fdsw3295",
+        "user_nick": "람쥐조아",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/fd/fdsw3295/fdsw3295.jpg"
+      },
+      {
+        "user_id": "baega52",
+        "user_nick": "긔읏l",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ba/baega52/baega52.jpg"
+      },
+      {
+        "user_id": "jihun0320",
+        "user_nick": "깡지입니다",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ji/jihun0320/jihun0320.jpg"
+      },
+      {
+        "user_id": "ddd1218",
+        "user_nick": "노래ㄱ?",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/dd/ddd1218/ddd1218.jpg"
+      },
+      {
+        "user_id": "ace8484",
+        "user_nick": "강달봉",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ac/ace8484/ace8484.jpg"
+      },
+      {
+        "user_id": "rnmrnm",
+        "user_nick": "[샤생팬]계식",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/rn/rnmrnm/rnmrnm.jpg"
+      },
+      {
+        "user_id": "jaho3250",
+        "user_nick": "파라피스",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ja/jaho3250/jaho3250.jpg"
+      },
+      {
+        "user_id": "wkzm123",
+        "user_nick": "23˙",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/wk/wkzm123/wkzm123.jpg"
+      },
+      {
+        "user_id": "ddemtongman",
+        "user_nick": "SOOPPICK",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/dd/ddemtongman/ddemtongman.jpg"
+      },
+      {
+        "user_id": "joung5599",
+        "user_nick": "솜덩",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/jo/joung5599/joung5599.jpg"
+      },
+      {
+        "user_id": "lynxcomwg",
+        "user_nick": "나츄러쓰",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ly/lynxcomwg/lynxcomwg.jpg"
+      }
+    ],
+    "sticker_top": [],
+    "subscription": {
+      "total": 0,
+      "tier1": 0,
+      "tier2": 0
+    },
+    "is_best_bj": false,
+    "is_partner_bj": false,
+    "is_ppv_bj": false,
+    "is_af_supporters_bj": false,
+    "is_shopfreeca_bj": false,
+    "is_favorite": false,
+    "is_subscription": false,
+    "is_owner": false,
+    "is_manager": false,
+    "is_notice": false,
+    "is_adsence": true,
+    "is_mobile_push": false,
+    "subscribe_visible": "on",
+    "country": "KR",
+    "current_timestamp": "2026-11-12 14:53:49"
+  }
+}

@@ -1676,14 +1676,5 @@ export default {
         );
       }
     }
-    const isKst7Am = (new Date(scheduledTime).getUTCHours() === 22 && new Date().getUTCMinutes() < 10) || event?.cron === '0 22 * * *';
-    // 자동 수집의 기존 DB 등록·메일 발송을 사용하지 않고 보고만 만든다.
-    if (isKst7Am) {
-      ctx.waitUntil(
-      runDebutCrawlerReport()
-        .then((res) => console.log(`[Scheduled Cron] 07:00 KST Debut REPORT_ONLY: Success=${res.success}, Total=${res.totalCrawledCount}, DBWrites=false`))
-        .catch((err) => console.error('[Scheduled Cron] Error:', err))
-    );
-    }
   }
 };

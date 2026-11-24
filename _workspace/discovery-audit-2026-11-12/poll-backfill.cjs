@@ -1,0 +1,5 @@
+const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:child_process');
+const cli='C:/Users/Jichang/AppData/Local/npm-cache/_npx/7f3444e3cc855b0c/node_modules/wrangler/bin/wrangler.js';
+const query="SELECT slot,id,status,started_at,finished_at,summary FROM debut_automation_runs WHERE mode='BACKFILL' ORDER BY started_at";
+const r=spawnSync(process.execPath,[cli,'d1','execute','vdebut-db','--remote','--config','backend/wrangler.debut-automation.jsonc','--command',query,'--json'],{encoding:'utf8',maxBuffer:20*1024*1024});if(r.status!==0)throw new Error(r.stderr.slice(-1000));const rows=JSON.parse(r.stdout)[0].results;fs.writeFileSync(path.join(__dirname,'backfill-runs.json'),JSON.stringify(rows,null,2));
+for(const row of rows){const s=JSON.parse(row.summary||'{}');console.log(JSON.stringify({slot:row.slot,status:row.status,checked:s.checked,updated:s.updated,unchanged:s.unchanged,held:s.held,failed:s.failed,remaining:s.remaining,deferred:s.enrichmentDeferred,external:s.externalRequests,reads:s.dbRowsRead,writes:s.dbRowsWritten,errors:s.errors}));}

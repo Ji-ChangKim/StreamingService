@@ -1,0 +1,37 @@
+├ Checking if file needs uploading
+│
+├ 🌀 Uploading 888a8c04-5657-4bff-9b50-5002a47ac7c7.4d52388e81887ff7.sql
+│ 🌀 Uploading complete.
+│
+[
+  {
+    "results": [
+      {
+        "Total queries executed": 1,
+        "Rows read": 0,
+        "Rows written": 2,
+        "Database size (MB)": "906.47"
+      }
+    ],
+    "success": true,
+    "finalBookmark": "00002dcd-00000006-00005121-4b6a9052e010c5a55e5f10d1630ca683",
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 2.1866
+      },
+      "duration": 2.1866,
+      "changes": 1,
+      "last_row_id": 6,
+      "changed_db": true,
+      "size_after": 906465280,
+      "rows_read": 0,
+      "rows_written": 2,
+      "num_tables": 30,
+      "total_attempts": 1
+    }
+  }
+]

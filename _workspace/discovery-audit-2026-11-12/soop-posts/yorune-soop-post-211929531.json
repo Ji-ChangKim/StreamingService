@@ -1,0 +1,85 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/dbsthduda/title/211929531",
+  "checkedAt": "2026-11-12T05:55:00.615Z",
+  "raw": {
+    "title_no": 211929531,
+    "station_no": 28738244,
+    "bbs_no": 109546999,
+    "board_type": 103,
+    "auth_no": 101,
+    "title_name": "💗요루네 프로필💗",
+    "user_nick": "요루네",
+    "user_id": "dbsthduda",
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/db/dbsthduda/dbsthduda.jpg",
+    "photo_cnt": 1,
+    "platform_type": 1,
+    "notice_yn": 2,
+    "comment_yn": 1,
+    "reply_yn": 1,
+    "livepost_yn": 1,
+    "share_yn": 1,
+    "search_yn": 0,
+    "ip": "",
+    "reg_date": "2026-11-07 01:58:28",
+    "count": {
+      "like_cnt": 12,
+      "read_cnt": 173,
+      "comment_cnt": 1,
+      "vod_read_cnt": 173,
+      "ucc_favorite_cnt": 0
+    },
+    "content": {
+      "content": "<figure tabindex=\"-1\" class=\"ImagePrimaryButton-module_parent__5NOXX\" style=\"margin-left: auto; margin-right: auto; width: 677px;\" dpt=2><img src=\"https://stimg.sooplive.com/NORMAL_BBS/4/28738244/43971793983362899.jpeg\" alt=\"Uploaded\" data-soop-primary-image=\"true\" style=\"display: block;\"></figure><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1><span data-font=\"ss-flower-road\" style=\"font-size: 36px; font-family: SSFlowerRoadRegular, Pretendard, sans-serif; color: rgb(38, 148, 255)\"><b>요루네</b></span></p><div class=\"paragraphs-module_separator__3wNv0 paragraphs-module_separatorShortLine__zHju8\" data-align=\"center\" data-sub-type=\"shortLine\" tabindex=\"-1\" dpt=8>  <hr></div><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>1월2일생</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>ISFP</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>26.11.07 데뷔</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>방송시간: 평일 pm10:30, 주말 pm03:00<br>(*자세한건 스케쥴 공지로 확인)</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>팬덤: 쿤단</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>팬닉: 쿠니</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><div class=\"paragraphs-module_separator__3wNv0 paragraphs-module_separatorShortLine__zHju8\" data-align=\"center\" data-sub-type=\"shortLine\" tabindex=\"-1\" dpt=8>  <hr></div><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p><p data-align=\"center\" style=\"text-align: center;\" dpt=1>💗</p><p data-align=\"center\" style=\"text-align: center;\" dpt=1></p>",
+      "text_content": "요루네<br />1월2일생<br />ISFP<br />26.11.07 데뷔<br />방송시간: 평일 pm10:30, 주말 pm03:00<br>(*자세한건 스케쥴 공지로 확인)<br />팬덤: 쿤단<br />팬닉: 쿠니<br />💗",
+      "summary": "요루네  1월2일생ISFP26.11.07 데뷔방송시간: 평일 pm10:30, 주말 pm03:00(*자세한건 스케쥴 공지로 확인)팬덤: 쿤단팬닉: 쿠니  💗"
+    },
+    "display": {
+      "bbs_name": "📌공지"
+    },
+    "photos": [
+      {
+        "photo_no": 57128827,
+        "rnum": 1,
+        "file_size": 110748,
+        "file_name": "43971793983362899.jpeg",
+        "img_height": 0,
+        "img_width": 677,
+        "url": "//stimg.sooplive.co.kr/NORMAL_BBS/4/28738244/43971793983362899.jpeg",
+        "key": "NORMAL_BBS/4/28738244/43971793983362899.jpeg"
+      }
+    ],
+    "hashtags": null,
+    "copyright": null,
+    "pin": {
+      "is_pin": null,
+      "bj_id": "dbsthduda",
+      "worker_nick": "요루네",
+      "worker_id": "dbsthduda",
+      "login_id": null,
+      "is_owner": false,
+      "is_manager": false,
+      "board_type": 104,
+      "reg_date": "2026-11-08 18:13:26"
+    },
+    "comment_auth": {
+      "auth_no": 1704
+    },
+    "bjlike": null,
+    "badge": null,
+    "calendar": [],
+    "ucc": null,
+    "authority": {
+      "is_board_shareable": true,
+      "is_board_deletable": false,
+      "is_board_updatable": false,
+      "is_movable": false,
+      "is_pinable": false,
+      "is_pin_fixable": false,
+      "is_pin_cancelable": false,
+      "is_notice_cancelable": false,
+      "is_reportable": true,
+      "is_comment_writable": true,
+      "is_reply_writable": true
+    }
+  }
+}

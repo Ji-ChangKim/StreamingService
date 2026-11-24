@@ -288,7 +288,7 @@ portalApi.put('/profiles/:slug', async (c) => {
   if (!original) return c.json({ error: '소개를 찾을 수 없습니다.' }, 404);
   if (profile.channelUrl !== original.channelUrl || profile.platform !== original.platform) return c.json({ error: '방송 채널 변경은 문의를 통해 신청해 주세요.' }, 400);
   // 소유자 수정은 관리자만 지정할 수 있는 데뷔 그룹과 등록 출처를 보존한다.
-  profile = { ...profile, slug, ownerVerified: true, source: original.source, requesterRole: original.requesterRole,
+  profile = { ...profile, slug, ownerVerified: true, source: original.source, requesterRole: original.requesterRole, debutKind: original.debutKind,
     debutGroupId: original.debutGroupId, debutGroupName: original.debutGroupName, media: profile.media ?? original.media,
     ...(profile.details === undefined && original.details !== undefined ? { details: original.details } : {}) };
   await c.env.DB.prepare('INSERT INTO portal_profiles(slug,channel_url,data) VALUES(?,?,?) ON CONFLICT(slug) DO UPDATE SET data=excluded.data,updated_at=CURRENT_TIMESTAMP').bind(slug, profile.channelUrl, JSON.stringify(profile)).run();
@@ -344,7 +344,7 @@ portalApi.put('/admin/profiles/:slug', async (c) => {
   let profile: PortalProfile;
   try { profile = cleanPortalProfile(body.profile as Record<string, unknown>); } catch (error) { return c.json({ error: (error as Error).message || '활동명과 일정 정보를 확인해 주세요.' }, 400); }
   if (profile.channelUrl !== original.channelUrl || profile.platform !== original.platform) return c.json({ error: '기존 방송 채널 주소를 유지해 주세요.' }, 400);
-  profile = { ...profile, slug, source: original.source, ownerVerified: original.ownerVerified, media: profile.media ?? original.media,
+  profile = { ...profile, slug, source: original.source, ownerVerified: original.ownerVerified, debutKind: original.debutKind, media: profile.media ?? original.media,
     ...(profile.details === undefined && original.details !== undefined ? { details: original.details } : {}), ...(original.requesterRole ? { requesterRole: original.requesterRole } : {}) };
   // 팀·기수 연결은 관리자 정정 경로에서만 허용하고 이름과 식별자를 함께 받는다.
   const group = body.profile as Record<string, unknown>;

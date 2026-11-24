@@ -1,0 +1,292 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/hamoye0/station",
+  "checkedAt": "2026-11-12T05:52:37.731Z",
+  "raw": {
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/hamoye0/hamoye0.jpg",
+    "station": {
+      "display": {
+        "main_type": "1110",
+        "title_type": "IMAGE",
+        "title_text": "",
+        "profile_text": "[문의] hamoye0@naver.com",
+        "skin_type": 0,
+        "skin_no": 0,
+        "title_skin_image": "",
+        "ai_profile_conf_yn": "N",
+        "ai_profile_str": null
+      },
+      "groups": [],
+      "menus": [
+        {
+          "bbs_no": 129731909,
+          "station_no": 33411485,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 0,
+          "line": 0,
+          "indention": 0,
+          "name": "🤍 공지사항 🤍",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129731913,
+          "station_no": 33411485,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 1,
+          "line": 0,
+          "indention": 0,
+          "name": "🤍 방송일정 🤍",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129855311,
+          "station_no": 33411485,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 2,
+          "line": 0,
+          "indention": 0,
+          "name": "🤍 방셀 🤍",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129732255,
+          "station_no": 33411485,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 3,
+          "line": 0,
+          "indention": 0,
+          "name": "🤍 끄적끄적 🤍",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129919575,
+          "station_no": 33411485,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 106,
+          "rnum": 4,
+          "line": 0,
+          "indention": 0,
+          "name": "",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129734731,
+          "station_no": 33411485,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 5,
+          "line": 0,
+          "indention": 0,
+          "name": "🖤 모예에게 🖤",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        }
+      ],
+      "upd": {
+        "station_no": 33411485,
+        "user_id": "hamoye0",
+        "asp_code": 0,
+        "fan_cnt": 181,
+        "today0_visit_cnt": 0,
+        "today1_visit_cnt": 32,
+        "total_visit_cnt": 1846,
+        "today0_ok_cnt": 0,
+        "today1_ok_cnt": 0,
+        "today0_fav_cnt": 0,
+        "today1_fav_cnt": 0,
+        "total_ok_cnt": 192,
+        "total_view_cnt": 4687
+      },
+      "vods": [
+        {
+          "bbs_no": 129729345,
+          "station_no": 33411485,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 108,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 다시보기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 129729347,
+          "station_no": 33411485,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 109,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 하이라이트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "broad_start": "2026-11-11 17:00:26",
+      "grade": 0,
+      "jointime": "2026-10-21 00:04:09",
+      "station_name": "하모예0",
+      "station_no": 33411485,
+      "station_title": "",
+      "total_broad_time": 128839,
+      "user_id": "hamoye0",
+      "user_nick": "하모예0",
+      "active_no": 1
+    },
+    "broad": null,
+    "starballoon_top": [
+      {
+        "user_id": "ehy1102",
+        "user_nick": "도화태˚｡",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/eh/ehy1102/ehy1102.jpg"
+      },
+      {
+        "user_id": "heezxang",
+        "user_nick": "윤이브",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/he/heezxang/heezxang.jpg"
+      },
+      {
+        "user_id": "asdfghyujiko",
+        "user_nick": "zxcvbnmasdfg",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/as/asdfghyujiko/asdfghyujiko.jpg"
+      },
+      {
+        "user_id": "sran08",
+        "user_nick": "니년말고모예",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/sr/sran08/sran08.jpg"
+      },
+      {
+        "user_id": "mg020700",
+        "user_nick": "민기˚｡",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/mg/mg020700/mg020700.jpg"
+      },
+      {
+        "user_id": "chamfact",
+        "user_nick": "할말하고살기",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ch/chamfact/chamfact.jpg"
+      },
+      {
+        "user_id": "hanuryeye",
+        "user_nick": "Moo.기웃",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/hanuryeye/hanuryeye.jpg"
+      },
+      {
+        "user_id": "junhee0730",
+        "user_nick": "나율",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ju/junhee0730/junhee0730.jpg"
+      },
+      {
+        "user_id": "soonsoo2100",
+        "user_nick": "세팅°",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/so/soonsoo2100/soonsoo2100.jpg"
+      },
+      {
+        "user_id": "jim830",
+        "user_nick": "손만두장인",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ji/jim830/jim830.jpg"
+      },
+      {
+        "user_id": "habeeya777",
+        "user_nick": "하비야",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/habeeya777/habeeya777.jpg"
+      },
+      {
+        "user_id": "mydj8777",
+        "user_nick": "지맘대로졸업",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/my/mydj8777/mydj8777.jpg"
+      },
+      {
+        "user_id": "com6039",
+        "user_nick": "[모솔남]",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/co/com6039/com6039.jpg"
+      },
+      {
+        "user_id": "d1234d48",
+        "user_nick": "하즐_",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/d1/d1234d48/d1234d48.jpg"
+      },
+      {
+        "user_id": "kclsrntlek",
+        "user_nick": "알람시계@",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/kc/kclsrntlek/kclsrntlek.jpg"
+      },
+      {
+        "user_id": "bluetheo0204",
+        "user_nick": "초코크림모찌",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/bl/bluetheo0204/bluetheo0204.jpg"
+      },
+      {
+        "user_id": "king040506",
+        "user_nick": "떠돌이어피치",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ki/king040506/king040506.jpg"
+      },
+      {
+        "user_id": "kok8936",
+        "user_nick": "위버멘쉬처럼",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ko/kok8936/kok8936.jpg"
+      },
+      {
+        "user_id": "ji400677",
+        "user_nick": "신이형!",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ji/ji400677/ji400677.jpg"
+      },
+      {
+        "user_id": "eyfo06",
+        "user_nick": "D1b2",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ey/eyfo06/eyfo06.jpg"
+      }
+    ],
+    "sticker_top": [
+      {
+        "user_id": "ji400677",
+        "user_nick": "신이형!",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ji/ji400677/ji400677.jpg"
+      }
+    ],
+    "subscription": {
+      "total": 5,
+      "tier1": 5,
+      "tier2": 0
+    },
+    "is_best_bj": false,
+    "is_partner_bj": false,
+    "is_ppv_bj": false,
+    "is_af_supporters_bj": false,
+    "is_shopfreeca_bj": false,
+    "is_favorite": false,
+    "is_subscription": false,
+    "is_owner": false,
+    "is_manager": false,
+    "is_notice": false,
+    "is_adsence": true,
+    "is_mobile_push": false,
+    "subscribe_visible": "on",
+    "country": "KR",
+    "current_timestamp": "2026-11-12 14:52:37"
+  }
+}

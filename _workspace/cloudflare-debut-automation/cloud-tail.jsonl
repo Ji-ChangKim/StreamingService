@@ -1,0 +1,851 @@
+{
+    "wallTime": 6057,
+    "cpuTime": 47,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794453870377
+    },
+    "scriptVersion": {
+        "id": "a68133c1-4673-4fd8-af06-68632d0fd8db"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"a81c42fb-8b17-4a49-aecb-ebffbdbebc7e\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:24\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"community-sheet\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":3,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[{\"id\":\"registered:CHZZK:037d7ba305538de29dbf2789071dbb82\",\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"registered:CHZZK:7795f5c37a5941cc20f44f5ee2744cd8\",\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"registered:CHZZK:bce5bac086baed274db13a2c9aacd41b\",\"reason\":\"SOURCE_OR_PARSE_ERROR\"}],\"remaining\":0,\"externalRequests\":8,\"downloadBytes\":0,\"dbCalls\":25,\"dbRowsRead\":2568,\"dbRowsWritten\":36,\"publicVerified\":true,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794453877080
+        }
+    ],
+    "eventTimestamp": 1794453870920,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794453870377
+    }
+}
+{
+    "wallTime": 5763,
+    "cpuTime": 30,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794453930377
+    },
+    "scriptVersion": {
+        "id": "a68133c1-4673-4fd8-af06-68632d0fd8db"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"c077025c-5276-494f-a4f1-c41d359bbb7e\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:25\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"community-sheet\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":5,\"downloadBytes\":0,\"dbCalls\":22,\"dbRowsRead\":2575,\"dbRowsWritten\":11,\"publicVerified\":true,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794453937044
+        }
+    ],
+    "eventTimestamp": 1794453931152,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794453930377
+    }
+}
+{
+    "wallTime": 5653,
+    "cpuTime": 42,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794453990377
+    },
+    "scriptVersion": {
+        "id": "836a8240-676b-48b9-905c-a65bb6748cfa"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"bafdffd9-8fcd-4975-9a7b-d2db3fe8c19d\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:26\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"community-sheet\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":5,\"downloadBytes\":0,\"dbCalls\":23,\"dbRowsRead\":2580,\"dbRowsWritten\":11,\"publicVerified\":true,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794453996748
+        }
+    ],
+    "eventTimestamp": 1794453991078,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794453990377
+    }
+}
+{
+    "wallTime": 245,
+    "cpuTime": 2,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454050377
+    },
+    "scriptVersion": {
+        "id": "836a8240-676b-48b9-905c-a65bb6748cfa"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"smoke:2026-11-12T03:27\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794454051128
+        }
+    ],
+    "eventTimestamp": 1794454050868,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454050377
+    }
+}
+{
+    "wallTime": 223,
+    "cpuTime": 2,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454110377
+    },
+    "scriptVersion": {
+        "id": "836a8240-676b-48b9-905c-a65bb6748cfa"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"smoke:2026-11-12T03:28\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794454111515
+        }
+    ],
+    "eventTimestamp": 1794454111279,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454110377
+    }
+}
+{
+    "wallTime": 60,
+    "cpuTime": 6,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454170377
+    },
+    "scriptVersion": {
+        "id": "836a8240-676b-48b9-905c-a65bb6748cfa"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"smoke:2026-11-12T03:29\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794454171691
+        }
+    ],
+    "eventTimestamp": 1794454171608,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454170377
+    }
+}
+{
+    "wallTime": 4350,
+    "cpuTime": 29,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454230377
+    },
+    "scriptVersion": {
+        "id": "f31cf670-7f2b-465e-9ae3-700bf1063077"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"63aee7fb-69d9-431c-9605-f97874501ee0\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:30\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"BACKOFF\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"community-sheet\",\"status\":\"BACKOFF\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"BACKOFF\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"BACKOFF\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"BACKOFF\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":0,\"downloadBytes\":0,\"dbCalls\":18,\"dbRowsRead\":2576,\"dbRowsWritten\":6,\"publicVerified\":false,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794454235582
+        }
+    ],
+    "eventTimestamp": 1794454231221,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454230377
+    }
+}
+{
+    "wallTime": 33886,
+    "cpuTime": 629,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454290377
+    },
+    "scriptVersion": {
+        "id": "ef7bd517-52f0-4152-8933-1589ebdf5892"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"95e45b2d-2d9c-4f55-9ee5-597d7a34fac2\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:31\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"OK\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"OK\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"OK\",\"count\":3,\"reason\":\"\"}],\"discovered\":9,\"sourceChanges\":0,\"checked\":20,\"published\":[],\"updated\":[\"leopyaco-chzzk\"],\"unchanged\":0,\"held\":[{\"id\":\"soop:739\",\"reason\":\"EVENT_SCOPE_HOLD\"},{\"id\":\"registered:CHZZK:037d7ba305538de29dbf2789071dbb82\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"},{\"id\":\"soop:713\",\"reason\":\"EVENT_SCOPE_HOLD\"},{\"id\":\"soop:683\",\"reason\":\"EVENT_SCOPE_HOLD\"}],\"failed\":[{\"id\":\"soop:745\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:747\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:717\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:711\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:749\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:751\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"registered:CHZZK:bce5bac086baed274db13a2c9aacd41b\",\"reason\":\"SOURCE_TOO_LARGE\"},{\"id\":\"soop:705\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:719\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:735\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:659\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:695\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:707\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:721\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:727\",\"reason\":\"SOURCE_HTTP_404\"}],\"remaining\":19,\"externalRequests\":30,\"downloadBytes\":3090996,\"dbCalls\":91,\"dbRowsRead\":3022,\"dbRowsWritten\":255,\"publicVerified\":true,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794454324824
+        }
+    ],
+    "eventTimestamp": 1794454290840,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454290377
+    }
+}
+{
+    "wallTime": 29369,
+    "cpuTime": 172,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454350377
+    },
+    "scriptVersion": {
+        "id": "ef7bd517-52f0-4152-8933-1589ebdf5892"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"6f879b08-e8e7-4f93-b47f-4c8a537dddaa\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:32\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":19,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[{\"id\":\"soop:737\",\"reason\":\"EVENT_SCOPE_HOLD\"},{\"id\":\"sheet:CHZZK:e4ae5646d01063022591e26bb81106cf:2026-12-01\",\"reason\":\"PRIMARY_NOTICE_REQUIRED\"}],\"failed\":[{\"id\":\"soop:685\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:729\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:687\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:689\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:709\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:715\",\"reason\":\"SOURCE_HTTP_502\"},{\"id\":\"soop:725\",\"reason\":\"SOURCE_HTTP_502\"},{\"id\":\"soop:733\",\"reason\":\"SOURCE_HTTP_502\"},{\"id\":\"soop:741\",\"reason\":\"SOURCE_HTTP_502\"},{\"id\":\"soop:743\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:759\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:697\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:753\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:699\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:757\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:755\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:761\",\"reason\":\"SOURCE_HTTP_404\"}],\"remaining\":0,\"externalRequests\":24,\"downloadBytes\":1145110,\"dbCalls\":80,\"dbRowsRead\":2792,\"dbRowsWritten\":50,\"publicVerified\":false,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794454380220
+        }
+    ],
+    "eventTimestamp": 1794454350834,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454350377
+    }
+}
+{
+    "wallTime": 251,
+    "cpuTime": 2,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454410377
+    },
+    "scriptVersion": {
+        "id": "ef7bd517-52f0-4152-8933-1589ebdf5892"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"smoke:2026-11-12T03:33\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794454411297
+        }
+    ],
+    "eventTimestamp": 1794454411033,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454410377
+    }
+}
+{
+    "wallTime": 177,
+    "cpuTime": 2,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454470377
+    },
+    "scriptVersion": {
+        "id": "ef7bd517-52f0-4152-8933-1589ebdf5892"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"smoke:2026-11-12T03:34\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794454471012
+        }
+    ],
+    "eventTimestamp": 1794454470818,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454470377
+    }
+}
+{
+    "wallTime": 201,
+    "cpuTime": 3,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454530377
+    },
+    "scriptVersion": {
+        "id": "ef7bd517-52f0-4152-8933-1589ebdf5892"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"smoke:2026-11-12T03:35\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794454531180
+        }
+    ],
+    "eventTimestamp": 1794454530962,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454530377
+    }
+}
+{
+    "wallTime": 281,
+    "cpuTime": 2,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454590377
+    },
+    "scriptVersion": {
+        "id": "ef7bd517-52f0-4152-8933-1589ebdf5892"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"smoke:2026-11-12T03:36\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794454591155
+        }
+    ],
+    "eventTimestamp": 1794454590858,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454590377
+    }
+}
+{
+    "wallTime": 51250,
+    "cpuTime": 472,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454650377
+    },
+    "scriptVersion": {
+        "id": "d22668d9-9f1b-4f2c-ad41-910b21888bcc"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"d00f3a9c-07d9-4a0a-8e0c-45a7a9ce6ac1\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:37\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":18,\"published\":[{\"name\":\"공이연\",\"slug\":\"02yeon-soop\",\"date\":\"2026-11-15\",\"time\":\"12:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"까망까맹\",\"slug\":\"dbrlshd123-soop\",\"date\":\"2026-11-06\",\"time\":\"13:00\",\"kind\":\"PLATFORM_DEBUT\"}],\"updated\":[\"nju123-soop\",\"kyykys12-soop\",\"gingmallang-soop\",\"ghostwitch-soop\",\"hue1115-soop\",\"koming-soop\",\"kissingyou-soop\",\"shinittan-soop\",\"soda-soop\",\"yorune-soop\",\"hanui-soop\",\"haita-soop\",\"iwol-soop\",\"hamoye-soop\"],\"unchanged\":0,\"held\":[{\"id\":\"soop:707\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"},{\"id\":\"soop:685\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"}],\"failed\":[],\"remaining\":0,\"externalRequests\":39,\"downloadBytes\":13285823,\"dbCalls\":186,\"dbRowsRead\":6912,\"dbRowsWritten\":180,\"publicVerified\":true,\"errors\":[\"DETAIL_BUDGET_DEFERRED\"]}"
+            ],
+            "level": "log",
+            "timestamp": 1794454702629
+        }
+    ],
+    "eventTimestamp": 1794454651362,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454650377
+    }
+}
+{
+    "wallTime": 41145,
+    "cpuTime": 786,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454710377
+    },
+    "scriptVersion": {
+        "id": "d22668d9-9f1b-4f2c-ad41-910b21888bcc"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"43dd98a7-2119-420b-aed1-86c975387445\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:38\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED_WITH_HOLDS\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":13,\"published\":[{\"name\":\"묘해¸\",\"slug\":\"ssohan-soop\",\"date\":\"2026-11-19\",\"time\":\"16:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"시즈즈\",\"slug\":\"seizes-soop\",\"date\":\"2026-11-23\",\"time\":\"17:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"온비\",\"slug\":\"onbi22-soop\",\"date\":\"2026-11-25\",\"time\":\"15:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"키리에♥\",\"slug\":\"kyrie01234-soop\",\"date\":\"2026-11-29\",\"time\":\"17:00\",\"kind\":\"PLATFORM_DEBUT\"}],\"updated\":[\"haenarong-soop\",\"sujiai-soop\",\"hasinyang-soop\",\"d00328-soop\",\"di6ixx-soop\",\"lanbee-soop\"],\"unchanged\":0,\"held\":[{\"id\":\"soop:715\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"},{\"id\":\"soop:699\",\"reason\":\"IMAGE_HOST_HOLD\"},{\"id\":\"soop:761\",\"reason\":\"IMAGE_HOST_HOLD\"}],\"failed\":[],\"remaining\":0,\"externalRequests\":31,\"downloadBytes\":14719357,\"dbCalls\":140,\"dbRowsRead\":5397,\"dbRowsWritten\":134,\"publicVerified\":true,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794454752304
+        }
+    ],
+    "eventTimestamp": 1794454711142,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454710377
+    }
+}
+{
+    "wallTime": 22488,
+    "cpuTime": 113,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454770377
+    },
+    "scriptVersion": {
+        "id": "d22668d9-9f1b-4f2c-ad41-910b21888bcc"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"ab6ddb1b-ebe6-4a0f-836a-0ddb80374139\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:39\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":5,\"downloadBytes\":630139,\"dbCalls\":61,\"dbRowsRead\":2756,\"dbRowsWritten\":12,\"publicVerified\":false,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794454793884
+        }
+    ],
+    "eventTimestamp": 1794454771381,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454770377
+    }
+}
+{
+    "wallTime": 6197,
+    "cpuTime": 129,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454830377
+    },
+    "scriptVersion": {
+        "id": "d22668d9-9f1b-4f2c-ad41-910b21888bcc"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"4b5110b0-1fb6-4290-990d-a046054f5c13\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:40\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":5,\"downloadBytes\":542174,\"dbCalls\":61,\"dbRowsRead\":2753,\"dbRowsWritten\":12,\"publicVerified\":false,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794454837494
+        }
+    ],
+    "eventTimestamp": 1794454831304,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454830377
+    }
+}
+{
+    "wallTime": 185,
+    "cpuTime": 5,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454890377
+    },
+    "scriptVersion": {
+        "id": "d22668d9-9f1b-4f2c-ad41-910b21888bcc"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"smoke:2026-11-12T03:41\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794454891122
+        }
+    ],
+    "eventTimestamp": 1794454890916,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454890377
+    }
+}
+{
+    "wallTime": 182,
+    "cpuTime": 3,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454950377
+    },
+    "scriptVersion": {
+        "id": "d22668d9-9f1b-4f2c-ad41-910b21888bcc"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"smoke:2026-11-12T03:42\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794454950882
+        }
+    ],
+    "eventTimestamp": 1794454950676,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794454950377
+    }
+}
+{
+    "wallTime": 23301,
+    "cpuTime": 214,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455010377
+    },
+    "scriptVersion": {
+        "id": "21df127c-d70d-43e9-b46c-f0e4bb7ce0b3"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"4c333862-c0e4-43d6-8436-654dfe34a09b\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:43\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":2,\"published\":[{\"name\":\"은재_\",\"slug\":\"ham2ko-soop\",\"date\":\"2026-12-06\",\"time\":\"18:00\",\"kind\":\"PLATFORM_DEBUT\"}],\"updated\":[\"hanieum-soop\"],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":9,\"downloadBytes\":2918775,\"dbCalls\":76,\"dbRowsRead\":3284,\"dbRowsWritten\":36,\"publicVerified\":true,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794455034157
+        }
+    ],
+    "eventTimestamp": 1794455010853,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455010377
+    }
+}
+{
+    "wallTime": 18881,
+    "cpuTime": 192,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455070377
+    },
+    "scriptVersion": {
+        "id": "21df127c-d70d-43e9-b46c-f0e4bb7ce0b3"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery\",\"runId\":\"d1b434c2-1d83-42d3-9039-5ae1a838c776\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:44\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":5,\"downloadBytes\":553764,\"dbCalls\":61,\"dbRowsRead\":2748,\"dbRowsWritten\":12,\"publicVerified\":false,\"errors\":[]}"
+            ],
+            "level": "log",
+            "timestamp": 1794455090185
+        }
+    ],
+    "eventTimestamp": 1794455071276,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455070377
+    }
+}
+{
+    "wallTime": 58,
+    "cpuTime": 4,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455130377
+    },
+    "scriptVersion": {
+        "id": "21df127c-d70d-43e9-b46c-f0e4bb7ce0b3"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"event\":\"debut-discovery-skipped\",\"slot\":\"smoke:2026-11-12T03:45\",\"reason\":\"LEASE_SLOT_MONTHLY_BUDGET_OR_DISABLED\"}"
+            ],
+            "level": "log",
+            "timestamp": 1794455131067
+        }
+    ],
+    "eventTimestamp": 1794455130988,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455130377
+    }
+}
+{
+    "wallTime": 0,
+    "cpuTime": 0,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455190377
+    },
+    "scriptVersion": {
+        "id": "21df127c-d70d-43e9-b46c-f0e4bb7ce0b3"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [],
+    "eventTimestamp": 1794455191510,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455190377
+    }
+}
+{
+    "wallTime": 1,
+    "cpuTime": 0,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455250377
+    },
+    "scriptVersion": {
+        "id": "21df127c-d70d-43e9-b46c-f0e4bb7ce0b3"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [],
+    "eventTimestamp": 1794455250995,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455250377
+    }
+}
+{
+    "wallTime": 0,
+    "cpuTime": 0,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455310377
+    },
+    "scriptVersion": {
+        "id": "21df127c-d70d-43e9-b46c-f0e4bb7ce0b3"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [],
+    "eventTimestamp": 1794455311008,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455310377
+    }
+}
+{
+    "wallTime": 0,
+    "cpuTime": 0,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455370377
+    },
+    "scriptVersion": {
+        "id": "21df127c-d70d-43e9-b46c-f0e4bb7ce0b3"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [],
+    "eventTimestamp": 1794455370926,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455370377
+    }
+}
+{
+    "wallTime": 0,
+    "cpuTime": 0,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455430377
+    },
+    "scriptVersion": {
+        "id": "21df127c-d70d-43e9-b46c-f0e4bb7ce0b3"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [],
+    "eventTimestamp": 1794455430939,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455430377
+    }
+}
+{
+    "wallTime": 0,
+    "cpuTime": 0,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455490377
+    },
+    "scriptVersion": {
+        "id": "9b338758-4de2-4f42-8f10-65882c0e91bb"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [],
+    "eventTimestamp": 1794455490762,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455490377
+    }
+}
+{
+    "wallTime": 0,
+    "cpuTime": 0,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455550377
+    },
+    "scriptVersion": {
+        "id": "9b338758-4de2-4f42-8f10-65882c0e91bb"
+    },
+    "scriptName": "vdebut-discovery",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [],
+    "eventTimestamp": 1794455551000,
+    "event": {
+        "cron": "* * * * *",
+        "scheduledTime": 1794455550377
+    }
+}
+{
+    "wallTime": 0,
+    "cpuTime": 0,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "tailAttributes": {
+        "cr

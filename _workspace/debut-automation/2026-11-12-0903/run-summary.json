@@ -1,0 +1,55 @@
+{
+  "runId": "2026-11-12-0903",
+  "startedAt": "2026-11-12T09:03:04+09:00",
+  "completedAt": "2026-11-12T11:04:06+09:00",
+  "status": "COMPLETED_WITH_HOLDS",
+  "coverage": "PARTIAL_WEB_SEARCH",
+  "dateWindow": {
+    "start": "2026-11-05",
+    "end": "2026-12-12",
+    "timezone": "Asia/Seoul"
+  },
+  "counts": {
+    "webQueries": 12,
+    "officialSoopSchedules": 35,
+    "officialSoopDebuts": 31,
+    "officialSoopTransfers": 4,
+    "officialScheduleChangesInOverlap": 0,
+    "newlyDiscoveredCandidates": 0,
+    "deferredLeadsPrimaryVerified": 1,
+    "newCanonicalResearchRows": 1,
+    "newPublicRegistrations": 0,
+    "publicCorrections": 0,
+    "imminentRegisteredProfiles": 8,
+    "imminentOfficialChannelsAndImagesChecked": 8,
+    "imminentSchedulesPrimaryConfirmed": 8,
+    "publicProfilesUnchanged": 428,
+    "hardSourceFailures": 0
+  },
+  "primaryConfirmedLead": {
+    "name": "시라나미 우유루",
+    "date": "2026-12-12",
+    "reportedTime": "11:00",
+    "timezoneConfirmed": false,
+    "channelUrl": "https://chzzk.naver.com/7f53351745cf665ee3889aac4d656aff",
+    "source": "https://x.com/wooyuru_x/status/2119301126755643875",
+    "status": "HOLD"
+  },
+  "unchangedHolds": [
+    "플랫폼 데뷔·이적과 FIRST_DEBUT 공개 모델 구분 문제",
+    "기존 리몬·메이벨라 시간대/활동 범위",
+    "기존 표시명 제안 3건"
+  ],
+  "recoveredAccessIssues": [
+    "웹 도구의 X 원문 4건 조회 실패를 정상 HTTPS 공개 본문 조회로 보완.",
+    "네이티브 브라우저 실행 승인 대기 시도는 중단. 이후 무인 예약에서 앱 실행·UI 조작 경로를 금지하도록 예약 지시문 보완."
+  ],
+  "operations": {
+    "productionDbWrites": false,
+    "codeDeployment": false,
+    "nativeAppInputPerformed": false,
+    "paidApiActivated": false,
+    "automationPromptUpdated": true,
+    "scheduleChanged": false
+  }
+}

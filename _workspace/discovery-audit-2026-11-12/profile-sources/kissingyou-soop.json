@@ -1,0 +1,165 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/kwonyoa/station",
+  "checkedAt": "2026-11-12T05:51:14.772Z",
+  "raw": {
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/kw/kwonyoa/kwonyoa.jpg",
+    "station": {
+      "display": {
+        "main_type": "1110",
+        "title_type": "IMAGE",
+        "title_text": "",
+        "profile_text": "롤 , 발로란트 , 오버워치 할구야",
+        "skin_type": 0,
+        "skin_no": 0,
+        "title_skin_image": "",
+        "ai_profile_conf_yn": "N",
+        "ai_profile_str": null
+      },
+      "groups": [],
+      "menus": [
+        {
+          "bbs_no": 95928889,
+          "station_no": 26075989,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 104,
+          "rnum": 1,
+          "line": 1,
+          "indention": 0,
+          "name": "General Board",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 130059029,
+          "station_no": 26075989,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 107,
+          "rnum": 2,
+          "line": 0,
+          "indention": 0,
+          "name": "🚨 공지 🚨",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        }
+      ],
+      "upd": {
+        "station_no": 26075989,
+        "user_id": "kwonyoa",
+        "asp_code": 0,
+        "fan_cnt": 132,
+        "today0_visit_cnt": 0,
+        "today1_visit_cnt": 22,
+        "total_visit_cnt": 4670,
+        "today0_ok_cnt": 0,
+        "today1_ok_cnt": 0,
+        "today0_fav_cnt": 0,
+        "today1_fav_cnt": 6,
+        "total_ok_cnt": 147,
+        "total_view_cnt": 1788
+      },
+      "vods": [
+        {
+          "bbs_no": 95928887,
+          "station_no": 26075989,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 108,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 다시보기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 95928888,
+          "station_no": 26075989,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 109,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 하이라이트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "broad_start": "2026-11-11 19:33:11",
+      "grade": 0,
+      "jointime": "2023-09-14 10:45:12",
+      "station_name": "키싱유*",
+      "station_no": 26075989,
+      "station_title": "",
+      "total_broad_time": 29307,
+      "user_id": "kwonyoa",
+      "user_nick": "키싱유*",
+      "active_no": 1
+    },
+    "broad": null,
+    "starballoon_top": [
+      {
+        "user_id": "candle06",
+        "user_nick": "유령마녀",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ca/candle06/candle06.jpg"
+      },
+      {
+        "user_id": "kisslove0131",
+        "user_nick": "정우준",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ki/kisslove0131/kisslove0131.jpg"
+      },
+      {
+        "user_id": "qkrwhdtn0",
+        "user_nick": "나얼_",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/qk/qkrwhdtn0/qkrwhdtn0.jpg"
+      },
+      {
+        "user_id": "thsptl",
+        "user_nick": "소사",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/th/thsptl/thsptl.jpg"
+      },
+      {
+        "user_id": "dlgksto12",
+        "user_nick": "딩동댕동대",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/dl/dlgksto12/dlgksto12.jpg"
+      },
+      {
+        "user_id": "282612",
+        "user_nick": "바보멍튱이",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/28/282612/282612.jpg"
+      },
+      {
+        "user_id": "chujh2020l1",
+        "user_nick": "파란나리야",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ch/chujh2020l1/chujh2020l1.jpg"
+      }
+    ],
+    "sticker_top": [],
+    "subscription": {
+      "total": 0,
+      "tier1": 0,
+      "tier2": 0
+    },
+    "is_best_bj": false,
+    "is_partner_bj": false,
+    "is_ppv_bj": false,
+    "is_af_supporters_bj": false,
+    "is_shopfreeca_bj": false,
+    "is_favorite": false,
+    "is_subscription": false,
+    "is_owner": false,
+    "is_manager": false,
+    "is_notice": false,
+    "is_adsence": true,
+    "is_mobile_push": false,
+    "subscribe_visible": "on",
+    "country": "KR",
+    "current_timestamp": "2026-11-12 14:51:14"
+  }
+}

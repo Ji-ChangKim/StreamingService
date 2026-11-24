@@ -1,0 +1,136 @@
+{
+  "runs": 12,
+  "published": [
+    {
+      "name": "공이연",
+      "slug": "02yeon-soop",
+      "date": "2026-11-15",
+      "time": "12:00",
+      "kind": "PLATFORM_DEBUT"
+    },
+    {
+      "name": "까망까맹",
+      "slug": "dbrlshd123-soop",
+      "date": "2026-11-06",
+      "time": "13:00",
+      "kind": "PLATFORM_DEBUT"
+    },
+    {
+      "name": "묘해¸",
+      "slug": "ssohan-soop",
+      "date": "2026-11-19",
+      "time": "16:00",
+      "kind": "PLATFORM_DEBUT"
+    },
+    {
+      "name": "시즈즈",
+      "slug": "seizes-soop",
+      "date": "2026-11-23",
+      "time": "17:00",
+      "kind": "PLATFORM_DEBUT"
+    },
+    {
+      "name": "온비",
+      "slug": "onbi22-soop",
+      "date": "2026-11-25",
+      "time": "15:00",
+      "kind": "PLATFORM_DEBUT"
+    },
+    {
+      "name": "키리에♥",
+      "slug": "kyrie01234-soop",
+      "date": "2026-11-29",
+      "time": "17:00",
+      "kind": "PLATFORM_DEBUT"
+    },
+    {
+      "name": "은재_",
+      "slug": "ham2ko-soop",
+      "date": "2026-12-06",
+      "time": "18:00",
+      "kind": "PLATFORM_DEBUT"
+    }
+  ],
+  "updated": [
+    "d00328-soop",
+    "di6ixx-soop",
+    "ghostwitch-soop",
+    "gingmallang-soop",
+    "haenarong-soop",
+    "haita-soop",
+    "hamoye-soop",
+    "hanieum-soop",
+    "hanui-soop",
+    "hasinyang-soop",
+    "hue1115-soop",
+    "iwol-soop",
+    "kissingyou-soop",
+    "koming-soop",
+    "kyykys12-soop",
+    "lanbee-soop",
+    "leopyaco-chzzk",
+    "nju123-soop",
+    "shinittan-soop",
+    "soda-soop",
+    "sujiai-soop",
+    "yorune-soop"
+  ],
+  "maxExternalRequests": 39,
+  "sumExternalRequests": 166,
+  "maxDbRead": 6912,
+  "maxDbWrite": 255,
+  "sumDbRead": 39963,
+  "sumDbWrite": 755,
+  "holds": [
+    {
+      "id": "registered:CHZZK:037d7ba305538de29dbf2789071dbb82",
+      "name": "아먕",
+      "reason": "EXISTING_INFORMATION_CONFLICT_HOLD"
+    },
+    {
+      "id": "registered:CHZZK:bce5bac086baed274db13a2c9aacd41b",
+      "name": "코바야시 후토",
+      "reason": "SOURCE_TOO_LARGE"
+    },
+    {
+      "id": "sheet:CHZZK:e4ae5646d01063022591e26bb81106cf:2026-12-01",
+      "name": "말리부",
+      "reason": "PRIMARY_NOTICE_REQUIRED"
+    },
+    {
+      "id": "soop:683",
+      "name": "하소o",
+      "reason": "EVENT_SCOPE_HOLD"
+    },
+    {
+      "id": "soop:685",
+      "name": "여농이오른팔",
+      "reason": "EXISTING_INFORMATION_CONFLICT_HOLD"
+    },
+    {
+      "id": "soop:707",
+      "name": "#샤루루",
+      "reason": "EXISTING_INFORMATION_CONFLICT_HOLD"
+    },
+    {
+      "id": "soop:713",
+      "name": "뽀소리_",
+      "reason": "EVENT_SCOPE_HOLD"
+    },
+    {
+      "id": "soop:715",
+      "name": "에스냐~",
+      "reason": "EXISTING_INFORMATION_CONFLICT_HOLD"
+    },
+    {
+      "id": "soop:737",
+      "name": "치키쨩",
+      "reason": "EVENT_SCOPE_HOLD"
+    },
+    {
+      "id": "soop:739",
+      "name": "슈야SHUYA",
+      "reason": "EVENT_SCOPE_HOLD"
+    }
+  ]
+}

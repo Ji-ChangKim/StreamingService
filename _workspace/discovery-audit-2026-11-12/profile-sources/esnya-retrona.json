@@ -1,0 +1,435 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/retrona/station",
+  "checkedAt": "2026-11-12T05:50:50.286Z",
+  "raw": {
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/re/retrona/retrona.jpg",
+    "station": {
+      "display": {
+        "main_type": "1110",
+        "title_type": "IMAGE",
+        "title_text": "",
+        "profile_text": "§§향수가득한 과거로 안내하는 추억열차의 차장§§리얼 뉴 와튜버§§\n2026년 11월 10일 오후 1시 데뷔예정\n비즈니스 문의 : esnyasoop@gmail.com",
+        "skin_type": 0,
+        "skin_no": 0,
+        "title_skin_image": "",
+        "ai_profile_conf_yn": "N",
+        "ai_profile_str": null
+      },
+      "groups": [],
+      "menus": [
+        {
+          "bbs_no": 129982821,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 107,
+          "rnum": 0,
+          "line": 0,
+          "indention": 0,
+          "name": "§§역장님 전용 게시판§§",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129982803,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 1,
+          "line": 0,
+          "indention": 0,
+          "name": "§공지사항§",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129982865,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 2,
+          "line": 0,
+          "indention": 0,
+          "name": "§방송일정§",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129982911,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 3,
+          "line": 0,
+          "indention": 0,
+          "name": "§일기장§",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129982849,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 4,
+          "line": 0,
+          "indention": 0,
+          "name": "§좋아요 부탁!§",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129982823,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 106,
+          "rnum": 5,
+          "line": 0,
+          "indention": 0,
+          "name": "",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129982827,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 107,
+          "rnum": 6,
+          "line": 0,
+          "indention": 0,
+          "name": "승객용 게시판",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130149173,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 7,
+          "line": 0,
+          "indention": 0,
+          "name": "to.차장님(자유게시판)",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 118036461,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 104,
+          "rnum": 8,
+          "line": 1,
+          "indention": 0,
+          "name": "에이봤?",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 129982851,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 9,
+          "line": 0,
+          "indention": 0,
+          "name": "뻐꾸기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129982853,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 10,
+          "line": 0,
+          "indention": 0,
+          "name": "팬아트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 129982825,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 106,
+          "rnum": 11,
+          "line": 0,
+          "indention": 0,
+          "name": "",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130149185,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 107,
+          "rnum": 12,
+          "line": 0,
+          "indention": 0,
+          "name": "§§업보용 게시판§§",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130181857,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 106,
+          "rnum": 13,
+          "line": 0,
+          "indention": 0,
+          "name": "",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130181859,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 107,
+          "rnum": 14,
+          "line": 0,
+          "indention": 0,
+          "name": "§§와우 포에버§§",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 130181847,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 104,
+          "rnum": 15,
+          "line": 0,
+          "indention": 0,
+          "name": "스냐의 와포 일기장",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        }
+      ],
+      "upd": {
+        "station_no": 30652714,
+        "user_id": "retrona",
+        "asp_code": 0,
+        "fan_cnt": 397,
+        "today0_visit_cnt": 0,
+        "today1_visit_cnt": 82,
+        "total_visit_cnt": 4328,
+        "today0_ok_cnt": 0,
+        "today1_ok_cnt": 5,
+        "today0_fav_cnt": 0,
+        "today1_fav_cnt": 5,
+        "total_ok_cnt": 193,
+        "total_view_cnt": 3232
+      },
+      "vods": [
+        {
+          "bbs_no": 118036457,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 108,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 다시보기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 118036459,
+          "station_no": 30652714,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 109,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 하이라이트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "broad_start": "2026-11-12 13:50:43",
+      "grade": 0,
+      "jointime": "2025-11-10 09:12:37",
+      "station_name": "에스냐~",
+      "station_no": 30652714,
+      "station_title": "",
+      "total_broad_time": 116315,
+      "user_id": "retrona",
+      "user_nick": "에스냐~",
+      "active_no": 1
+    },
+    "broad": {
+      "user_id": "retrona",
+      "broad_no": 298536987,
+      "broad_cate_no": 40427,
+      "broad_title": "[리얼 뉴 와튜버] 왁굳님이 추천해준 애드온 깔고 와포",
+      "current_sum_viewer": 10,
+      "broad_grade": 0,
+      "subscription_only": 0,
+      "is_password": false
+    },
+    "starballoon_top": [
+      {
+        "user_id": "tmqmf9808",
+        "user_nick": "스브리",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/tm/tmqmf9808/tmqmf9808.jpg"
+      },
+      {
+        "user_id": "poteto88741",
+        "user_nick": "청연이다",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/po/poteto88741/poteto88741.jpg"
+      },
+      {
+        "user_id": "qqd0258",
+        "user_nick": "마오희",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/qq/qqd0258/qqd0258.jpg"
+      },
+      {
+        "user_id": "fdsw3295",
+        "user_nick": "람쥐조아",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/fd/fdsw3295/fdsw3295.jpg"
+      },
+      {
+        "user_id": "chikichan",
+        "user_nick": "치키쨩",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ch/chikichan/chikichan.jpg"
+      },
+      {
+        "user_id": "bbosori",
+        "user_nick": "뽀소리_",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/bb/bbosori/bbosori.jpg"
+      },
+      {
+        "user_id": "ku2050",
+        "user_nick": "지나가던수달",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ku/ku2050/ku2050.jpg"
+      },
+      {
+        "user_id": "heggng",
+        "user_nick": "헤끙",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/he/heggng/heggng.jpg"
+      },
+      {
+        "user_id": "ekfwo10",
+        "user_nick": "스위치_",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ek/ekfwo10/ekfwo10.jpg"
+      },
+      {
+        "user_id": "nstarlts",
+        "user_nick": "숲기잇",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ns/nstarlts/nstarlts.jpg"
+      },
+      {
+        "user_id": "attp133",
+        "user_nick": "흑흑왁굳형",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/at/attp133/attp133.jpg"
+      },
+      {
+        "user_id": "nek5yang2",
+        "user_nick": "해치킴",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ne/nek5yang2/nek5yang2.jpg"
+      },
+      {
+        "user_id": "gus1066",
+        "user_nick": "네아",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/gu/gus1066/gus1066.jpg"
+      },
+      {
+        "user_id": "zippo0202",
+        "user_nick": "한번의일탈",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/zi/zippo0202/zippo0202.jpg"
+      },
+      {
+        "user_id": "dlswo90",
+        "user_nick": "휫자",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/dl/dlswo90/dlswo90.jpg"
+      },
+      {
+        "user_id": "sydsyd1010",
+        "user_nick": "FrogMonster",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/sy/sydsyd1010/sydsyd1010.jpg"
+      },
+      {
+        "user_id": "kjejah1012",
+        "user_nick": "구르름",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/kj/kjejah1012/kjejah1012.jpg"
+      },
+      {
+        "user_id": "shirobako",
+        "user_nick": "올므",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/sh/shirobako/shirobako.jpg"
+      },
+      {
+        "user_id": "nspinqube",
+        "user_nick": "알마늘",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ns/nspinqube/nspinqube.jpg"
+      },
+      {
+        "user_id": "kanoz0",
+        "user_nick": "카노ミ☆",
+        "profile_image": "//profile.img.sooplive.co.kr/LOGO/ka/kanoz0/kanoz0.jpg"
+      }
+    ],
+    "sticker_top": [],
+    "subscription": {
+      "total": 0,
+      "tier1": 0,
+      "tier2": 0
+    },
+    "is_best_bj": false,
+    "is_partner_bj": false,
+    "is_ppv_bj": false,
+    "is_af_supporters_bj": false,
+    "is_shopfreeca_bj": false,
+    "is_favorite": false,
+    "is_subscription": false,
+    "is_owner": false,
+    "is_manager": false,
+    "is_notice": false,
+    "is_adsence": true,
+    "is_mobile_push": false,
+    "subscribe_visible": "on",
+    "country": "KR",
+    "current_timestamp": "2026-11-12 14:50:50"
+  }
+}

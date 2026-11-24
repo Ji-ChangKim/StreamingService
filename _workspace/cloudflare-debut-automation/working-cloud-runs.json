@@ -1,0 +1,34 @@
+[
+  {
+    "results": [
+      {
+        "slot": "smoke:2026-11-12T03:39",
+        "status": "RUNNING",
+        "summary": "{}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:38",
+        "status": "COMPLETED_WITH_HOLDS",
+        "summary": "{\"runId\":\"43dd98a7-2119-420b-aed1-86c975387445\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:38\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED_WITH_HOLDS\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":13,\"published\":[{\"name\":\"묘해¸\",\"slug\":\"ssohan-soop\",\"date\":\"2026-11-19\",\"time\":\"16:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"시즈즈\",\"slug\":\"seizes-soop\",\"date\":\"2026-11-23\",\"time\":\"17:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"온비\",\"slug\":\"onbi22-soop\",\"date\":\"2026-11-25\",\"time\":\"15:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"키리에♥\",\"slug\":\"kyrie01234-soop\",\"date\":\"2026-11-29\",\"time\":\"17:00\",\"kind\":\"PLATFORM_DEBUT\"}],\"updated\":[\"haenarong-soop\",\"sujiai-soop\",\"hasinyang-soop\",\"d00328-soop\",\"di6ixx-soop\",\"lanbee-soop\"],\"unchanged\":0,\"held\":[{\"id\":\"soop:715\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"},{\"id\":\"soop:699\",\"reason\":\"IMAGE_HOST_HOLD\"},{\"id\":\"soop:761\",\"reason\":\"IMAGE_HOST_HOLD\"}],\"failed\":[],\"remaining\":0,\"externalRequests\":31,\"downloadBytes\":14719357,\"dbCalls\":140,\"dbRowsRead\":5397,\"dbRowsWritten\":134,\"publicVerified\":true,\"errors\":[]}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1989
+      },
+      "duration": 0.1989,
+      "changes": 0,
+      "last_row_id": 9,
+      "changed_db": false,
+      "size_after": 905891840,
+      "rows_read": 2,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

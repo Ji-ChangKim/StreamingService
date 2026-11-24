@@ -20,6 +20,8 @@ export interface PortalMedia {
   featured?: boolean; linkOnly?: boolean;
 }
 export interface PortalProfile {
+  // 플랫폼 공식 일정은 생애 첫 데뷔와 구분해서 저장한다. 기존 자료의 의미는 바꾸지 않는다.
+  debutKind?: 'FIRST_DEBUT' | 'PLATFORM_DEBUT';
   // 공개 캐릭터 스펙과 소개 카드는 기존 프로필 JSON에 함께 저장한다.
   details?: ProfileDetails;
   // 소유권 확인과 별개로 운영자가 검토한 내용에만 공개 권한을 부여한다.

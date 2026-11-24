@@ -1,0 +1,251 @@
+{
+  "url": "https://chapi.sooplive.co.kr/api/haihito/station",
+  "checkedAt": "2026-11-12T05:52:37.446Z",
+  "raw": {
+    "profile_image": "//profile.img.sooplive.co.kr/LOGO/ha/haihito/haihito.jpg",
+    "station": {
+      "display": {
+        "main_type": "1110",
+        "title_type": "IMAGE",
+        "title_text": "",
+        "profile_text": "ꕤ 하잇따-!! | 🫧 비즈니스 메일: biz@akaivstudio.com ꕤ",
+        "skin_type": 0,
+        "skin_no": 0,
+        "title_skin_image": "",
+        "ai_profile_conf_yn": "N",
+        "ai_profile_str": null
+      },
+      "groups": [],
+      "menus": [
+        {
+          "bbs_no": 130313447,
+          "station_no": 31515252,
+          "auth_no": 101,
+          "w_auth_no": 259,
+          "display_type": 107,
+          "rnum": 0,
+          "line": 0,
+          "indention": 0,
+          "name": "🫧 하잇따잇따",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 0
+        },
+        {
+          "bbs_no": 121698207,
+          "station_no": 31515252,
+          "auth_no": 101,
+          "w_auth_no": 200,
+          "display_type": 104,
+          "rnum": 1,
+          "line": 1,
+          "indention": 0,
+          "name": "ꕤ | 공지",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "upd": {
+        "station_no": 31515252,
+        "user_id": "haihito",
+        "asp_code": 0,
+        "fan_cnt": 3019,
+        "today0_visit_cnt": 0,
+        "today1_visit_cnt": 2641,
+        "total_visit_cnt": 33503,
+        "today0_ok_cnt": 0,
+        "today1_ok_cnt": 0,
+        "today0_fav_cnt": 0,
+        "today1_fav_cnt": 47,
+        "total_ok_cnt": 1499,
+        "total_view_cnt": 25108
+      },
+      "vods": [
+        {
+          "bbs_no": 121698203,
+          "station_no": 31515252,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 108,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 다시보기",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        },
+        {
+          "bbs_no": 121698205,
+          "station_no": 31515252,
+          "auth_no": 101,
+          "w_auth_no": 216,
+          "display_type": 109,
+          "rnum": 0,
+          "line": 1,
+          "indention": 0,
+          "name": "방송 하이라이트",
+          "name_font": 0,
+          "main_view_yn": 0,
+          "view_type": 1
+        }
+      ],
+      "broad_start": "2026-11-11 12:00:15",
+      "grade": 0,
+      "jointime": "2026-02-22 20:37:26",
+      "station_name": "하이타",
+      "station_no": 31515252,
+      "station_title": "",
+      "total_broad_time": 42172,
+      "user_id": "haihito",
+      "user_nick": "하이타",
+      "active_no": 1
+    },
+    "broad": null,
+    "starballoon_top": [
+      {
+        "user_id": "zico0000",
+        "user_nick": "Shy",
+        "profile_image": "//profile.img.sooplive.com/LOGO/zi/zico0000/zico0000.jpg"
+      },
+      {
+        "user_id": "klunawish",
+        "user_nick": "먼치킨따냥이",
+        "profile_image": "//profile.img.sooplive.com/LOGO/kl/klunawish/klunawish.jpg"
+      },
+      {
+        "user_id": "zztjdwlszz1",
+        "user_nick": "하잇따",
+        "profile_image": "//profile.img.sooplive.com/LOGO/zz/zztjdwlszz1/zztjdwlszz1.jpg"
+      },
+      {
+        "user_id": "baekyonghwan",
+        "user_nick": "백도짱",
+        "profile_image": "//profile.img.sooplive.com/LOGO/ba/baekyonghwan/baekyonghwan.jpg"
+      },
+      {
+        "user_id": "kjwook0515",
+        "user_nick": "카스텔_",
+        "profile_image": "//profile.img.sooplive.com/LOGO/kj/kjwook0515/kjwook0515.jpg"
+      },
+      {
+        "user_id": "wookh2468",
+        "user_nick": "우거지상",
+        "profile_image": "//profile.img.sooplive.com/LOGO/wo/wookh2468/wookh2468.jpg"
+      },
+      {
+        "user_id": "sd1927",
+        "user_nick": "오요어",
+        "profile_image": "//profile.img.sooplive.com/LOGO/sd/sd1927/sd1927.jpg"
+      },
+      {
+        "user_id": "kmkl0127",
+        "user_nick": "아이띨",
+        "profile_image": "//profile.img.sooplive.com/LOGO/km/kmkl0127/kmkl0127.jpg"
+      },
+      {
+        "user_id": "niceappler1",
+        "user_nick": "비몽두희롱범",
+        "profile_image": "//profile.img.sooplive.com/LOGO/ni/niceappler1/niceappler1.jpg"
+      },
+      {
+        "user_id": "nanamoon777",
+        "user_nick": "나나문",
+        "profile_image": "//profile.img.sooplive.com/LOGO/na/nanamoon777/nanamoon777.jpg"
+      },
+      {
+        "user_id": "mercury18",
+        "user_nick": "수수6734",
+        "profile_image": "//profile.img.sooplive.com/LOGO/me/mercury18/mercury18.jpg"
+      },
+      {
+        "user_id": "alswlr123",
+        "user_nick": "패배자",
+        "profile_image": "//profile.img.sooplive.com/LOGO/al/alswlr123/alswlr123.jpg"
+      },
+      {
+        "user_id": "grand0123",
+        "user_nick": "23호_23rd",
+        "profile_image": "//profile.img.sooplive.com/LOGO/gr/grand0123/grand0123.jpg"
+      },
+      {
+        "user_id": "silparion999",
+        "user_nick": "나문_",
+        "profile_image": "//profile.img.sooplive.com/LOGO/si/silparion999/silparion999.jpg"
+      },
+      {
+        "user_id": "zeroori034",
+        "user_nick": "제로오리",
+        "profile_image": "//profile.img.sooplive.com/LOGO/ze/zeroori034/zeroori034.jpg"
+      },
+      {
+        "user_id": "pliant093",
+        "user_nick": "연서유",
+        "profile_image": "//profile.img.sooplive.com/LOGO/pl/pliant093/pliant093.jpg"
+      },
+      {
+        "user_id": "wckr99",
+        "user_nick": "푸몽띠",
+        "profile_image": "//profile.img.sooplive.com/LOGO/wc/wckr99/wckr99.jpg"
+      },
+      {
+        "user_id": "odenecol36",
+        "user_nick": "ODE",
+        "profile_image": "//profile.img.sooplive.com/LOGO/od/odenecol36/odenecol36.jpg"
+      },
+      {
+        "user_id": "pkon0005",
+        "user_nick": "50희재",
+        "profile_image": "//profile.img.sooplive.com/LOGO/pk/pkon0005/pkon0005.jpg"
+      },
+      {
+        "user_id": "localhost43",
+        "user_nick": "울림소리",
+        "profile_image": "//profile.img.sooplive.com/LOGO/lo/localhost43/localhost43.jpg"
+      }
+    ],
+    "sticker_top": [
+      {
+        "user_id": "softsheep",
+        "user_nick": "부드러운양",
+        "profile_image": "//profile.img.sooplive.com/LOGO/so/softsheep/softsheep.jpg"
+      },
+      {
+        "user_id": "nyammoil",
+        "user_nick": "흐루루루___",
+        "profile_image": "//profile.img.sooplive.com/LOGO/ny/nyammoil/nyammoil.jpg"
+      },
+      {
+        "user_id": "nilous2",
+        "user_nick": "Citrus아이셔",
+        "profile_image": "//profile.img.sooplive.com/LOGO/ni/nilous2/nilous2.jpg"
+      },
+      {
+        "user_id": "rnmrnm",
+        "user_nick": "[샤생팬]계식",
+        "profile_image": "//profile.img.sooplive.com/LOGO/rn/rnmrnm/rnmrnm.jpg"
+      }
+    ],
+    "subscription": {
+      "total": 76,
+      "tier1": 66,
+      "tier2": 10
+    },
+    "is_best_bj": false,
+    "is_partner_bj": false,
+    "is_ppv_bj": false,
+    "is_af_supporters_bj": false,
+    "is_shopfreeca_bj": false,
+    "is_favorite": false,
+    "is_subscription": false,
+    "is_owner": false,
+    "is_manager": false,
+    "is_notice": false,
+    "is_adsence": true,
+    "is_mobile_push": false,
+    "subscribe_visible": "on",
+    "country": "KR",
+    "current_timestamp": "2026-11-12 14:52:37"
+  }
+}

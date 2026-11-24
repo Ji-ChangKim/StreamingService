@@ -21,7 +21,20 @@ function verifyDeployedSite(fetcher = globalThis.fetch) {
     .then(requireRobotsResponse).then(requireProductionRobots);
 }
 
-module.exports = { verifyDeployedSite, SITE_URL, USER_AGENT };
+async function verifyCalendarContract(fetcher=globalThis.fetch){
+  const suffix=`?verification=${Date.now()}`;
+  const read=async url=>{const r=await fetcher(url,{method:'GET',redirect:'error',headers:{'User-Agent':USER_AGENT,'Cache-Control':'no-cache'},signal:AbortSignal.timeout(15000)});if(!r.ok)throw new Error(`캘린더 계약 확인 HTTP ${r.status}`);return r.json();};
+  const [payload,calendar]=await Promise.all([read('https://vdebut.live/api/v1/portal/profiles?version=3&verification='+Date.now()),read('https://vdebut.live/api/v1/events'+suffix)]);
+  if(!Array.isArray(payload.profiles)||!payload.profiles.length||!Array.isArray(calendar.events))throw new Error('공개 프로필·달력 응답 형식 오류');
+  let checked=0;
+  for(const p of payload.profiles){
+    if(p.dateState==='NONE')continue;const event=calendar.events.find(e=>e.creator?.slug===p.slug);
+    if(!event||event.type!==(p.debutKind||'FIRST_DEBUT')||event.startAtUtc!==p.startAtUtc||!event.links?.some(l=>l.url===p.channelUrl))throw new Error(`공개 프로필·달력 불일치: ${p.slug}`);
+    checked++;
+  }
+  return {calendarContractVerified:true,profilesChecked:checked,dbWritten:false};
+}
+module.exports = { verifyDeployedSite, verifyCalendarContract, SITE_URL, USER_AGENT };
 
 // 실패는 처리되지 않은 거부로 종료되어 Actions가 성공으로 숨기지 않게 한다.
-if (require.main === module) verifyDeployedSite().then((result) => console.log(JSON.stringify(result)));
+if (require.main === module) Promise.all([verifyDeployedSite(),verifyCalendarContract()]).then((result) => console.log(JSON.stringify(result)));

@@ -1,0 +1,16 @@
+{
+  "slug": "hanamaru-mei",
+  "sourceUrl": "https://api.chzzk.naver.com/service/v1/channels/4ef5180fb79d3cf53bcb4cb3ce0796bc",
+  "via": "https://vdebut.live/api/v1/platform/profile?platform=CHZZK&url=4ef5180fb79d3cf53bcb4cb3ce0796bc",
+  "checkedAt": "2026-11-12T05:54:07.660Z",
+  "raw": {
+    "success": true,
+    "platform": "CHZZK",
+    "channelId": "4ef5180fb79d3cf53bcb4cb3ce0796bc",
+    "creatorName": "하나마루 메이",
+    "profileImageUrl": "https://nng-phinf.pstatic.net/MjAyNjEwMzFfNTkg/MDAxNzkzMzc1ODU2MTky.yViPSQs8VnJ9QGicW1Kp9JTilpjLuFDsYztS6x7pVQ0g.pXu0ddfRzPub4TEfaY3Xoq6-ARAFeRoSLKG280hr7MEg.JPEG/image.jpg",
+    "channelUrl": "https://chzzk.naver.com/4ef5180fb79d3cf53bcb4cb3ce0796bc",
+    "description": "월 수 금 - 21:30 토 일 - 17:30 / \n3월 - LD로 변신 예정!!🐹🌻",
+    "verified": false
+  }
+}

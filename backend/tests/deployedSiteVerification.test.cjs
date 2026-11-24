@@ -1,6 +1,14 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const { verifyDeployedSite, SITE_URL, USER_AGENT } = require('../scripts/verify_deployed_site.cjs');
+
+test('배포 검사는 플랫폼 데뷔가 첫 데뷔로 바뀌면 실패한다',async()=>{
+ const {verifyCalendarContract}=require('../scripts/verify_deployed_site.cjs');
+ const p={slug:'test',dateState:'FIXED',debutKind:'PLATFORM_DEBUT',startAtUtc:'2026-11-20T07:00:00Z',channelUrl:'https://www.sooplive.com/station/test'};
+ const fake=type=>async url=>Response.json(url.includes('/profiles')?{profiles:[p]}:{events:[{creator:{slug:p.slug},type,startAtUtc:p.startAtUtc,links:[{url:p.channelUrl}]}]});
+ await assert.rejects(verifyCalendarContract(fake('FIRST_DEBUT')),/불일치/);
+ assert.equal((await verifyCalendarContract(fake('PLATFORM_DEBUT'))).profilesChecked,1);
+});
 const robots = 'User-agent: *\nAllow: /\nSitemap: https://vdebut.live/sitemap.xml\n';
 
 // 실제 운영 요청 없이 배포 점검의 주소·메서드·식별자를 검증한다.

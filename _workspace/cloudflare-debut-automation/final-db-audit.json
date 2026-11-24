@@ -1,0 +1,701 @@
+[
+  {
+    "results": [
+      {
+        "slot": "smoke:2026-11-12T03:24",
+        "mode": "SMOKE",
+        "status": "PARTIAL",
+        "started_at": "2026-11-12T03:24:31.023Z",
+        "finished_at": "2026-11-12T03:24:36.843Z",
+        "summary": "{\"runId\":\"a81c42fb-8b17-4a49-aecb-ebffbdbebc7e\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:24\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"community-sheet\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":3,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[{\"id\":\"registered:CHZZK:037d7ba305538de29dbf2789071dbb82\",\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"registered:CHZZK:7795f5c37a5941cc20f44f5ee2744cd8\",\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"registered:CHZZK:bce5bac086baed274db13a2c9aacd41b\",\"reason\":\"SOURCE_OR_PARSE_ERROR\"}],\"remaining\":0,\"externalRequests\":8,\"downloadBytes\":0,\"dbCalls\":25,\"dbRowsRead\":2568,\"dbRowsWritten\":36,\"publicVerified\":true,\"errors\":[]}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:25",
+        "mode": "SMOKE",
+        "status": "PARTIAL",
+        "started_at": "2026-11-12T03:25:31.281Z",
+        "finished_at": "2026-11-12T03:25:36.791Z",
+        "summary": "{\"runId\":\"c077025c-5276-494f-a4f1-c41d359bbb7e\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:25\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"community-sheet\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":5,\"downloadBytes\":0,\"dbCalls\":22,\"dbRowsRead\":2575,\"dbRowsWritten\":11,\"publicVerified\":true,\"errors\":[]}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:26",
+        "mode": "SMOKE",
+        "status": "PARTIAL",
+        "started_at": "2026-11-12T03:26:31.092Z",
+        "finished_at": "2026-11-12T03:26:36.513Z",
+        "summary": "{\"runId\":\"bafdffd9-8fcd-4975-9a7b-d2db3fe8c19d\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:26\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"community-sheet\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"FAILED\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":5,\"downloadBytes\":0,\"dbCalls\":23,\"dbRowsRead\":2580,\"dbRowsWritten\":11,\"publicVerified\":true,\"errors\":[]}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:30",
+        "mode": "SMOKE",
+        "status": "PARTIAL",
+        "started_at": "2026-11-12T03:30:31.232Z",
+        "finished_at": "2026-11-12T03:30:35.329Z",
+        "summary": "{\"runId\":\"63aee7fb-69d9-431c-9605-f97874501ee0\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:30\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"BACKOFF\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"community-sheet\",\"status\":\"BACKOFF\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"BACKOFF\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"BACKOFF\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"BACKOFF\",\"count\":0,\"reason\":\"SOURCE_OR_PARSE_ERROR\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":0,\"downloadBytes\":0,\"dbCalls\":18,\"dbRowsRead\":2576,\"dbRowsWritten\":6,\"publicVerified\":false,\"errors\":[]}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:31",
+        "mode": "SMOKE",
+        "status": "PARTIAL",
+        "started_at": "2026-11-12T03:31:30.983Z",
+        "finished_at": "2026-11-12T03:32:04.624Z",
+        "summary": "{\"runId\":\"95e45b2d-2d9c-4f55-9ee5-597d7a34fac2\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:31\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"OK\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"OK\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"OK\",\"count\":3,\"reason\":\"\"}],\"discovered\":9,\"sourceChanges\":0,\"checked\":20,\"published\":[],\"updated\":[\"leopyaco-chzzk\"],\"unchanged\":0,\"held\":[{\"id\":\"soop:739\",\"reason\":\"EVENT_SCOPE_HOLD\"},{\"id\":\"registered:CHZZK:037d7ba305538de29dbf2789071dbb82\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"},{\"id\":\"soop:713\",\"reason\":\"EVENT_SCOPE_HOLD\"},{\"id\":\"soop:683\",\"reason\":\"EVENT_SCOPE_HOLD\"}],\"failed\":[{\"id\":\"soop:745\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:747\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:717\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:711\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:749\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:751\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"registered:CHZZK:bce5bac086baed274db13a2c9aacd41b\",\"reason\":\"SOURCE_TOO_LARGE\"},{\"id\":\"soop:705\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:719\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:735\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:659\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:695\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:707\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:721\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:727\",\"reason\":\"SOURCE_HTTP_404\"}],\"remaining\":19,\"externalRequests\":30,\"downloadBytes\":3090996,\"dbCalls\":91,\"dbRowsRead\":3022,\"dbRowsWritten\":255,\"publicVerified\":true,\"errors\":[]}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:32",
+        "mode": "SMOKE",
+        "status": "PARTIAL",
+        "started_at": "2026-11-12T03:32:30.846Z",
+        "finished_at": "2026-11-12T03:32:59.973Z",
+        "summary": "{\"runId\":\"6f879b08-e8e7-4f93-b47f-4c8a537dddaa\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:32\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":19,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[{\"id\":\"soop:737\",\"reason\":\"EVENT_SCOPE_HOLD\"},{\"id\":\"sheet:CHZZK:e4ae5646d01063022591e26bb81106cf:2026-12-01\",\"reason\":\"PRIMARY_NOTICE_REQUIRED\"}],\"failed\":[{\"id\":\"soop:685\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:729\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:687\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:689\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:709\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:715\",\"reason\":\"SOURCE_HTTP_502\"},{\"id\":\"soop:725\",\"reason\":\"SOURCE_HTTP_502\"},{\"id\":\"soop:733\",\"reason\":\"SOURCE_HTTP_502\"},{\"id\":\"soop:741\",\"reason\":\"SOURCE_HTTP_502\"},{\"id\":\"soop:743\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:759\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:697\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:753\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:699\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:757\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:755\",\"reason\":\"SOURCE_HTTP_404\"},{\"id\":\"soop:761\",\"reason\":\"SOURCE_HTTP_404\"}],\"remaining\":0,\"externalRequests\":24,\"downloadBytes\":1145110,\"dbCalls\":80,\"dbRowsRead\":2792,\"dbRowsWritten\":50,\"publicVerified\":false,\"errors\":[]}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:37",
+        "mode": "SMOKE",
+        "status": "PARTIAL",
+        "started_at": "2026-11-12T03:37:31.372Z",
+        "finished_at": "2026-11-12T03:38:22.382Z",
+        "summary": "{\"runId\":\"d00f3a9c-07d9-4a0a-8e0c-45a7a9ce6ac1\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:37\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"PARTIAL\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":18,\"published\":[{\"name\":\"공이연\",\"slug\":\"02yeon-soop\",\"date\":\"2026-11-15\",\"time\":\"12:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"까망까맹\",\"slug\":\"dbrlshd123-soop\",\"date\":\"2026-11-06\",\"time\":\"13:00\",\"kind\":\"PLATFORM_DEBUT\"}],\"updated\":[\"nju123-soop\",\"kyykys12-soop\",\"gingmallang-soop\",\"ghostwitch-soop\",\"hue1115-soop\",\"koming-soop\",\"kissingyou-soop\",\"shinittan-soop\",\"soda-soop\",\"yorune-soop\",\"hanui-soop\",\"haita-soop\",\"iwol-soop\",\"hamoye-soop\"],\"unchanged\":0,\"held\":[{\"id\":\"soop:707\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"},{\"id\":\"soop:685\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"}],\"failed\":[],\"remaining\":0,\"externalRequests\":39,\"downloadBytes\":13285823,\"dbCalls\":186,\"dbRowsRead\":6912,\"dbRowsWritten\":180,\"publicVerified\":true,\"errors\":[\"DETAIL_BUDGET_DEFERRED\"]}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:38",
+        "mode": "SMOKE",
+        "status": "COMPLETED_WITH_HOLDS",
+        "started_at": "2026-11-12T03:38:31.159Z",
+        "finished_at": "2026-11-12T03:39:12.097Z",
+        "summary": "{\"runId\":\"43dd98a7-2119-420b-aed1-86c975387445\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:38\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED_WITH_HOLDS\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":13,\"published\":[{\"name\":\"묘해¸\",\"slug\":\"ssohan-soop\",\"date\":\"2026-11-19\",\"time\":\"16:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"시즈즈\",\"slug\":\"seizes-soop\",\"date\":\"2026-11-23\",\"time\":\"17:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"온비\",\"slug\":\"onbi22-soop\",\"date\":\"2026-11-25\",\"time\":\"15:00\",\"kind\":\"PLATFORM_DEBUT\"},{\"name\":\"키리에♥\",\"slug\":\"kyrie01234-soop\",\"date\":\"2026-11-29\",\"time\":\"17:00\",\"kind\":\"PLATFORM_DEBUT\"}],\"updated\":[\"haenarong-soop\",\"sujiai-soop\",\"hasinyang-soop\",\"d00328-soop\",\"di6ixx-soop\",\"lanbee-soop\"],\"unchanged\":0,\"held\":[{\"id\":\"soop:715\",\"reason\":\"EXISTING_INFORMATION_CONFLICT_HOLD\"},{\"id\":\"soop:699\",\"reason\":\"IMAGE_HOST_HOLD\"},{\"id\":\"soop:761\",\"reason\":\"IMAGE_HOST_HOLD\"}],\"failed\":[],\"remaining\":0,\"externalRequests\":31,\"downloadBytes\":14719357,\"dbCalls\":140,\"dbRowsRead\":5397,\"dbRowsWritten\":134,\"publicVerified\":true,\"errors\":[]}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:39",
+        "mode": "SMOKE",
+        "status": "COMPLETED",
+        "started_at": "2026-11-12T03:39:31.391Z",
+        "finished_at": "2026-11-12T03:39:53.542Z",
+        "summary": "{\"runId\":\"ab6ddb1b-ebe6-4a0f-836a-0ddb80374139\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:39\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":5,\"downloadBytes\":630139,\"dbCalls\":61,\"dbRowsRead\":2756,\"dbRowsWritten\":12,\"publicVerified\":false,\"errors\":[]}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:40",
+        "mode": "SMOKE",
+        "status": "COMPLETED",
+        "started_at": "2026-11-12T03:40:31.316Z",
+        "finished_at": "2026-11-12T03:40:37.414Z",
+        "summary": "{\"runId\":\"4b5110b0-1fb6-4290-990d-a046054f5c13\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:40\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":5,\"downloadBytes\":542174,\"dbCalls\":61,\"dbRowsRead\":2753,\"dbRowsWritten\":12,\"publicVerified\":false,\"errors\":[]}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:43",
+        "mode": "SMOKE",
+        "status": "COMPLETED",
+        "started_at": "2026-11-12T03:43:30.866Z",
+        "finished_at": "2026-11-12T03:43:53.802Z",
+        "summary": "{\"runId\":\"4c333862-c0e4-43d6-8436-654dfe34a09b\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:43\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":2,\"published\":[{\"name\":\"은재_\",\"slug\":\"ham2ko-soop\",\"date\":\"2026-12-06\",\"time\":\"18:00\",\"kind\":\"PLATFORM_DEBUT\"}],\"updated\":[\"hanieum-soop\"],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":9,\"downloadBytes\":2918775,\"dbCalls\":76,\"dbRowsRead\":3284,\"dbRowsWritten\":36,\"publicVerified\":true,\"errors\":[]}"
+      },
+      {
+        "slot": "smoke:2026-11-12T03:44",
+        "mode": "SMOKE",
+        "status": "COMPLETED",
+        "started_at": "2026-11-12T03:44:31.294Z",
+        "finished_at": "2026-11-12T03:44:49.889Z",
+        "summary": "{\"runId\":\"d1b434c2-1d83-42d3-9039-5ae1a838c776\",\"mode\":\"SMOKE\",\"slot\":\"smoke:2026-11-12T03:44\",\"range\":{\"today\":\"2026-11-12\",\"from\":\"2026-11-05\",\"to\":\"2026-12-12\"},\"status\":\"COMPLETED\",\"coverage\":\"LIMITED_PUBLIC_SOURCES\",\"sources\":[{\"id\":\"soop-calendar\",\"status\":\"OK\",\"count\":35,\"reason\":\"\"},{\"id\":\"community-sheet\",\"status\":\"OK\",\"count\":1,\"reason\":\"\"},{\"id\":\"x-curator:VtuberDebutBot\",\"status\":\"CACHED\",\"count\":5,\"reason\":\"\"},{\"id\":\"x-curator:KRVtubefollower\",\"status\":\"CACHED\",\"count\":8,\"reason\":\"\"},{\"id\":\"x-curator:vvw_kr\",\"status\":\"CACHED\",\"count\":3,\"reason\":\"\"}],\"discovered\":0,\"sourceChanges\":0,\"checked\":0,\"published\":[],\"updated\":[],\"unchanged\":0,\"held\":[],\"failed\":[],\"remaining\":0,\"externalRequests\":5,\"downloadBytes\":553764,\"dbCalls\":61,\"dbRowsRead\":2748,\"dbRowsWritten\":12,\"publicVerified\":false,\"errors\":[]}"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.3346
+      },
+      "duration": 0.3346,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 906088448,
+      "rows_read": 12,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "id": "registered:CHZZK:037d7ba305538de29dbf2789071dbb82",
+        "channel_key": "CHZZK:037d7ba305538de29dbf2789071dbb82",
+        "seed": "{\"id\":\"registered:CHZZK:037d7ba305538de29dbf2789071dbb82\",\"channelKey\":\"CHZZK:037d7ba305538de29dbf2789071dbb82\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/037d7ba305538de29dbf2789071dbb82\",\"name\":\"아먕\",\"date\":\"2026-11-14\",\"time\":\"13:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"FIRST_DEBUT\",\"source\":\"REGISTERED\",\"sourceUrl\":\"https://x.com/_amyangyang/status/2119427989998108786\",\"primaryUrl\":\"https://x.com/_amyangyang/status/2119427989998108786\",\"xUrl\":\"https://x.com/_amyangyang\",\"scopeConfirmed\":false}",
+        "first_seen_at": "2026-11-12T03:24:31.023Z",
+        "status": "HOLD",
+        "reason": "EXISTING_INFORMATION_CONFLICT_HOLD",
+        "profile_slug": "",
+        "managed_json": "",
+        "evidence": "{}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "registered:CHZZK:7795f5c37a5941cc20f44f5ee2744cd8",
+        "channel_key": "CHZZK:7795f5c37a5941cc20f44f5ee2744cd8",
+        "seed": "{\"id\":\"registered:CHZZK:7795f5c37a5941cc20f44f5ee2744cd8\",\"channelKey\":\"CHZZK:7795f5c37a5941cc20f44f5ee2744cd8\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/7795f5c37a5941cc20f44f5ee2744cd8\",\"name\":\"레오 퍄코\",\"date\":\"2026-11-14\",\"time\":\"20:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"FIRST_DEBUT\",\"source\":\"REGISTERED\",\"sourceUrl\":\"https://x.com/leopyaco/status/2117611502249312379\",\"primaryUrl\":\"https://x.com/leopyaco/status/2117611502249312379\",\"xUrl\":\"https://x.com/leopyaco\",\"scopeConfirmed\":false}",
+        "first_seen_at": "2026-11-12T03:24:31.023Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "leopyaco-chzzk",
+        "managed_json": "{\"slug\":\"leopyaco-chzzk\",\"displayName\":\"레오 퍄코\",\"description\":\"버추얼 아이돌 그룹 'VENOMICA'의 첫번째 멤버, [레오 퍄코]입니다!\",\"avatarUrl\":\"https://nng-phinf.pstatic.net/MjAyNjExMDNfMjY3/MDAxNzkzNzEwMDEyMzc1.OwFhlq83y2YRXqc5C-ytLczNBtXvsAL87j1dHo1G-Lwg.wuolhV8v6Ar-kgUD2uDHIpFoo3IHN96coJ5n8H1ZPfQg.PNG/image.png\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/7795f5c37a5941cc20f44f5ee2744cd8\",\"countryCode\":\"KR\",\"languages\":[],\"tags\":[],\"agency\":\"VENOMICA\",\"xUrl\":\"https://x.com/leopyaco\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-14\",\"debutTime\":\"20:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-14T11:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"VENOMICA\\\",\\\"avatarUrl\\\":\\\"https://nng-phinf.pstatic.net/MjAyNjExMDNfMjY3/MDAxNzkzNzEwMDEyMzc1.OwFhlq83y2YRXqc5C-ytLczNBtXvsAL87j1dHo1G-Lwg.wuolhV8v6Ar-kgUD2uDHIpFoo3IHN96coJ5n8H1ZPfQg.PNG/image.png\\\",\\\"channelUrl\\\":\\\"https://chzzk.naver.com/7795f5c37a5941cc20f44f5ee2744cd8\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-14\\\",\\\"debutKind\\\":\\\"FIRST_DEBUT\\\",\\\"debutTime\\\":\\\"20:00\\\",\\\"description\\\":\\\"버추얼 아이돌 그룹 'VENOMICA'의 첫번째 멤버, [레오 퍄코]입니다!\\\",\\\"displayName\\\":\\\"레오 퍄코\\\",\\\"languages\\\":[],\\\"platform\\\":\\\"CHZZK\\\",\\\"slug\\\":\\\"leopyaco-chzzk\\\",\\\"startAtUtc\\\":\\\"2026-11-14T11:00:00.000Z\\\",\\\"tags\\\":[],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"https://x.com/leopyaco\\\"}\",\"reviewedAt\":\"2026-11-12T03:31:30.983Z\"},\"debutKind\":\"FIRST_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://api.chzzk.naver.com/service/v1/channels/7795f5c37a5941cc20f44f5ee2744cd8\",\"notice\":\"https://x.com/leopyaco/status/2117611502249312379\",\"verifiedAt\":\"2026-11-12T03:31:30.983Z\",\"scope\":\"FIRST_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "registered:CHZZK:bce5bac086baed274db13a2c9aacd41b",
+        "channel_key": "CHZZK:bce5bac086baed274db13a2c9aacd41b",
+        "seed": "{\"id\":\"registered:CHZZK:bce5bac086baed274db13a2c9aacd41b\",\"channelKey\":\"CHZZK:bce5bac086baed274db13a2c9aacd41b\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/bce5bac086baed274db13a2c9aacd41b\",\"name\":\"코바야시 후토\",\"date\":\"2026-11-14\",\"time\":\"21:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"FIRST_DEBUT\",\"source\":\"REGISTERED\",\"sourceUrl\":\"https://x.com/huto00q/status/2118989751785226662\",\"primaryUrl\":\"https://x.com/huto00q/status/2118989751785226662\",\"xUrl\":\"https://x.com/huto00q\",\"scopeConfirmed\":false}",
+        "first_seen_at": "2026-11-12T03:24:31.023Z",
+        "status": "FAILED",
+        "reason": "SOURCE_TOO_LARGE",
+        "profile_slug": "",
+        "managed_json": "",
+        "evidence": "{}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "sheet:CHZZK:e4ae5646d01063022591e26bb81106cf:2026-12-01",
+        "channel_key": "CHZZK:e4ae5646d01063022591e26bb81106cf",
+        "seed": "{\"id\":\"sheet:CHZZK:e4ae5646d01063022591e26bb81106cf:2026-12-01\",\"channelKey\":\"CHZZK:e4ae5646d01063022591e26bb81106cf\",\"platform\":\"CHZZK\",\"channelUrl\":\"https://chzzk.naver.com/e4ae5646d01063022591e26bb81106cf\",\"name\":\"말리부\",\"date\":\"2026-12-01\",\"time\":\"17:30\",\"timezone\":\"\",\"kind\":\"UNKNOWN\",\"source\":\"COMMUNITY_SHEET\",\"sourceUrl\":\"https://docs.google.com/spreadsheets/d/1SEcOZAhMqFLUW7bxSsBkWK0UriMD3fD82xXX2HrUf38/export?format=csv&gid=1884409648\",\"primaryUrl\":\"\",\"xUrl\":\"https://x.com/malliboochzz\",\"scopeConfirmed\":false}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "HOLD",
+        "reason": "PRIMARY_NOTICE_REQUIRED",
+        "profile_slug": "",
+        "managed_json": "",
+        "evidence": "{}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:659",
+        "channel_key": "SOOP:chouzaigal",
+        "seed": "{\"id\":\"soop:659\",\"channelKey\":\"SOOP:chouzaigal\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/chouzaigal\",\"name\":\"시니땅\",\"date\":\"2026-11-07\",\"time\":\"11:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "shinittan-soop",
+        "managed_json": "{\"slug\":\"shinittan-soop\",\"displayName\":\"시니땅\",\"description\":\"오로지 일방적이고 편향적인 칭찬과 관심, 사랑만 부탁드립니다앗~~~(^///^)7♡♡ 시니땅의 SOOP 웰컴 버추얼 데뷔 방송🖤\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ch/chouzaigal/chouzaigal.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/chouzaigal\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-07\",\"debutTime\":\"11:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-07T02:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"종족\":\"인간\",\"생일\":\"5월 16일\",\"별자리\":\"황소자리\",\"신장\":\"156cm\",\"팬덤명\":\"오니땅\",\"오시마크\":\"🍙💊\",\"mbti\":\"INFP\",\"species\":\"인간\",\"birthday\":\"5월 16일\",\"zodiac\":\"황소자리\",\"height\":\"156cm\",\"fandomName\":\"오니땅\",\"oshiMark\":\"🍙💊\",\"MBTI\":\"INFP\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ch/chouzaigal/chouzaigal.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/chouzaigal\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-07\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"11:00\\\",\\\"description\\\":\\\"오로지 일방적이고 편향적인 칭찬과 관심, 사랑만 부탁드립니다앗~~~(^///^)7♡♡ 시니땅의 SOOP 웰컴 버추얼 데뷔 방송🖤\\\",\\\"details\\\":{\\\"종족\\\":\\\"인간\\\",\\\"생일\\\":\\\"5월 16일\\\",\\\"별자리\\\":\\\"황소자리\\\",\\\"신장\\\":\\\"156cm\\\",\\\"팬덤명\\\":\\\"오니땅\\\",\\\"오시마크\\\":\\\"🍙💊\\\",\\\"mbti\\\":\\\"INFP\\\",\\\"species\\\":\\\"인간\\\",\\\"birthday\\\":\\\"5월 16일\\\",\\\"zodiac\\\":\\\"황소자리\\\",\\\"height\\\":\\\"156cm\\\",\\\"fandomName\\\":\\\"오니땅\\\",\\\"oshiMark\\\":\\\"🍙💊\\\",\\\"MBTI\\\":\\\"INFP\\\"},\\\"displayName\\\":\\\"시니땅\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"shinittan-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-07T02:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/chouzaigal/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:683",
+        "channel_key": "SOOP:hasooo",
+        "seed": "{\"id\":\"soop:683\",\"channelKey\":\"SOOP:hasooo\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/hasooo\",\"name\":\"하소o\",\"date\":\"2026-11-08\",\"time\":\"15:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"TRANSFER\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":false}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "HOLD",
+        "reason": "EVENT_SCOPE_HOLD",
+        "profile_slug": "",
+        "managed_json": "",
+        "evidence": "{}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:685",
+        "channel_key": "SOOP:hyesung0410",
+        "seed": "{\"id\":\"soop:685\",\"channelKey\":\"SOOP:hyesung0410\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/hyesung0410\",\"name\":\"여농이오른팔\",\"date\":\"2026-11-08\",\"time\":\"22:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "HOLD",
+        "reason": "EXISTING_INFORMATION_CONFLICT_HOLD",
+        "profile_slug": "",
+        "managed_json": "",
+        "evidence": "{}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:687",
+        "channel_key": "SOOP:kovexo0209",
+        "seed": "{\"id\":\"soop:687\",\"channelKey\":\"SOOP:kovexo0209\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/kovexo0209\",\"name\":\"이월이\",\"date\":\"2026-11-09\",\"time\":\"14:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "iwol-soop",
+        "managed_json": "{\"slug\":\"iwol-soop\",\"displayName\":\"이월이\",\"description\":\"여우 같은 강아지 컨셉의 종합게임·소통 신입 버튜버 이월이의 SOOP 웰컴 버추얼 데뷔 방송입니다୨୧\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ko/kovexo0209/kovexo0209.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/kovexo0209\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-09\",\"debutTime\":\"14:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-09T05:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"종족\":\"강아지\",\"생일\":\"2월 9일\",\"별자리\":\"물병자리\",\"팬덤명\":\"간택식\",\"오시마크\":\"୨୧\",\"species\":\"강아지\",\"birthday\":\"2월 9일\",\"zodiac\":\"물병자리\",\"fandomName\":\"간택식\",\"oshiMark\":\"୨୧\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ko/kovexo0209/kovexo0209.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/kovexo0209\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-09\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"14:00\\\",\\\"description\\\":\\\"여우 같은 강아지 컨셉의 종합게임·소통 신입 버튜버 이월이의 SOOP 웰컴 버추얼 데뷔 방송입니다୨୧\\\",\\\"details\\\":{\\\"종족\\\":\\\"강아지\\\",\\\"생일\\\":\\\"2월 9일\\\",\\\"별자리\\\":\\\"물병자리\\\",\\\"팬덤명\\\":\\\"간택식\\\",\\\"오시마크\\\":\\\"୨୧\\\",\\\"species\\\":\\\"강아지\\\",\\\"birthday\\\":\\\"2월 9일\\\",\\\"zodiac\\\":\\\"물병자리\\\",\\\"fandomName\\\":\\\"간택식\\\",\\\"oshiMark\\\":\\\"୨୧\\\"},\\\"displayName\\\":\\\"이월이\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"iwol-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-09T05:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/kovexo0209/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:689",
+        "channel_key": "SOOP:hamoye0",
+        "seed": "{\"id\":\"soop:689\",\"channelKey\":\"SOOP:hamoye0\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/hamoye0\",\"name\":\"하모예0\",\"date\":\"2026-11-09\",\"time\":\"19:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "hamoye-soop",
+        "managed_json": "{\"slug\":\"hamoye-soop\",\"displayName\":\"하모예0\",\"description\":\"[웰컴버추얼] 11월 9일 저녁 7시 SOOP에서 첫 방송으로 인사드리는 하모예0입니다 ૮₍ ៸៸•⩊•៸៸ ₎ა🩵🫧\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ha/hamoye0/hamoye0.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/hamoye0\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-09\",\"debutTime\":\"19:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-09T10:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"오시마크\":\"🩵🫧\",\"oshiMark\":\"🩵🫧\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ha/hamoye0/hamoye0.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/hamoye0\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-09\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"19:00\\\",\\\"description\\\":\\\"[웰컴버추얼] 11월 9일 저녁 7시 SOOP에서 첫 방송으로 인사드리는 하모예0입니다 ૮₍ ៸៸•⩊•៸៸ ₎ა🩵🫧\\\",\\\"details\\\":{\\\"오시마크\\\":\\\"🩵🫧\\\",\\\"oshiMark\\\":\\\"🩵🫧\\\"},\\\"displayName\\\":\\\"하모예0\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"hamoye-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-09T10:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/hamoye0/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:695",
+        "channel_key": "SOOP:xooooooo",
+        "seed": "{\"id\":\"soop:695\",\"channelKey\":\"SOOP:xooooooo\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/xooooooo\",\"name\":\"소다*\",\"date\":\"2026-11-07\",\"time\":\"14:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "soda-soop",
+        "managed_json": "{\"slug\":\"soda-soop\",\"displayName\":\"소다*\",\"description\":\"🫧11월 7일 오후 2시🫧 SOOP 웰컴 버추얼로 데뷔하는 소다*입니다🩵\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/xo/xooooooo/xooooooo.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/xooooooo\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-07\",\"debutTime\":\"14:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-07T05:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"오시마크\":\"🫧🩵\",\"oshiMark\":\"🫧🩵\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/xo/xooooooo/xooooooo.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/xooooooo\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-07\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"14:00\\\",\\\"description\\\":\\\"🫧11월 7일 오후 2시🫧 SOOP 웰컴 버추얼로 데뷔하는 소다*입니다🩵\\\",\\\"details\\\":{\\\"오시마크\\\":\\\"🫧🩵\\\",\\\"oshiMark\\\":\\\"🫧🩵\\\"},\\\"displayName\\\":\\\"소다*\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"soda-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-07T05:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/xooooooo/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:697",
+        "channel_key": "SOOP:lanbee1224",
+        "seed": "{\"id\":\"soop:697\",\"channelKey\":\"SOOP:lanbee1224\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/lanbee1224\",\"name\":\"란비\",\"date\":\"2026-11-21\",\"time\":\"14:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "lanbee-soop",
+        "managed_json": "{\"slug\":\"lanbee-soop\",\"displayName\":\"란비\",\"description\":\"정령계에서 와버린 등나무꽃의 정령 란비입니다🫟💜 2026년 11월 21일 토요일 오후 2시 SOOP 웰컴 버추얼 데뷔!\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/la/lanbee1224/lanbee1224.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/lanbee1224\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-21\",\"debutTime\":\"14:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-21T05:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"종족\":\"등나무꽃의 정령\",\"생일\":\"12월 24일\",\"별자리\":\"염소자리\",\"신장\":\"156cm\",\"팬덤명\":\"쿠리\",\"오시마크\":\"🫟💜\",\"mbti\":\"INTJ\",\"species\":\"등나무꽃의 정령\",\"birthday\":\"12월 24일\",\"zodiac\":\"염소자리\",\"height\":\"156cm\",\"fandomName\":\"쿠리\",\"oshiMark\":\"🫟💜\",\"MBTI\":\"INTJ\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/la/lanbee1224/lanbee1224.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/lanbee1224\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-21\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"14:00\\\",\\\"description\\\":\\\"정령계에서 와버린 등나무꽃의 정령 란비입니다🫟💜 2026년 11월 21일 토요일 오후 2시 SOOP 웰컴 버추얼 데뷔!\\\",\\\"details\\\":{\\\"종족\\\":\\\"등나무꽃의 정령\\\",\\\"생일\\\":\\\"12월 24일\\\",\\\"별자리\\\":\\\"염소자리\\\",\\\"신장\\\":\\\"156cm\\\",\\\"팬덤명\\\":\\\"쿠리\\\",\\\"오시마크\\\":\\\"🫟💜\\\",\\\"mbti\\\":\\\"INTJ\\\",\\\"species\\\":\\\"등나무꽃의 정령\\\",\\\"birthday\\\":\\\"12월 24일\\\",\\\"zodiac\\\":\\\"염소자리\\\",\\\"height\\\":\\\"156cm\\\",\\\"fandomName\\\":\\\"쿠리\\\",\\\"oshiMark\\\":\\\"🫟💜\\\",\\\"MBTI\\\":\\\"INTJ\\\"},\\\"displayName\\\":\\\"란비\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"lanbee-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-21T05:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:38:31.159Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/lanbee1224/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:38:31.159Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:699",
+        "channel_key": "SOOP:twpriy",
+        "seed": "{\"id\":\"soop:699\",\"channelKey\":\"SOOP:twpriy\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/twpriy\",\"name\":\"한이음\",\"date\":\"2026-11-25\",\"time\":\"12:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "hanieum-soop",
+        "managed_json": "{\"slug\":\"hanieum-soop\",\"displayName\":\"한이음\",\"description\":\"[웰컴버추얼] 11월 25일(수) 낮 12시 SOOP에서 첫 방송으로 데뷔하는 한이음입니다! 🤍\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/tw/twpriy/twpriy.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/twpriy\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-25\",\"debutTime\":\"12:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-25T03:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"오시마크\":\"🤍\",\"oshiMark\":\"🤍\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/tw/twpriy/twpriy.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/twpriy\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-25\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"12:00\\\",\\\"description\\\":\\\"[웰컴버추얼] 11월 25일(수) 낮 12시 SOOP에서 첫 방송으로 데뷔하는 한이음입니다! 🤍\\\",\\\"details\\\":{\\\"오시마크\\\":\\\"🤍\\\",\\\"oshiMark\\\":\\\"🤍\\\"},\\\"displayName\\\":\\\"한이음\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"hanieum-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-25T03:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:43:30.866Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/twpriy/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:43:30.866Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:705",
+        "channel_key": "SOOP:ghdlcom753",
+        "seed": "{\"id\":\"soop:705\",\"channelKey\":\"SOOP:ghdlcom753\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/ghdlcom753\",\"name\":\"코밍˚\",\"date\":\"2026-11-06\",\"time\":\"15:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "koming-soop",
+        "managed_json": "{\"slug\":\"koming-soop\",\"displayName\":\"코밍˚\",\"description\":\"노래와 게임을 좋아하는 SOOP 웰컴 버추얼 신입 버튜버 코밍˚입니다🩷\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/gh/ghdlcom753/ghdlcom753.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/ghdlcom753\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-06\",\"debutTime\":\"15:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-06T06:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"생일\":\"5월 19일\",\"별자리\":\"황소자리\",\"팬덤명\":\"코뭉이\",\"오시마크\":\"🩷\",\"mbti\":\"INFP\",\"birthday\":\"5월 19일\",\"zodiac\":\"황소자리\",\"fandomName\":\"코뭉이\",\"oshiMark\":\"🩷\",\"MBTI\":\"INFP\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/gh/ghdlcom753/ghdlcom753.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/ghdlcom753\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-06\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"15:00\\\",\\\"description\\\":\\\"노래와 게임을 좋아하는 SOOP 웰컴 버추얼 신입 버튜버 코밍˚입니다🩷\\\",\\\"details\\\":{\\\"생일\\\":\\\"5월 19일\\\",\\\"별자리\\\":\\\"황소자리\\\",\\\"팬덤명\\\":\\\"코뭉이\\\",\\\"오시마크\\\":\\\"🩷\\\",\\\"mbti\\\":\\\"INFP\\\",\\\"birthday\\\":\\\"5월 19일\\\",\\\"zodiac\\\":\\\"황소자리\\\",\\\"fandomName\\\":\\\"코뭉이\\\",\\\"oshiMark\\\":\\\"🩷\\\",\\\"MBTI\\\":\\\"INFP\\\"},\\\"displayName\\\":\\\"코밍˚\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"koming-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-06T06:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/ghdlcom753/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:707",
+        "channel_key": "SOOP:ire1113",
+        "seed": "{\"id\":\"soop:707\",\"channelKey\":\"SOOP:ire1113\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/ire1113\",\"name\":\"#샤루루\",\"date\":\"2026-11-07\",\"time\":\"12:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "HOLD",
+        "reason": "EXISTING_INFORMATION_CONFLICT_HOLD",
+        "profile_slug": "",
+        "managed_json": "",
+        "evidence": "{}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:709",
+        "channel_key": "SOOP:urmuse512",
+        "seed": "{\"id\":\"soop:709\",\"channelKey\":\"SOOP:urmuse512\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/urmuse512\",\"name\":\"해나롱\",\"date\":\"2026-11-09\",\"time\":\"17:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "haenarong-soop",
+        "managed_json": "{\"slug\":\"haenarong-soop\",\"displayName\":\"해나롱\",\"description\":\"11월 9일 오후 5시 SOOP 웰컴 버추얼로 첫 방송을 시작하는 신입 버튜버 해나롱입니다!\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ur/urmuse512/urmuse512.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/urmuse512\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-09\",\"debutTime\":\"17:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-09T08:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ur/urmuse512/urmuse512.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/urmuse512\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-09\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"17:00\\\",\\\"description\\\":\\\"11월 9일 오후 5시 SOOP 웰컴 버추얼로 첫 방송을 시작하는 신입 버튜버 해나롱입니다!\\\",\\\"displayName\\\":\\\"해나롱\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"haenarong-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-09T08:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:38:31.159Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/urmuse512/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:38:31.159Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:711",
+        "channel_key": "SOOP:candle06",
+        "seed": "{\"id\":\"soop:711\",\"channelKey\":\"SOOP:candle06\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/candle06\",\"name\":\"유령마녀\",\"date\":\"2026-11-14\",\"time\":\"17:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "ghostwitch-soop",
+        "managed_json": "{\"slug\":\"ghostwitch-soop\",\"displayName\":\"유령마녀\",\"description\":\"타로보는 유령 어떤데!! 11월 14일 오후 5시 출몰 예정인 SOOP 웰컴 버추얼 신입 유령마녀입니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ca/candle06/candle06.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/candle06\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-14\",\"debutTime\":\"17:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-14T08:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"종족\":\"유령 마녀\",\"species\":\"유령 마녀\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ca/candle06/candle06.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/candle06\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-14\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"17:00\\\",\\\"description\\\":\\\"타로보는 유령 어떤데!! 11월 14일 오후 5시 출몰 예정인 SOOP 웰컴 버추얼 신입 유령마녀입니다.\\\",\\\"details\\\":{\\\"종족\\\":\\\"유령 마녀\\\",\\\"species\\\":\\\"유령 마녀\\\"},\\\"displayName\\\":\\\"유령마녀\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"ghostwitch-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-14T08:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/candle06/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:713",
+        "channel_key": "SOOP:bbosori",
+        "seed": "{\"id\":\"soop:713\",\"channelKey\":\"SOOP:bbosori\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/bbosori\",\"name\":\"뽀소리_\",\"date\":\"2026-11-05\",\"time\":\"15:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"TRANSFER\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":false}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "HOLD",
+        "reason": "EVENT_SCOPE_HOLD",
+        "profile_slug": "",
+        "managed_json": "",
+        "evidence": "{}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:715",
+        "channel_key": "SOOP:retrona",
+        "seed": "{\"id\":\"soop:715\",\"channelKey\":\"SOOP:retrona\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/retrona\",\"name\":\"에스냐~\",\"date\":\"2026-11-10\",\"time\":\"13:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "HOLD",
+        "reason": "EXISTING_INFORMATION_CONFLICT_HOLD",
+        "profile_slug": "",
+        "managed_json": "",
+        "evidence": "{}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:717",
+        "channel_key": "SOOP:gingmallang",
+        "seed": "{\"id\":\"soop:717\",\"channelKey\":\"SOOP:gingmallang\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/gingmallang\",\"name\":\"깅말랑\",\"date\":\"2026-11-13\",\"time\":\"20:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "gingmallang-soop",
+        "managed_json": "{\"slug\":\"gingmallang-soop\",\"displayName\":\"깅말랑\",\"description\":\"11월 13일 오후 8시 SOOP 웰컴 버추얼로 첫 방송을 시작하는 버튜버 깅말랑입니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/gi/gingmallang/gingmallang.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/gingmallang\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-13\",\"debutTime\":\"20:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-13T11:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/gi/gingmallang/gingmallang.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/gingmallang\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-13\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"20:00\\\",\\\"description\\\":\\\"11월 13일 오후 8시 SOOP 웰컴 버추얼로 첫 방송을 시작하는 버튜버 깅말랑입니다.\\\",\\\"details\\\":{\\\"birthday\\\":\\\"2월 1일\\\",\\\"생일\\\":\\\"2월 1일\\\",\\\"zodiac\\\":\\\"물병자리\\\",\\\"별자리\\\":\\\"물병자리\\\",\\\"mbti\\\":\\\"ISTP\\\",\\\"MBTI\\\":\\\"ISTP\\\"},\\\"displayName\\\":\\\"깅말랑\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"gingmallang-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-13T11:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"details\":{\"birthday\":\"2월 1일\",\"생일\":\"2월 1일\",\"zodiac\":\"물병자리\",\"별자리\":\"물병자리\",\"mbti\":\"ISTP\",\"MBTI\":\"ISTP\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/gingmallang/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:719",
+        "channel_key": "SOOP:kwonyoa",
+        "seed": "{\"id\":\"soop:719\",\"channelKey\":\"SOOP:kwonyoa\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/kwonyoa\",\"name\":\"키싱유*\",\"date\":\"2026-11-06\",\"time\":\"22:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "kissingyou-soop",
+        "managed_json": "{\"slug\":\"kissingyou-soop\",\"displayName\":\"키싱유*\",\"description\":\"11월 6일 밤 10시 SOOP 웰컴 버추얼로 첫 인사를 드리는 신입 버튜버 키싱유*입니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/kw/kwonyoa/kwonyoa.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/kwonyoa\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-06\",\"debutTime\":\"22:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-06T13:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/kw/kwonyoa/kwonyoa.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/kwonyoa\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-06\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"22:00\\\",\\\"description\\\":\\\"11월 6일 밤 10시 SOOP 웰컴 버추얼로 첫 인사를 드리는 신입 버튜버 키싱유*입니다.\\\",\\\"displayName\\\":\\\"키싱유*\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"kissingyou-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-06T13:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/kwonyoa/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:721",
+        "channel_key": "SOOP:dbsthduda",
+        "seed": "{\"id\":\"soop:721\",\"channelKey\":\"SOOP:dbsthduda\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/dbsthduda\",\"name\":\"요루네\",\"date\":\"2026-11-07\",\"time\":\"15:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "yorune-soop",
+        "managed_json": "{\"slug\":\"yorune-soop\",\"displayName\":\"요루네\",\"description\":\"소통하고 노래 좋아하는 요루네 입니다(* ´ ▽ ` *)💙 (웰컴버추얼 11.7(토) 데뷔방송!)\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/db/dbsthduda/dbsthduda.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/dbsthduda\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-07\",\"debutTime\":\"15:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-07T06:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"오시마크\":\"💙\",\"oshiMark\":\"💙\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/db/dbsthduda/dbsthduda.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/dbsthduda\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-07\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"15:00\\\",\\\"description\\\":\\\"소통하고 노래 좋아하는 요루네 입니다(* ´ ▽ ` *)💙 (웰컴버추얼 11.7(토) 데뷔방송!)\\\",\\\"details\\\":{\\\"오시마크\\\":\\\"💙\\\",\\\"oshiMark\\\":\\\"💙\\\"},\\\"displayName\\\":\\\"요루네\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"yorune-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-07T06:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/dbsthduda/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:725",
+        "channel_key": "SOOP:mentos1",
+        "seed": "{\"id\":\"soop:725\",\"channelKey\":\"SOOP:mentos1\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/mentos1\",\"name\":\"수지AI\",\"date\":\"2026-11-11\",\"time\":\"13:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "sujiai-soop",
+        "managed_json": "{\"slug\":\"sujiai-soop\",\"displayName\":\"수지AI\",\"description\":\"AI 버튜버! 편의점에서 알바하는 아이돌 연습생 수지의 SOOP 웰컴 버추얼 첫 방송입니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/me/mentos1/mentos1.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/mentos1\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-11\",\"debutTime\":\"13:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-11T04:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"종족\":\"AI\",\"species\":\"AI\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/me/mentos1/mentos1.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/mentos1\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-11\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"13:00\\\",\\\"description\\\":\\\"AI 버튜버! 편의점에서 알바하는 아이돌 연습생 수지의 SOOP 웰컴 버추얼 첫 방송입니다.\\\",\\\"details\\\":{\\\"종족\\\":\\\"AI\\\",\\\"species\\\":\\\"AI\\\"},\\\"displayName\\\":\\\"수지AI\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"sujiai-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-11T04:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:38:31.159Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/mentos1/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:38:31.159Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:727",
+        "channel_key": "SOOP:hanui2o",
+        "seed": "{\"id\":\"soop:727\",\"channelKey\":\"SOOP:hanui2o\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/hanui2o\",\"name\":\"하늬_\",\"date\":\"2026-11-07\",\"time\":\"16:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "hanui-soop",
+        "managed_json": "{\"slug\":\"hanui-soop\",\"displayName\":\"하늬_\",\"description\":\"AkaiV Studio 산하 버추얼 아이돌 그룹 idyll(아이딜) 소속 하늬_의 SOOP 웰컴 버추얼 데뷔 방송입니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ha/hanui2o/hanui2o.jpg\",\"agency\":\"AkaiV Studio (idyll)\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/hanui2o\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-07\",\"debutTime\":\"16:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-07T07:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"AkaiV Studio (idyll)\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ha/hanui2o/hanui2o.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/hanui2o\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-07\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"16:00\\\",\\\"description\\\":\\\"AkaiV Studio 산하 버추얼 아이돌 그룹 idyll(아이딜) 소속 하늬_의 SOOP 웰컴 버추얼 데뷔 방송입니다.\\\",\\\"displayName\\\":\\\"하늬_\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"hanui-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-07T07:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/hanui2o/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:729",
+        "channel_key": "SOOP:haihito",
+        "seed": "{\"id\":\"soop:729\",\"channelKey\":\"SOOP:haihito\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/haihito\",\"name\":\"하이타\",\"date\":\"2026-11-08\",\"time\":\"16:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "haita-soop",
+        "managed_json": "{\"slug\":\"haita-soop\",\"displayName\":\"하이타\",\"description\":\"AkaiV Studio 산하 버추얼 아이돌 그룹 idyll(아이딜) 소속 하이타의 SOOP 웰컴 버추얼 데뷔 방송입니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ha/haihito/haihito.jpg\",\"agency\":\"AkaiV Studio (idyll)\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/haihito\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-08\",\"debutTime\":\"16:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-08T07:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"AkaiV Studio (idyll)\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ha/haihito/haihito.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/haihito\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-08\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"16:00\\\",\\\"description\\\":\\\"AkaiV Studio 산하 버추얼 아이돌 그룹 idyll(아이딜) 소속 하이타의 SOOP 웰컴 버추얼 데뷔 방송입니다.\\\",\\\"displayName\\\":\\\"하이타\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"haita-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-08T07:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/haihito/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:733",
+        "channel_key": "SOOP:hasinyang",
+        "seed": "{\"id\":\"soop:733\",\"channelKey\":\"SOOP:hasinyang\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/hasinyang\",\"name\":\"꾼구마\",\"date\":\"2026-11-11\",\"time\":\"13:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "hasinyang-soop",
+        "managed_json": "{\"slug\":\"hasinyang-soop\",\"displayName\":\"꾼구마\",\"description\":\"반인반냥 천재 고양이 꾼구마의 11월 11일 오후 1시 SOOP 웰컴 버추얼 데뷔 방송입니다🐈\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ha/hasinyang/hasinyang.jpg\",\"agency\":\"개인세\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/hasinyang\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\"],\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-11\",\"debutTime\":\"13:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-11T04:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"EXISTING\",\"details\":{\"종족\":\"반인반냥 고양이\",\"생일\":\"3월 8일\",\"별자리\":\"물고기자리\",\"팬덤명\":\"츄르단\",\"오시마크\":\"🐈\",\"species\":\"반인반냥 고양이\",\"birthday\":\"3월 8일\",\"zodiac\":\"물고기자리\",\"fandomName\":\"츄르단\",\"oshiMark\":\"🐈\"},\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"개인세\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ha/hasinyang/hasinyang.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/hasinyang\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-11\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"13:00\\\",\\\"description\\\":\\\"반인반냥 천재 고양이 꾼구마의 11월 11일 오후 1시 SOOP 웰컴 버추얼 데뷔 방송입니다🐈\\\",\\\"details\\\":{\\\"종족\\\":\\\"반인반냥 고양이\\\",\\\"생일\\\":\\\"3월 8일\\\",\\\"별자리\\\":\\\"물고기자리\\\",\\\"팬덤명\\\":\\\"츄르단\\\",\\\"오시마크\\\":\\\"🐈\\\",\\\"species\\\":\\\"반인반냥 고양이\\\",\\\"birthday\\\":\\\"3월 8일\\\",\\\"zodiac\\\":\\\"물고기자리\\\",\\\"fandomName\\\":\\\"츄르단\\\",\\\"oshiMark\\\":\\\"🐈\\\"},\\\"displayName\\\":\\\"꾼구마\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"hasinyang-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-11T04:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:38:31.159Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/hasinyang/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:38:31.159Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:735",
+        "channel_key": "SOOP:dbrlshd123",
+        "seed": "{\"id\":\"soop:735\",\"channelKey\":\"SOOP:dbrlshd123\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/dbrlshd123\",\"name\":\"까망까맹\",\"date\":\"2026-11-06\",\"time\":\"13:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "dbrlshd123-soop",
+        "managed_json": "{\"slug\":\"dbrlshd123-soop\",\"displayName\":\"까망까맹\",\"description\":\"까망까맹의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/db/dbrlshd123/dbrlshd123.jpg\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/dbrlshd123\",\"countryCode\":\"KR\",\"languages\":[],\"tags\":[],\"agency\":\"\",\"xUrl\":\"\",\"debutKind\":\"PLATFORM_DEBUT\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-06\",\"debutTime\":\"13:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-06T04:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"noticeUrl\":\"https://welcomevirtual.sooplive.com/\",\"headline\":\"SOOP 플랫폼 데뷔\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/db/dbrlshd123/dbrlshd123.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/dbrlshd123\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-06\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"13:00\\\",\\\"description\\\":\\\"까망까맹의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\\\",\\\"displayName\\\":\\\"까망까맹\\\",\\\"headline\\\":\\\"SOOP 플랫폼 데뷔\\\",\\\"languages\\\":[],\\\"noticeUrl\\\":\\\"https://welcomevirtual.sooplive.com/\\\",\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"dbrlshd123-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-06T04:00:00.000Z\\\",\\\"tags\\\":[],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"}}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/dbrlshd123/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:737",
+        "channel_key": "SOOP:chikichan",
+        "seed": "{\"id\":\"soop:737\",\"channelKey\":\"SOOP:chikichan\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/chikichan\",\"name\":\"치키쨩\",\"date\":\"2026-11-11\",\"time\":\"12:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"TRANSFER\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":false}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "HOLD",
+        "reason": "EVENT_SCOPE_HOLD",
+        "profile_slug": "",
+        "managed_json": "",
+        "evidence": "{}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:739",
+        "channel_key": "SOOP:shushu0122",
+        "seed": "{\"id\":\"soop:739\",\"channelKey\":\"SOOP:shushu0122\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/shushu0122\",\"name\":\"슈야SHUYA\",\"date\":\"2026-11-14\",\"time\":\"14:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"TRANSFER\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":false}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "HOLD",
+        "reason": "EVENT_SCOPE_HOLD",
+        "profile_slug": "",
+        "managed_json": "",
+        "evidence": "{}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:741",
+        "channel_key": "SOOP:d00328",
+        "seed": "{\"id\":\"soop:741\",\"channelKey\":\"SOOP:d00328\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/d00328\",\"name\":\"단온\",\"date\":\"2026-11-11\",\"time\":\"17:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "d00328-soop",
+        "managed_json": "{\"slug\":\"d00328-soop\",\"displayName\":\"단온\",\"description\":\"단온의 SOOP 데뷔 일정은 2026-11-11 17:00 (한국시간)입니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/d0/d00328/d00328.jpg\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/d00328\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\",\"SOOP 데뷔\"],\"agency\":\"\",\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-11\",\"debutTime\":\"17:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-11T08:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"noticeUrl\":\"https://welcomevirtual.sooplive.com/\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/d0/d00328/d00328.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/d00328\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-11\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"17:00\\\",\\\"description\\\":\\\"단온의 SOOP 데뷔 일정은 2026-11-11 17:00 (한국시간)입니다.\\\",\\\"displayName\\\":\\\"단온\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"noticeUrl\\\":\\\"https://welcomevirtual.sooplive.com/\\\",\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"d00328-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-11T08:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\",\\\"SOOP 데뷔\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:38:31.159Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/d00328/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:38:31.159Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:743",
+        "channel_key": "SOOP:di6ixx",
+        "seed": "{\"id\":\"soop:743\",\"channelKey\":\"SOOP:di6ixx\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/di6ixx\",\"name\":\"우디디디\",\"date\":\"2026-11-11\",\"time\":\"11:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "di6ixx-soop",
+        "managed_json": "{\"slug\":\"di6ixx-soop\",\"displayName\":\"우디디디\",\"description\":\"우디디디의 SOOP 데뷔 일정은 2026-11-11 11:00 (한국시간)입니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/di/di6ixx/di6ixx.jpg\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/di6ixx\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\",\"SOOP 데뷔\"],\"agency\":\"\",\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-11\",\"debutTime\":\"11:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-11T02:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"noticeUrl\":\"https://www.sooplive.com/station/di6ixx/post/211698419\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/di/di6ixx/di6ixx.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/di6ixx\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-11\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"11:00\\\",\\\"description\\\":\\\"우디디디의 SOOP 데뷔 일정은 2026-11-11 11:00 (한국시간)입니다.\\\",\\\"displayName\\\":\\\"우디디디\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"noticeUrl\\\":\\\"https://www.sooplive.com/station/di6ixx/post/211698419\\\",\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"di6ixx-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-11T02:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\",\\\"SOOP 데뷔\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:38:31.159Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/di6ixx/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:38:31.159Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:745",
+        "channel_key": "SOOP:nju123",
+        "seed": "{\"id\":\"soop:745\",\"channelKey\":\"SOOP:nju123\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/nju123\",\"name\":\"아오이로하쿠\",\"date\":\"2026-11-12\",\"time\":\"20:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "nju123-soop",
+        "managed_json": "{\"slug\":\"nju123-soop\",\"displayName\":\"아오이로하쿠\",\"description\":\"아오이로하쿠의 SOOP 데뷔 일정은 2026-11-12 20:00 (한국시간)입니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/nj/nju123/nju123.jpg\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/nju123\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\",\"SOOP 데뷔\"],\"agency\":\"\",\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-12\",\"debutTime\":\"20:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-12T11:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"noticeUrl\":\"https://www.sooplive.com/station/nju123/post/211739633\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/nj/nju123/nju123.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/nju123\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-12\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"20:00\\\",\\\"description\\\":\\\"아오이로하쿠의 SOOP 데뷔 일정은 2026-11-12 20:00 (한국시간)입니다.\\\",\\\"displayName\\\":\\\"아오이로하쿠\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"noticeUrl\\\":\\\"https://www.sooplive.com/station/nju123/post/211739633\\\",\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"nju123-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-12T11:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\",\\\"SOOP 데뷔\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/nju123/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:747",
+        "channel_key": "SOOP:kyykys12",
+        "seed": "{\"id\":\"soop:747\",\"channelKey\":\"SOOP:kyykys12\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/kyykys12\",\"name\":\"에이루나\",\"date\":\"2026-11-12\",\"time\":\"21:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "kyykys12-soop",
+        "managed_json": "{\"slug\":\"kyykys12-soop\",\"displayName\":\"에이루나\",\"description\":\"에이루나의 SOOP 데뷔 일정은 2026-11-12 21:00 (한국시간)입니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ky/kyykys12/kyykys12.jpg\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/kyykys12\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\",\"SOOP 데뷔\"],\"agency\":\"\",\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-12\",\"debutTime\":\"21:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-12T12:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"noticeUrl\":\"https://www.sooplive.com/station/kyykys12/post/211695999\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ky/kyykys12/kyykys12.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/kyykys12\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-12\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"21:00\\\",\\\"description\\\":\\\"에이루나의 SOOP 데뷔 일정은 2026-11-12 21:00 (한국시간)입니다.\\\",\\\"displayName\\\":\\\"에이루나\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"noticeUrl\\\":\\\"https://www.sooplive.com/station/kyykys12/post/211695999\\\",\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"kyykys12-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-12T12:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\",\\\"SOOP 데뷔\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/kyykys12/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:749",
+        "channel_key": "SOOP:hue1115",
+        "seed": "{\"id\":\"soop:749\",\"channelKey\":\"SOOP:hue1115\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/hue1115\",\"name\":\"휴이~\",\"date\":\"2026-11-14\",\"time\":\"11:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "hue1115-soop",
+        "managed_json": "{\"slug\":\"hue1115-soop\",\"displayName\":\"휴이~\",\"description\":\"휴이~의 SOOP 데뷔 일정은 2026-11-14 11:00 (한국시간)입니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/hu/hue1115/hue1115.jpg\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/hue1115\",\"countryCode\":\"KR\",\"languages\":[\"한국어\"],\"tags\":[\"버튜버\",\"SOOP 데뷔\"],\"agency\":\"\",\"xUrl\":\"\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-14\",\"debutTime\":\"11:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-14T02:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"noticeUrl\":\"https://www.sooplive.com/station/hue1115/post/211357779\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/hu/hue1115/hue1115.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/hue1115\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-14\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"11:00\\\",\\\"description\\\":\\\"휴이~의 SOOP 데뷔 일정은 2026-11-14 11:00 (한국시간)입니다.\\\",\\\"displayName\\\":\\\"휴이~\\\",\\\"languages\\\":[\\\"한국어\\\"],\\\"noticeUrl\\\":\\\"https://www.sooplive.com/station/hue1115/post/211357779\\\",\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"hue1115-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-14T02:00:00.000Z\\\",\\\"tags\\\":[\\\"버튜버\\\",\\\"SOOP 데뷔\\\"],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"},\"debutKind\":\"PLATFORM_DEBUT\"}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/hue1115/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:751",
+        "channel_key": "SOOP:02yeon",
+        "seed": "{\"id\":\"soop:751\",\"channelKey\":\"SOOP:02yeon\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/02yeon\",\"name\":\"공이연\",\"date\":\"2026-11-15\",\"time\":\"12:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "02yeon-soop",
+        "managed_json": "{\"slug\":\"02yeon-soop\",\"displayName\":\"공이연\",\"description\":\"공이연의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/02/02yeon/02yeon.jpg\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/02yeon\",\"countryCode\":\"KR\",\"languages\":[],\"tags\":[],\"agency\":\"\",\"xUrl\":\"\",\"debutKind\":\"PLATFORM_DEBUT\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-15\",\"debutTime\":\"12:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-15T03:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"noticeUrl\":\"https://welcomevirtual.sooplive.com/\",\"headline\":\"SOOP 플랫폼 데뷔\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/02/02yeon/02yeon.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/02yeon\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-15\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"12:00\\\",\\\"description\\\":\\\"공이연의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\\\",\\\"displayName\\\":\\\"공이연\\\",\\\"headline\\\":\\\"SOOP 플랫폼 데뷔\\\",\\\"languages\\\":[],\\\"noticeUrl\\\":\\\"https://welcomevirtual.sooplive.com/\\\",\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"02yeon-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-15T03:00:00.000Z\\\",\\\"tags\\\":[],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:37:31.372Z\"}}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/02yeon/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:37:31.372Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:753",
+        "channel_key": "SOOP:seizes",
+        "seed": "{\"id\":\"soop:753\",\"channelKey\":\"SOOP:seizes\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/seizes\",\"name\":\"시즈즈\",\"date\":\"2026-11-23\",\"time\":\"17:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "seizes-soop",
+        "managed_json": "{\"slug\":\"seizes-soop\",\"displayName\":\"시즈즈\",\"description\":\"시즈즈의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/se/seizes/seizes.jpg\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/seizes\",\"countryCode\":\"KR\",\"languages\":[],\"tags\":[],\"agency\":\"\",\"xUrl\":\"\",\"debutKind\":\"PLATFORM_DEBUT\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-23\",\"debutTime\":\"17:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-23T08:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"noticeUrl\":\"https://welcomevirtual.sooplive.com/\",\"headline\":\"SOOP 플랫폼 데뷔\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/se/seizes/seizes.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/seizes\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-23\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"17:00\\\",\\\"description\\\":\\\"시즈즈의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\\\",\\\"displayName\\\":\\\"시즈즈\\\",\\\"headline\\\":\\\"SOOP 플랫폼 데뷔\\\",\\\"languages\\\":[],\\\"noticeUrl\\\":\\\"https://welcomevirtual.sooplive.com/\\\",\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"seizes-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-23T08:00:00.000Z\\\",\\\"tags\\\":[],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:38:31.159Z\"}}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/seizes/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:38:31.159Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:755",
+        "channel_key": "SOOP:kyrie01234",
+        "seed": "{\"id\":\"soop:755\",\"channelKey\":\"SOOP:kyrie01234\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/kyrie01234\",\"name\":\"키리에♥\",\"date\":\"2026-11-29\",\"time\":\"17:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "kyrie01234-soop",
+        "managed_json": "{\"slug\":\"kyrie01234-soop\",\"displayName\":\"키리에♥\",\"description\":\"키리에♥의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ky/kyrie01234/kyrie01234.jpg\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/kyrie01234\",\"countryCode\":\"KR\",\"languages\":[],\"tags\":[],\"agency\":\"\",\"xUrl\":\"\",\"debutKind\":\"PLATFORM_DEBUT\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-29\",\"debutTime\":\"17:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-29T08:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"noticeUrl\":\"https://welcomevirtual.sooplive.com/\",\"headline\":\"SOOP 플랫폼 데뷔\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ky/kyrie01234/kyrie01234.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/kyrie01234\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-29\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"17:00\\\",\\\"description\\\":\\\"키리에♥의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\\\",\\\"displayName\\\":\\\"키리에♥\\\",\\\"headline\\\":\\\"SOOP 플랫폼 데뷔\\\",\\\"languages\\\":[],\\\"noticeUrl\\\":\\\"https://welcomevirtual.sooplive.com/\\\",\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"kyrie01234-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-29T08:00:00.000Z\\\",\\\"tags\\\":[],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:38:31.159Z\"}}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/kyrie01234/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:38:31.159Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:757",
+        "channel_key": "SOOP:onbi22",
+        "seed": "{\"id\":\"soop:757\",\"channelKey\":\"SOOP:onbi22\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/onbi22\",\"name\":\"온비\",\"date\":\"2026-11-25\",\"time\":\"15:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "onbi22-soop",
+        "managed_json": "{\"slug\":\"onbi22-soop\",\"displayName\":\"온비\",\"description\":\"온비의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/on/onbi22/onbi22.jpg\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/onbi22\",\"countryCode\":\"KR\",\"languages\":[],\"tags\":[],\"agency\":\"\",\"xUrl\":\"\",\"debutKind\":\"PLATFORM_DEBUT\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-25\",\"debutTime\":\"15:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-25T06:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"noticeUrl\":\"https://welcomevirtual.sooplive.com/\",\"headline\":\"SOOP 플랫폼 데뷔\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/on/onbi22/onbi22.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/onbi22\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-25\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"15:00\\\",\\\"description\\\":\\\"온비의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\\\",\\\"displayName\\\":\\\"온비\\\",\\\"headline\\\":\\\"SOOP 플랫폼 데뷔\\\",\\\"languages\\\":[],\\\"noticeUrl\\\":\\\"https://welcomevirtual.sooplive.com/\\\",\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"onbi22-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-25T06:00:00.000Z\\\",\\\"tags\\\":[],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:38:31.159Z\"}}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/onbi22/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:38:31.159Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:759",
+        "channel_key": "SOOP:ssohan",
+        "seed": "{\"id\":\"soop:759\",\"channelKey\":\"SOOP:ssohan\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/ssohan\",\"name\":\"묘해¸\",\"date\":\"2026-11-19\",\"time\":\"16:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "ssohan-soop",
+        "managed_json": "{\"slug\":\"ssohan-soop\",\"displayName\":\"묘해¸\",\"description\":\"묘해¸의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ss/ssohan/ssohan.jpg\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/ssohan\",\"countryCode\":\"KR\",\"languages\":[],\"tags\":[],\"agency\":\"\",\"xUrl\":\"\",\"debutKind\":\"PLATFORM_DEBUT\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-11-19\",\"debutTime\":\"16:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-11-19T07:00:00.000Z\",\"targetMonth\":\"2026-11\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"noticeUrl\":\"https://welcomevirtual.sooplive.com/\",\"headline\":\"SOOP 플랫폼 데뷔\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ss/ssohan/ssohan.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/ssohan\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-11-19\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"16:00\\\",\\\"description\\\":\\\"묘해¸의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\\\",\\\"displayName\\\":\\\"묘해¸\\\",\\\"headline\\\":\\\"SOOP 플랫폼 데뷔\\\",\\\"languages\\\":[],\\\"noticeUrl\\\":\\\"https://welcomevirtual.sooplive.com/\\\",\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"ssohan-soop\\\",\\\"startAtUtc\\\":\\\"2026-11-19T07:00:00.000Z\\\",\\\"tags\\\":[],\\\"targetMonth\\\":\\\"2026-11\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:38:31.159Z\"}}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/ssohan/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:38:31.159Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      },
+      {
+        "id": "soop:761",
+        "channel_key": "SOOP:ham2ko",
+        "seed": "{\"id\":\"soop:761\",\"channelKey\":\"SOOP:ham2ko\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/ham2ko\",\"name\":\"은재_\",\"date\":\"2026-12-06\",\"time\":\"18:00\",\"timezone\":\"Asia/Seoul\",\"kind\":\"PLATFORM_DEBUT\",\"source\":\"SOOP_CALENDAR\",\"sourceUrl\":\"https://welcomevirtual.sooplive.com/api/api.php?work=getScheduleList&startDate=2026-11-05&endDate=2026-12-12\",\"primaryUrl\":\"https://welcomevirtual.sooplive.com/\",\"scopeConfirmed\":true}",
+        "first_seen_at": "2026-11-12T03:31:30.983Z",
+        "status": "PUBLIC_VERIFIED",
+        "reason": "",
+        "profile_slug": "ham2ko-soop",
+        "managed_json": "{\"slug\":\"ham2ko-soop\",\"displayName\":\"은재_\",\"description\":\"은재_의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\",\"avatarUrl\":\"https://profile.img.sooplive.co.kr/LOGO/ha/ham2ko/ham2ko.jpg\",\"platform\":\"SOOP\",\"channelUrl\":\"https://www.sooplive.com/station/ham2ko\",\"countryCode\":\"KR\",\"languages\":[],\"tags\":[],\"agency\":\"\",\"xUrl\":\"\",\"debutKind\":\"PLATFORM_DEBUT\",\"dateState\":\"FIXED\",\"debutDate\":\"2026-12-06\",\"debutTime\":\"18:00\",\"timezone\":\"Asia/Seoul\",\"startAtUtc\":\"2026-12-06T09:00:00.000Z\",\"targetMonth\":\"2026-12\",\"ownerVerified\":false,\"source\":\"REGISTERED\",\"noticeUrl\":\"https://welcomevirtual.sooplive.com/\",\"headline\":\"SOOP 플랫폼 데뷔\",\"contentReview\":{\"state\":\"APPROVED\",\"snapshot\":\"{\\\"agency\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://profile.img.sooplive.co.kr/LOGO/ha/ham2ko/ham2ko.jpg\\\",\\\"channelUrl\\\":\\\"https://www.sooplive.com/station/ham2ko\\\",\\\"countryCode\\\":\\\"KR\\\",\\\"dateState\\\":\\\"FIXED\\\",\\\"debutDate\\\":\\\"2026-12-06\\\",\\\"debutKind\\\":\\\"PLATFORM_DEBUT\\\",\\\"debutTime\\\":\\\"18:00\\\",\\\"description\\\":\\\"은재_의 SOOP 플랫폼 데뷔 일정입니다. 공식 공지와 방송국에서 확인한 정보를 안내합니다.\\\",\\\"displayName\\\":\\\"은재_\\\",\\\"headline\\\":\\\"SOOP 플랫폼 데뷔\\\",\\\"languages\\\":[],\\\"noticeUrl\\\":\\\"https://welcomevirtual.sooplive.com/\\\",\\\"platform\\\":\\\"SOOP\\\",\\\"slug\\\":\\\"ham2ko-soop\\\",\\\"startAtUtc\\\":\\\"2026-12-06T09:00:00.000Z\\\",\\\"tags\\\":[],\\\"targetMonth\\\":\\\"2026-12\\\",\\\"timezone\\\":\\\"Asia/Seoul\\\",\\\"xUrl\\\":\\\"\\\"}\",\"reviewedAt\":\"2026-11-12T03:43:30.866Z\"}}",
+        "evidence": "{\"channel\":\"https://chapi.sooplive.co.kr/api/ham2ko/station\",\"notice\":\"https://welcomevirtual.sooplive.com/\",\"verifiedAt\":\"2026-11-12T03:43:30.866Z\",\"scope\":\"PLATFORM_DEBUT\",\"imagePolicy\":\"OFFICIAL_CDN_RASTER_AND_TEXT_SCREEN\"}",
+        "next_check_at": "2026-11-12T12:00:00.000Z"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 1.1832
+      },
+      "duration": 1.1832,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 906088448,
+      "rows_read": 39,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "id": "soop-calendar",
+        "status": "OK",
+        "checked_at": "2026-11-12T03:44:31.294Z",
+        "last_success_at": "2026-11-12T03:44:31.294Z",
+        "reason": "",
+        "failures": 0
+      },
+      {
+        "id": "community-sheet",
+        "status": "OK",
+        "checked_at": "2026-11-12T03:44:31.294Z",
+        "last_success_at": "2026-11-12T03:44:31.294Z",
+        "reason": "",
+        "failures": 0
+      },
+      {
+        "id": "x-curator:VtuberDebutBot",
+        "status": "OK",
+        "checked_at": "2026-11-12T03:31:30.983Z",
+        "last_success_at": "2026-11-12T03:31:30.983Z",
+        "reason": "",
+        "failures": 0
+      },
+      {
+        "id": "x-curator:KRVtubefollower",
+        "status": "OK",
+        "checked_at": "2026-11-12T03:31:30.983Z",
+        "last_success_at": "2026-11-12T03:31:30.983Z",
+        "reason": "",
+        "failures": 0
+      },
+      {
+        "id": "x-curator:vvw_kr",
+        "status": "OK",
+        "checked_at": "2026-11-12T03:31:30.983Z",
+        "last_success_at": "2026-11-12T03:31:30.983Z",
+        "reason": "",
+        "failures": 0
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1187
+      },
+      "duration": 0.1187,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 906088448,
+      "rows_read": 5,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "month": "2026-11",
+        "runs": 12,
+        "reserved_external": 480,
+        "reserved_reads": 360000,
+        "reserved_writes": 8400
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.056
+      },
+      "duration": 0.056,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 906088448,
+      "rows_read": 1,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]
