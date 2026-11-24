@@ -1,20 +1,33 @@
 import { canonicalChannel, LIMITS } from './policy';
 
-const ALLOWED = ['welcomevirtual.sooplive.com','chapi.sooplive.co.kr','chapi.sooplive.com','api.chzzk.naver.com','docs.google.com','doc-0c-0o-sheets.googleusercontent.com','x.com','twitter.com','www.sooplive.com','profile.img.sooplive.co.kr','profile.img.sooplive.com','stimg.sooplive.co.kr','nng-phinf.pstatic.net','www.charonuniverse.com','revernia.co.kr'];
+const ALLOWED = ['game.naver.com','naverapihub.apigw.ntruss.com','welcomevirtual.sooplive.com','chapi.sooplive.co.kr','chapi.sooplive.com','api.chzzk.naver.com','docs.google.com','doc-0c-0o-sheets.googleusercontent.com','x.com','twitter.com','www.sooplive.com','profile.img.sooplive.co.kr','profile.img.sooplive.com','stimg.sooplive.co.kr','nng-phinf.pstatic.net','www.charonuniverse.com','revernia.co.kr'];
 export class BudgetNetwork {
   requests=0; bytes=0;
+  private phase='unallocated'; private phaseStart=0; private phaseLimit:number=LIMITS.external;
+  readonly allocations:Record<string,{limit:number;used:number}>={};
   constructor(private deadline: number, private fetcher: typeof fetch = fetch) {}
+  startPhase(name:string,limit:number):void {
+    this.phase=name;this.phaseStart=this.requests;this.phaseLimit=Math.min(limit,LIMITS.external-this.requests);
+    this.allocations[name]={limit:this.phaseLimit,used:0};
+  }
+  private reserve():void {
+    if(this.requests>=LIMITS.external)throw new Error('EXTERNAL_BUDGET_EXCEEDED');
+    if(this.requests-this.phaseStart>=this.phaseLimit)throw new Error('PHASE_BUDGET_EXCEEDED');
+    if(Date.now()>=this.deadline)throw new Error('WALL_BUDGET_EXCEEDED');
+    this.requests++;if(this.allocations[this.phase])this.allocations[this.phase].used++;
+  }
   async get(url: string, maxBytes=LIMITS.sourceBytes, headers: Record<string,string>={}): Promise<{status:number; text:string; bytes:Uint8Array; headers:Headers}> {
     let target=new URL(url);
     for(let redirects=0;redirects<4;redirects++){
       if(target.protocol!=='https:'||target.username||target.password||target.port||!ALLOWED.includes(target.hostname)&&!target.hostname.endsWith('-sheets.googleusercontent.com'))throw new Error('SOURCE_HOST_REJECTED');
-      if(this.requests>=LIMITS.external)throw new Error('EXTERNAL_BUDGET_EXCEEDED');
-      if(Date.now()>=this.deadline)throw new Error('WALL_BUDGET_EXCEEDED');
-      this.requests++;
+      this.reserve();
       // Workers의 전역 fetch에 수집기 인스턴스가 this로 전달되지 않도록 한다.
       const response=await this.fetcher.call(globalThis,target.href,{redirect:'manual',headers:{Accept:'*/*',...headers},signal:AbortSignal.timeout(Math.min(12000,this.deadline-Date.now()))});
       if(response.status>=300&&response.status<400&&response.status!==304){
-        await response.body?.cancel(); const location=response.headers.get('Location');if(!location)throw new Error('INVALID_REDIRECT');target=new URL(location,target);continue;
+        await response.body?.cancel(); const location=response.headers.get('Location');if(!location)throw new Error('INVALID_REDIRECT');
+        const next=new URL(location,target);
+        if(Object.keys(headers).some(k=>/API.KEY|Authorization/i.test(k))&&next.origin!==target.origin)throw new Error('CREDENTIAL_REDIRECT_REJECTED');
+        target=next;continue;
       }
       if(response.status!==200){await response.body?.cancel();return {status:response.status,text:'',bytes:new Uint8Array(),headers:response.headers};}
       if(Number(response.headers.get('Content-Length')||0)>maxBytes){await response.body?.cancel();throw new Error('SOURCE_TOO_LARGE');}
@@ -27,12 +40,30 @@ export class BudgetNetwork {
     throw new Error('REDIRECT_LIMIT');
   }
   async json(url:string,headers:Record<string,string>={}): Promise<Record<string,unknown>> {const r=await this.get(url,LIMITS.sourceBytes,{Accept:'application/json',...headers});if(r.status!==200)throw new Error(`SOURCE_HTTP_${r.status}`);return JSON.parse(r.text);}
+  async approvedImageHeaders(url:string):Promise<void>{
+    const u=new URL(url);
+    if(u.protocol!=='https:'||u.username||u.password||u.port||!['profile.img.sooplive.co.kr','profile.img.sooplive.com','stimg.sooplive.co.kr','nng-phinf.pstatic.net'].includes(u.hostname))throw new Error('IMAGE_HOST_HOLD');
+    this.reserve();const response=await this.fetcher.call(globalThis,u.href,{method:'HEAD',redirect:'manual',signal:AbortSignal.timeout(Math.min(12000,this.deadline-Date.now()))});
+    await response.body?.cancel();if(response.status!==200)throw new Error(`IMAGE_HTTP_${response.status}`);
+    if(!/^image\/(?:png|jpeg|gif|webp)(?:;|$)/i.test(response.headers.get('Content-Type')||''))throw new Error('IMAGE_CONTENT_TYPE_HOLD');
+  }
+  async tavilySearch(payload:Record<string,unknown>,key:string):Promise<Record<string,unknown>>{
+    this.reserve();
+    // 키가 붙은 요청은 고정 호스트로만 전송하고 리디렉션을 따라가지 않는다.
+    const response=await this.fetcher.call(globalThis,'https://api.tavily.com/search',{method:'POST',redirect:'manual',headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(Math.min(20000,this.deadline-Date.now()))});
+    if(!response.ok){await response.body?.cancel();throw new Error(`TAVILY_HTTP_${response.status}`);}
+    const reader=response.body?.getReader();if(!reader)throw new Error('TAVILY_EMPTY_BODY');
+    const chunks:Uint8Array[]=[];let size=0;
+    try{for(;;){const part=await reader.read();if(part.done)break;size+=part.value.byteLength;this.bytes+=part.value.byteLength;if(size>LIMITS.sourceBytes){await reader.cancel();throw new Error('TAVILY_RESPONSE_TOO_LARGE');}chunks.push(part.value);}}finally{reader.releaseLock();}
+    const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.byteLength;}
+    return JSON.parse(new TextDecoder().decode(bytes));
+  }
   async resolveChannel(url:string):Promise<string>{
     let target=new URL(url);
     for(let i=0;i<4;i++){
       const channel=canonicalChannel(target.href);if(channel?.platform==='CHZZK')return channel.url;
       if(target.protocol!=='https:'||target.hostname!=='ch.ci'||target.username||target.password||target.port||!/^\/[a-z0-9]{1,30}$/i.test(target.pathname))throw new Error('CHANNEL_REDIRECT_HOST_HOLD');
-      if(this.requests>=LIMITS.external)throw new Error('EXTERNAL_BUDGET_EXCEEDED');if(Date.now()>=this.deadline)throw new Error('WALL_BUDGET_EXCEEDED');this.requests++;
+      this.reserve();
       const response=await this.fetcher.call(globalThis,target.href,{redirect:'manual',signal:AbortSignal.timeout(Math.min(12000,this.deadline-Date.now()))});await response.body?.cancel();
       const location=response.headers.get('Location');if(response.status<300||response.status>=400||!location)throw new Error('CHANNEL_REDIRECT_UNCONFIRMED');target=new URL(location,target);
     }

@@ -1,5 +1,7 @@
 # VDébut 자동화 프로세스와 테스트 결과
 
+> [전체 문서 안내](debut-automation-documents.md) · [11월 12일 작업 정리](work-summary-2026-11-12.md) · [최신 기술 기준](신규버튜버자동화.md). 아래 그림·PDF·시험 수치는 당시 배포본의 기록입니다. CSV 선저장 목표 흐름은 최신 기술 기준서에서 확인합니다.
+
 2026-11-12. 현재 배포된 동작을 기준으로 작성했다.
 
 [공유용 PDF: 플로우 차트와 테스트 결과 2쪽](../output/pdf/vdebut-automation-flow-2026-11-12.pdf) · [수정 가능한 Mermaid 원본](debut-automation-flow.mmd)

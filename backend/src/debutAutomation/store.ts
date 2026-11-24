@@ -28,7 +28,8 @@ export class DiscoveryStore {
        SELECT ?,?,?,?,'RUNNING',? WHERE EXISTS(SELECT 1 FROM debut_automation_control WHERE id='discovery' AND enabled=1 AND lease_until<?)
        AND EXISTS(SELECT 1 FROM debut_automation_months WHERE month=? AND runs<?)
        AND (?!='SMOKE' OR (SELECT COUNT(*) FROM debut_automation_runs WHERE month=? AND mode='SMOKE')<12)
-       AND (?!='BACKFILL' OR (SELECT COUNT(*) FROM debut_automation_runs WHERE month=? AND mode='BACKFILL')<8)`,args:[slot,this.runId,month,mode,now,now,month,LIMITS.monthlyRuns,mode,month,mode,month]},
+       AND (?!='BACKFILL' OR (SELECT COUNT(*) FROM debut_automation_runs WHERE month=? AND mode='BACKFILL')<8)
+       AND (?!='TAVILY_TEST' OR (SELECT COUNT(*) FROM debut_automation_runs WHERE month=? AND mode='TAVILY_TEST' AND substr(slot,1,length(?))=?)<2)`,args:[slot,this.runId,month,mode,now,now,month,LIMITS.monthlyRuns,mode,month,mode,month,mode,month,slot.split(':retry-')[0],slot.split(':retry-')[0]]},
       {sql:`UPDATE debut_automation_control SET lease_owner=?,lease_until=? WHERE id='discovery' AND enabled=1 AND lease_until<?
        AND EXISTS(SELECT 1 FROM debut_automation_runs WHERE id=? AND status='RUNNING')`,args:[this.runId,until,now,this.runId]},
       {sql:`UPDATE debut_automation_months SET runs=runs+1,reserved_external=reserved_external+?,reserved_reads=reserved_reads+?,reserved_writes=reserved_writes+?
@@ -97,6 +98,9 @@ export class DiscoveryStore {
       else{guard+=` AND NOT EXISTS(SELECT 1 FROM streamerChannel_info WHERE slug=?) AND NOT EXISTS(SELECT 1 FROM streamerChannel_info i JOIN streamerChannel c ON c.id=i.channel_id WHERE c.channel_url IN (${placeholders}) AND NOT (i.debut_time='00:00' AND i.description=i.display_name||' 스트리머의 채널입니다.'))`;guardArgs.push(profile.slug,...aliases);}
     }
     guard+=' AND NOT EXISTS(SELECT 1 FROM portal_profile_channels WHERE (channel_key=? AND slug!=?) OR (slug=? AND channel_key!=?))';guardArgs.push(key,profile.slug,profile.slug,key);
+    // 실제 저장·재독한 CSV 버전과 이번 공개 내용의 지문이 일치할 때에만 공개한다.
+    guard+=` AND EXISTS(SELECT 1 FROM debut_csv_receipts c JOIN debut_csv_revisions r ON r.month=c.month AND r.revision=c.revision AND r.bundle_hash=c.bundle_hash JOIN debut_csv_months m ON m.month=c.month AND m.revision=c.revision WHERE c.candidate_id=? AND c.source_hash=? AND c.profile_hash=? AND c.run_id=?)`;
+    guardArgs.push(candidate.id,candidate.source_hash,await sha256(json),this.runId);
     // 중간의 고유키 충돌은 D1 batch 전체를 취소한다. 일부 테이블만 공개된 상태는 남기지 않는다.
     const tokenSql="EXISTS(SELECT 1 FROM debut_automation_candidates WHERE id=? AND publish_token=?)";
     const r=await this.batch([

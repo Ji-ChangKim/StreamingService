@@ -49,5 +49,10 @@ function validateRows(rows: string[][]): string[][] {
 
 // 실제 레코드 단위로 파싱하여 머리말 안의 줄바꿈에 영향을 받지 않는다.
 export function parseCrawlerCsv(text: string): string[][] {
-  return validateRows(finishCsv(Array.from(text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n')).reduce(consumeCharacter, { rows: [], row: [], field: '', quoted: false, closing: false })));
+  return validateRows(parseCsvRows(text));
+}
+
+// 월별 자동화 CSV도 같은 인용 규칙을 사용하되 커뮤니티 시트의 머리말 조건은 적용하지 않는다.
+export function parseCsvRows(text: string): string[][] {
+  return finishCsv(Array.from(text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n')).reduce(consumeCharacter, { rows: [], row: [], field: '', quoted: false, closing: false }));
 }

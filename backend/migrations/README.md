@@ -2,6 +2,10 @@
 
 본 문서는 StreamingService 프로젝트의 Cloudflare D1 데이터베이스 스키마 이력 및 마이그레이션 운영 규칙을 정리한 문서입니다.
 
+2026-11-13: `0065_debut_csv_pipeline.sql`만 운영에 명시 적용했습니다. CSV 현재 버전·원문 이력·공개 내용 연결 영수증 테이블 3종과 인덱스를 추가했습니다. 11월·12월 CSV 최초 작성일과 T/F를 보존해 초기 저장했습니다. 공개 신규 1명은 마이그레이션이 아닌 배포된 자동화가 처리했습니다. [배포·실제 시험 기록](../../docs/debut-pipeline-release-2026-11-13.md).
+
+2026-11-13 18시 시험 준비: `0066_tavily_test_usage.sql`만 추가로 운영에 명시 적용했습니다. 월 검색 예약·응답 크레딧·성공·실패 사용량 테이블을 만들고 기존 로컬 시험의 예약 4회·보고 3크레딧을 이관했습니다. 공개 프로필 데이터는 변경하지 않았고 과거 마이그레이션을 재실행하지 않았습니다. [시험 예약·결과 기록](../../docs/tavily-server-test-2026-11-13-1800.md).
+
 ---
 
 ## 📌 1. 현재 표준 DB 스키마 구조 (`v0.3` 기준)
@@ -117,4 +121,11 @@
 ## 2026-11-12 Cloudflare 정기 발굴 자동화
 
 - `0063_debut_server_automation.sql`: 실행 임대·월 예산·후보·원문 대기·원천 캐시 테이블 및 조회 인덱스만 명시 적용했다. 과거 마이그레이션은 실행하지 않았다. 최초 읽기 4,949행·쓰기 2,469행, 후속 실제 프로필 조회 인덱스 추가 읽기 1,596행·쓰기 421행. 기존 공개값은 변경하지 않았다. 신규 7명과 기존 22명 행사 구분 보완은 배포된 Worker의 원자적 검증·공개 경로로 처리했다. [운영·검증 기록](../../docs/debut-server-automation.md).
+- `0063_index_broadcast_snapshots_channel.sql`: `analytics_broadcast_snapshots(channel_key, run_id)` 복합 인덱스 추가 (채널별 방송 통계 조회 최적화).
 - `0064_sync_november_pending_debuts_and_profile_updates.sql`: 2026-11-12 사용자 승인으로 운영 `vdebut-db`에 명시 실행 완료. `vtuber-list/2026-11/new-debuts.csv` 내 미등록 신규 데뷔 3인(`메리Merry` 11/7 19:00 YOUTUBE, `삐빙이` 11/25 19:00 CHZZK, `몽냐 o3o` 11/28 14:00 CHZZK)을 `portal_profiles`, `portal_profile_channels`, `portal_profile_history`에 공개 등록하고(기존 DB에 이미 등록된 16명은 중복 등록 없이 CSV만 `T` 동기화), `vtuber-list/2026-11/profile-updates.csv` 내 공식 출처 확인 제원·링크 보강 6인(12항목: `아란 아누라`, `에스냐`, `이리나쨩`, `무아 MOOA`, `샤루루`, `스티나_`)을 운영 DB에 반영 및 이력 보관 완료.
+- `0064_add_broadcast_snapshot_tags.sql`: `analytics_broadcast_snapshots` 테이블에 방송 태그(`tags`) 컬럼 추가.
+- `0065_debut_csv_pipeline.sql`: 2026-11-13 운영 명시 적용. D1 내 월별 CSV 정본(`debut_csv_months`), 리비전 이력(`debut_csv_revisions`), 공개 내용 연결 영수증(`debut_csv_receipts`) 테이블 3종과 인덱스를 추가.
+- `0065_channel_samples.sql`: 등록 버튜버 직접 기록(`analytics_channel_samples`) 테이블 및 인덱스 생성 (상위 100 밖 신입 버튜버 5분 주기 방송 기록).
+- `0066_tavily_test_usage.sql`: 2026-11-13 운영 명시 적용. 월 검색 크레딧 선예약·응답 사용량·성공/실패 집계 테이블(`debut_search_usage`) 생성.
+- `0066_channel_rollups.sql`: 채널 일별 요약(`analytics_channel_daily`) 및 개별 방송 요약(`analytics_channel_streams`) 장기 보관 테이블 생성.
+- `0067_sync_nov24_dec31_2026_debuts_and_profiles.sql`: 2026-11-24 사용자 승인으로 운영 `vdebut-db`에 명시 실행 완료. 2026년 11월 24일 ~ 12월 31일 전수 조사로 발굴·검증된 신규 데뷔 버튜버 6인(`모아엘` 11/28 15:00 SOOP, `SR호안HOAN` 12/04 17:00 CHZZK, `첫눈에 Firstsight` 12/06 20:00 CHZZK, `타초왕` 12/13 21:00 CHZZK, `백로향 rohyang` 12/18 시간 미정 CHZZK, `소리베` 12/19 14:00 CHZZK)을 `portal_profiles`, `portal_profile_channels`, `portal_profile_history`에 등록하고, 기존 `89girl-soop`의 공식 활동명 변경(`노니_` → `리즈_`) 반영 및 `malribu`/`malribu-2` 중복 프로필을 정규 채널 URL 기준 1개(`malribu`)로 통합 완료.

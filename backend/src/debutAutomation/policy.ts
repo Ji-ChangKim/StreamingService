@@ -3,9 +3,9 @@ import { isPublicProfile, looksLikeVideoTitle, needsContentReview, reviewedProfi
 import { parseCrawlerCsv } from '../services/crawlerCsv';
 import type { ProfileDetails } from '../../../shared/profileDetails';
 
-export const LIMITS = Object.freeze({ external: 40, candidates: 20, weeklyProfiles: 10, cpuMs: 5000,
+export const LIMITS = Object.freeze({ external: 40, candidates: 20, weeklyProfiles: 20, cpuMs: 5000,
   dbCalls: 220, dbReads: 30000, dbWrites: 700, monthlyRuns: 70, wallMs: 150000, sourceBytes: 2 * 1024 * 1024 });
-export type Mode = 'DISCOVER' | 'RECHECK' | 'WEEKLY' | 'SMOKE' | 'BACKFILL';
+export type Mode = 'DISCOVER' | 'RECHECK' | 'WEEKLY' | 'PROFILE' | 'SMOKE' | 'BACKFILL' | 'TAVILY_TEST';
 export type Seed = {
   id: string; channelKey: string; platform: 'SOOP' | 'CHZZK'; channelUrl: string; name: string;
   date: string; time: string; timezone: string; kind: 'FIRST_DEBUT' | 'PLATFORM_DEBUT' | 'TRANSFER' | 'UNKNOWN';
@@ -21,16 +21,21 @@ export function seedHashInput(seed:Seed):string{return JSON.stringify(seed.sourc
 export function kstDay(now: number): string { return new Date(now + 9 * 3600000).toISOString().slice(0, 10); }
 export function addDays(date: string, days: number): string { return new Date(Date.parse(`${date}T00:00:00Z`) + days * 86400000).toISOString().slice(0, 10); }
 export function nextRegularRun(time:number):string{
-  const local=new Date(time+9*3600000),day=kstDay(time),hour=local.getUTCHours();
-  const date=hour>=21?addDays(day,1):day,nextHour=hour<9||hour>=21?'09':'21';
-  return new Date(`${date}T${nextHour}:00:00+09:00`).toISOString();
+  const day=kstDay(time);
+  for(let offset=0;offset<8;offset++){
+    const at=Date.parse(`${addDays(day,offset)}T10:00:00+09:00`);
+    const weekday=new Date(at+9*3600000).getUTCDay();
+    if(at>time&&[0,1,3].includes(weekday))return new Date(at).toISOString();
+  }
+  throw new RangeError('INVALID_REGULAR_RUN_TIME');
 }
 export function windowFor(time: number, mode: Mode) {
   const today = kstDay(time);
+  if(mode==='PROFILE')return {today,from:addDays(today,-((new Date(`${today}T00:00:00Z`).getUTCDay()+6)%7)),to:today};
   return { today, from: addDays(today, mode === 'WEEKLY' ? -30 : -7), to: addDays(today, mode === 'WEEKLY' ? 90 : 30) };
 }
 export function modeFor(cron: string): Mode | null {
-  return cron === '0 0 * * *' ? 'DISCOVER' : cron === '0 12 * * *' ? 'RECHECK' : cron === '0 1 * * MON' ? 'WEEKLY' : null;
+  return cron === '0 1 * * SUN' ? 'PROFILE' : cron === '0 1 * * WED' ? 'RECHECK' : cron === '0 1 * * MON' ? 'WEEKLY' : null;
 }
 export function canonicalChannel(value: string): { key: string; url: string; platform: Seed['platform'] } | null {
   for (const platform of ['SOOP', 'CHZZK'] as const) {
