@@ -45,11 +45,11 @@ export function renderPortalPage(html: string, url: URL, profile?: PortalProfile
 
 // 운영 공개 목록에 승인된 신규 소개도 포함하고 비공개 주소는 제외한다.
 // 사이트맵에 넣을 방송 수: 일일 요약(0066)의 최근 30일 방송 수(등록 채널 키 → 방송 수). 표가 없거나 실패하면 빈 값.
-// 일일 요약은 상세 페이지가 쓰는 채널 통계보다 같거나 적게 세므로, 사이트맵에 오른 소개는 상세에서도 검색 허용이 된다.
+// 자정을 넘긴 방송은 날짜별로 두 줄이 되므로 방송 번호로 한 번만 센다. 일일 요약은 상세 페이지가 쓰는 채널 통계보다 같거나 적게 세므로, 사이트맵에 오른 소개는 상세에서도 검색 허용이 된다.
 export async function readRecentBroadcastCounts(db: D1Database, now: number): Promise<Map<string, number>> {
   try {
     const since = new Date(now + 9 * 3600000 - 30 * 86400000).toISOString().slice(0, 10);
-    const rows = await db.prepare('SELECT channel_key, COUNT(*) AS n FROM analytics_channel_streams WHERE day >= ? GROUP BY channel_key').bind(since).all<{ channel_key: string; n: number }>();
+    const rows = await db.prepare('SELECT channel_key, COUNT(DISTINCT stream_id) AS n FROM analytics_channel_streams WHERE day >= ? GROUP BY channel_key').bind(since).all<{ channel_key: string; n: number }>();
     return new Map((rows.results || []).map((row) => [row.channel_key.toUpperCase().replace(/^([A-Z]+):(.*)$/, (_, p, id) => `${p}:${String(id).toLowerCase()}`), Number(row.n) || 0]));
   } catch { return new Map(); }
 }
