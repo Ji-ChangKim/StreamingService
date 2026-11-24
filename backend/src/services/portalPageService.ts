@@ -10,7 +10,7 @@ import { escapeActivityHtml, activityJson } from './activityPageService';
 import { activityChannelKey } from '../../../shared/broadcastActivity';
 import { profileHeroStats } from '../../../shared/profileHeroStats';
 import { INITIAL_PAGE_LOADING_HEAD, initialPageRoot } from './initialPageLoading';
-import { isPublicProfile, isThinProfile, publicProfileView } from '../../../shared/contentReview';
+import { isPublicProfile, isProfileIndexable, publicProfileView } from '../../../shared/contentReview';
 
 // 운영 셸의 메타데이터와 최초 본문을 공개 주소에 맞추고 외부 문자열을 이스케이프한다.
 export function renderPortalPage(html: string, url: URL, profile?: PortalProfile, profiles: PortalProfile[] = [], channel30?: AnalyticsChannelBoard | null): string {
@@ -44,11 +44,28 @@ export function renderPortalPage(html: string, url: URL, profile?: PortalProfile
 }
 
 // 운영 공개 목록에 승인된 신규 소개도 포함하고 비공개 주소는 제외한다.
-export function portalSitemap(profiles: PortalProfile[]): string {
-  // 얇은 소개는 보강 전까지 사이트맵에 넣지 않는다.
-  const profilePaths = profiles.filter((profile) => isPublicProfile(profile) && !isThinProfile(profile)).map((profile) => `/creator/${encodeURIComponent(profile.slug)}`);
+// 사이트맵에 넣을 방송 수: 일일 요약(0066)의 최근 30일 방송 수(등록 채널 키 → 방송 수). 표가 없거나 실패하면 빈 값.
+// 일일 요약은 상세 페이지가 쓰는 채널 통계보다 같거나 적게 세므로, 사이트맵에 오른 소개는 상세에서도 검색 허용이 된다.
+export async function readRecentBroadcastCounts(db: D1Database, now: number): Promise<Map<string, number>> {
+  try {
+    const since = new Date(now + 9 * 3600000 - 30 * 86400000).toISOString().slice(0, 10);
+    const rows = await db.prepare('SELECT channel_key, COUNT(*) AS n FROM analytics_channel_streams WHERE day >= ? GROUP BY channel_key').bind(since).all<{ channel_key: string; n: number }>();
+    return new Map((rows.results || []).map((row) => [row.channel_key.toUpperCase().replace(/^([A-Z]+):(.*)$/, (_, p, id) => `${p}:${String(id).toLowerCase()}`), Number(row.n) || 0]));
+  } catch { return new Map(); }
+}
+
+// 입력 화면(일정 등록·소개 등록)은 안내 글이 짧은 양식이라 검색과 사이트맵에서 뺀다(기획문서 41번 A2).
+export const PORTAL_FORM_PATHS = ['/upload', '/creators/register'];
+
+export function portalSitemap(profiles: PortalProfile[], broadcasts: Map<string, number> = new Map()): string {
+  // 검색 허용 기준을 채운 소개만 넣는다(직접 쓴 소개 100자, 또는 50자 + 최근 30일 방송 5회).
+  const profilePaths = profiles.filter((profile) => {
+    if (!isPublicProfile(profile)) return false;
+    const key = profile.platform === 'CHZZK' || profile.platform === 'SOOP' ? activityChannelKey(profile.platform, profile.channelUrl) : null;
+    return isProfileIndexable(profile, key ? broadcasts.get(key) || 0 : 0);
+  }).map((profile) => `/creator/${encodeURIComponent(profile.slug)}`);
   // 안내 페이지는 본문까지 번역돼 있어 세 언어를 모두 싣는다. 프로필은 소개글이 원문 그대로라 한국어판만 싣는다.
-  const pages = [...new Set(PORTAL_INDEX_PATHS)].flatMap((path) => (['ko', 'ja', 'en'] as const).map((language) => sitemapEntry(path, language, true)));
+  const pages = [...new Set(PORTAL_INDEX_PATHS)].filter((path) => !PORTAL_FORM_PATHS.includes(path)).flatMap((path) => (['ko', 'ja', 'en'] as const).map((language) => sitemapEntry(path, language, true)));
   const creators = [...new Set(profilePaths)].map((path) => sitemapEntry(path, 'ko'));
   return [...pages, ...creators].join('');
 }

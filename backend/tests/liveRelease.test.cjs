@@ -59,7 +59,10 @@ test('운영·개발·비공개·잘못된 URL의 셸과 검색 설정을 분리
   try {
     for (const route of ['/', '/upload', '/creators', '/creators/register', '/about', '/guide', '/contact', '/privacy', '/terms', '/analytics', '/analytics/chzzk', '/analytics/soop']) {
       const response = await call(route); const html = await response.text();
-      assert.equal(response.status, 200, route); if (!route.startsWith('/analytics')) assert.match(html, /content="index, follow"/);
+      assert.equal(response.status, 200, route);
+      // 입력 화면은 짧은 양식이라 검색 제외·링크 따라가기(기획 41 A2), 나머지 안내 화면은 검색 허용.
+      const form = route === '/upload' || route === '/creators/register';
+      if (!route.startsWith('/analytics')) assert.match(html, form ? /content="noindex, follow"/ : /content="index, follow"/, route);
       assert.doesNotMatch(html, /gtm\.js|GTM-KWX992HR/); assert.match(html, /G-LS6E68YC5K/); assert.doesNotMatch(html, /dev\.vdebut\.live/);
       assert.match(html, /portal-main-/, route);
       if (!route.startsWith('/analytics')) assert.equal(response.headers.get('X-Robots-Tag'), null);
@@ -153,7 +156,7 @@ test('새 등록은 기존 CMS 목록·삭제·소개 URL·사이트맵까지 �
     const token = 'local-admin';
     const hash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))).toString('hex');
     db.sqlite.prepare('INSERT INTO portal_sessions VALUES(?,?)').run(hash, Date.now() + 60000);
-    const body = { countryCode: 'KR', requesterRole: 'SELF', kind: 'DEBUT', displayName: '테스트 <script>홍보</script>', description: '게임 & 노래 "소개" — 매주 금요일 밤 팬들과 함께 종합 게임과 신곡 커버를 진행합니다.', platform: 'CHZZK', channelUrl: 'https://chzzk.naver.com/' + 'a'.repeat(32), dateState: 'FIXED', debutDate: '2026-10-20', debutTime: '20:00', timezone: 'Asia/Seoul', contactEmail: 'private@example.com' };
+    const body = { countryCode: 'KR', requesterRole: 'SELF', kind: 'DEBUT', displayName: '테스트 <script>홍보</script>', description: '게임 & 노래 "소개" — 매주 금요일 밤 팬들과 함께 종합 게임과 신곡 커버를 진행합니다. 주말에는 시청자와 함께 노래 신청을 받고, 평일 저녁에는 공포 게임과 협동 게임을 번갈아 합니다. 데뷔 첫 주에는 매일 방송할 예정이에요. 방송이 끝나면 다시보기와 짧은 클립을 정리해 팬카페에 올립니다.', platform: 'CHZZK', channelUrl: 'https://chzzk.naver.com/' + 'a'.repeat(32), dateState: 'FIXED', debutDate: '2026-10-20', debutTime: '20:00', timezone: 'Asia/Seoul', contactEmail: 'private@example.com' };
     const registered = await (await call('/api/v1/portal/requests', { method: 'POST', body: JSON.stringify(body) })).json();
     const result = await (await call(`/api/v1/portal/admin/requests/${registered.id}/decision`, { method: 'POST', headers: { 'X-Admin-Key': token }, body: JSON.stringify({ status: 'APPROVED', contentChecked: true }) })).json();
     assert.ok(result.slug);

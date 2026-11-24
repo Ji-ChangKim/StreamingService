@@ -35,6 +35,10 @@ const TermsPage = lazy(() => import('../components/pages/TermsPage').then((modul
 const NAV = [{ to: '/', label: '데뷔 캘린더', icon: CalendarDays }, { to: '/analytics', label: '방송 통계', icon: BarChart3 }, { to: '/creators', label: '버튜버 DB', icon: Search }];
 
 // 개발 사이트에서 전체 화면을 같은 내비게이션과 실제 데이터로 연결한다.
+// 서버가 처음 보낸 HTML의 검색 허용 값(첫 화면 주소에서만 사용).
+const SERVER_PATH = typeof window === 'undefined' ? '' : window.location.pathname;
+const SERVER_ROBOTS = typeof document === 'undefined' ? '' : document.querySelector('meta[name="robots"]')?.getAttribute('content') || '';
+
 export function PortalApp() {
   const language = usePortalLocale(); // 언어 변경은 화면 상태를 유지한 채 문구만 갱신한다.
 
@@ -64,7 +68,8 @@ export function PortalApp() {
     if (isAnalytics) return;
     const seoUrl = new URL(window.location.href); seoUrl.searchParams.set('lang', language);
     const seo = portalPageSeo(seoUrl, profile, { unavailable: (needsProfiles && (Boolean(error) || loading)) || (isCreator && !profile && !single.missing) });
-    applyPageSeo(seo);
+    // 서버가 처음 보낸 페이지에서 검색 제외(noindex)로 정한 소개는 화면이 그려진 뒤에도 그대로 둔다(방송 기록 기준은 서버만 앎).
+    applyPageSeo(isCreator && window.location.pathname === SERVER_PATH && SERVER_ROBOTS.includes('noindex') && !seo.robots.includes('noindex') ? { ...seo, robots: SERVER_ROBOTS } : seo);
   }, [location, path, profile, isAnalytics, language, error, loading, needsProfiles, isCreator, single.missing]);
   const dataProps = { profiles, loading, error, refresh, onNavigate: navigate };
   let content;

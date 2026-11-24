@@ -1167,6 +1167,8 @@ YouTube에서 데뷔 공지 보기|||YouTubeでデビュー告知を見る|||See
 프로필 정보 펼치기|||プロフィールを開く|||Show profile info
 한 주에 쉬는 날|||週の休み|||Days off per week
 채널 미리 보기|||チャンネルを見る|||Preview the channel
+최근 4주 동안 평일엔 주 {0}일, 주말엔 주 {1}일 방송했어요.|||直近4週間、平日は週{0}日、週末は週{1}日配信しました。|||Over the last 4 weeks: {0} weekdays and {1} weekend days a week.
+{0}요일은 보통 쉬었어요.|||{0}曜日はたいてい休みでした。|||Usually off on {0}.
 `.trim().split('\n');
 
 export const PORTAL_TRANSLATIONS: Record<string, readonly [string, string]> = { ...PROFILE_CONTENT_TRANSLATIONS, ...Object.fromEntries(rows.map((row) => {

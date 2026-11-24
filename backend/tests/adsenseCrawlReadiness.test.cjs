@@ -104,17 +104,53 @@ test('자동 등록 채널 기록은 공개 목록에서 빠지고 상세 조회
   assert.equal((await readPublicPortalProfileBySlug(db, 'auto-one'))?.slug, 'auto-one');
 });
 
-test('얇은 소개는 사이트맵에서 빠지고 보강하면 다시 포함된다', () => {
-  const { isThinProfile } = load('../../shared/contentReview.ts');
+test('검색 허용 기준: 직접 쓴 소개 100자, 또는 50자 + 최근 30일 방송 5회만 사이트맵에 들어간다(기획 41 A1)', () => {
+  const { isProfileIndexable, profileOwnTextLength } = load('../../shared/contentReview.ts');
   const { portalSitemap } = load('../src/services/portalPageService.ts');
   const thin = profile('thin-one', '하티', '2026.07.02 SOOP 데뷔 버튜버');
-  const rich = profile('rich-one', '리치', '노래와 종합 게임을 주로 하며 매주 금요일 밤 팬들과 함께 신곡 커버를 공개합니다.');
-  assert.equal(isThinProfile(thin), true);
-  assert.equal(isThinProfile(rich), false);
-  assert.equal(isThinProfile({ ...thin, tags: ['노래'] }), false);
-  const xml = portalSitemap([thin, rich]);
+  const long = '노래와 종합 게임을 주로 하며 매주 금요일 밤 팬들과 함께 신곡 커버를 공개합니다. '.repeat(4);
+  const rich = profile('rich-one', '리치', long);
+  const mid = { ...profile('mid-one', '미드', '노래와 종합 게임을 주로 하며 매주 금요일 밤 팬들과 함께 신곡 커버를 공개합니다 매주 화요일과 목요일에는 쉬고 주말에는 길게 방송해요'), platform: 'CHZZK', channelUrl: 'https://chzzk.naver.com/' + 'b'.repeat(32) };
+  assert.ok(profileOwnTextLength(rich) >= 100);
+  assert.ok(profileOwnTextLength(mid) >= 50 && profileOwnTextLength(mid) < 100);
+  assert.equal(isProfileIndexable(thin, 99), false);
+  assert.equal(isProfileIndexable({ ...thin, tags: ['노래'] }), false); // 태그만으로는 검색 허용이 되지 않는다
+  assert.equal(isProfileIndexable(rich), true);
+  assert.equal(isProfileIndexable(mid, 4), false);
+  assert.equal(isProfileIndexable(mid, 5), true);
+  const xml = portalSitemap([thin, rich, mid], new Map([['CHZZK:' + 'b'.repeat(32), 6]]));
   assert.doesNotMatch(xml, /creator\/thin-one/);
   assert.match(xml, /creator\/rich-one/);
+  assert.match(xml, /creator\/mid-one/);
+  assert.doesNotMatch(portalSitemap([mid]), /creator\/mid-one/); // 방송 기록이 없으면 빠진다
+});
+
+test('입력 화면은 검색 제외·사이트맵 제외(기획 41 A2)', () => {
+  const { portalSitemap } = load('../src/services/portalPageService.ts');
+  const xml = portalSitemap([]);
+  assert.doesNotMatch(xml, /vdebut\.live\/upload/);
+  assert.doesNotMatch(xml, /creators\/register/);
+  assert.match(xml, /vdebut\.live\/privacy/);
+  assert.match(renderPortalPage(template, new URL('https://vdebut.live/upload')), /<meta name="robots" content="noindex, follow">/);
+  assert.match(renderPortalPage(template, new URL('https://vdebut.live/creators/register')), /<meta name="robots" content="noindex, follow">/);
+});
+
+test('상세 첫 HTML: 카테고리 없음 문장을 쓰지 않고, 방송 패턴 문장을 넣는다(기획 41 A3)', () => {
+  const { profileStoryBody } = load('../src/services/portalEditorialBody.ts');
+  const now = Date.parse('2026-11-24T03:00:00Z');
+  const log = [];
+  for (let i = 1; i <= 28; i += 1) {
+    const d = new Date(now - i * 86400000); const wd = (d.getUTCDay() + 6) % 7;
+    if (wd === 2 || wd === 4) continue; // 수·금 휴방
+    log.push({ streamId: 's' + i, date: d.toISOString(), title: 't', category: '토크', isGame: false, minutes: 120, avg: 10, peak: 20 });
+  }
+  const board = { kpis: { broadcasts: log.length, minutes: log.length * 120, avg: 10, peak: 20 }, games: [{ name: '카테고리 없음', isGame: false, share: 70, avg: 10 }, { name: '토크', isGame: false, share: 30, avg: 10 }], log, heat: [] };
+  const p = { ...profile('pat-one', '패턴', '소개'), dateState: 'FIXED', startAtUtc: '2026-08-01T11:00:00Z', tags: ['버튜버', '노래'] };
+  const html = profileStoryBody(p, 'ko', board, now);
+  assert.doesNotMatch(html, /카테고리 없음/);
+  assert.match(html, /「토크」\(30%\)/);
+  assert.match(html, /최근 4주 동안 평일엔 주 3일, 주말엔 주 2일 방송했어요\. 수·금요일은 보통 쉬었어요\./);
+  assert.doesNotMatch(html, /버튜버·노래|버튜버 방송/);
 });
 
 test('개인정보처리방침에 운영 주체·보호책임자·시행일이 세 언어로 들어간다', () => {
@@ -131,7 +167,7 @@ test('개인정보처리방침에 운영 주체·보호책임자·시행일이 �
 
 test('프로필 일본어·영어판은 한국어판을 canonical로 가리키고 사이트맵에는 한국어판만 싣는다', () => {
   const { portalSitemap } = load('../src/services/portalPageService.ts');
-  const rich = profile('rich-one', '리치', '노래와 종합 게임을 주로 하며 매주 금요일 밤 팬들과 함께 신곡 커버를 공개합니다.');
+  const rich = profile('rich-one', '리치', '노래와 종합 게임을 주로 하며 매주 금요일 밤 팬들과 함께 신곡 커버를 공개합니다. '.repeat(4));
   const ja = renderPortalPage(template, new URL('https://vdebut.live/creator/rich-one?lang=ja'), rich);
   assert.match(ja, /<link rel="canonical" href="https:\/\/vdebut.live\/creator\/rich-one">/);
   assert.doesNotMatch(ja, /hreflang/);
@@ -146,7 +182,7 @@ test('프로필 일본어·영어판은 한국어판을 canonical로 가리키�
   assert.match(xml, /<loc>https:\/\/vdebut.live\/creator\/rich-one<\/loc>/);
   assert.doesNotMatch(xml, /creator\/rich-one\?lang=/);
   assert.match(xml, /<loc>https:\/\/vdebut.live\/guide\?lang=ja<\/loc>/);
-  assert.equal((xml.match(/<url>/g) || []).length, 9 * 3 + 1);
+  assert.equal((xml.match(/<url>/g) || []).length, 7 * 3 + 1); // 안내 9쪽 중 입력 화면 2쪽은 제외(기획 41 A2)
 });
 
 test('홈·소개 목록 첫 HTML은 목록 요청을 미리 시작하고, 홈에는 실제 데뷔 일정이 들어간다', () => {

@@ -33,7 +33,8 @@ export function portalPageSeo(url: URL, profile?: { displayName: string; descrip
   };
   const description = profile ? profileExcerpt(profile, 160) : text(missingProfile ? '다른 버튜버의 소개와 데뷔 일정을 살펴보세요.' : descriptions[path] || (path.startsWith('/submissions/') ? '접수 번호와 비공개 확인 키로 문의 처리 상태를 확인하세요.' : known ? '등록 신청과 문의 내용을 확인하고 검토합니다.' : '주소를 확인하거나 데뷔 캘린더에서 새로운 만남을 찾아보세요.'));
   return { path, known, development, privatePage, title, description, language,
-    robots: development || privatePage || !known || missingProfile || options.unavailable ? 'noindex, nofollow' : 'index, follow',
+    // 입력 화면은 짧은 양식이라 검색에서 빼되 링크는 따라가게 한다(기획문서 41번 A2).
+    robots: development || privatePage || !known || missingProfile || options.unavailable ? 'noindex, nofollow' : path === '/upload' || path === '/creators/register' ? 'noindex, follow' : 'index, follow',
     // 프로필 소개글은 번역하지 않으므로 일본어·영어판은 한국어판과 본문이 같다.
     // 복제 페이지로 보이지 않게 원본(한국어판)을 canonical로 가리키고 언어 연결(hreflang)은 내지 않는다.
     canonical: siteCanonical(path, profilePage ? 'ko' : language),

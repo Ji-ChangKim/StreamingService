@@ -2,13 +2,13 @@ import { isActivityPath } from '../../shared/activitySeo';
 import { publicErrorPage } from './services/publicErrorPage';
 import { sitePath, siteRobots } from '../../shared/siteSeo';
 import { isAutoRegisteredChannelProfile } from '../../shared/portal';
-import { isThinProfile } from '../../shared/contentReview';
+import { isProfileIndexable } from '../../shared/contentReview';
 import { publicResponseCache } from './services/publicResponseCache';
 import { normalizeStreamerQuery } from '../../shared/statisticsStreamerSearch';
 const STATIC_IMAGE_CACHE_CONTROL = 'public, max-age=2592000, stale-while-revalidate=86400';
 import { Hono } from 'hono';
 import { portalApi, readPublicPortalProfiles, readPublicPortalProfilesBetween, readPublicPortalProfileBySlug, portalAdminStreamers, deletePortalProfile } from './services/portalService';
-import { renderPortalPage, portalSitemap } from './services/portalPageService';
+import { renderPortalPage, portalSitemap, readRecentBroadcastCounts } from './services/portalPageService';
 import { portalPageSeo } from '../../shared/portalSeo';
 import { publicBroadcastPayload } from '../../shared/contentReview';
 import { readUnifiedDebutEvents, portalProfileEvent } from './services/unifiedEventService';
@@ -180,8 +180,6 @@ app.use('*', async (c, next) => {
     const response = await getAssetFromKV({ request: new Request(new URL(seo.development ? '/dev.html' : '/portal.html', c.req.url), c.req.raw), waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, { ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}') });
     // 자동 등록 채널 기록은 내용이 없어 검색에서 제외하되, 링크로 들어온 방문자에게는 계속 보여 준다.
     // 얇은 소개도 보강 전까지 같은 방식으로 검색에서 제외한다.
-    const autoChannel = !!profile && (isAutoRegisteredChannelProfile(profile) || isThinProfile(profile));
-    if (autoChannel) c.header('X-Robots-Tag', 'noindex, follow');
     if (seo.privatePage || missing) c.header('X-Robots-Tag', 'noindex, nofollow');
     c.header('Cache-Control', seo.privatePage || missing ? 'no-store' : 'public, max-age=0, must-revalidate');
     // 버튜버 상세 첫 HTML에 최근 30일 방송 기록 요약을 넣는다(화면과 같은 채널 통계, 10분 캐시 공유). 실패해도 페이지는 그린다.
@@ -193,6 +191,9 @@ app.use('*', async (c, next) => {
         channel30 = (await cachedBoard(boardCache(), key, () => getAnalyticsChannelBoard(c.env.DB, profileKey, 30), boardCacheSeconds, (p) => c.executionCtx.waitUntil(p))).data as AnalyticsChannelBoard | null;
       } catch (error) { console.warn('[Portal] Profile channel summary failed', String(error)); }
     }
+    // 검색 허용 기준(기획문서 41번 A1): 직접 쓴 소개 100자, 또는 50자 + 최근 30일 방송 5회. 못 미치면 검색에서만 뺀다.
+    const autoChannel = !!profile && (isAutoRegisteredChannelProfile(profile) || !isProfileIndexable(profile, channel30?.kpis.broadcasts || 0));
+    if (autoChannel && !(seo.privatePage || missing)) c.header('X-Robots-Tag', 'noindex, follow');
     const html = renderPortalPage(await response.text(), url, profile, profiles, channel30);
     const page: Response = c.html(missing ? html.replace(/content="index, follow"/g, 'content="noindex, nofollow"') : autoChannel ? html.replace(/content="index, follow"/g, 'content="noindex, follow"') : html, missing ? 404 : 200);
     // 자료를 읽지 못한 응답은 저장하지 않는다. 정상 응답은 짧은 저장본과 하루짜리 사본(장애 대비)을 함께 둔다.
@@ -252,7 +253,8 @@ const sitemapXmlHandler = async (c: any) => {
   // 새 플랫폼에서는 기존 소개와 승인된 신규 소개를 모두 검색 목록에 포함한다.
   if (c.env.PORTAL_ENABLED === 'true') {
     const profiles = await readPublicPortalProfiles(c.env.DB);
-    return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${portalSitemap(profiles)}${await activitySitemapEntries(c.env.DB)}</urlset>`, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
+    const broadcasts = await readRecentBroadcastCounts(c.env.DB, Date.now());
+    return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${portalSitemap(profiles, broadcasts)}${await activitySitemapEntries(c.env.DB)}</urlset>`, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
   }
   const creators = await fetchAllCreatorSlugs(c.env.DB || null);
 

@@ -57,12 +57,20 @@ export function publicProfileView(profile: PortalProfile): PortalProfile {
   return profile.contentReview ? { ...profile, contentReview: { state: profile.contentReview.state, reviewedAt: profile.contentReview.reviewedAt, snapshot: '' } } : profile;
 }
 
-// 활동명·날짜·플랫폼명을 빼면 자체 설명이 거의 없고 제원·영상·공지·태그도 없는 소개.
-// 목록·캘린더에는 그대로 보이지만 검색 노출과 사이트맵에서는 제외한다. 소개를 보강하면 자동으로 다시 포함된다.
-export const THIN_PROFILE_MIN_CHARS = 30;
-export function isThinProfile(profile: PortalProfile): boolean {
-  const own = [profile.description, profile.headline, profile.details?.contentSummary, profile.fanGuide, profile.regularSchedule]
-    .filter(Boolean).join(' ').split(profile.displayName || '\u0000').join('').replace(/[^\p{L}\p{N}]/gu, '');
-  const extras = (profile.media?.length || 0) + (profile.notices?.length || 0) + Object.keys(profile.details || {}).length + (profile.tags?.length || 0);
-  return own.length < THIN_PROFILE_MIN_CHARS && extras === 0;
+// 검색 허용 기준(기획문서 41번 A1). 사람이 직접 쓴 소개 글자 수(활동명·기호 제외)와 최근 30일 방송 수로 정한다.
+// 기준에 못 미치는 소개는 목록·캘린더·링크로는 그대로 보이고, 검색 노출(noindex)과 사이트맵에서만 빠진다.
+// 소개를 보강하거나 방송 기록이 쌓이면 자동으로 다시 포함된다.
+export const PROFILE_INDEX_OWN_CHARS = 100;
+export const PROFILE_INDEX_OWN_CHARS_WITH_RECORD = 50;
+export const PROFILE_INDEX_BROADCASTS_30D = 5;
+export function profileOwnTextLength(profile: PortalProfile): number {
+  const details = profile.details;
+  return [profile.description, profile.headline, details?.contentSummary, details?.broadcastStyle, details?.fanMessage, profile.fanGuide, profile.regularSchedule]
+    .filter(Boolean).join(' ').split(profile.displayName || '\u0000').join('').replace(/[^\p{L}\p{N}]/gu, '').length;
 }
+export function isProfileIndexable(profile: PortalProfile, broadcasts30 = 0): boolean {
+  const own = profileOwnTextLength(profile);
+  return own >= PROFILE_INDEX_OWN_CHARS || (own >= PROFILE_INDEX_OWN_CHARS_WITH_RECORD && broadcasts30 >= PROFILE_INDEX_BROADCASTS_30D);
+}
+// 예전 이름. 방송 기록 없이 판단할 때(사이트맵 기록 조회 실패 등) 쓴다.
+export function isThinProfile(profile: PortalProfile): boolean { return !isProfileIndexable(profile, 0); }

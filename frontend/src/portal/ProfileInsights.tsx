@@ -6,7 +6,8 @@ import type { AnalyticsChannelBoard } from '../../../shared/analyticsBoard';
 import type { PortalProfile } from '../../../shared/portal';
 import { PORTAL_PLATFORMS, portalWebUrl } from '../../../shared/portal';
 import { activityChannelKey } from '../../../shared/broadcastActivity';
-import { profileAgencyName, topicName } from '../../../shared/profilePresentation';
+import { contentTags, profileAgencyName, topicName } from '../../../shared/profilePresentation';
+export { contentTags };
 import { t, getPortalLanguage } from './portalLocale';
 import './profileInsights.css';
 
@@ -43,9 +44,6 @@ export function debutTime(profile: PortalProfile): number | null {
 const platformLabel = (id: string) => t(PORTAL_PLATFORMS.find((item) => item.id === id)?.label || id);
 // 섹션 머리 라벨: 작은 라벨(종류) + 회색 기간.
 function Label({ name, note }: { name: string; note?: string }) { return <span className="vd-ins-eyebrow"><b>{name}</b>{note}</span>; }
-
-// 주요 콘텐츠: '버튜버'처럼 모두에게 붙는 태그는 뺀다.
-export const contentTags = (profile: PortalProfile) => (profile.tags || []).filter((tag) => !/^(버튜버|vtuber|v튜버)$/i.test(tag.trim()));
 
 // 데뷔 공지 버튼 문구: 링크 주소로 어디로 가는지 알려 준다.
 export function noticeLabel(profile: PortalProfile, url: string): string {

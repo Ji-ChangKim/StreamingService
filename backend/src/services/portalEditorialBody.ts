@@ -1,7 +1,7 @@
 import { type PortalProfile, PORTAL_PLATFORMS, portalWebUrl } from '../../../shared/portal';
 import { ABOUT_CARDS, ABOUT_INTRO, ABOUT_SECTIONS, CONTACT_SECTIONS, POLICY_CONTACT_EMAIL, PRIVACY_INTRO, PRIVACY_SECTIONS, TERMS_SECTIONS, type PolicySection } from '../../../shared/portalPolicyContent';
 import { PORTAL_GUIDES, currentDebutWeek, profileExcerpt } from '../../../shared/portalEditorial';
-import { profileAgencyName, topicName } from '../../../shared/profilePresentation';
+import { contentTags, profileAgencyName, topicName } from '../../../shared/profilePresentation';
 import { portalDay } from '../../../shared/portal';
 import type { AnalyticsChannelBoard } from '../../../shared/analyticsBoard';
 import { translatePortalText } from '../../../shared/portalTranslations';
@@ -72,6 +72,26 @@ export function homeDebutBody(profiles: PortalProfile[], language: 'ko' | 'ja' |
     + (recent.length ? `<section><h2>${text('최근 데뷔한 버튜버')}</h2><p>${text('지난 2주 동안 첫 방송을 시작한 버튜버예요.')}</p>${list(recent)}</section>` : '');
 }
 
+const WEEKDAYS = ['월', '화', '수', '목', '금', '토', '일'];
+// 방송 패턴 한 문장(화면 '방송 패턴' 섹션과 같은 기준): 최근 4주, 한국 시간 날짜, 하루 10분 이상이면 방송한 날.
+// 방송한 날이 5일 미만이면 만들지 않는다. 페이지마다 다른 숫자·요일이 나와 같은 문장이 반복되지 않는다.
+export function broadcastPatternSentence(board: AnalyticsChannelBoard, debutAt: number, now: number, language: 'ko' | 'ja' | 'en'): string {
+  const day = (ms: number) => new Date(ms + 9 * 3600000).toISOString().slice(0, 10);
+  const today = day(now);
+  const from = day(Math.max(now - 28 * 86400000, Number.isFinite(debutAt) ? debutAt : 0));
+  const minutes = new Map<string, number>();
+  for (const entry of board.log) { const d = day(Date.parse(entry.date)); if (d >= from && d < today) minutes.set(d, (minutes.get(d) || 0) + entry.minutes); }
+  const days: string[] = [];
+  for (let d = from; d < today; d = new Date(Date.parse(`${d}T00:00:00Z`) + 86400000).toISOString().slice(0, 10)) days.push(d);
+  const weekday = (d: string) => (new Date(`${d}T00:00:00Z`).getUTCDay() + 6) % 7;
+  const on = days.filter((d) => (minutes.get(d) || 0) >= 10);
+  if (on.length < 5 || days.length < 14) return '';
+  const per = (weekend: boolean) => { const all = days.filter((d) => (weekday(d) >= 5) === weekend); const n = on.filter((d) => (weekday(d) >= 5) === weekend).length; return all.length ? Math.round(n / (all.length / (weekend ? 2 : 5)) * 10) / 10 : 0; };
+  const rest = WEEKDAYS.map((_, i) => ({ i, all: days.filter((d) => weekday(d) === i).length, n: on.filter((d) => weekday(d) === i).length })).filter((x) => x.all >= 3 && x.n === 0).map((x) => translatePortalText(WEEKDAYS[x.i], language));
+  const base = translatePortalText('최근 4주 동안 평일엔 주 {0}일, 주말엔 주 {1}일 방송했어요.', language, [per(false), per(true)]);
+  return rest.length ? `${base} ${translatePortalText('{0}요일은 보통 쉬었어요.', language, [rest.join('·')])}` : base;
+}
+
 // 버튜버 상세 첫 HTML: 화면 '소개' 탭과 같은 데뷔 이야기·방송 기록 요약 문장(기획 39·40번).
 export function profileStoryBody(profile: PortalProfile, language: 'ko' | 'ja' | 'en', channel30?: AnalyticsChannelBoard | null, now = Date.now()): string {
   const esc = escapeActivityHtml;
@@ -82,7 +102,7 @@ export function profileStoryBody(profile: PortalProfile, language: 'ko' | 'ja' |
     const date = new Intl.DateTimeFormat(language, { timeZone: KST, year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(at));
     const platform = translatePortalText(PORTAL_PLATFORMS.find((item) => item.id === profile.platform)?.label || profile.platform, language);
     const agency = profileAgencyName(profile.agency);
-    const tags = (profile.tags || []).slice(0, 3);
+    const tags = contentTags(profile).slice(0, 3);
     const lines = [
       at <= now ? text('{0} {1}에서 데뷔했어요 · 오늘로 {2}일째예요', [date, platform, Math.floor((now - at) / 86400000) + 1]) : text('{0} {1}에서 데뷔할 예정이에요', [date, platform]),
       tags.length ? text('{0} {1} 방송을 주로 하는 {2} 버튜버예요.', [topicName(profile.displayName, language), tags.join('·'), platform]) : text('{0} {1} 버튜버예요.', [topicName(profile.displayName, language), platform]),
@@ -93,11 +113,14 @@ export function profileStoryBody(profile: PortalProfile, language: 'ko' | 'ja' |
   }
   const k = channel30?.kpis;
   if (channel30 && k && k.broadcasts > 0) {
-    const top = channel30.games[0];
+    // '카테고리 없음'은 콘텐츠 정보가 아니므로 문장에 쓰지 않는다.
+    const top = channel30.games.find((game) => game.name !== '카테고리 없음' && game.share >= 10);
+    const pattern = broadcastPatternSentence(channel30, at, now, language);
     const lines = [
       text('최근 30일 동안 {0}번, 모두 {1}시간 방송했어요.', [k.broadcasts.toLocaleString(language), Math.round(k.minutes / 60).toLocaleString(language)]),
       k.avg !== null ? text('평균 시청자는 {0}명, 가장 많을 때는 {1}명이었어요.', [k.avg.toLocaleString(language), (k.peak ?? k.avg).toLocaleString(language)]) : '',
       top ? text('가장 많이 한 콘텐츠는 「{0}」({1}%)예요.', [top.name, top.share]) : '',
+      pattern ? esc(pattern) : '',
     ].filter(Boolean);
     parts.push(`<section><h2>${text('최근 방송 기록')}</h2><p>${lines.join(' ')}</p></section>`);
   }
@@ -124,5 +147,5 @@ export function portalEditorialBody(path: string, language: 'ko' | 'ja' | 'en', 
     : profile.dateState === 'TIME_TBD' ? translatePortalText('{0} · 시간 미정 ({1})', language, [profile.debutDate, profile.timezone])
     : profile.dateState === 'DATE_TBD' ? translatePortalText('{0} · 날짜 미정', language, [profile.targetMonth]) : '';
 
-  return `${profile.headline ? `<p>${esc(profile.headline)}</p>` : ''}${profileStoryBody(profile, language, channel30)}${profile.description || profile.tags.length || profile.languages.length ? `<section>${profile.description ? `<p>${esc(profile.description)}</p>` : ''}<dl>${profile.tags.length ? `<dt>${text('주요 콘텐츠')}</dt><dd>${esc(profile.tags.join(' · '))}</dd>` : ''}${profile.languages.length ? `<dt>${text('방송 언어')}</dt><dd>${esc(profile.languages.join(' · '))}</dd>` : ''}</dl></section>` : ''}<section><h2>${text('소개와 일정 확인하기')}</h2>${schedule ? `<p>${esc(schedule)}</p>` : ''}${reviewedAt && Number.isFinite(Date.parse(reviewedAt)) ? `<p>${text('소개 검토일')} · <time datetime="${esc(reviewedAt)}">${esc(new Intl.DateTimeFormat(language, { timeZone: 'Asia/Seoul', year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(reviewedAt)))}</time> · KST</p>` : ''}${notice ? `<a href="${esc(notice)}" rel="noopener noreferrer">${text('데뷔 공지 원문 보기')}</a>` : ''}</section>${profileEditorialExtras(profile, language)}`;
+  return `${profile.headline ? `<p>${esc(profile.headline)}</p>` : ''}${profileStoryBody(profile, language, channel30)}${profile.description || contentTags(profile).length || profile.languages.length ? `<section>${profile.description ? `<p>${esc(profile.description)}</p>` : ''}<dl>${contentTags(profile).length ? `<dt>${text('주요 콘텐츠')}</dt><dd>${esc(contentTags(profile).join(' · '))}</dd>` : ''}${profile.languages.length ? `<dt>${text('방송 언어')}</dt><dd>${esc(profile.languages.join(' · '))}</dd>` : ''}</dl></section>` : ''}<section><h2>${text('데뷔 일정')}</h2>${schedule ? `<p>${esc(schedule)}</p>` : ''}${reviewedAt && Number.isFinite(Date.parse(reviewedAt)) ? `<p>${text('소개 검토일')} · <time datetime="${esc(reviewedAt)}">${esc(new Intl.DateTimeFormat(language, { timeZone: 'Asia/Seoul', year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(reviewedAt)))}</time> · KST</p>` : ''}${notice ? `<a href="${esc(notice)}" rel="noopener noreferrer">${text('데뷔 공지 원문 보기')}</a>` : ''}</section>${profileEditorialExtras(profile, language)}`;
 }
