@@ -4,18 +4,33 @@ import { activityStreamerPath } from '../../../../../shared/activitySeo';
 import { PlatformIcon } from './boardParts';
 
 // 스트리머 검색: 입력하면 검색창 바로 아래에 결과 목록을 펼친다.
-export function StreamerSearch({ onNavigate }: { onNavigate: (path: string) => void }) {
+// withTags: '#'로 시작하면 태그 검색(같은 이름의 게임이 있으면 게임 페이지도 함께). 게임 페이지 오른쪽 위 검색에서 쓴다.
+type TagOption = { kind: 'game' | 'tag'; name: string };
+const squash = (text: string) => text.normalize('NFKC').replace(/^#/, '').replace(/\s+/g, '').toLowerCase();
+let gameNames: Promise<string[]> | null = null;
+const loadGameNames = () => (gameNames ??= fetch('/api/analytics/board?platform=ALL').then((r) => (r.ok ? r.json() : { games: [] })).then((b: { games?: Array<{ name: string }> }) => (b.games || []).map((g) => g.name)).catch(() => []));
+export function StreamerSearch({ onNavigate, withTags = false, className = '' }: { onNavigate: (path: string) => void; withTags?: boolean; className?: string }) {
   const [query, setQuery] = useState('');
   const [items, setItems] = useState<StatisticsStreamer[]>([]);
   const [state, setState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
   const box = useRef<HTMLFormElement>(null);
+  const input = useRef<HTMLInputElement>(null);
+  const [tagItems, setTagItems] = useState<TagOption[]>([]);
+  const tagMode = withTags && query.trim().startsWith('#');
   const seq = useRef(0);
 
   const search = async (q: string) => {
     const id = ++seq.current;
     if (!q.trim()) { setItems([]); setState('idle'); return; }
+    if (withTags && q.trim().startsWith('#')) {
+      const key = q.trim().slice(1).trim();
+      if (!key) { setTagItems([]); setState('idle'); return; }
+      const games = (await loadGameNames()).filter((name) => squash(name) === squash(key));
+      if (id !== seq.current) return;
+      setTagItems([...games.map((name) => ({ kind: 'game' as const, name })), { kind: 'tag' as const, name: key.replace(/\s+/g, '') }]); setItems([]); setState('done'); setActive(-1); return;
+    }
     setState('loading');
     try {
       const response = await fetch(`/api/analytics/streamers/search?q=${encodeURIComponent(q.trim())}`);
@@ -42,23 +57,32 @@ export function StreamerSearch({ onNavigate }: { onNavigate: (path: string) => v
     const path = activityStreamerPath(streamer.channelKey || `${streamer.platform}:${streamer.id}`);
     onNavigate((streamer.recordedBroadcasts || 0) > 0 ? path : `${path}?name=${encodeURIComponent(streamer.name)}`);
   };
-  const submit = (event: FormEvent) => { event.preventDefault(); setOpen(true); if (items[active >= 0 ? active : 0] && state === 'done') go(items[active >= 0 ? active : 0]); else void search(query); };
+  const goTag = (option: TagOption) => { setOpen(false); onNavigate(option.kind === 'game' ? `/analytics/game/${encodeURIComponent(option.name)}` : `/analytics/tag/${encodeURIComponent(option.name)}`); };
+  const count = tagMode ? tagItems.length : items.length;
+  const submit = (event: FormEvent) => {
+    event.preventDefault(); setOpen(true);
+    if (tagMode) { if (tagItems[active >= 0 ? active : 0]) goTag(tagItems[active >= 0 ? active : 0]); return; }
+    if (items[active >= 0 ? active : 0] && state === 'done') go(items[active >= 0 ? active : 0]); else void search(query);
+  };
   const keys = (event: KeyboardEvent) => {
-    if (event.key === 'ArrowDown') { event.preventDefault(); setOpen(true); setActive((i) => Math.min(items.length - 1, i + 1)); }
+    if (event.key === 'ArrowDown') { event.preventDefault(); setOpen(true); setActive((i) => Math.min(count - 1, i + 1)); }
     else if (event.key === 'ArrowUp') { event.preventDefault(); setActive((i) => Math.max(-1, i - 1)); }
     else if (event.key === 'Escape') setOpen(false);
   };
 
-  return <form ref={box} className="ab-search" role="search" onSubmit={submit}>
+  return <form ref={box} className={`ab-search ${className}`} role="search" onSubmit={submit}>
     <label htmlFor="ab-q" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>스트리머 검색</label>
-    <input id="ab-q" type="search" value={query} autoComplete="off" role="combobox" aria-expanded={open && query.trim() !== ''} aria-controls="ab-q-list"
-      onChange={(e) => { setQuery(e.target.value); setOpen(true); }} onFocus={() => setOpen(true)} onKeyDown={keys} placeholder="스트리머 이름 검색" maxLength={80} />
-    <button type="submit">검색</button>
+    <input ref={input} id="ab-q" type="search" value={query} autoComplete="off" role="combobox" aria-expanded={open && query.trim() !== ''} aria-controls="ab-q-list"
+      onChange={(e) => { setQuery(e.target.value); setOpen(true); }} onFocus={() => setOpen(true)} onKeyDown={keys} placeholder={withTags ? '스트리머 이름 또는 #태그 검색' : '스트리머 이름 검색'} maxLength={80} />
+    {withTags ? <button type="button" className="ab-hash" aria-label="태그 검색으로 바꾸기" onClick={() => { const next = query.startsWith('#') ? query : `#${query}`; setQuery(next); setOpen(true); input.current?.focus(); }}>#</button> : <button type="submit">검색</button>}
     {open && query.trim() !== '' && <div className="ab-dropdown" id="ab-q-list" role="listbox">
       {state === 'loading' && !items.length && <p className="ab-dropdown-note">찾고 있어요</p>}
       {state === 'error' && <p className="ab-dropdown-note">검색하지 못했어요. 잠시 후 다시 시도해 주세요.</p>}
-      {state === 'done' && !items.length && <p className="ab-dropdown-note">‘{query.trim()}’ 스트리머를 찾지 못했어요.</p>}
-      {items.map((s, i) => <button key={`${s.platform}:${s.id}`} type="button" role="option" aria-selected={i === active} className="ab-dropdown-item" onMouseEnter={() => setActive(i)} onClick={() => go(s)}>
+      {tagMode && tagItems.map((option, i) => <button key={`${option.kind}:${option.name}`} type="button" role="option" aria-selected={i === active} className="ab-dropdown-item" onMouseEnter={() => setActive(i)} onClick={() => goTag(option)}>
+        <span className="ab-dropdown-who"><span className="ab-dropdown-name">{option.kind === 'game' ? option.name : `#${option.name}`}</span><span className="ab-dropdown-rec">{option.kind === 'game' ? '게임 페이지 · 언제 켜면 덜 붐빌까' : '태그 페이지 · 이 태그를 단 방송'}</span></span>
+      </button>)}
+      {!tagMode && state === 'done' && !items.length && <p className="ab-dropdown-note">‘{query.trim()}’ 스트리머를 찾지 못했어요.</p>}
+      {!tagMode && items.map((s, i) => <button key={`${s.platform}:${s.id}`} type="button" role="option" aria-selected={i === active} className="ab-dropdown-item" onMouseEnter={() => setActive(i)} onClick={() => go(s)}>
         {s.imageUrl ? <img src={s.imageUrl} alt="" referrerPolicy="no-referrer" /> : <span className="ab-dropdown-avatar" aria-hidden="true" />}
         <span className="ab-dropdown-who">
           <span className="ab-dropdown-name">{s.name}{s.isLive && <i className="ab-dropdown-live">방송 중</i>}</span>

@@ -723,7 +723,7 @@ export async function readGameNewcomers(db: D1Database, target: string, profiles
   if (people.size < 3) return null;
   const all = [...people.values()].flatMap((p) => p.avgs);
   const list = [...people.entries()].map(([key, p]) => { const prof = byKey.get(key)!; return { slug: prof.slug, name: prof.displayName, imageUrl: prof.avatarUrl || '', debutAt: prof.startAtUtc || `${prof.debutDate}T00:00:00+09:00`, streams: p.streams, avgViewers: p.avgs.length ? Math.round(p.avgs.reduce((a, b) => a + b, 0) / p.avgs.length) : null }; })
-    .sort((a, b) => b.streams - a.streams || (b.avgViewers || 0) - (a.avgViewers || 0)).slice(0, 6);
+    .sort((a, b) => (b.avgViewers ?? -1) - (a.avgViewers ?? -1) || b.streams - a.streams).slice(0, 10); // 평균 시청자 많은 순(같으면 방송 많은 순), 10명까지
   return { people: people.size, streams: [...people.values()].reduce((s, p) => s + p.streams, 0), avgViewers: all.length ? Math.round(median(all) as number) : null, minutes: [...people.values()].reduce((s, p) => s + p.minutes, 0), list };
 }
 
