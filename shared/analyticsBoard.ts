@@ -31,8 +31,21 @@ export interface AnalyticsBoard {
 }
 
 export interface BoardTopChannel { channelKey: string; name: string; platform: 'CHZZK' | 'SOOP'; affiliation: string; avg: number; peak: number; hours: number }
+// 게임 페이지 신입 가이드(기획문서 42번). 치지직 정각 기록, 최근 4주(28일), 한국 시간.
+export interface GameGuideSlot { day: number; start: number; per: number; broadcasts: number; viewers: number; note: string } // day: 0=월
+export interface GameGuide {
+  heat: { viewers: number[][]; broadcasts: number[][]; per: Array<Array<number | null>> }; // [월..일][0..23], per는 방송 3개 미만이면 null
+  best: GameGuideSlot[]; // 덜 붐비는 3시간 구간 TOP 3
+  busiest: { day: number; hour: number } | null; // 시청자가 가장 많은 칸
+  usualPer: number | null; // 지금 요일·시간의 4주 평균 방송 1개당 시청자
+  trend: Array<{ date: string; viewers: number | null; broadcasts: number | null }>;
+  recordDays: number; dailyChannels: number; // 검색 허용 기준(기록 일수, 하루 평균 방송 채널 수)
+  newcomers: { people: number; streams: number; avgViewers: number | null; minutes: number; list: Array<{ slug: string; name: string; imageUrl: string; debutAt: string; streams: number; avgViewers: number | null }> } | null;
+  alternatives: { day: number; start: number; games: Array<{ name: string; per: number; broadcasts: number; competition: Competition; self: boolean }> } | null;
+}
 export interface AnalyticsGameBoard {
   asOf: string | null; nextAt: string; name: string; summary: string | null;
+  guide?: GameGuide;
   now: { viewers: number; broadcasts: number; perBroadcast: number | null; competition: Competition; rank: number | null };
   days: Array<{ date: string; viewers: number | null; broadcasts: number | null }>;
   platforms: Array<{ platform: 'CHZZK' | 'SOOP'; viewers: number; share: number }>;

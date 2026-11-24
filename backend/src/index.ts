@@ -57,8 +57,9 @@ import {
 import { getLiveDiscovery } from './services/liveDiscoveryService';
 import { getLiveHistory, getCreatorHistory } from './services/liveHistoryService';
 import { getBroadcastStatistics, getStreamerBroadcastHistory } from './services/broadcastStatisticsService';
-import { boardCacheSeconds, getAnalyticsBoard, getAnalyticsChannelBoard, getAnalyticsGameBoard, getAnalyticsTagBoard } from './services/analyticsBoardService';
-import type { AnalyticsBoard, AnalyticsChannelBoard } from '../../shared/analyticsBoard';
+import { boardCacheSeconds, getAnalyticsBoard, getAnalyticsChannelBoard, getAnalyticsGameBoard, getAnalyticsTagBoard, readIndexableGames } from './services/analyticsBoardService';
+import { sitemapEntry } from './services/sitemapEntry';
+import type { AnalyticsBoard, AnalyticsChannelBoard, AnalyticsGameBoard } from '../../shared/analyticsBoard';
 import { getBroadcastActivity, getActivityBroadcastPage, readActivityCursor } from './services/broadcastActivityService';
 import { activityPeriod, validActivityRange } from '../../shared/broadcastActivity';
 import { collectBroadcastStatistics, pruneStatisticsCollections } from './services/broadcastStatisticsCollection';
@@ -66,7 +67,7 @@ import { searchStatisticsStreamers } from './services/statisticsStreamerSearchSe
 import { registerExternalStreamerToD1 } from './services/externalPlatformSearchService';
 import { ensureStreamerRegistered } from './services/onDemandStreamerService';
 import { activitySitemapEntries, renderActivityPage, escapeActivityHtml } from './services/activityPageService';
-import { boardInitialBody, boardPageTitle, methodInitialBody, renderBoardPage } from './services/analyticsBoardPage';
+import { boardInitialBody, boardPageTitle, gameInitialBody, gamePageDescription, gamePageTitle, methodInitialBody, renderBoardPage } from './services/analyticsBoardPage';
 import { prunePersonalData } from './services/personalDataRetention';
 import { activityChannelKey } from '../../shared/broadcastActivity';
 import { collectTrackedChannels, pruneChannelSamples, TRACK_CRON } from './services/trackedChannelCollection';
@@ -254,7 +255,7 @@ const sitemapXmlHandler = async (c: any) => {
   if (c.env.PORTAL_ENABLED === 'true') {
     const profiles = await readPublicPortalProfiles(c.env.DB);
     const broadcasts = await readRecentBroadcastCounts(c.env.DB, Date.now());
-    return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${portalSitemap(profiles, broadcasts)}${await activitySitemapEntries(c.env.DB)}</urlset>`, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
+    return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${portalSitemap(profiles, broadcasts)}${await activitySitemapEntries(c.env.DB)}${[...await loadIndexableGames(c)].map((game) => sitemapEntry(`/analytics/game/${encodeURIComponent(game)}`, 'ko')).join('')}</urlset>`, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
   }
   const creators = await fetchAllCreatorSlugs(c.env.DB || null);
 
@@ -1290,6 +1291,20 @@ app.get('/api/analytics/current-content', async (c) => {
 // 방송 통계 개편 화면 응답. 10분 회차 단위 키로 엣지에 저장해 다음 회차(수집 여유 2분)까지 재사용한다.
 // 통계 첫 HTML용 보드 자료: /api/analytics/board와 같은 캐시 키를 써서 한 번 계산한 결과를 함께 쓴다.
 const boardCache = () => (typeof caches === 'undefined' ? undefined : (caches as any).default as Cache);
+// 검색 허용 게임 목록(기획문서 42번 5): 무거운 4주 집계라 지역별로 6시간에 한 번만 계산해 저장한다. 실패하면 빈 목록(전부 검색 제외).
+async function loadIndexableGames(c: any): Promise<Set<string>> {
+  const now = Date.now();
+  const cache = boardCache();
+  const key = new Request(`https://vdebut.live/__vd/indexable-games?at=${Math.floor(now / (6 * HOUR_MS))}`);
+  try {
+    const hit = cache ? await cache.match(key) : undefined;
+    if (hit) return new Set(((await hit.json()) as { names: string[] }).names);
+    const data = await readIndexableGames(c.env.DB, now);
+    if (cache) c.executionCtx.waitUntil(cache.put(key, new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, s-maxage=21600' } })));
+    return new Set(data.names);
+  } catch (error) { console.warn('[Statistics] Indexable games failed', String(error)); return new Set(); }
+}
+const HOUR_MS = 3600000;
 async function loadBoardCached(c: any, platform: 'ALL' | 'CHZZK' | 'SOOP'): Promise<AnalyticsBoard> {
   const key = new URL('/api/analytics/board', c.req.url);
   key.searchParams.set('platform', platform);
@@ -1458,12 +1473,28 @@ const renderActivityPageResponse = async (c: any) => {
         ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}'),
         ...(c.env.PORTAL_ENABLED === 'true' ? {} : { mapRequestToAsset: serveSinglePageApp }),
       });
-      c.header('X-Robots-Tag', 'noindex, follow');
       c.header('Cache-Control', 'public, max-age=60, s-maxage=600');
-      // 자료 조회 없이 제목·설명·검색 제외 메타만 이 주소에 맞춘다(홈 제목이 그대로 남지 않게, 헤더와 메타의 검색 신호를 같게).
       const [, , kind, rawName] = url.pathname.split('/');
       let name = rawName; try { name = decodeURIComponent(rawName); } catch { /* 원문 그대로 쓴다. */ }
       const isTag = kind === 'tag';
+      // 게임 페이지(기획문서 42번): 화면과 같은 통계(10분 캐시 공유)로 첫 HTML을 만들고, 기준을 채운 게임만 검색 허용한다.
+      if (!isTag && name.trim().length > 0 && name.trim().length <= 80) {
+        try {
+          const key = new URL('/api/analytics/board/game', c.req.url); key.searchParams.set('name', name.trim());
+          const [{ data }, indexable] = await Promise.all([
+            cachedBoard(boardCache(), key, () => getAnalyticsGameBoard(c.env.DB, name.trim()), boardCacheSeconds, (p) => c.executionCtx.waitUntil(p)),
+            loadIndexableGames(c),
+          ]);
+          const board = data as AnalyticsGameBoard | null;
+          if (board) {
+            const index = indexable.has(board.name);
+            c.header('X-Robots-Tag', index ? 'index, follow' : 'noindex, follow');
+            return c.html(renderBoardPage(await asset.text(), `/analytics/game/${encodeURIComponent(board.name)}`, gamePageTitle(board.name), gamePageDescription(board.name), gameInitialBody(board), !index));
+          }
+        } catch (error) { console.warn('[Statistics] Game page data failed', String(error)); }
+      }
+      c.header('X-Robots-Tag', 'noindex, follow');
+      // 자료가 없으면 제목·설명·검색 제외 메타만 이 주소에 맞춘다(홈 제목이 그대로 남지 않게, 헤더와 메타의 검색 신호를 같게).
       const title = isTag ? `#${name} 태그 방송 통계 · 시청자와 방송 수 | VDébut` : `${name} 방송 통계 · 시청자·방송 수·상위 채널 | VDébut`;
       const description = isTag ? `#${name} 태그를 단 방송의 시청자와 방송 수, 함께 쓰인 태그를 10분마다 보여 줘요.` : `${name} 방송의 실시간 시청자와 방송 수, 경쟁 정도, 최근 7일 상위 채널을 10분마다 보여 줘요.`;
       const body = `<main><h1>${escapeActivityHtml(isTag ? `#${name} 태그 방송 통계` : `${name} 방송 통계`)}</h1><p>${escapeActivityHtml(description)}</p><p><a href="/analytics">방송 통계</a> · <a href="/analytics/method">집계 기준</a></p></main>`;

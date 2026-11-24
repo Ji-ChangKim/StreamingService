@@ -1,6 +1,8 @@
 import type { AnalyticsChannelBoard, ChannelPeriod } from '../../../shared/analyticsBoard';
-import type { AnalyticsBoard, AnalyticsGameBoard, AnalyticsTagBoard, BoardChannel, BoardGame, BoardPlatform, BoardTrendPoint, Competition } from '../../../shared/analyticsBoard';
+import type { AnalyticsBoard, AnalyticsGameBoard, AnalyticsTagBoard, BoardChannel, BoardGame, BoardPlatform, BoardTrendPoint, Competition, GameGuide, GameGuideSlot } from '../../../shared/analyticsBoard';
 import { normalizeBoardTag } from '../../../shared/analyticsBoard';
+import { activityChannelKey } from '../../../shared/broadcastActivity';
+import { readPublicPortalProfilesBetween } from './portalProfileRepository';
 import { profileAgencyName } from '../../../shared/profilePresentation';
 import { getChzzkStatisticsSource } from './broadcastStatisticsSources';
 import { snapshotTagsReady } from './broadcastStatisticsCollection';
@@ -386,9 +388,21 @@ export async function getAnalyticsGameBoard(db: D1Database, name: string, now = 
   if (current) parts.push(`「${target}」은 지금 방송 ${won(current.broadcasts)}개에 ${won(current.viewers)}명이 보고 있어요.`);
   if (current?.perBroadcast) parts.push(`방송당 시청자는 ${won(current.perBroadcast)}명으로 경쟁은 ${current.competition}이에요.`);
   if (busiest?.v) parts.push(`최근 4주 중 가장 많이 본 시간은 ${WEEKDAY[(busiest.d + 1) % 7]}요일 ${busiest.h}시예요.`);
+  // 신입 가이드(기획문서 42번): 치지직 정각 기록 최근 28일.
+  const since28 = new Date(now - 28 * DAY).toISOString();
+  const chzzkSlots = [...new Set(runs.filter((run) => run.platform === 'CHZZK' && run.scheduled_at >= since28).map((run) => run.scheduled_at))];
+  const base = gameGuideFrom(rows.filter((row) => row.platform === 'CHZZK' && (row.scheduled_at as string) >= since28), chzzkSlots, now);
+  const [newcomers, alternatives] = await Promise.all([
+    readPublicPortalProfilesBetween(db, new Date(now - 90 * DAY).toISOString(), new Date(now).toISOString()).then((profiles) => readGameNewcomers(db, target, profiles, now)).catch(() => null),
+    base.best[0] ? readGameAlternatives(db, target, base.best[0], chzzkSlots).catch(() => null) : Promise.resolve(null),
+  ]);
+  const guide: GameGuide = { ...base, newcomers, alternatives };
+  // 지금 경쟁: 같은 요일·시간의 4주 평균 방송 1개당 시청자와 비교(1.2배 이상 여유, 0.8배 이하 혼잡).
+  const nowPer = current?.perBroadcast ?? null;
+  const competition: Competition = nowPer === null ? '경쟁 없음' : guide.usualPer ? (nowPer >= guide.usualPer * 1.2 ? '여유' : nowPer <= guide.usualPer * 0.8 ? '혼잡' : '보통') : current?.competition || '보통';
   return {
-    asOf: latest, nextAt: boardNextAt(now), name: target, summary: parts.length >= 2 ? parts.join(' ') : null,
-    now: { viewers: current?.viewers || 0, broadcasts: current?.broadcasts || 0, perBroadcast: current?.perBroadcast ?? null, competition: current?.competition || '경쟁 없음', rank: rank >= 0 ? rank + 1 : null },
+    asOf: latest, nextAt: boardNextAt(now), name: target, summary: parts.length >= 2 ? parts.join(' ') : null, guide,
+    now: { viewers: current?.viewers || 0, broadcasts: current?.broadcasts || 0, perBroadcast: nowPer, competition, rank: rank >= 0 ? rank + 1 : null },
     days, heat, top,
     platforms: total ? (['CHZZK', 'SOOP'] as const).filter((p) => byPlatform[p]).map((p) => ({ platform: p, viewers: Math.round(byPlatform[p] / Math.max(1, new Set(week.map((row) => row.scheduled_at)).size)), share: Math.round(byPlatform[p] / total * 100) })) : [],
   };
@@ -602,4 +616,130 @@ export function boardCacheSeconds(asOf: string | null, now = Date.now()): number
   const currentSlot = Math.floor(now / SLOT) * SLOT;
   if (!asOf || Date.parse(asOf) < currentSlot) return 60;
   return Math.max(60, Math.round((currentSlot + SLOT + 2 * 60000 - now) / 1000));
+}
+
+// ── 게임 페이지 신입 가이드(기획문서 42번) ──
+// 치지직 정각 기록 최근 28일, 한국 시간. 칸 = 요일(월=0)×시간.
+const MONDAY0 = (iso: string) => (kstWeekday(iso) + 6) % 7;
+export function gameGuideFrom(rows: SnapshotRow[], slots: string[], now: number): Omit<GameGuide, 'newcomers' | 'alternatives'> {
+  const cell = () => Array.from({ length: 7 }, () => Array.from({ length: 24 }, () => 0));
+  const slotCount = cell(), sumV = cell(), sumN = cell();
+  for (const slot of slots) slotCount[MONDAY0(slot)][kstHour(slot)] += 1;
+  const channelsByDay = new Map<string, Set<string>>();
+  const bySlot = new Map<string, { v: number; n: number }>();
+  for (const row of rows) {
+    const at = row.scheduled_at as string;
+    sumV[MONDAY0(at)][kstHour(at)] += row.viewers; sumN[MONDAY0(at)][kstHour(at)] += 1;
+    const day = kstDate(at); const set = channelsByDay.get(day) || new Set<string>(); set.add(row.channel_key.toLowerCase()); channelsByDay.set(day, set);
+    const entry = bySlot.get(at) || { v: 0, n: 0 }; entry.v += row.viewers; entry.n += 1; bySlot.set(at, entry);
+  }
+  const avg = (a: number, b: number) => (b ? a / b : 0);
+  const viewers = sumV.map((row, d) => row.map((v, h) => Math.round(avg(v, slotCount[d][h]))));
+  const broadcasts = sumN.map((row, d) => row.map((n, h) => Math.round(avg(n, slotCount[d][h]) * 10) / 10));
+  // 방송이 평균 3개 미만인 칸은 방송 1개당 시청자가 크게 흔들리므로 비운다.
+  const per = sumV.map((row, d) => row.map((v, h) => (broadcasts[d][h] >= 3 && sumN[d][h] ? Math.round(v / sumN[d][h]) : null)));
+  const windows: GameGuideSlot[] = [];
+  for (let d = 0; d < 7; d += 1) for (let h = 0; h <= 21; h += 1) {
+    if ([0, 1, 2].some((i) => per[d][h + i] === null)) continue;
+    const v = [0, 1, 2].reduce((s, i) => s + sumV[d][h + i], 0), n = [0, 1, 2].reduce((s, i) => s + sumN[d][h + i], 0);
+    windows.push({ day: d, start: h, per: Math.round(v / n), broadcasts: Math.round([0, 1, 2].reduce((s, i) => s + broadcasts[d][h + i], 0) / 3 * 10) / 10, viewers: Math.round([0, 1, 2].reduce((s, i) => s + viewers[d][h + i], 0) / 3), note: '' });
+  }
+  windows.sort((a, b) => b.per - a.per);
+  const best: GameGuideSlot[] = [];
+  for (const w of windows) { if (best.length >= 3) break; if (!best.some((b) => b.day === w.day && Math.abs(b.start - w.start) < 3)) best.push(w); }
+  const valid = per.flatMap((row, d) => row.map((p, h) => (p === null ? null : { v: viewers[d][h], n: broadcasts[d][h] }))).filter((x): x is { v: number; n: number } => x !== null);
+  const midV = median(valid.map((x) => x.v)) || 0, midN = median(valid.map((x) => x.n)) || 0;
+  if (best.length) {
+    const fewest = best.reduce((a, b) => (b.broadcasts < a.broadcasts ? b : a));
+    for (const b of best) b.note = b === fewest && best.length > 1 ? '방송이 가장 적은 시간이에요' : b.viewers >= midV && b.broadcasts <= midN ? '시청자는 많은 편인데 방송은 적어요' : '';
+  }
+  const top = viewers.flatMap((row, d) => row.map((v, h) => ({ v, d, h }))).sort((a, b) => b.v - a.v)[0];
+  const today = kstDate(now);
+  const trend = Array.from({ length: 28 }, (_, i) => {
+    const date = kstDate(Date.parse(`${today}T00:00:00Z`) - (27 - i) * DAY - KST);
+    const daySlots = slots.filter((slot) => kstDate(slot) === date);
+    if (!daySlots.length) return { date, viewers: null, broadcasts: null };
+    const sum = daySlots.reduce((acc, slot) => { const e = bySlot.get(slot); return { v: acc.v + (e?.v || 0), n: acc.n + (e?.n || 0) }; }, { v: 0, n: 0 });
+    return { date, viewers: Math.round(sum.v / daySlots.length), broadcasts: Math.round(sum.n / daySlots.length * 10) / 10 };
+  });
+  const nowISO = new Date(now).toISOString();
+  return {
+    heat: { viewers, broadcasts, per }, best, busiest: top && top.v > 0 ? { day: top.d, hour: top.h } : null,
+    usualPer: per[MONDAY0(nowISO)][kstHour(nowISO)], trend,
+    recordDays: channelsByDay.size, dailyChannels: Math.round([...channelsByDay.values()].reduce((s, set) => s + set.size, 0) / 28 * 10) / 10,
+  };
+}
+
+// 검색 허용 기준(기획문서 42번 5): 최근 28일 중 20일 이상 기록, 하루 평균 방송 채널 3개 이상.
+export const GAME_INDEX_MIN_DAYS = 20;
+export const GAME_INDEX_MIN_DAILY = 3;
+export const isGameIndexable = (guide: { recordDays: number; dailyChannels: number }) => guide.recordDays >= GAME_INDEX_MIN_DAYS && guide.dailyChannels >= GAME_INDEX_MIN_DAILY;
+
+// 사이트맵·검색 허용용 게임 목록(하루 몇 번만 계산해 캐시). 게임 페이지와 같은 기준·같은 기록을 쓴다.
+export async function readIndexableGames(db: D1Database, now = Date.now()): Promise<{ asOf: string | null; names: string[] }> {
+  const since = new Date(now - 28 * DAY).toISOString();
+  const result = await db.prepare(`SELECT s.category_name AS c, substr(datetime(r.scheduled_at, '+9 hours'), 1, 10) AS d, COUNT(DISTINCT lower(s.channel_key)) AS n
+    FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id = s.run_id
+    WHERE ${HOURLY} AND r.platform = 'CHZZK' AND r.scheduled_at >= ? GROUP BY s.category_name, d`).bind(since).all<{ c: string; d: string; n: number }>();
+  const games = new Map<string, Map<string, number>>();
+  for (const row of result.results || []) {
+    if (NOT_A_GAME_TITLE.test(row.c.trim()) || !isGameCategory(row.c)) continue;
+    const name = gameName(row.c); const days = games.get(name) || new Map<string, number>();
+    days.set(row.d, (days.get(row.d) || 0) + Number(row.n)); games.set(name, days);
+  }
+  const names = [...games.entries()].filter(([, days]) => isGameIndexable({ recordDays: days.size, dailyChannels: [...days.values()].reduce((s, n) => s + n, 0) / 28 })).map(([name]) => name).sort((a, b) => a.localeCompare(b, 'ko'));
+  return { asOf: new Date(now).toISOString(), names };
+}
+
+// 신입(데뷔 90일 이내 등록 버튜버)의 이 게임 방송: 일일 요약(0066) 방송별 기록. 3명 미만이면 null(섹션 숨김).
+export async function readGameNewcomers(db: D1Database, target: string, profiles: Array<{ slug: string; displayName: string; avatarUrl: string; platform: string; channelUrl: string; startAtUtc: string; debutDate: string }>, now = Date.now()): Promise<GameGuide['newcomers']> {
+  const byKey = new Map<string, (typeof profiles)[number]>();
+  for (const p of profiles) { const key = p.platform === 'CHZZK' || p.platform === 'SOOP' ? activityChannelKey(p.platform, p.channelUrl) : null; if (key) byKey.set(key, p); }
+  if (byKey.size < 3) return null;
+  const since = kstDate(now - 30 * DAY);
+  const keys = [...byKey.keys()];
+  const rows: Array<{ channel_key: string; minutes: number; viewer_points: number; viewer_sum: number; category_minutes: string | null }> = [];
+  try {
+    for (let i = 0; i < keys.length; i += 90) {
+      const part = keys.slice(i, i + 90);
+      const r = await db.prepare(`SELECT channel_key, minutes, viewer_points, viewer_sum, category_minutes FROM analytics_channel_streams WHERE day >= ? AND channel_key IN (${inList(part)})`).bind(since, ...part).all<(typeof rows)[number]>();
+      rows.push(...(r.results || []));
+    }
+  } catch { return null; }
+  const people = new Map<string, { streams: number; minutes: number; avgs: number[] }>();
+  for (const row of rows) {
+    let cats: Record<string, number> = {};
+    try { cats = JSON.parse(row.category_minutes || '{}'); } catch { continue; }
+    const gm = Object.entries(cats).filter(([c]) => gameName(c) === target).reduce((s, [, m]) => s + Number(m || 0), 0);
+    if (gm < 30 && gm < row.minutes / 2) continue;
+    const entry = people.get(row.channel_key) || { streams: 0, minutes: 0, avgs: [] };
+    entry.streams += 1; entry.minutes += gm; if (row.viewer_points > 0) entry.avgs.push(row.viewer_sum / row.viewer_points);
+    people.set(row.channel_key, entry);
+  }
+  if (people.size < 3) return null;
+  const all = [...people.values()].flatMap((p) => p.avgs);
+  const list = [...people.entries()].map(([key, p]) => { const prof = byKey.get(key)!; return { slug: prof.slug, name: prof.displayName, imageUrl: prof.avatarUrl || '', debutAt: prof.startAtUtc || `${prof.debutDate}T00:00:00+09:00`, streams: p.streams, avgViewers: p.avgs.length ? Math.round(p.avgs.reduce((a, b) => a + b, 0) / p.avgs.length) : null }; })
+    .sort((a, b) => b.streams - a.streams || (b.avgViewers || 0) - (a.avgViewers || 0)).slice(0, 6);
+  return { people: people.size, streams: [...people.values()].reduce((s, p) => s + p.streams, 0), avgViewers: all.length ? Math.round(all.reduce((a, b) => a + b, 0) / all.length) : null, minutes: [...people.values()].reduce((s, p) => s + p.minutes, 0), list };
+}
+
+// 같은 시간 다른 게임: 1위 구간(요일·3시간)의 최근 4주 정각 기록. 평균 방송 2개 이상인 게임만, 최대 5개(이 게임 포함).
+export async function readGameAlternatives(db: D1Database, target: string, slot: { day: number; start: number }, slots: string[]): Promise<GameGuide['alternatives']> {
+  const picked = slots.filter((s) => MONDAY0(s) === slot.day && kstHour(s) >= slot.start && kstHour(s) < slot.start + 3);
+  if (!picked.length) return null;
+  const result = await db.prepare(`SELECT s.category_name, s.viewers FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id = s.run_id
+    WHERE ${HOURLY} AND r.platform = 'CHZZK' AND r.scheduled_at IN (${inList(picked)})`).bind(...picked).all<{ category_name: string; viewers: number }>();
+  const games = new Map<string, { v: number; n: number }>();
+  for (const row of result.results || []) {
+    if (NOT_A_GAME_TITLE.test(row.category_name.trim()) || !isGameCategory(row.category_name)) continue;
+    const name = gameName(row.category_name); const e = games.get(name) || { v: 0, n: 0 }; e.v += row.viewers; e.n += 1; games.set(name, e);
+  }
+  const rowsOut = [...games.entries()].map(([name, e]) => ({ name, per: Math.round(e.v / e.n), broadcasts: Math.round(e.n / picked.length * 10) / 10 })).filter((g) => g.broadcasts >= 2);
+  const mid = median(rowsOut.map((g) => g.per)) || 0;
+  const label = (per: number): Competition => (!mid ? '보통' : per >= mid * 1.2 ? '여유' : per <= mid * 0.8 ? '혼잡' : '보통');
+  const sorted = rowsOut.sort((a, b) => b.per - a.per);
+  const self = sorted.find((g) => g.name === target);
+  const top = sorted.filter((g) => g.name !== target).slice(0, self ? 4 : 5);
+  const out = (self ? [self, ...top] : top).sort((a, b) => b.per - a.per).map((g) => ({ ...g, competition: label(g.per), self: g.name === target }));
+  return out.length >= 3 ? { day: slot.day, start: slot.start, games: out } : null;
 }

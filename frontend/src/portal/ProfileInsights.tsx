@@ -125,7 +125,7 @@ function Summary({ data, days, setDays, openRecord }: { data: AnalyticsChannelBo
     <Label name="BROADCAST" note={t('최근 {0}일', [days])} />
     <h2 id="ins-rec">{heading}</h2>
     <div className="vd-ins-two">
-      {top.length > 0 && <div><p className="vd-ins-sub">{t('주로 한 콘텐츠')}</p>{top.map((g, i) => <div className="vd-ins-bar" key={g.name}><span>{g.name}</span><i className={`l${i + 1}`} style={{ width: `${Math.max(4, g.share / Math.max(1, top[0].share) * 100)}%` }} /><em>{g.share}%</em></div>)}</div>}
+      {top.length > 0 && <div><p className="vd-ins-sub">{t('주로 한 콘텐츠')}</p>{top.map((g, i) => <div className="vd-ins-bar" key={g.name}><span>{g.isGame ? <a className="vd-ins-game" href={`/analytics/game/${encodeURIComponent(g.name)}`}>{g.name}</a> : g.name}</span><i className={`l${i + 1}`} style={{ width: `${Math.max(4, g.share / Math.max(1, top[0].share) * 100)}%` }} /><em>{g.share}%</em></div>)}</div>}
       <div><p className="vd-ins-sub">{t('요일별 방송 시간')}</p><div className="vd-ins-week">{totalWeek.map((v, d) => <div key={d}><i className={v >= maxWeek * 0.75 && v > 0 ? 'hi' : ''} style={{ height: `${Math.max(2, v / maxWeek * 80)}px` }} />{t(DAYS[d])}</div>)}</div></div>
     </div>
     <div className="vd-ins-foot"><span>{t('{0}번 방송 · {1}시간 · 공개 방송 기록 기준', [num(k.broadcasts), num(k.minutes / 60)])}</span><button type="button" onClick={openRecord}>{t('방송 기록 자세히 보기')} →</button></div>
