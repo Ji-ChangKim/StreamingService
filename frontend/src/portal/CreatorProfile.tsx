@@ -7,7 +7,6 @@ import { dateTimeFormatter } from '../../../shared/dateTimeFormatter';
 import { CopyButton, FavoriteButton, PlatformBadge, PortalAvatar, PortalLink, PortalState, downloadPortalSchedule, portalSchedule } from './PortalUi';
 import { ProfileCover } from './ProfileCover';
 import { getPortalLanguage, t, usePortalLocale } from './portalLocale';
-import { isPublicProfile } from '../../../shared/contentReview';
 import { ProfileArchiveOverview } from './ProfileArchiveOverview';
 import type { ProfileBroadcast, ProfileChannelMedia } from '../../../shared/profileDetails';
 import { useProfileDetail } from './useProfileDetail';
@@ -124,7 +123,7 @@ function ProfileLinks({ profile, compact = false }: { profile: PortalProfile; co
   if (!channels.length && !links.length) return null;
   return <section className={compact ? 'vd-detail-quicklinks' : 'vd-panel vd-profile-channels'} aria-label={t('채널')}>{!compact && <h2>{t('채널')}</h2>}<div className="vd-profile-links">
     {/* 치지직과 SOOP은 아이콘과 임의 글꼴을 조합하지 않고 공식 브랜드 로고 원본을 사용한다. */}
-    {channels.map((channel) => <a className={channel.platform === 'CHZZK' ? 'vd-chzzk-channel-link' : channel.platform === 'SOOP' ? 'vd-soop-channel-link' : undefined} href={portalWebUrl(channel.channelUrl)} key={`${channel.platform}:${channel.channelUrl}`} target="_blank" rel="noopener noreferrer"><span>{channel.platform === 'CHZZK' ? <span className="vd-chzzk-channel-brand"><img src="/icons/chzzk/chzzklogo_kor(Black).png" alt="치지직" /></span> : channel.platform === 'SOOP' ? <span className="vd-soop-channel-brand"><img src="/icons/soop/soop_logo_blue.svg" alt="SOOP" /></span> : <PlatformBadge platform={channel.platform} />}{channels.filter((item) => item.platform === channel.platform).length > 1 && <small>{channel.primary ? t('대표 방송 채널') : t('추가 방송·영상 채널')}</small>}</span></a>)}
+    {channels.map((channel) => <a className={channel.platform === 'CHZZK' ? 'vd-chzzk-channel-link' : channel.platform === 'SOOP' ? 'vd-soop-channel-link' : undefined} href={portalWebUrl(channel.channelUrl)} key={`${channel.platform}:${channel.channelUrl}`} target="_blank" rel="noopener noreferrer"><span>{channel.platform === 'CHZZK' ? <span className="vd-chzzk-channel-brand"><img src="/icons/chzzk/chzzklogo_kor_black.png" alt="치지직" /></span> : channel.platform === 'SOOP' ? <span className="vd-soop-channel-brand"><img src="/icons/soop/soop_logo_blue.svg" alt="SOOP" /></span> : <PlatformBadge platform={channel.platform} />}{channels.filter((item) => item.platform === channel.platform).length > 1 && <small>{channel.primary ? t('대표 방송 채널') : t('추가 방송·영상 채널')}</small>}</span></a>)}
     {links.map((link) => <a key={link.url} href={portalWebUrl(link.url || '')} target="_blank" rel="noopener noreferrer"><strong>{t(link.label)}</strong></a>)}
   </div></section>;
 }
@@ -186,7 +185,8 @@ export function ProfileExperience({ profile, profiles = [], onNavigate, preview 
   // 저장된 개인 활동 구분값을 소속명처럼 표시하지 않는다.
   const agency = profileAgencyName(profile.agency);
   // 기존 소개에 검토 기록이 없으면 검토일을 만들거나 접근하지 않는다.
-  const reviewedAt = isPublicProfile(profile) ? profile.contentReview?.reviewedAt : undefined;
+  // 공개 목록은 서버가 공개 기준을 통과한 소개만 보내며, 검토 사본은 응답에서 제외된다.
+  const reviewedAt = profile.contentReview?.state === 'APPROVED' ? profile.contentReview.reviewedAt : undefined;
   const IdentityHeading = preview ? 'h2' : 'h1';
 
   // 팀·크루 정보 계산

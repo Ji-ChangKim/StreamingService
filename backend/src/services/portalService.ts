@@ -1,13 +1,13 @@
 import { readPortalProfiles, readPortalProfileBySlug, readPublicPortalProfiles, readPublicPortalProfileBySlug } from './portalProfileRepository';
 import { publicResponseCache } from './publicResponseCache';
-import { isPublicProfile, reviewedProfile } from '../../../shared/contentReview';
+import { isPublicProfile, reviewedProfile, publicProfileView } from '../../../shared/contentReview';
 import { cleanProfilePresentation } from '../../../shared/profilePresentation';
 import { readProfileBroadcast } from './portalProfileDetail';
 import { readProfileChannelMedia } from './portalChannelMedia';
 import { cleanWikiParticipation } from '../../../shared/wikiParticipation';
 import { broadcastNewDebutToDiscord } from './discordBotService';
 import { portalProfileEvent } from './unifiedEventService';
-export { readPortalProfiles, readPortalProfileBySlug, readPublicPortalProfiles, readPublicPortalProfileBySlug } from './portalProfileRepository';
+export { readPortalProfiles, readPortalProfileBySlug, readPublicPortalProfiles, readPublicPortalProfilesBetween, readPublicPortalProfileBySlug } from './portalProfileRepository';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { verifyAdminLogin, validateAdminToken } from './adminAuthService';
@@ -156,6 +156,7 @@ portalApi.get('/channels/check', async (c) => {
 
 // 공개 프로필은 실제 DB 결과만 반환한다.
 export const PUBLIC_PROFILE_LIST_CACHE_SECONDS = 60;
+export const PUBLIC_PROFILE_DETAIL_CACHE_SECONDS = 60;
 portalApi.get('/profiles', async (c) => {
   // 개인 신청과 분리한 공개 소개만 60초 동안 엣지·브라우저에서 재사용한다.
   // 관리자 변경 직후 화면은 no-cache 요청으로 캐시를 갱신한다.
@@ -163,7 +164,7 @@ portalApi.get('/profiles', async (c) => {
   c.header('Cache-Control', `public, max-age=${PUBLIC_PROFILE_LIST_CACHE_SECONDS}`);
   try {
     const key = new URL(c.req.url); key.search = ''; key.searchParams.set('version', c.req.query('version') || '');
-    return await publicResponseCache(c.req.raw, key, PUBLIC_PROFILE_LIST_CACHE_SECONDS, async () => c.json({ profiles: await readPublicPortalProfiles(c.env.DB) }), (promise) => c.executionCtx.waitUntil(promise));
+    return await publicResponseCache(c.req.raw, key, PUBLIC_PROFILE_LIST_CACHE_SECONDS, async () => c.json({ profiles: (await readPublicPortalProfiles(c.env.DB)).map(publicProfileView) }), (promise) => c.executionCtx.waitUntil(promise));
   } catch {
     c.header('Cache-Control', 'no-store');
     return c.json({ error: '소개를 불러오지 못했습니다. 다시 시도해 주세요.' }, 503);
@@ -173,13 +174,19 @@ portalApi.get('/profiles', async (c) => {
 // 소개 상세에는 검토한 저장 배너만 제공하고 외부 원문은 가져오지 않는다.
 // 상세 단건 조회는 공개 검토를 통과한 저장 정보와 최근 방송 상태를 함께 반환한다.
 portalApi.get('/profiles/:slug/detail', async (c) => {
-  c.header('Cache-Control', 'no-store');
+  // 방송 상태·영상은 치지직·SOOP에 실시간 조회해 약 2초가 걸리므로 정상 응답을 1분 동안 재사용한다.
+  c.header('Cache-Control', `public, max-age=${PUBLIC_PROFILE_DETAIL_CACHE_SECONDS}`);
   try {
-    const profile = await readPublicPortalProfileBySlug(c.env.DB, c.req.param('slug'));
-    if (!profile) return c.json({ error: '소개를 찾을 수 없습니다.' }, 404);
-    const [broadcast, channelMedia] = await Promise.all([readProfileBroadcast(profile), readProfileChannelMedia(profile)]);
-    return c.json({ profile, broadcast, channelMedia });
+    const key = new URL(c.req.url); key.search = '';
+    return await publicResponseCache(c.req.raw, key, PUBLIC_PROFILE_DETAIL_CACHE_SECONDS, async () => {
+      const profile = await readPublicPortalProfileBySlug(c.env.DB, c.req.param('slug'));
+      if (!profile) { c.header('Cache-Control', 'no-store'); return c.json({ error: '소개를 찾을 수 없습니다.' }, 404); }
+      const [broadcast, channelMedia] = await Promise.all([readProfileBroadcast(profile), readProfileChannelMedia(profile)]);
+      // 외부 조회 실패도 1분만 재사용한다. 계속 실패하는 채널이 방문마다 다시 기다리지 않게 한다.
+      return c.json({ profile: publicProfileView(profile), broadcast, channelMedia });
+    }, (promise) => c.executionCtx.waitUntil(promise));
   } catch {
+    c.header('Cache-Control', 'no-store');
     return c.json({ error: '소개를 불러오지 못했습니다. 다시 시도해 주세요.' }, 503);
   }
 });

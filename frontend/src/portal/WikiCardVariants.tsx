@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { warmCreator } from './portalPrefetch';
 import { HeartIcon, ArrowUpRightIcon, CalendarDaysIcon, CalendarPlusIcon } from '@animateicons/react/lucide';
 import { sizedImageUrl } from './imageDelivery';
 import { Sparkles, Clock } from 'lucide-react';
@@ -36,7 +37,7 @@ function dateLabel(profile: PortalProfile): string {
 }
 
 // 카드 크기는 CSS가 정하며, size는 변환 이미지의 기준 너비로만 사용한다.
-function CardAvatar({ profile, className = '', size = 80 }: { profile: PortalProfile; className?: string; size?: number }) {
+function CardAvatar({ profile, className = '', size = 80, eager = false }: { profile: PortalProfile; className?: string; size?: number; eager?: boolean }) {
   const [failed, setFailed] = useState(false);
   return (
     <img
@@ -45,7 +46,8 @@ function CardAvatar({ profile, className = '', size = 80 }: { profile: PortalPro
       alt={profile.displayName}
       width={size}
       height={size}
-      loading="lazy"
+      loading={eager ? 'eager' : 'lazy'}
+      {...(eager ? { fetchpriority: 'high' } : {})}
       decoding="async"
       onError={() => setFailed(true)}
     />
@@ -55,7 +57,7 @@ function CardAvatar({ profile, className = '', size = 80 }: { profile: PortalPro
 // 타사 스트리밍 플랫폼 공식 브랜딩 로고 (치지직 공식 국문 기본형, SOOP 공식 로고, YouTube 공식 로고)
 function PlatformBrandLogo({ platformId, alt = '' }: { platformId: string; alt?: string }) {
   if (platformId === 'CHZZK') {
-    return <img className="platform-brand-img is-chzzk" src="/icons/chzzk/chzzklogo_kor(Black).png" alt={alt || '치지직'} />;
+    return <img className="platform-brand-img is-chzzk" src="/icons/chzzk/chzzklogo_kor_black.png" alt={alt || '치지직'} />;
   }
   if (platformId === 'SOOP') {
     return <img className="platform-brand-img is-soop" src="/icons/soop/soop_logo_blue.svg" alt={alt || 'SOOP'} />;
@@ -126,6 +128,9 @@ export function WikiCreatorCardSchedule({
     <article
       className="creator-card-focus-timing"
       onClick={() => open(profile.slug)}
+      onPointerEnter={() => warmCreator(profile.slug)}
+      onTouchStart={() => warmCreator(profile.slug)}
+      onFocus={() => warmCreator(profile.slug)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
@@ -209,11 +214,13 @@ export function WikiCreatorCardContent({
   open,
   favorites,
   toggle,
+  index = 99,
 }: {
   profile: PortalProfile;
   open: (slug: string) => void;
   favorites: string[];
   toggle: (slug: string) => void;
+  index?: number;
   now: number;
 }) {
   const platform = platforms.find((item) => item.id === profile.platform);
@@ -233,6 +240,9 @@ export function WikiCreatorCardContent({
     <article
       className="creator-card-focus-profile"
       onClick={() => open(profile.slug)}
+      onPointerEnter={() => warmCreator(profile.slug)}
+      onTouchStart={() => warmCreator(profile.slug)}
+      onFocus={() => warmCreator(profile.slug)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
@@ -244,7 +254,8 @@ export function WikiCreatorCardContent({
     >
       {/* 1순위: 카드 가로 100%를 꽉 채우는 대형 프로필 비주얼 커버 (Full-Bleed 200px) */}
       <div className="profile-hero-cover">
-        <CardAvatar profile={profile} className="profile-cover-img" size={360} />
+        {/* 첫 줄 카드는 화면에 바로 보이므로 이미지를 먼저 받는다. */}
+        <CardAvatar profile={profile} className="profile-cover-img" size={360} eager={index <= 4} />
         <div className="profile-cover-gradient" />
 
         {/* 상단 오버레이: 소속사/데뷔 뱃지 + 관심 하트 버튼 */}
@@ -329,6 +340,9 @@ export function WikiCreatorCardLore({
     <article
       className="creator-card-focus-lore"
       onClick={() => open(profile.slug)}
+      onPointerEnter={() => warmCreator(profile.slug)}
+      onTouchStart={() => warmCreator(profile.slug)}
+      onFocus={() => warmCreator(profile.slug)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {

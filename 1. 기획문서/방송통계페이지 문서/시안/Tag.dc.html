@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>태그 채널 목록 — 디자인 시스템 규격</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="./ds.css">
+</helmet>
+<div class="vd">
+  <header class="hdr"><div class="hdr-in"><b>VDébut</b><nav><a href="#">데뷔 캘린더</a><a href="#">버튜버 탐색</a><a class="on" href="Main.dc.html">방송 통계</a></nav></div></header>
+  <main class="pg">
+    <nav class="crumb"><a href="Main.dc.html">방송 통계</a> / 방송 태그 순위 / #신입</nav>
+    <section class="head">
+      <div><span class="eyebrow">BROADCAST TAG</span><h1>#신입</h1><p style="display:flex;align-items:center;gap:6px"><img src="/_blob/af83299f810965a478532a41f1074b69" alt="" style="width:16px;height:16px">치지직 방송 태그 · 오늘 오후 9시 30분 기준</p></div>
+    </section>
+
+    <section class="kpis" aria-label="지금 한눈에">
+      <article class="panel kpi hero"><span class="lab">지금 #신입 시청자</span><div><span class="num">17,205</span><span class="unit">명</span></div><span class="chip">태그 순위 3위</span>
+        <svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:100%;height:36px;display:block" aria-hidden="true"><polygon points="0,30 0,26 20,25 40,22 60,16 80,10 92,8 92,30" fill="#DBE7FB"></polygon><polyline points="0,26 20,25 40,22 60,16 80,10 92,8" fill="none" stroke="#2563EB" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg></article>
+      <article class="panel kpi"><span class="lab">지금 방송 수</span><div><span class="num">15</span><span class="unit">개</span></div><p class="sub">치지직 인기 방송 상위 100개 중</p></article>
+      <article class="panel kpi"><span class="lab">방송당 시청자</span><div><span class="num">1,147</span><span class="unit">명</span></div><p class="sub">상위 3개 채널이 <b>69%</b></p></article>
+      <article class="panel kpi"><span class="lab">가장 많이 함께 한 콘텐츠</span><div><a href="Game.dc.html" class="num" style="font-size:22px;color:#19263B">리그 오브 레전드</a></div><p class="sub">지금 <b>5개</b> 방송</p></article>
+    </section>
+
+    <div class="grid3">
+      <section class="panel">
+        <div class="sec-h">
+          <div><span class="eyebrow">#신입 추이</span><h2>저녁 9시에 #신입 방송을 가장 많이 봤어요 · 17,205명</h2></div>
+          <div class="seg"><button aria-pressed="true">오늘</button><button aria-pressed="false">어제</button><button aria-pressed="false">7일</button><button aria-pressed="false">30일</button></div>
+        </div>
+        <div class="legend"><span><i class="dot" style="background:#2563EB"></i>태그 시청자</span><span><i style="width:16px;border-top:2px solid #19263B;display:inline-block"></i>태그 방송 수</span></div>
+        <div class="chart" style="height:180px">
+          <sc-for list="{{trend.bars}}" as="b" hint-placeholder-count="24"><span><i style="{{b}}"></i></span></sc-for>
+          <svg viewBox="0 0 2400 100" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible"><polyline points="{{trend.line}}" fill="none" stroke="#19263B" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>
+        </div>
+        <div class="xl"><sc-for list="{{trend.labels}}" as="l" hint-placeholder-count="24"><span>{{l}}</span></sc-for></div>
+      </section>
+      <section class="panel brief">
+        <div><span class="eyebrow">#신입 방송은 무엇을 하나</span><h2 class="ph2">게임 방송이 대부분이에요</h2></div>
+        <div class="blk" style="border-top:0;padding-top:0"><h3>콘텐츠 구성 <small>지금 방송 수 기준</small></h3>
+          <div class="share"><i style="width:34%;background:#2563EB"></i><i style="width:27%;background:#5B8DEF"></i><i style="width:20%;background:#8FB1F2"></i><i style="width:19%;background:#F1F5F9"></i></div>
+          <div class="slegend" style="margin:0"><span><i class="dot" style="background:#2563EB"></i>리그 오브 레전드 <b>34%</b></span><span><i class="dot" style="background:#5B8DEF"></i>발로란트 <b>27%</b></span><span><i class="dot" style="background:#8FB1F2"></i>토크 <b>20%</b></span><span><i class="dot" style="background:#F1F5F9"></i>기타 <b>19%</b></span></div></div>
+        <div class="blk"><h3>함께 많이 쓴 태그</h3><ul class="tags"><li><a href="Tag.dc.html">#버츄얼 <small>5개</small></a></li><li><a href="Tag.dc.html">#소통 <small>5개</small></a></li><li><a href="Tag.dc.html">#공포 <small>3개</small></a></li><li><a href="Tag.dc.html">#노래 <small>2개</small></a></li></ul></div>
+      </section>
+    </div>
+
+    <section class="panel">
+      <div class="sec-h"><div><span class="eyebrow">#신입 태그로 지금 방송 중인 채널</span><h2>상위 3개 채널이 이 태그 시청자의 69%를 모으고 있어요</h2></div></div>
+      <ol class="top3"><sc-for list="{{top3}}" as="t" hint-placeholder-count="3"><li class="{{t.cls}}"><span class="rk">{{t.rank}}</span><span class="av"></span><a href="Channel.dc.html" class="nm">{{t.name}}</a><span class="vw">{{t.viewers}}</span><span class="meta"><span class="plat"><img src="/_blob/af83299f810965a478532a41f1074b69" alt="">{{t.sub}}</span> · {{t.game}}</span><button class="btn sm wide">방송 보기</button></li></sc-for></ol>
+      <ol class="rows"><sc-for list="{{rows}}" as="r" hint-placeholder-count="5"><li><span class="rn">{{r.rank}}</span><span class="av sm"></span><a class="who" href="Channel.dc.html"><b>{{r.name}}</b><span class="plat"><img src="/_blob/af83299f810965a478532a41f1074b69" alt="">{{r.sub}}</span></a><span class="game">{{r.game}}</span><span class="vbar"><span class="tr"><i style="{{r.bar}}"></i></span><strong>{{r.viewers}}</strong></span><button class="btn sm">방송 보기</button></li></sc-for></ol>
+      <div style="text-align:center;margin-top:16px"><button class="btn">15개 모두 보기</button></div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const v = [6, 5, 4, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 17.2, null, null];
+    const c = [8, 7, 6, 5, 5, 5, 5, 6, 7, 8, 9, 10, 10, 11, 12, 12, 13, 13, 14, 14, 15, 15, null, null];
+    const trend = {
+      bars: v.map((x) => `height:${x == null ? 0 : x / 20 * 88}%;max-width:28px;background:#2563EB`),
+      line: c.map((x, i) => (x == null ? null : `${i * 100 + 50},${(100 - x / 18 * 88).toFixed(1)}`)).filter(Boolean).join(' '),
+      labels: v.map((_, h) => (h % 6 === 0 || h === 23 ? `${h}시` : '')),
+    };
+    const ch = [['한결', '치지직 / 스텔라이브', '리그 오브 레전드', 9000], ['하늘', '치지직 / 스텔라이브', '발로란트', 1800], ['세아', '치지직', '토크', 1125], ['유하', '치지직 / 스텔라이브', '리그 오브 레전드', 1000], ['루아', '치지직', '발로란트', 692], ['지오', '치지직', '토크', 563], ['모아', '치지직', '리그 오브 레전드', 529], ['라온', '치지직', '발로란트', 429]];
+    const won = (x) => `${x.toLocaleString('ko-KR')}명`;
+    return {
+      trend,
+      top3: ch.slice(0, 3).map(([name, sub, game, x], i) => ({ rank: i + 1, name, sub, game, viewers: won(x), cls: i === 0 ? 't3 first' : 't3' })),
+      rows: ch.slice(3).map(([name, sub, game, x], i) => ({ rank: i + 4, name, sub, game, viewers: won(x), bar: `width:${x / 9000 * 100}%` })),
+    };
+  }
+}
+</script>
+</body>
+</html>

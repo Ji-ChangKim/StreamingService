@@ -19,26 +19,37 @@ export async function portalApi<T>(path: string, options: RequestInit = {}): Pro
 
 // 정상 응답의 빈 목록과 JSON 손상·응답 형식 오류를 구분한다.
 // 목록은 60초 캐시를 쓰고, 관리자 변경 직후의 새로고침(fresh)은 캐시를 건너뛰어 다시 저장한다.
+// 주소를 바꾸면 서버 첫 HTML의 preload 주소(backend/src/services/portalPageService.ts)도 같이 바꿔야 한다.
 export async function fetchPublicProfiles(signal?: AbortSignal, fresh = false): Promise<PortalProfile[]> {
   const data = await portalApi<{ profiles?: PortalProfile[] }>('/profiles?version=3', { signal, ...(fresh ? { cache: 'no-cache' as RequestCache } : {}) });
   if (!Array.isArray(data.profiles)) throw new Error('소개를 불러오지 못했어요');
   return data.profiles;
 }
 
+// 목록은 한 번 받으면 화면 이동 때 바로 보여 주고, 1분이 지나면 뒤에서 조용히 새로 받는다.
+const LIST_TTL_MS = 60_000;
+let listCache: { at: number; profiles: PortalProfile[] } | null = null;
+
 // 목록은 실제 결과·불러오는 상태·실패를 구분한다.
 export function usePortalProfiles(enabled = true, page = '') {
-  const [profiles, setProfiles] = useState<PortalProfile[]>([]);
-  const [loading, setLoading] = useState(enabled);
+  const [profiles, setProfiles] = useState<PortalProfile[]>(() => listCache?.profiles || []);
+  const [loading, setLoading] = useState(enabled && !listCache);
   const [error, setError] = useState('');
   const [attempt, setAttempt] = useState(0);
   const refresh = useCallback(() => setAttempt((value) => value + 1), []);
   useEffect(() => {
-    // 화면 이동은 짧은 캐시를 재사용하고, 새로고침 요청은 서버의 최신 공개 목록을 읽는다.
     if (!enabled) { setLoading(false); return; }
+    // 저장된 목록이 충분히 새것이면 다시 받지 않는다. 관리자 새로고침(attempt)은 항상 서버에서 받는다.
+    if (attempt === 0 && listCache && Date.now() - listCache.at < LIST_TTL_MS) { setProfiles(listCache.profiles); setLoading(false); return; }
     const abort = new AbortController();
-    setLoading(true); setError('');
-    // 새 캐시 정책의 주소를 구분해 이전 브라우저 캐시의 긴 유효 시간을 승계하지 않는다.
-    fetchPublicProfiles(abort.signal, attempt > 0).then((data) => { if (!abort.signal.aborted) { setProfiles(data); } }).catch((e: Error) => { if (!abort.signal.aborted) { setProfiles([]); setError(e.message); } }).finally(() => { if (!abort.signal.aborted) setLoading(false); });
+    // 이미 보여 줄 목록이 있으면 불러오는 화면으로 바꾸지 않는다.
+    if (!listCache) setLoading(true);
+    setError('');
+    fetchPublicProfiles(abort.signal, attempt > 0).then((data) => {
+      if (abort.signal.aborted) return;
+      listCache = { at: Date.now(), profiles: data };
+      setProfiles(data);
+    }).catch((e: Error) => { if (!abort.signal.aborted && !listCache) { setProfiles([]); setError(e.message); } }).finally(() => { if (!abort.signal.aborted) setLoading(false); });
     return () => abort.abort();
   }, [attempt, enabled, page]);
   return { profiles, loading, error, refresh };
@@ -52,4 +63,14 @@ export function readPortalStorage<T>(key: string, fallback: T): T {
 // 개인 목록은 이 브라우저에 저장하며 저장 실패를 호출자에게 알려준다.
 export function savePortalStorage(key: string, value: unknown): boolean {
   try { localStorage.setItem(`vd:${key}`, JSON.stringify(value)); return true; } catch { return false; }
+}
+
+// 서버가 소개 상세 첫 HTML에 넣어 준 공개 정보를 읽는다. 다른 소개로 이동하면 사용하지 않는다.
+export function readInitialProfile(slug: string): PortalProfile | undefined {
+  if (!slug || typeof document === 'undefined') return undefined;
+  try {
+    const element = document.getElementById('vd-initial-profile');
+    const profile = element?.textContent ? JSON.parse(element.textContent) as PortalProfile : undefined;
+    return profile?.slug === slug ? profile : undefined;
+  } catch { return undefined; }
 }

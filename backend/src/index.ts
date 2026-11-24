@@ -1,11 +1,14 @@
 import { isActivityPath } from '../../shared/activitySeo';
 import { publicErrorPage } from './services/publicErrorPage';
 import { sitePath, siteRobots } from '../../shared/siteSeo';
+import { isAutoRegisteredChannelProfile } from '../../shared/portal';
+import { isProfileIndexable } from '../../shared/contentReview';
 import { publicResponseCache } from './services/publicResponseCache';
+import { normalizeStreamerQuery } from '../../shared/statisticsStreamerSearch';
 const STATIC_IMAGE_CACHE_CONTROL = 'public, max-age=2592000, stale-while-revalidate=86400';
 import { Hono } from 'hono';
-import { portalApi, readPublicPortalProfiles, readPublicPortalProfileBySlug, portalAdminStreamers, deletePortalProfile } from './services/portalService';
-import { renderPortalPage, portalSitemap } from './services/portalPageService';
+import { portalApi, readPublicPortalProfiles, readPublicPortalProfilesBetween, readPublicPortalProfileBySlug, portalAdminStreamers, deletePortalProfile } from './services/portalService';
+import { renderPortalPage, portalSitemap, readRecentBroadcastCounts } from './services/portalPageService';
 import { portalPageSeo } from '../../shared/portalSeo';
 import { publicBroadcastPayload } from '../../shared/contentReview';
 import { readUnifiedDebutEvents, portalProfileEvent } from './services/unifiedEventService';
@@ -51,17 +54,26 @@ import {
   getAnalyticsMethodology,
   getCurrentContentDrilldown,
 } from './services/analyticsService';
-import { collectChzzkLiveSnapshot } from './services/chzzkCollector';
 import { getLiveDiscovery } from './services/liveDiscoveryService';
 import { getLiveHistory, getCreatorHistory } from './services/liveHistoryService';
 import { getBroadcastStatistics, getStreamerBroadcastHistory } from './services/broadcastStatisticsService';
+import { boardCacheSeconds, getAnalyticsBoard, getAnalyticsChannelBoard, getAnalyticsGameBoard, getAnalyticsTagBoard, readIndexableGames } from './services/analyticsBoardService';
+import { sitemapEntry } from './services/sitemapEntry';
+import type { AnalyticsBoard, AnalyticsChannelBoard, AnalyticsGameBoard } from '../../shared/analyticsBoard';
 import { getBroadcastActivity, getActivityBroadcastPage, readActivityCursor } from './services/broadcastActivityService';
 import { activityPeriod, validActivityRange } from '../../shared/broadcastActivity';
-import { collectBroadcastStatistics } from './services/broadcastStatisticsCollection';
+import { collectBroadcastStatistics, pruneStatisticsCollections } from './services/broadcastStatisticsCollection';
 import { searchStatisticsStreamers } from './services/statisticsStreamerSearchService';
 import { registerExternalStreamerToD1 } from './services/externalPlatformSearchService';
 import { ensureStreamerRegistered } from './services/onDemandStreamerService';
-import { activitySitemapEntries, renderActivityPage } from './services/activityPageService';
+import { activitySitemapEntries, renderActivityPage, escapeActivityHtml } from './services/activityPageService';
+import { boardInitialBody, boardPageTitle, gameInitialBody, gamePageDescription, gamePageTitle, methodInitialBody, renderBoardPage } from './services/analyticsBoardPage';
+import { prunePersonalData } from './services/personalDataRetention';
+import { activityChannelKey } from '../../shared/broadcastActivity';
+import { collectTrackedChannels, pruneChannelSamples, TRACK_CRON } from './services/trackedChannelCollection';
+import { buildDailyRollup, kstDay, recordFollowers } from './services/channelRollup';
+import { fetchPlatformJson } from './services/broadcastStatisticsSources';
+import { cachedBoard, matchPageCopy, putPageCopy } from './services/edgeCache';
 import { activityNoindex } from '../../shared/activitySeo';
 import { cheerApi, resetWeeklyCheers, WEEKLY_RESET_CRON } from './services/cheerService';
 
@@ -130,23 +142,68 @@ app.use('*', async (c, next) => {
   if (c.req.method === 'GET' && path !== '/' && path.endsWith('/') && !path.startsWith('/api/') && !path.startsWith('/assets/')) return c.redirect(`${sitePath(path)}${url.search}`, 308);
   // 개발 통계도 전용 렌더러로 보내 실제 초기 본문과 올바른 제목을 제공한다.
   if (c.req.method === 'GET' && !path.startsWith('/api/') && !path.startsWith('/analytics') && !/\.[a-z0-9]+$/i.test(path)) {
+    // 홈·소개 목록·소개 상세의 첫 HTML은 데이터베이스를 읽어 만들므로 정상 응답을 엣지에 잠시 저장한다.
+    // 목록은 1분(목록 API와 같은 주기), 홈(데뷔 일정)·상세는 5분. 관리자 변경 직후 확인은 no-cache 요청으로 저장본을 건너뛴다.
+    const cachePath = sitePath(path);
+    const edgeSeconds = cachePath === '/creators' ? 60 : cachePath === '/' || /^\/creator\/[^/]+$/.test(path) ? 300 : 0;
+    const pageCache = edgeSeconds && !seo.development && typeof caches !== 'undefined' ? (caches as any).default as Cache : undefined;
+    const pageKey = new Request(url.toString(), { method: 'GET' });
+    if (pageCache && !/no-cache|no-store/i.test(c.req.header('Cache-Control') || '')) {
+      const hit = await pageCache.match(pageKey).catch(() => undefined);
+      if (hit) { const cached = new Response(hit.body, hit); cached.headers.set('Cache-Control', 'public, max-age=0, must-revalidate'); cached.headers.set('X-VD-Cache', 'HIT'); return cached; }
+    }
     let profile;
     if (/^\/creator\/[^/]+$/.test(path)) {
       let slug = ''; try { slug = decodeURIComponent(path.slice('/creator/'.length)); } catch { /* 찾을 수 없는 주소로 처리한다. */ }
       try { profile = (await readPublicPortalProfileBySlug(c.env.DB, slug)) || undefined; }
-      catch { c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex, nofollow'); return c.html(publicErrorPage(url, '소개를 불러오지 못했어요', 503), 503); }
+      catch {
+        // 데이터베이스가 막혀도(무료 한도·장애) 하루 안에 저장한 정상 사본이 있으면 그것을 보여 준다.
+        const copy = await matchPageCopy(pageCache, url.toString()); if (copy) return copy;
+        c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex, nofollow'); return c.html(publicErrorPage(url, '소개를 불러오지 못했어요', 503), 503);
+      }
     }
     // 소개 목록의 초기 HTML에도 공개 소개 링크를 제공한다. 실패하면 기존 화면 로딩으로 이어간다.
     let profiles: Awaited<ReturnType<typeof readPublicPortalProfiles>> = [];
+    let degraded = false; // 홈·목록 자료를 읽지 못했으면 빈 화면을 저장하지 않고 사본을 먼저 찾는다.
+    if (cachePath === '/') {
+      // 홈은 이번 주·다음 주·최근 2주 데뷔만 필요하므로 전체 목록 대신 그 기간만 읽는다.
+      const now = Date.now();
+      try { profiles = await readPublicPortalProfilesBetween(c.env.DB, new Date(now - 22 * 86400000).toISOString(), new Date(now + 15 * 86400000).toISOString()); }
+      catch (error) { degraded = true; console.error('[Portal] Initial home schedule failed', String(error)); }
+    }
     if (sitePath(path) === '/creators') {
-      try { profiles = await readPublicPortalProfiles(c.env.DB); } catch (error) { console.error('[Portal] Initial creator list failed', String(error)); }
+      try { profiles = await readPublicPortalProfiles(c.env.DB); } catch (error) { degraded = true; console.error('[Portal] Initial creator list failed', String(error)); }
+    }
+    if (degraded) {
+      const copy = await matchPageCopy(pageCache, url.toString()); if (copy) return copy;
     }
     const missing = (!seo.known && !isActivityPath(path)) || (path.startsWith('/creator/') && !profile);
     const response = await getAssetFromKV({ request: new Request(new URL(seo.development ? '/dev.html' : '/portal.html', c.req.url), c.req.raw), waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, { ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}') });
+    // 자동 등록 채널 기록은 내용이 없어 검색에서 제외하되, 링크로 들어온 방문자에게는 계속 보여 준다.
+    // 얇은 소개도 보강 전까지 같은 방식으로 검색에서 제외한다.
     if (seo.privatePage || missing) c.header('X-Robots-Tag', 'noindex, nofollow');
     c.header('Cache-Control', seo.privatePage || missing ? 'no-store' : 'public, max-age=0, must-revalidate');
-    const html = renderPortalPage(await response.text(), url, profile, profiles);
-    return c.html(missing ? html.replace(/content="index, follow"/g, 'content="noindex, nofollow"') : html, missing ? 404 : 200);
+    // 버튜버 상세 첫 HTML에 최근 30일 방송 기록 요약을 넣는다(화면과 같은 채널 통계, 10분 캐시 공유). 실패해도 페이지는 그린다.
+    let channel30: AnalyticsChannelBoard | null = null;
+    const profileKey = profile && (profile.platform === 'CHZZK' || profile.platform === 'SOOP') ? activityChannelKey(profile.platform, profile.channelUrl) : null;
+    if (profileKey) {
+      try {
+        const key = new URL('/api/analytics/board/channel', c.req.url); key.searchParams.set('key', profileKey); key.searchParams.set('days', '30');
+        channel30 = (await cachedBoard(boardCache(), key, () => getAnalyticsChannelBoard(c.env.DB, profileKey, 30), boardCacheSeconds, (p) => c.executionCtx.waitUntil(p))).data as AnalyticsChannelBoard | null;
+      } catch (error) { console.warn('[Portal] Profile channel summary failed', String(error)); }
+    }
+    // 검색 허용 기준(기획문서 41번 A1): 직접 쓴 소개 100자, 또는 50자 + 최근 30일 방송 5회. 못 미치면 검색에서만 뺀다.
+    const autoChannel = !!profile && (isAutoRegisteredChannelProfile(profile) || !isProfileIndexable(profile, channel30?.kpis.broadcasts || 0));
+    if (autoChannel && !(seo.privatePage || missing)) c.header('X-Robots-Tag', 'noindex, follow');
+    const html = renderPortalPage(await response.text(), url, profile, profiles, channel30);
+    const page: Response = c.html(missing ? html.replace(/content="index, follow"/g, 'content="noindex, nofollow"') : autoChannel ? html.replace(/content="index, follow"/g, 'content="noindex, follow"') : html, missing ? 404 : 200);
+    // 자료를 읽지 못한 응답은 저장하지 않는다. 정상 응답은 짧은 저장본과 하루짜리 사본(장애 대비)을 함께 둔다.
+    if (pageCache && page.status === 200 && !degraded) {
+      const stored = new Response(page.clone().body, page); stored.headers.set('Cache-Control', `public, s-maxage=${edgeSeconds}`);
+      c.executionCtx.waitUntil(pageCache.put(pageKey, stored).catch(() => undefined));
+      putPageCopy(pageCache, url.toString(), page, (p) => c.executionCtx.waitUntil(p));
+    }
+    return page;
   }
   await next();
   if (c.req.method === 'GET' && c.res.status === 200 && !path.startsWith('/api/')) {
@@ -197,7 +254,8 @@ const sitemapXmlHandler = async (c: any) => {
   // 새 플랫폼에서는 기존 소개와 승인된 신규 소개를 모두 검색 목록에 포함한다.
   if (c.env.PORTAL_ENABLED === 'true') {
     const profiles = await readPublicPortalProfiles(c.env.DB);
-    return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${portalSitemap(profiles)}${await activitySitemapEntries(c.env.DB)}</urlset>`, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
+    const broadcasts = await readRecentBroadcastCounts(c.env.DB, Date.now());
+    return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${portalSitemap(profiles, broadcasts)}${await activitySitemapEntries(c.env.DB)}${[...await loadIndexableGames(c)].map((game) => sitemapEntry(`/analytics/game/${encodeURIComponent(game)}`, 'ko')).join('')}</urlset>`, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
   }
   const creators = await fetchAllCreatorSlugs(c.env.DB || null);
 
@@ -998,9 +1056,10 @@ app.get('/api/analytics/streamers/search', async (c) => {
   const platform = c.req.query('platform') || 'ALL';
   if (!['ALL', 'CHZZK', 'SOOP'].includes(platform)) return c.json({ error: '검색 플랫폼을 확인해 주세요.' }, 400);
   try {
-    const result = await searchStatisticsStreamers(c.env.DB, query, includeExternal, platform as 'ALL' | 'CHZZK' | 'SOOP');
-    c.header('Cache-Control', 'public, max-age=15');
-    return c.json(result);
+    // 같은 검색어는 5분 동안 엣지에 저장해 외부 플랫폼 검색(1~3초)을 반복하지 않는다.
+    const key = new URL('/api/analytics/streamers/search', c.req.url);
+    key.search = new URLSearchParams({ q: normalizeStreamerQuery(query), external: String(includeExternal), platform, v: '2' }).toString();
+    return await publicResponseCache(c.req.raw, key, 300, async () => c.json(await searchStatisticsStreamers(c.env.DB, query, includeExternal, platform as 'ALL' | 'CHZZK' | 'SOOP')), (promise) => c.executionCtx.waitUntil(promise));
   } catch (error) {
     console.error('[Statistics] Streamer search failed', String(error));
     return c.json({ error: '스트리머 정보를 불러오지 못했습니다.' }, 503);
@@ -1058,7 +1117,8 @@ app.get('/api/analytics/broadcast-statistics', async (c) => {
   const cacheKey = new Request(cacheUrl);
   if (!forceFresh) {
     const cached = await caches.default.match(cacheKey);
-    if (cached) return cached;
+    // 저장본에 붙는 브라우저 캐시 기본값(4시간)을 덮어써 1분 갱신 화면이 오래된 자료에 묶이지 않게 한다.
+    if (cached) { const response = new Response(cached.body, cached); response.headers.set('Cache-Control', isPastDate ? 'public, max-age=86400' : 'public, max-age=30'); response.headers.set('X-VD-Cache', 'HIT'); return response; }
   }
   try {
     const result = await getBroadcastStatistics(c.env.DB, date, forceFresh);
@@ -1228,6 +1288,81 @@ app.get('/api/analytics/current-content', async (c) => {
   return c.json(result);
 });
 
+// 방송 통계 개편 화면 응답. 10분 회차 단위 키로 엣지에 저장해 다음 회차(수집 여유 2분)까지 재사용한다.
+// 통계 첫 HTML용 보드 자료: /api/analytics/board와 같은 캐시 키를 써서 한 번 계산한 결과를 함께 쓴다.
+const boardCache = () => (typeof caches === 'undefined' ? undefined : (caches as any).default as Cache);
+// 검색 허용 게임 목록(기획문서 42번 5): 무거운 4주 집계라 지역별로 6시간에 한 번만 계산해 저장한다. 실패하면 빈 목록(전부 검색 제외).
+async function loadIndexableGames(c: any): Promise<Set<string>> {
+  const now = Date.now();
+  const cache = boardCache();
+  const key = new Request(`https://vdebut.live/__vd/indexable-games?at=${Math.floor(now / (6 * HOUR_MS))}`);
+  try {
+    const hit = cache ? await cache.match(key) : undefined;
+    if (hit) return new Set(((await hit.json()) as { names: string[] }).names);
+    const data = await readIndexableGames(c.env.DB, now);
+    if (cache) c.executionCtx.waitUntil(cache.put(key, new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, s-maxage=21600' } })));
+    return new Set(data.names);
+  } catch (error) { console.warn('[Statistics] Indexable games failed', String(error)); return new Set(); }
+}
+const HOUR_MS = 3600000;
+async function loadBoardCached(c: any, platform: 'ALL' | 'CHZZK' | 'SOOP'): Promise<AnalyticsBoard> {
+  const key = new URL('/api/analytics/board', c.req.url);
+  key.searchParams.set('platform', platform);
+  const { data } = await cachedBoard(boardCache(), key, () => getAnalyticsBoard(c.env.DB, platform, new URL(c.req.url).origin, (p) => c.executionCtx.waitUntil(p)), boardCacheSeconds, (p) => c.executionCtx.waitUntil(p));
+  if (!data) throw new Error('집계된 기록이 없어요.');
+  return data;
+}
+
+// 통계 API: 슬롯이 바뀌면 직전 결과를 바로 주고 최신 계산은 뒤에서 한다. 계산이 실패해도 직전 결과가 있으면 그것을 준다.
+async function analyticsBoardResponse(c: any, key: URL, load: () => Promise<{ asOf: string | null } | null>): Promise<Response> {
+  try {
+    const { data, state } = await cachedBoard(boardCache(), key, load, boardCacheSeconds, (p) => c.executionCtx.waitUntil(p));
+    if (!data) { c.header('Cache-Control', 'public, max-age=60'); return c.json({ error: '집계된 기록이 없어요.' }, 404); }
+    return new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=60', 'X-VD-Cache': state } });
+  } catch (error) {
+    console.error('[Board] request failed', String(error));
+    c.header('Cache-Control', 'no-store');
+    return c.json({ error: '방송 통계를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.' }, 503);
+  }
+}
+
+app.get('/api/analytics/board', async (c) => {
+  const platform = (c.req.query('platform') || 'ALL').toUpperCase();
+  if (!['ALL', 'CHZZK', 'SOOP'].includes(platform)) return c.json({ error: '조회 조건을 확인해 주세요.' }, 400);
+  const key = new URL('/api/analytics/board', c.req.url);
+  key.searchParams.set('platform', platform);
+  const origin = new URL(c.req.url).origin;
+  return analyticsBoardResponse(c, key, () => getAnalyticsBoard(c.env.DB, platform as 'ALL' | 'CHZZK' | 'SOOP', origin, (p) => c.executionCtx.waitUntil(p)));
+});
+
+app.get('/api/analytics/board/game', async (c) => {
+  const name = (c.req.query('name') || '').trim();
+  if (!name || name.length > 80) return c.json({ error: '게임 이름을 확인해 주세요.' }, 400);
+  const key = new URL('/api/analytics/board/game', c.req.url);
+  key.searchParams.set('name', name);
+  return analyticsBoardResponse(c, key, () => getAnalyticsGameBoard(c.env.DB, name));
+});
+
+app.get('/api/analytics/board/channel', async (c) => {
+  const key = (c.req.query('key') || '').trim();
+  const days = Number(c.req.query('days') || 30);
+  if (!/^(CHZZK:[a-f0-9]{32}|SOOP:[a-z0-9_]{1,50})$/i.test(key) || ![7, 30, 90].includes(days)) return c.json({ error: '조회 조건을 확인해 주세요.' }, 400);
+  const normalized = `${key.split(':')[0].toUpperCase()}:${key.split(':')[1].toLowerCase()}`;
+  const cacheKey = new URL('/api/analytics/board/channel', c.req.url);
+  cacheKey.searchParams.set('key', normalized);
+  cacheKey.searchParams.set('days', String(days));
+  return analyticsBoardResponse(c, cacheKey, () => getAnalyticsChannelBoard(c.env.DB, normalized, days as 7 | 30 | 90));
+});
+
+app.get('/api/analytics/board/tag', async (c) => {
+  const tag = (c.req.query('tag') || '').trim();
+  if (!tag || tag.length > 40) return c.json({ error: '태그를 확인해 주세요.' }, 400);
+  const key = new URL('/api/analytics/board/tag', c.req.url);
+  key.searchParams.set('tag', tag);
+  const origin = new URL(c.req.url).origin;
+  return analyticsBoardResponse(c, key, () => getAnalyticsTagBoard(c.env.DB, tag, origin, (p) => c.executionCtx.waitUntil(p)));
+});
+
 // 14.2 VDébut 실시간 방송 탐색 API (기획서 10.2절: GET /api/discovery/live)
 app.get('/api/discovery/live', async (c) => {
   const platform = (c.req.query('platform') || 'ALL').toUpperCase() as 'ALL' | 'CHZZK' | 'SOOP';
@@ -1288,14 +1423,116 @@ app.get('/api/discovery/history/creator', async (c) => {
 });
 
 // 통계 주소는 검색로봇과 사용자에게 같은 초기 본문과 메타데이터를 제공한다.
-const activityPageHandler = async (c: any) => {
+const renderActivityPageResponse = async (c: any) => {
   const url = new URL(c.req.url);
   let channel = '';
   if (url.pathname.startsWith('/analytics/streamer/')) {
     try { channel = decodeURIComponent(url.pathname.slice('/analytics/streamer/'.length)); } catch { return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404); }
     if (!/^(CHZZK:[a-f0-9]{32}|SOOP:[a-z0-9_]{1,50})$/i.test(channel)) return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404);
     channel = `${channel.split(':')[0].toUpperCase()}:${channel.split(':')[1].toLowerCase()}`;
-  } else if (!['/analytics', '/analytics/chzzk', '/analytics/soop'].includes(url.pathname)) {
+    // 등록 버튜버의 채널 통계는 버튜버 상세의 '방송 기록' 탭이 대표 주소다(기획 39·40번 C안). 공개 소개가 있으면 그리로 보낸다.
+    try {
+      const [platformKey, idKey] = channel.split(':');
+      const mapped = await c.env.DB.prepare('SELECT slug FROM portal_profile_channels WHERE channel_key = ? LIMIT 1').bind(channel).first().catch(() => null) as { slug: string } | null;
+      const legacy = mapped ? null : await c.env.DB.prepare(`SELECT i.slug FROM streamerChannel c JOIN streamerChannel_info i ON i.channel_id = c.id
+        WHERE c.platform = ? AND lower(c.channel_url) LIKE ? AND i.slug IS NOT NULL AND i.slug != ''
+          AND NOT (i.description = i.display_name || ' 스트리머의 채널입니다.' AND i.debut_time = '00:00') LIMIT 1`).bind(platformKey, `%/${idKey}`).first() as { slug: string } | null;
+      const slug = mapped?.slug || legacy?.slug;
+      if (slug && await readPublicPortalProfileBySlug(c.env.DB, slug)) return c.redirect(`/creator/${encodeURIComponent(slug)}?tab=record`, 301);
+    } catch (error) { console.warn('[Statistics] Channel profile lookup failed', String(error)); }
+    // 화면은 새 채널 통계(/api/analytics/board/channel)를 쓰므로, 첫 HTML은 예전 활동 집계 없이 이름 확인만 한다(검색 제외 페이지).
+    try {
+      const [platform, id] = channel.split(':');
+      const seen = await c.env.DB.prepare('SELECT channel_name FROM analytics_broadcast_snapshots WHERE channel_key = ? COLLATE NOCASE ORDER BY run_id DESC LIMIT 1').bind(channel).first() as { channel_name: string | null } | null;
+      const registered = seen ? null : await c.env.DB.prepare('SELECT channel_name FROM streamerChannel WHERE platform = ? AND lower(channel_url) LIKE ? LIMIT 1').bind(platform, `%/${id}`).first() as { channel_name: string | null } | null;
+      const name = (seen?.channel_name || registered?.channel_name || url.searchParams.get('name') || '').trim().slice(0, 80);
+      if (!seen && !registered && !url.searchParams.has('name')) { c.header('X-Robots-Tag', 'noindex'); return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404); }
+      const shellRequest = c.env.PORTAL_ENABLED === 'true' ? new Request(new URL(url.hostname === 'vdebut.live' ? '/portal.html' : '/dev.html', c.req.url), c.req.raw) : c.req.raw;
+      const asset = await getAssetFromKV({ request: shellRequest, waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, {
+        ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}'),
+        ...(c.env.PORTAL_ENABLED === 'true' ? {} : { mapRequestToAsset: serveSinglePageApp }),
+      });
+      const platformName = platform === 'CHZZK' ? '치지직' : 'SOOP';
+      const display = name || id;
+      const description = `${display}의 최근 방송 기록과 시청자, 주로 한 콘텐츠를 10분마다 모은 공개 방송 기록으로 보여 줘요.`;
+      const body = `<main><h1>${escapeActivityHtml(`${display} 방송 통계`)}</h1><p>${escapeActivityHtml(`${platformName} · ${description}`)}</p><p><a href="/analytics">방송 통계</a> · <a href="/analytics/method">집계 기준</a></p></main>`;
+      c.header('X-Robots-Tag', 'noindex, follow');
+      c.header('Cache-Control', 'public, max-age=60, s-maxage=600');
+      return c.html(renderBoardPage(await asset.text(), url.pathname, `${display} 방송 통계 · ${platformName} | VDébut`, description, body, true));
+    } catch (error) {
+      console.error('[Statistics] Channel page failed', String(error));
+      c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex');
+      return c.html(publicErrorPage(url, '방송 통계를 불러오지 못했어요', 503), 503);
+    }
+  } else if (/^\/analytics\/(game|tag)\/[^/]{1,240}$/.test(url.pathname)) {
+    // 게임·태그 하위 화면은 화면에서 자료를 읽으므로 무거운 활동 집계 없이 앱 껍데기만 돌려준다.
+    // 노출 기준(정의서 7.1)을 서버에서 판정하기 전까지 검색 제외한다.
+    try {
+      const shellRequest = c.env.PORTAL_ENABLED === 'true' ? new Request(new URL(url.hostname === 'vdebut.live' ? '/portal.html' : '/dev.html', c.req.url), c.req.raw) : c.req.raw;
+      const asset = await getAssetFromKV({ request: shellRequest, waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, {
+        ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}'),
+        ...(c.env.PORTAL_ENABLED === 'true' ? {} : { mapRequestToAsset: serveSinglePageApp }),
+      });
+      c.header('Cache-Control', 'public, max-age=60, s-maxage=600');
+      const [, , kind, rawName] = url.pathname.split('/');
+      let name = rawName; try { name = decodeURIComponent(rawName); } catch { /* 원문 그대로 쓴다. */ }
+      const isTag = kind === 'tag';
+      // 게임 페이지(기획문서 42번): 화면과 같은 통계(10분 캐시 공유)로 첫 HTML을 만들고, 기준을 채운 게임만 검색 허용한다.
+      if (!isTag && name.trim().length > 0 && name.trim().length <= 80) {
+        try {
+          const key = new URL('/api/analytics/board/game', c.req.url); key.searchParams.set('name', name.trim());
+          const [{ data }, indexable] = await Promise.all([
+            cachedBoard(boardCache(), key, () => getAnalyticsGameBoard(c.env.DB, name.trim()), boardCacheSeconds, (p) => c.executionCtx.waitUntil(p)),
+            loadIndexableGames(c),
+          ]);
+          const board = data as AnalyticsGameBoard | null;
+          if (board) {
+            const index = indexable.has(board.name);
+            c.header('X-Robots-Tag', index ? 'index, follow' : 'noindex, follow');
+            return c.html(renderBoardPage(await asset.text(), `/analytics/game/${encodeURIComponent(board.name)}`, gamePageTitle(board.name), gamePageDescription(board.name), gameInitialBody(board), !index));
+          }
+        } catch (error) { console.warn('[Statistics] Game page data failed', String(error)); }
+      }
+      c.header('X-Robots-Tag', 'noindex, follow');
+      // 자료가 없으면 제목·설명·검색 제외 메타만 이 주소에 맞춘다(홈 제목이 그대로 남지 않게, 헤더와 메타의 검색 신호를 같게).
+      const title = isTag ? `#${name} 태그 방송 통계 · 시청자와 방송 수 | VDébut` : `${name} 방송 통계 · 시청자·방송 수·상위 채널 | VDébut`;
+      const description = isTag ? `#${name} 태그를 단 방송의 시청자와 방송 수, 함께 쓰인 태그를 10분마다 보여 줘요.` : `${name} 방송의 실시간 시청자와 방송 수, 경쟁 정도, 최근 7일 상위 채널을 10분마다 보여 줘요.`;
+      const body = `<main><h1>${escapeActivityHtml(isTag ? `#${name} 태그 방송 통계` : `${name} 방송 통계`)}</h1><p>${escapeActivityHtml(description)}</p><p><a href="/analytics">방송 통계</a> · <a href="/analytics/method">집계 기준</a></p></main>`;
+      return c.html(renderBoardPage(await asset.text(), url.pathname, title, description, body, true));
+    } catch (error) {
+      console.error('[Statistics] Board shell failed', String(error));
+      c.header('Cache-Control', 'no-store');
+      return c.html(publicErrorPage(url, '방송 통계를 불러오지 못했어요', 503), 503);
+    }
+  } else if (['/analytics', '/analytics/chzzk', '/analytics/soop', '/analytics/method'].includes(url.pathname)) {
+    // 대표 통계 주소: 예전 활동 집계(무거운 계산·표 나열) 대신 화면과 같은 새 통계를 글로 담는다(첫 응답 3초 → 캐시된 보드 자료).
+    try {
+      const shellRequest = c.env.PORTAL_ENABLED === 'true' ? new Request(new URL(url.hostname === 'vdebut.live' ? '/portal.html' : '/dev.html', c.req.url), c.req.raw) : c.req.raw;
+      const assetPromise = getAssetFromKV({ request: shellRequest, waitUntil: (promise) => c.executionCtx.waitUntil(promise) }, {
+        ASSET_NAMESPACE: c.env.__STATIC_CONTENT, ASSET_MANIFEST: JSON.parse(manifestJSON || '{}'),
+        ...(c.env.PORTAL_ENABLED === 'true' ? {} : { mapRequestToAsset: serveSinglePageApp }),
+      });
+      const extraQuery = [...url.searchParams.keys()].some((name) => !['lang', 'gclid', 'fbclid'].includes(name) && !name.startsWith('utm_'));
+      const noindex = url.hostname !== 'vdebut.live' || extraQuery;
+      if (noindex) c.header('X-Robots-Tag', 'noindex, follow');
+      if (url.pathname === '/analytics/method') {
+        c.header('Cache-Control', 'public, max-age=60, s-maxage=3600');
+        return c.html(renderBoardPage(await (await assetPromise).text(), url.pathname, '방송 통계 집계 기준 | VDébut', '치지직·SOOP 방송 통계를 무엇을, 얼마나 자주, 어떤 기준으로 계산하는지 정리했어요.', methodInitialBody(), noindex));
+      }
+      const platform = url.pathname === '/analytics/chzzk' ? 'CHZZK' : url.pathname === '/analytics/soop' ? 'SOOP' : 'ALL';
+      const [asset, board] = await Promise.all([assetPromise, loadBoardCached(c, platform)]);
+      const description = board.summary || '치지직·SOOP에서 지금 어떤 방송을 얼마나 보고 있는지 10분마다 모아 보여 줘요. 실시간 시청자, 인기 게임, 채널·태그 순위를 확인하세요.';
+      // 데이터가 준비되지 않은 플랫폼 화면(준비 중 안내뿐)은 미완성 페이지로 보이지 않게 검색에서 뺀다(정의서 5.12).
+      const unready = platform === 'SOOP' && !board.availability?.platformReady?.SOOP;
+      if (unready && !noindex) c.header('X-Robots-Tag', 'noindex, follow');
+      c.header('Cache-Control', 'public, max-age=60, s-maxage=120');
+      return c.html(renderBoardPage(await asset.text(), url.pathname, boardPageTitle(platform), description, boardInitialBody(board, platform), noindex || unready));
+    } catch (error) {
+      console.error('[Statistics] Board page failed', String(error));
+      c.header('Cache-Control', 'no-store'); c.header('X-Robots-Tag', 'noindex');
+      return c.html(publicErrorPage(url, '방송 통계를 불러오지 못했어요', 503), 503);
+    }
+  } else if (!url.pathname.startsWith('/analytics/streamer/')) {
     c.header('X-Robots-Tag', 'noindex');
     return c.html(publicErrorPage(url, '페이지를 찾을 수 없어요', 404), 404);
   }
@@ -1327,6 +1564,28 @@ const activityPageHandler = async (c: any) => {
     return c.html(publicErrorPage(url, '방송 통계를 불러오지 못했어요', 503), 503);
   }
 };
+// 통계 첫 화면은 집계 계산이 무거워 정상 응답만 엣지에 2분 저장한다(수집 주기 10분).
+// 새로고침 요청(no-cache)은 저장본을 건너뛰고 다시 계산한다.
+const ACTIVITY_PAGE_EDGE_SECONDS = 120;
+const activityPageHandler = async (c: any) => {
+  const cache = typeof caches === 'undefined' ? undefined : (caches as any).default as Cache | undefined;
+  const cacheKey = new Request(new URL(c.req.url).toString(), { method: 'GET' });
+  const bypass = /no-cache|no-store/i.test(c.req.header('Cache-Control') || '');
+  if (cache && !bypass && c.req.method === 'GET') {
+    const hit = await cache.match(cacheKey).catch(() => undefined);
+    // Cloudflare가 저장본에 붙이는 브라우저 캐시 기본값(4시간)을 덮어써, 브라우저는 매번 최신 화면을 확인하게 한다.
+    if (hit) { const response = new Response(hit.body, hit); response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate'); response.headers.set('X-VD-Cache', 'HIT'); return response; }
+  }
+  const response: Response = await renderActivityPageResponse(c);
+  if (response.status === 503) { const copy = await matchPageCopy(cache, cacheKey.url); if (copy) return copy; }
+  if (cache && c.req.method === 'GET' && response.status === 200) putPageCopy(cache, cacheKey.url, response, (p) => c.executionCtx.waitUntil(p));
+  if (cache && c.req.method === 'GET' && response.status === 200) {
+    const stored = new Response(response.clone().body, response);
+    stored.headers.set('Cache-Control', `public, max-age=0, s-maxage=${ACTIVITY_PAGE_EDGE_SECONDS}`);
+    c.executionCtx.waitUntil(cache.put(cacheKey, stored).catch(() => undefined));
+  }
+  return response;
+};
 app.get('/analytics', activityPageHandler);
 app.get('/analytics/*', activityPageHandler);
 
@@ -1356,6 +1615,25 @@ export default {
   async scheduled(event: any, env: Bindings, ctx: any) {
     const scheduledTime = event?.scheduledTime || Date.now();
     // 매주 월요일 00:00(KST) 주간 응원 수 초기화 전용 크론은 다른 수집 작업과 분리한다.
+    // 5분마다 등록 버튜버 채널을 나눠서 확인한다(자기 외부 호출 한도를 따로 쓰도록 별도 예약).
+    if (event?.cron === TRACK_CRON) {
+      if (!env.DB) return;
+      const at = new Date(scheduledTime);
+      // 매일 07:02(한국 시간) 슬롯은 전날 채널 요약을 만든다(자기 실행 한도를 온전히 쓰도록 이 슬롯은 직접 기록을 쉬어 간다).
+      if (at.getUTCHours() === 22 && at.getUTCMinutes() < 5) {
+        ctx.waitUntil(buildDailyRollup(env.DB, kstDay(scheduledTime - 86400000))
+          .then((report) => console.log('[Scheduled Cron] Channel rollup:', JSON.stringify(report)))
+          .catch((err) => console.error('[Scheduled Cron] Channel rollup error:', err)));
+        return;
+      }
+      ctx.waitUntil(collectTrackedChannels(env.DB, scheduledTime)
+        .then(async (report) => {
+          const followers = report.chzzkTargets ? await recordFollowers(env.DB, report.chzzkTargets, scheduledTime, (url) => fetchPlatformJson(url)) : 0;
+          console.log('[Scheduled Cron] Tracked channels:', JSON.stringify({ checked: report.checked, live: report.live, skipped: report.skipped, followers }));
+        })
+        .catch((err) => console.error('[Scheduled Cron] Tracked channels error:', err)));
+      return;
+    }
     if (event?.cron === WEEKLY_RESET_CRON) {
       if (env.DB) ctx.waitUntil(resetWeeklyCheers(env.DB).then(() => console.log('[Scheduled Cron] Weekly cheers reset')).catch((err) => console.error('[Scheduled Cron] Weekly cheers reset error:', err)));
       return;
@@ -1368,6 +1646,9 @@ export default {
       );
     }
     if (env.DB && new Date().getUTCMinutes() < 10) {
+      // 보관 기간 정리(매시간 1회): 방송 통계 90일, 처리 끝난 문의·신청의 연락 정보 1년. 개인정보처리방침과 같은 기준이다.
+      ctx.waitUntil(Promise.all([pruneStatisticsCollections(env.DB), prunePersonalData(env.DB), pruneChannelSamples(env.DB)])
+        .catch((err) => console.error('[Scheduled Cron] Retention cleanup error:', err)));
       // 1. 신청서 3단계 자동 심사 및 캘린더 자동 반영 파이프라인 (매시간 1회 자동 실행)
       ctx.waitUntil(
         runAutoReviewPipeline(env.DB)
@@ -1382,12 +1663,8 @@ export default {
           .catch((err) => console.error('[Scheduled Cron] Profile sync error:', err))
       );
 
-      // 3. 치지직 실시간 라이브 스냅샷 정기 수집
-      ctx.waitUntil(
-        collectChzzkLiveSnapshot(env.DB)
-          .then((res) => console.log('[Scheduled Cron] Chzzk live snapshot collected:', res.collectedCount, 'lives /', res.vtuberMatchCount, 'matched'))
-          .catch((err) => console.error('[Scheduled Cron] Chzzk live snapshot error:', err))
-      );
+      // 3. (중단 2026-11-17) 예전 치지직 매시간 수집(analytics_live_snapshots)은 10분 방송 기록과 내용이 겹치고 정리 없이 쌓여
+      //    무료 플랜의 쓰기·저장 한도를 소모했다. 이 자료를 쓰는 화면이 없어 수집을 멈춘다(기획문서 38번 6항).
 
       // 4. 디스코드 모닝 데뷔 브리핑 발송 (KST 오전 9시 = UTC 00시)
       const nowUtc = new Date();

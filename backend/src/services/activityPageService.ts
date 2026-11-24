@@ -1,5 +1,6 @@
 import { pageStructuredData } from '../../../shared/siteSeo';
 import { sitemapEntry } from './sitemapEntry';
+import { readBoardAvailability } from './analyticsBoardService';
 import { STATISTICS_GUIDE } from '../../../shared/portalEditorial';
 import { translatePortalText } from '../../../shared/portalTranslations';
 import '../../../shared/portalTranslationData'; // 서버 초기 HTML은 세 언어 사전을 항상 사용한다.
@@ -42,18 +43,21 @@ export function renderActivityPage(html: string, url: URL, filters: ActivityFilt
   html = html.replace(/<link\b[^>]*rel="(?:canonical|alternate)"[^>]*>/g, '');
   html = html.replace(/<script\b[^>]*type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>/g, '');
   html = html.replace('</head>', `<meta name="description" content="${esc(seo.description)}"><link rel="canonical" href="${esc(seo.canonical)}"><meta name="robots" content="${noindex ? 'noindex,follow' : 'index,follow'}"><meta property="og:title" content="${esc(seo.title)}"><meta property="og:description" content="${esc(seo.description)}"><meta property="og:url" content="${esc(seo.canonical)}"><meta property="og:type" content="website"><meta property="og:image" content="${esc(seo.image)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(seo.title)}"><meta name="twitter:description" content="${esc(seo.description)}"><meta name="twitter:image" content="${esc(seo.image)}"><script type="application/ld+json">${activityJson(pageStructuredData(seo))}</script></head>`);
+  const pageLanguage = language === 'ja' || language === 'en' ? language : 'ko';
   const start = html.indexOf('<div id="root">');
   const end = html.lastIndexOf('</div>');
   if (start < 0 || end < start) throw new Error('통계 초기 본문을 찾을 수 없습니다.');
-  return html.slice(0, start).replace('</head>', `${INITIAL_PAGE_LOADING_HEAD}</head>`) + initialPageRoot(activityInitialBody(data, url.searchParams.get('lang') === 'ja' ? 'ja' : url.searchParams.get('lang') === 'en' ? 'en' : 'ko'), '화면을 불러오고 있어요') + `<script id="activity-bootstrap" type="application/json">${activityJson({ filters, data: { ...data, broadcasts: data.broadcasts.slice(0, 25) } })}</script>` + html.slice(end + 6);
+  return html.slice(0, start).replace('</head>', `${INITIAL_PAGE_LOADING_HEAD}</head>`) + initialPageRoot(activityInitialBody(data, pageLanguage), '화면을 불러오고 있어요', pageLanguage) + `<script id="activity-bootstrap" type="application/json">${activityJson({ filters, data: { ...data, broadcasts: data.broadcasts.slice(0, 25) } })}</script>` + html.slice(end + 6);
 }
 
 // 실제 수집 기록이 있는 채널만 개인 통계 사이트맵에 포함한다.
+// 통계 사이트맵에는 대표 통계 화면만 넣는다. 스트리머별 통계는 검색 제외 대상이라 넣지 않는다.
 export async function activitySitemapEntries(db: D1Database): Promise<string> {
-  const rows = await db.prepare(`SELECT s.channel_key AS channel, MAX(r.observed_at) AS modified
-    FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id=s.run_id
-    WHERE r.state IN ('available','partial') GROUP BY s.channel_key`).all<{ channel: string; modified: string }>();
-  const modified = rows.results.reduce((max, row) => row.modified > max ? row.modified : max, '');
-  return ['/analytics', '/analytics/chzzk', '/analytics/soop'].map((path) => sitemapEntry(path, 'ko', false, modified)).join('')
-    + rows.results.map((row) => sitemapEntry(activityStreamerPath(row.channel), 'ko', false, row.modified)).join('');
+  const row = await db.prepare(`SELECT MAX(observed_at) AS modified FROM analytics_broadcast_runs WHERE state IN ('available','partial')`).first<{ modified: string | null }>();
+  const modified = row?.modified || '';
+  // SOOP 화면은 데이터가 준비됐을 때만 싣는다(준비 중 안내뿐인 페이지 제외). 집계 기준은 내용이 거의 바뀌지 않아 수정 시각 없이 싣는다.
+  let soopReady = false;
+  try { soopReady = (await readBoardAvailability(db, Date.now())).platformReady.SOOP; } catch { /* 판단할 수 없으면 싣지 않는다. */ }
+  const boards = ['/analytics', '/analytics/chzzk', ...(soopReady ? ['/analytics/soop'] : [])];
+  return boards.map((path) => sitemapEntry(path, 'ko', false, modified)).join('') + sitemapEntry('/analytics/method', 'ko');
 }

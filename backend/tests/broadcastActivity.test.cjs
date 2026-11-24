@@ -28,7 +28,7 @@ const { initialActivityBroadcastPage } = loadTypeScript(path.join(root, 'shared/
 const key = `CHZZK:${'a'.repeat(32)}`;
 const range = activityPeriod(7);
 
-test('90일 조회 기록은 보존하고 오래된 회차만 최대 100개 정리한다', async () => {
+test('90일 조회 기록은 보존하고 오래된 회차만 한 번에 최대 12개 정리한다(무료 플랜 쓰기 한도)', async () => {
   const db = new DatabaseSync(':memory:');
   db.exec(fs.readFileSync(path.join(root, 'backend/migrations/0030_broadcast_statistics_collection.sql'), 'utf8'));
   const now = Date.parse('2026-10-05T14:00:00.000Z');
@@ -44,7 +44,7 @@ test('90일 조회 기록은 보존하고 오래된 회차만 최대 100개 정�
   }
   await pruneStatisticsCollections({ prepare(sql) { return { bind(...values) { return { async run() { return db.prepare(sql).run(...values); } }; } }; } }, now);
   assert.equal(db.prepare("SELECT COUNT(*) count FROM analytics_broadcast_runs WHERE run_id LIKE 'keep-%'").get().count, 4);
-  assert.equal(db.prepare("SELECT COUNT(*) count FROM analytics_broadcast_runs WHERE run_id LIKE 'old-%'").get().count, 5);
+  assert.equal(db.prepare("SELECT COUNT(*) count FROM analytics_broadcast_runs WHERE run_id LIKE 'old-%'").get().count, 105 - 12);
   db.close();
 });
 

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>방송 통계 — 디자인 시스템 규격</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="./ds.css">
+</helmet>
+<div class="vd">
+  <header class="hdr"><div class="hdr-in"><b>VDébut</b><nav><a href="#">데뷔 캘린더</a><a href="#">버튜버 탐색</a><a class="on" href="#">방송 통계</a></nav></div></header>
+  <main class="pg">
+    <section class="head">
+      <div>
+        <span class="eyebrow">LIVE STATISTICS</span>
+        <h1>방송 통계</h1>
+        <p>10분마다 새로 집계해요 · 오늘 오후 9시 30분 기준</p>
+      </div>
+      <form class="search" onSubmit="{{noop}}"><input type="search" placeholder="스트리머 이름 검색"><button class="btn primary" type="submit">검색</button></form>
+    </section>
+    <div class="seg" role="group" aria-label="플랫폼">
+      <sc-for list="{{platforms}}" as="p" hint-placeholder-count="3"><button type="button" aria-pressed="{{p.on}}" onClick="{{p.pick}}"><sc-if value="{{p.icon}}" hint-placeholder-val="{{false}}"><img src="{{p.icon}}" alt="" style="{{p.iconStyle}}"></sc-if>{{p.label}}</button></sc-for>
+    </div>
+
+    <section class="kpis" aria-label="지금 한눈에">
+      <article class="panel kpi hero">
+        <span class="lab"><img src="/_blob/af83299f810965a478532a41f1074b69" alt="" style="width:16px;height:16px">치지직 지금 시청자</span>
+        <div><span class="num">90,280</span><span class="unit">명</span></div>
+        <span class="chip up">평소 이 시간보다 ▲ 12%</span>
+        <svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:100%;height:36px;display:block" aria-hidden="true"><polygon points="{{spark.area}}" fill="#DBE7FB"></polygon><polyline points="{{spark.line}}" fill="none" stroke="#2563EB" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>
+      </article>
+      <article class="panel kpi"><span class="lab">오늘 최고 시청자</span><div><span class="num">218,069</span><span class="unit">명</span></div><p class="sub">지금은 오늘 최고의 <b>41%</b> · 가장 많던 때 15시</p></article>
+      <article class="panel kpi"><span class="lab">1,000명 이상 방송</span><div><span class="num">42</span><span class="unit">개</span></div><p class="sub">인기 방송 상위 100개 중</p></article>
+      <article class="panel kpi"><span class="lab">지금 1위 게임</span><div><a href="Game.dc.html" class="num" style="font-size:22px;color:#19263B">리그 오브 레전드</a></div><p class="sub">전체 시청자의 <b>28%</b> · 방송 14개</p></article>
+    </section>
+
+    <div class="grid3">
+      <section class="panel" aria-labelledby="trend">
+        <div class="sec-h">
+          <div><span class="eyebrow">시청자 추이</span><h2 id="trend">{{trendTitle}}</h2></div>
+          <div class="seg"><sc-for list="{{trendTabs}}" as="t" hint-placeholder-count="4"><button type="button" aria-pressed="{{t.on}}" onClick="{{t.pick}}">{{t.label}}</button></sc-for></div>
+        </div>
+        <div class="legend"><span><i class="dot" style="background:#2563EB"></i>치지직 시청자</span><span><i style="width:16px;border-top:2px dashed #19263B;display:inline-block"></i>평소</span></div>
+        <div class="chart" style="height:200px">
+          <sc-for list="{{trend.bars}}" as="b" hint-placeholder-count="24"><span title="{{b.tip}}"><i style="{{b.style}}"></i></span></sc-for>
+          <svg viewBox="{{trend.vb}}" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible"><polyline points="{{trend.line}}" fill="none" stroke="#19263B" stroke-width="2" stroke-dasharray="5 4" vector-effect="non-scaling-stroke"></polyline></svg>
+        </div>
+        <div class="xl"><sc-for list="{{trend.labels}}" as="l" hint-placeholder-count="24"><span>{{l}}</span></sc-for></div>
+      </section>
+      <section class="panel brief" aria-labelledby="brief">
+        <div><span class="eyebrow">지금 판도</span><h2 id="brief" class="ph2">리그 오브 레전드가 이끌고 있어요</h2></div>
+        <p>지금 가장 많이 보는 게임은 <b>「리그 오브 레전드」</b>로, 방송 <b>14개</b>에 <b>25,379명</b>이 보고 있어요. 방송당 시청자가 가장 여유로운 게임은 <b>「피크」</b>예요.</p>
+        <div class="blk"><h3>급상승 게임 <small>지난 7일, 그 전 7일 대비</small></h3><ol class="mini"><li><a href="Game.dc.html"><span>1.</span>피크</a><b class="up">▲ 86%</b></li><li><a href="Game.dc.html"><span>2.</span>로블록스</a><b class="up">▲ 54%</b></li></ol></div>
+        <div class="blk"><h3>게임 외 콘텐츠 <small>지금</small></h3><ol class="mini"><li><span><span>1.</span>토크</span><b>20,944명</b></li><li><span><span>2.</span>노래</span><b>3,682명</b></li><li><span><span>3.</span>먹방</span><b>1,364명</b></li></ol></div>
+      </section>
+    </div>
+
+    <section class="panel" aria-labelledby="games">
+      <div class="sec-h">
+        <div><span class="eyebrow">인기 게임 순위</span><h2 id="games">「리그 오브 레전드」가 게임 시청자의 41%를 모으고 있어요</h2></div>
+        <div class="seg"><sc-for list="{{gameTabs}}" as="t" hint-placeholder-count="3"><button type="button" aria-pressed="{{t.on}}" onClick="{{t.pick}}">{{t.label}}</button></sc-for></div>
+      </div>
+      <div class="share"><sc-for list="{{share}}" as="s" hint-placeholder-count="6"><i style="{{s.style}}" title="{{s.label}}"></i></sc-for></div>
+      <div class="slegend"><sc-for list="{{share}}" as="s" hint-placeholder-count="6"><span><i class="dot" style="{{s.dot}}"></i>{{s.label}} <b>{{s.pct}}</b></span></sc-for></div>
+      <div class="legend"><span><i class="dot" style="background:#2563EB"></i>시청자</span><span><i style="width:16px;border-top:2px solid #19263B;display:inline-block"></i>방송 수</span></div>
+      <div class="chart" style="height:180px">
+        <sc-for list="{{games.bars}}" as="b" hint-placeholder-count="8"><span title="{{b.tip}}"><i style="{{b.style}}"></i></span></sc-for>
+        <svg viewBox="{{games.vb}}" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible"><polyline points="{{games.line}}" fill="none" stroke="#19263B" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>
+      </div>
+      <div class="xl"><sc-for list="{{games.labels}}" as="g" hint-placeholder-count="8"><a href="Game.dc.html" class="glab"><b>{{g.rank}}. {{g.name}}</b><small>방송 {{g.n}}개</small><span class="comp {{g.compClass}}">{{g.comp}}</span></a></sc-for></div>
+      <p class="note">여유·보통·혼잡: 방송당 시청자를 같은 시각 모든 게임의 가운데 값과 비교했어요. 여유일수록 새 방송이 시청자를 모으기 쉬워요.</p>
+    </section>
+
+    <section class="panel" aria-labelledby="ch">
+      <div class="sec-h">
+        <div><span class="eyebrow">실시간 채널 순위</span><h2 id="ch">상위 3개 채널이 순위 안 시청자의 21%를 모으고 있어요</h2></div>
+        <div class="seg"><button type="button" aria-pressed="true">전체</button><button type="button" aria-pressed="false">버튜버만</button></div>
+      </div>
+      <ol class="top3">
+        <sc-for list="{{top3}}" as="t" hint-placeholder-count="3">
+          <li class="{{t.cls}}"><span class="rk">{{t.rank}}</span><span class="av"></span><a href="Channel.dc.html" class="nm">{{t.name}}</a><span class="vw">{{t.viewers}}</span><span class="meta"><span class="plat"><img src="/_blob/af83299f810965a478532a41f1074b69" alt="">{{t.sub}}</span> · {{t.game}}</span><button class="btn sm wide">방송 보기</button></li>
+        </sc-for>
+      </ol>
+      <ol class="rows">
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="7">
+          <li><span class="rn">{{r.rank}}</span><span class="av sm"></span><a class="who" href="Channel.dc.html"><b>{{r.name}}</b><span class="plat"><img src="/_blob/af83299f810965a478532a41f1074b69" alt="">{{r.sub}}</span></a><span class="game">{{r.game}}</span><span class="vbar"><span class="tr"><i style="{{r.bar}}"></i></span><strong>{{r.viewers}}</strong></span><button class="btn sm">방송 보기</button></li>
+        </sc-for>
+      </ol>
+    </section>
+
+    <section class="panel" aria-labelledby="tags">
+      <div class="sec-h"><div><span class="eyebrow">방송 태그 순위</span><h2 id="tags">#소통 태그 방송에 시청자가 가장 많아요</h2></div><span class="note" style="margin:0">치지직 방송 태그 · 지금</span></div>
+      <div class="legend"><span><i class="dot" style="background:#2563EB"></i>태그 시청자</span><span><i style="width:16px;border-top:2px solid #19263B;display:inline-block"></i>태그 방송 수</span></div>
+      <div class="chart" style="height:150px">
+        <sc-for list="{{tags.bars}}" as="b" hint-placeholder-count="8"><span title="{{b.tip}}"><i style="{{b.style}}"></i></span></sc-for>
+        <svg viewBox="{{tags.vb}}" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible"><polyline points="{{tags.line}}" fill="none" stroke="#19263B" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>
+      </div>
+      <div class="xl"><sc-for list="{{tags.labels}}" as="g" hint-placeholder-count="8"><a href="Tag.dc.html" class="glab"><b>{{g.rank}}. #{{g.name}}</b><small>방송 {{g.n}}개</small></a></sc-for></div>
+    </section>
+
+    <p class="foot">숫자를 어떻게 셌는지 궁금하다면 <a href="Method.dc.html">집계 기준</a>을 확인하세요.</p>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3000}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { platform: 'ALL', trendTab: 'today', gameTab: 'now' }; }
+  renderVals() {
+    const s = this.state;
+    const tab = (key, list) => list.map(([id, label]) => ({ label, on: s[key] === id, pick: () => this.setState({ [key]: id }) }));
+    const platforms = [['ALL', '전체', null, ''], ['CHZZK', '치지직', '/_blob/af83299f810965a478532a41f1074b69', 'width:16px;height:16px'], ['SOOP', 'SOOP', '/_blob/1423303da46c36a87b0ffcbbb05fc587', 'width:22px;height:13px']]
+      .map(([id, label, icon, iconStyle]) => ({ label, icon, iconStyle, on: s.platform === id, pick: () => this.setState({ platform: id }) }));
+    // 막대(파랑) + 선(먹색) 그래프 값
+    const combo = (bars, line, maxB, maxL, labels) => ({
+      bars: bars.map((v) => ({ tip: v == null ? '집계 전' : `${v}`, style: `height:${v == null ? 0 : v / maxB * 88}%;max-width:44px;background:#2563EB` })),
+      vb: `0 0 ${bars.length * 100} 100`,
+      line: line.map((v, i) => (v == null ? null : `${i * 100 + 50},${(100 - v / maxL * 88).toFixed(1)}`)).filter(Boolean).join(' '),
+      labels,
+    });
+    const today = [38, 34, 31, 30, 32, 35, 41, 53, 70, 92, 118, 143, 168, 190, 205, 218, 211, 196, 175, 150, 120, 90, null, null];
+    const usual = [40, 35, 31, 29, 29, 31, 37, 50, 66, 88, 110, 135, 158, 176, 186, 190, 186, 172, 154, 132, 108, 84, 64, 50];
+    const hours = today.map((_, h) => (h % 6 === 0 || h === 23 ? `${h}시` : ''));
+    const trendSets = {
+      today: combo(today, usual, 240, 240, hours),
+      yesterday: combo(usual.map((v) => v * 1.04), usual, 240, 240, hours),
+      '7d': combo([118, 121, 116, 124, 140, 168, 152], [], 200, 200, ['월', '화', '수', '목', '금', '토', '일']),
+      '30d': combo(Array.from({ length: 30 }, (_, i) => 110 + (i % 7 >= 5 ? 40 : 0) + i), [], 200, 200, Array.from({ length: 30 }, (_, i) => ((29 - i) % 7 === 0 ? `D-${29 - i}` : ''))),
+    };
+    const trendTitle = { today: '오늘은 15시에 가장 많이 봤어요 · 218,069명', yesterday: '어제는 15시에 가장 많이 봤어요 · 197,600명', '7d': '토요일에 가장 많고 수요일에 가장 적었어요', '30d': '주말마다 시청자가 늘어요' }[s.trendTab];
+    const g = [['리그 오브 레전드', 25379, 14, '보통'], ['마인크래프트', 8420, 5, '보통'], ['배틀그라운드', 6950, 5, '보통'], ['피크', 6120, 2, '여유'], ['발로란트', 4890, 4, '보통'], ['로스트아크', 4210, 3, '보통'], ['스타크래프트', 3380, 2, '보통'], ['메이플스토리', 2900, 3, '혼잡']];
+    const games = combo(g.map((r) => r[1] / 1000), g.map((r) => r[2]), 30, 16, []);
+    games.labels = g.map(([name, , n, comp], i) => ({ rank: i + 1, name, n, comp, compClass: `c-${comp}` }));
+    const pal = ['#2563EB', '#5B8DEF', '#8FB1F2', '#BCD0F7', '#DBE7FB', '#F1F5F9'];
+    const share = [['리그 오브 레전드', 40.6], ['마인크래프트', 13.4], ['배틀그라운드', 11.1], ['피크', 9.8], ['발로란트', 7.8], ['기타', 17.3]].map(([label, pct], i) => ({ label, pct: `${pct}%`, style: `width:${pct}%;background:${pal[i]}`, dot: `background:${pal[i]}` }));
+    const ch = [['모아', '치지직', '피크', 3404], ['해솔', '치지직', '피크', 2695], ['한결', '치지직 / 스텔라이브', '리그 오브 레전드', 2182], ['도윤', '치지직', '리그 오브 레전드', 2125], ['서아', '치지직', '리그 오브 레전드', 2069], ['라온', '치지직', '리그 오브 레전드', 2012], ['하늘', '치지직 / 스텔라이브', '리그 오브 레전드', 1955], ['별하', '치지직', '마인크래프트', 1940], ['태오', '치지직', '스타크래프트', 1909], ['이든', '치지직', '리그 오브 레전드', 1898]];
+    const won = (v) => `${v.toLocaleString('ko-KR')}명`;
+    const top3 = ch.slice(0, 3).map(([name, sub, game, v], i) => ({ rank: i + 1, name, sub, game, viewers: won(v), cls: i === 0 ? 't3 first' : 't3' }));
+    const rows = ch.slice(3).map(([name, sub, game, v], i) => ({ rank: i + 4, name, sub, game, viewers: won(v), bar: `width:${v / ch[0][3] * 100}%` }));
+    const t = [['소통', 21.4, 15], ['버츄얼', 18.9, 15], ['신입', 17.2, 15], ['롤', 11.6, 10], ['노래', 8.1, 10], ['합방', 4.2, 5], ['공포', 3.6, 5], ['종겜', 3.1, 5]];
+    const tags = combo(t.map((r) => r[1]), t.map((r) => r[2]), 25, 16, []);
+    tags.labels = t.map(([name, , n], i) => ({ rank: i + 1, name, n }));
+    const v = today.filter((x) => x != null);
+    const pts = v.map((x, i) => `${(i / 23 * 100).toFixed(1)},${(30 - x / 230 * 28).toFixed(1)}`);
+    const spark = { line: pts.join(' '), area: `0,30 ${pts.join(' ')} ${((v.length - 1) / 23 * 100).toFixed(1)},30` };
+    return { platforms, trendTabs: tab('trendTab', [['today', '오늘'], ['yesterday', '어제'], ['7d', '7일'], ['30d', '30일']]), gameTabs: tab('gameTab', [['now', '지금'], ['today', '오늘'], ['7d', '7일']]),
+      trend: trendSets[s.trendTab], trendTitle, games, share, top3, rows, tags, spark, noop: (e) => e && e.preventDefault && e.preventDefault() };
+  }
+}
+</script>
+</body>
+</html>

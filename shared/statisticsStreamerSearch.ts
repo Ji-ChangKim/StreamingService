@@ -9,6 +9,8 @@ export interface StatisticsStreamer {
   isRegistered?: boolean;
   isLive?: boolean;
   followerCount?: number;
+  // 최근 30일 VDébut 방송 통계에 기록된 방송 수(정각 회차 기준). 0이면 통계 기록 없음.
+  recordedBroadcasts?: number;
 }
 
 export interface StatisticsStreamerSearchResponse {

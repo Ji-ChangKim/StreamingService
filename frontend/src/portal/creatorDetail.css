@@ -1,5 +1,5 @@
 /* 시안의 본문 비율을 유지하며 공통 Header·Footer에는 영향을 주지 않는다. */
-.vd-creator-detail { --detail-line:#e2e8f0; --detail-muted:#64748b; padding-top:28px; padding-bottom:40px; }
+.vd-creator-detail { --detail-line:#e2e8f0; --detail-muted:#64748b; padding-top:28px; padding-bottom:40px; word-break:keep-all; overflow-wrap:break-word; }
 .vd-creator-detail .vd-profile-hero { border-radius:16px; border-color:var(--detail-line); box-shadow:0 2px 8px #25385804; }
 .vd-creator-detail .vd-profile-cover { height:150px; background:radial-gradient(ellipse at 20% 20%,#ddd6fe,transparent 65%),linear-gradient(115deg,#ede9fe,#e0e7ff 55%,#e0f2fe); }
 .vd-creator-detail .vd-profile-banner { opacity:.5; }

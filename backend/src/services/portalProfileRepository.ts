@@ -1,4 +1,4 @@
-import { PortalProfile, portalWebUrl, portalChannelUrl } from '../../../shared/portal';
+import { PortalProfile, portalWebUrl, portalChannelUrl, isAutoRegisteredChannelProfile } from '../../../shared/portal';
 import { isPublicProfile } from '../../../shared/contentReview';
 
 type LegacyRow = { slug: string; display_name: string; description: string; profile_image_url: string; agency_name: string; platform: PortalProfile['platform']; channel_url: string; country_code: string; x_url: string; debut_date: string; debut_time: string; timezone: string; start_at_utc: string };
@@ -52,7 +52,28 @@ export async function readPortalProfileBySlug(db: D1Database, slug: string): Pro
 
 // 관리자 원문 조회와 공개 목록을 분리해 검토 보류 자료의 우회 노출을 막는다.
 export async function readPublicPortalProfiles(db: D1Database): Promise<PortalProfile[]> {
-  return (await readPortalProfiles(db)).filter(isPublicProfile);
+  // 자동 등록 채널 기록은 탐색 목록·사이트맵·캘린더에 넣지 않는다. 개별 주소는 상세 조회로 계속 열린다.
+  return (await readPortalProfiles(db)).filter((profile) => isPublicProfile(profile) && !isAutoRegisteredChannelProfile(profile));
+}
+
+// 홈 첫 HTML용: 데뷔 시각이 기간 안에 있는 공개 소개만 읽는다.
+// 전체 채널 행을 읽지 않도록 기존 소개는 start_at_utc 색인으로 좁히고, 직접 등록 소개는 덮어쓰기 규칙을 지키려 모두 읽은 뒤 기간으로 거른다.
+export async function readPublicPortalProfilesBetween(db: D1Database, fromIso: string, toIso: string): Promise<PortalProfile[]> {
+  const [legacy, additions] = await Promise.all([
+    db.prepare(`SELECT i.slug,i.display_name,i.description,i.profile_image_url,i.agency_name,i.country_code,i.x_url,i.debut_date,i.debut_time,i.timezone,i.start_at_utc,c.platform,c.channel_url
+      FROM streamerChannel_info i JOIN streamerChannel c ON c.id=i.channel_id
+      WHERE i.start_at_utc >= ? AND i.start_at_utc < ? AND i.slug IS NOT NULL AND i.slug != ''`).bind(fromIso, toIso).all<LegacyRow>(),
+    db.prepare('SELECT data FROM portal_profiles').all<{ data: string }>(),
+  ]);
+  const profiles = new Map((legacy.results || []).map((row) => [row.slug, legacyProfile(row)]));
+  for (const row of additions.results || []) { try { const profile = JSON.parse(row.data) as PortalProfile; profiles.set(profile.slug, profile); } catch { /* 잘못된 행은 건너뛴다. */ } }
+  const from = Date.parse(fromIso), to = Date.parse(toIso);
+  return [...profiles.values()].filter((profile) => {
+    // 시간 미정 일정은 데뷔 날짜(한국 시간 0시)로 기간을 판정한다.
+    const at = profile.dateState === 'TIME_TBD' ? Date.parse(`${profile.debutDate}T00:00:00+09:00`) : Date.parse(profile.startAtUtc || '');
+    return Number.isFinite(at) && at >= from && at < to && profile.dateState !== 'NONE' && profile.dateState !== 'DATE_TBD'
+      && isPublicProfile(profile) && !isAutoRegisteredChannelProfile(profile);
+  });
 }
 
 // 직접 URL·검색 메타데이터·구형 API에도 같은 공개 기준을 적용한다.

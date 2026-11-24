@@ -51,3 +51,26 @@ export function publicBroadcastTitle(title: string): string {
 export function publicBroadcastPayload<T>(value: T): T {
   return (Array.isArray(value) ? value.map(publicBroadcastPayload) : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).map(([key, item]) => [key, /^(?:title|broadcastTitle|streamTitle)$/i.test(key) && typeof item === 'string' ? publicBroadcastTitle(item) : publicBroadcastPayload(item)])) : value) as T;
 }
+
+// 공개 응답에는 검토 상태와 검토일만 남긴다. 검토 시점의 전체 사본(snapshot)은 서버 판정에만 쓰므로 내려보내지 않는다.
+export function publicProfileView(profile: PortalProfile): PortalProfile {
+  return profile.contentReview ? { ...profile, contentReview: { state: profile.contentReview.state, reviewedAt: profile.contentReview.reviewedAt, snapshot: '' } } : profile;
+}
+
+// 검색 허용 기준(기획문서 41번 A1). 사람이 직접 쓴 소개 글자 수(활동명·기호 제외)와 최근 30일 방송 수로 정한다.
+// 기준에 못 미치는 소개는 목록·캘린더·링크로는 그대로 보이고, 검색 노출(noindex)과 사이트맵에서만 빠진다.
+// 소개를 보강하거나 방송 기록이 쌓이면 자동으로 다시 포함된다.
+export const PROFILE_INDEX_OWN_CHARS = 100;
+export const PROFILE_INDEX_OWN_CHARS_WITH_RECORD = 50;
+export const PROFILE_INDEX_BROADCASTS_30D = 5;
+export function profileOwnTextLength(profile: PortalProfile): number {
+  const details = profile.details;
+  return [profile.description, profile.headline, details?.contentSummary, details?.broadcastStyle, details?.fanMessage, profile.fanGuide, profile.regularSchedule]
+    .filter(Boolean).join(' ').split(profile.displayName || '\u0000').join('').replace(/[^\p{L}\p{N}]/gu, '').length;
+}
+export function isProfileIndexable(profile: PortalProfile, broadcasts30 = 0): boolean {
+  const own = profileOwnTextLength(profile);
+  return own >= PROFILE_INDEX_OWN_CHARS || (own >= PROFILE_INDEX_OWN_CHARS_WITH_RECORD && broadcasts30 >= PROFILE_INDEX_BROADCASTS_30D);
+}
+// 예전 이름. 방송 기록 없이 판단할 때(사이트맵 기록 조회 실패 등) 쓴다.
+export function isThinProfile(profile: PortalProfile): boolean { return !isProfileIndexable(profile, 0); }

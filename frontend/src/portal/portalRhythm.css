@@ -288,3 +288,21 @@
   .vd .vd-calendar-filters { padding-inline: 8px; }
   .vd .vd-cards { grid-template-columns: minmax(0,1fr); }
 }
+
+/* 소개·문의 안내 문단: 한국어 어절 단위 줄바꿈 */
+.vd .vd-info-sections { margin-top: 24px; word-break: keep-all; overflow-wrap: break-word; }
+.vd .vd-info-sections > div + div { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--vd-line); }
+.vd .vd-info-sections h2 { font-size: 16px; font-weight: 750; color: #0f172a; margin: 0 0 10px; }
+.vd .vd-info-sections p { font-size: 14px; line-height: 1.8; color: #475569; text-wrap: pretty; max-width: 760px; }
+.vd .vd-info-sections p + p { margin-top: 10px; }
+.vd .vd-about-intro, .vd .vd-info-cards { word-break: keep-all; overflow-wrap: break-word; }
+.vd .vd-about-intro p, .vd .vd-info-cards p { text-wrap: pretty; }
+.vd .vd-heading, .vd .vd-section { word-break: keep-all; overflow-wrap: break-word; }
+.vd .vd-heading p, .vd .vd-section p { text-wrap: pretty; }
+/* 개인정보처리방침·이용약관: 한국어 어절 단위 줄바꿈 */
+.vd .vd-policy { word-break: keep-all; overflow-wrap: break-word; }
+.vd .vd-policy p { text-wrap: pretty; }
+.vd .vd-policy p strong { color: #0f172a; font-weight: 700; }
+/* 어절 단위 줄바꿈은 한국어 전용. 띄어쓰기가 없는 일본어는 기본 줄바꿈으로 되돌린다. */
+html:lang(ja) .vd .vd-policy, html:lang(ja) .vd .vd-info-sections, html:lang(ja) .vd .vd-heading,
+html:lang(ja) .vd .vd-section, html:lang(ja) .vd .vd-about-intro, html:lang(ja) .vd .vd-info-cards { word-break: normal; line-break: strict; }

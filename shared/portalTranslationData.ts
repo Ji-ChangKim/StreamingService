@@ -320,6 +320,11 @@ VDébut은 서비스 운영을 위해 Google AdSense 등 제3자 광고 서비�
 Google을 포함한 제3자 광고 사업자는 쿠키를 사용해 이용자의 이 사이트 및 다른 웹사이트 방문 기록을 바탕으로 광고를 제공할 수 있습니다. Google은 광고 쿠키를 사용해 이용자에게 이 사이트와 다른 사이트 방문 정보를 바탕으로 한 광고를 표시할 수 있습니다.|||Googleを含む第三者配信事業者は、Cookieを使用して、このサイトや他のウェブサイトへの過去のアクセス情報に基づいて広告を配信することがあります。Googleは広告Cookieを使用して、このサイトや他のサイトへのアクセス情報に基づく広告を表示することがあります。|||Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this website or other websites. Google's use of advertising cookies enables it to serve ads based on your visits to this site and other sites.
 Google 광고 설정에서 맞춤 광고를 사용 중지할 수 있으며, aboutads.info에서 제3자 광고 사업자의 맞춤 광고 쿠키 사용을 거부할 수 있습니다.|||Googleの広告設定でパーソナライズ広告を無効にできます。また、aboutads.infoで第三者配信事業者によるパーソナライズ広告用Cookieの使用を無効にできます。|||You can opt out of personalized advertising in Google Ads Settings, and opt out of third-party vendors' use of cookies for personalized advertising at aboutads.info.
 Google 광고 설정|||Googleの広告設定|||Google Ads Settings
+운영 주체 및 개인정보 보호책임자|||運営者および個人情報保護責任者|||Operator and privacy officer
+VDébut은 사업자 등록이 없는 개인이 운영하는 독립 서비스입니다.|||VDébutは事業者登録のない個人が運営する独立したサービスです。|||VDébut is an independent service run by an individual without a registered business.
+개인정보 보호책임자: VDébut 운영자 (이메일 ru_0120@naver.com). 개인정보 관련 문의·열람·정정·삭제 요청은 이 이메일 또는 문의 화면으로 접수하며, 확인 후 지체 없이 처리합니다.|||個人情報保護責任者：VDébut運営者（メール ru_0120@naver.com）。個人情報に関するお問い合わせ・閲覧・訂正・削除のご依頼は、このメールまたはお問い合わせ画面で受け付け、確認後速やかに対応します。|||Privacy officer: VDébut operator (email ru_0120@naver.com). Privacy inquiries and requests for access, correction or deletion are accepted at this email or through the Contact page and handled promptly after review.
+시행일|||施行日|||Effective date
+이 개인정보처리방침은 2026년 11월 12일부터 시행합니다. 내용이 바뀌면 이 페이지에 변경 내용과 새 시행일을 안내합니다.|||本プライバシーポリシーは2026年11月12日から施行します。内容を変更する場合は、このページで変更内容と新しい施行日をお知らせします。|||This privacy policy is effective as of November 12, 2026. If it changes, we will post the changes and the new effective date on this page.
 공개된 버튜버 소개 {0}명|||公開中のVTuber紹介 {0}人|||{0} published VTuber profiles
 Google의 광고 쿠키 사용 안내|||Googleによる広告Cookieの使用について|||How Google uses advertising cookies
 제3자 맞춤 광고 거부(aboutads.info)|||第三者パーソナライズ広告の無効化（aboutads.info）|||Opt out of third-party personalized ads (aboutads.info)
@@ -882,6 +887,288 @@ X(트위터) 데뷔 공지 확인하기|||X（Twitter）のデビュー告知を
 데뷔 완료|||デビュー完了|||Debut completed
 데뷔일|||デビュー日|||Debut date
 역사적인 첫 방송 다시보기|||記念すべき初配信アーカイブ|||Debut stream archive
+치지직|||CHZZK|||CHZZK
+월|||月|||Mon
+화|||火|||Tue
+수|||水|||Wed
+목|||木|||Thu
+금|||金|||Fri
+토|||土|||Sat
+일|||日|||Sun
+{0} {1}에서 데뷔했어요 · 오늘로 {2}일째예요|||{0}に{1}でデビューしました・今日で{2}日目です|||Debuted on {1} on {0} · Day {2} today
+{0} {1}에서 데뷔할 예정이에요|||{0}に{1}でデビュー予定です|||Debuting on {1} on {0}
+{0} {1} 방송을 주로 하는 {2} 버튜버예요.|||{0}は{1}の配信を中心に活動する{2}のVTuberです。|||{0} is a {2} VTuber who mainly streams {1}.
+{0} {1} 버튜버예요.|||{0}は{1}のVTuberです。|||{0} is a {1} VTuber.
+{0}(한국 시간)에 첫 방송을 했어요.|||{0}（韓国時間）に初配信を行いました。|||The first stream was on {0} (Korean time).
+첫 방송은 {0}(한국 시간)이에요.|||初配信は{0}（韓国時間）です。|||The first stream is on {0} (Korean time).
+{0}로 방송해요.|||{0}で配信しています。|||Streams in {0}.
+{0} 소속이에요.|||{0}所属です。|||Part of {0}.
+기간|||期間|||Period
+{0}일|||{0}日|||{0} days
+최근 {0}일|||直近{0}日|||Last {0} days
+{0}일 동안 {1}번 방송했어요|||{0}日間で{1}回配信しました|||Streamed {1} times in {0} days
+주로 {0}시에 켜요|||主に{0}時に配信を始めます|||usually starts at {0}:00
+방송|||配信|||Streams
+방송 시간|||配信時間|||Stream time
+평균 시청자|||平均視聴者|||Average viewers
+최고 시청자|||最高視聴者|||Peak viewers
+회|||回|||times
+시간|||時間|||h
+주로 한 콘텐츠|||主な配信内容|||Main content
+요일별 방송 시간|||曜日別の配信時間|||Stream time by weekday
+공개 방송 기록 기준|||公開された配信記録に基づきます|||Based on public stream records
+방송 기록 자세히 보기|||配信記録を詳しく見る|||See full stream records
+데뷔 후 {0}주|||デビュー後{0}週|||{0} weeks since debut
+데뷔 둘째 주보다 시청자가 {0}배로 늘었어요|||デビュー2週目より視聴者が{0}倍に増えました|||Viewers have grown {0}× since debut week 2
+데뷔 둘째 주보다 시청자가 {0}%나 늘었어요|||デビュー2週目より視聴者が{0}%も増えました|||Viewers are up a whopping {0}% from debut week 2
+데뷔 둘째 주보다 시청자가 {0}% 크게 늘었어요|||デビュー2週目より視聴者が{0}%大きく増えました|||Viewers are up a big {0}% from debut week 2
+데뷔 둘째 주보다 시청자가 {0}% 늘었어요|||デビュー2週目より視聴者が{0}%増えました|||Viewers are up {0}% from debut week 2
+데뷔 둘째 주보다 시청자가 조금 늘었어요 ({0}%)|||デビュー2週目より視聴者が少し増えました({0}%)|||Viewers are up a little from debut week 2 ({0}%)
+최근 주 평균 시청자는 {0}명, 둘째 주와 거의 비슷해요|||直近週の平均視聴者は{0}人、2週目とほぼ同じです|||Latest-week average is {0} viewers, about the same as week 2
+최근 주 평균 시청자는 {0}명이에요 · 둘째 주보다 {1}% 적어요|||直近週の平均視聴者は{0}人です · 2週目より{1}%少なめです|||Latest-week average is {0} viewers · {1}% fewer than week 2
+최근 주 평균 시청자는 {0}명이에요 · 둘째 주의 {1}% 수준이에요|||直近週の平均視聴者は{0}人です · 2週目の{1}%ほどです|||Latest-week average is {0} viewers · about {1}% of week 2
+데뷔 주 평균 시청자|||デビュー週の平均視聴者|||Debut-week average viewers
+둘째 주 평균 시청자|||2週目の平均視聴者|||Week-2 average viewers
+{0}주 평균 시청자|||{0}週目の平均視聴者|||Week-{0} average viewers
+데뷔 주|||デビュー週|||Debut
+데뷔 주는 첫 방송을 보러 온 시청자가 몰리는 때라 비교 기준에서 빼고, 둘째 주부터 비교해요.|||デビュー週は初配信を見に来る視聴者が集まる時期なので比較の基準から外し、2週目から比べています。|||Debut week draws a rush of first-stream viewers, so we compare from week 2 instead.
+데뷔 후 시청자가 꾸준히 비슷해요|||デビュー後、視聴者数は安定しています|||Viewers have stayed steady since debut
+최근 주 평균 시청자|||直近週の平均視聴者|||Latest-week average viewers
+주차별 평균 시청자: {0}|||週ごとの平均視聴者: {0}|||Average viewers by week: {0}
+주로 {0}요일 {1}~{2}시에 방송해요|||主に{0}曜日の{1}〜{2}時に配信しています|||Usually streams on {0}, {1}:00–{2}:00
+방송 시간표|||配信スケジュール|||Stream schedule
+요일별 시간대 방송 빈도|||曜日・時間帯別の配信頻度|||How often they stream by weekday and hour
+평균 방송 길이|||平均配信時間|||Average stream length
+{0}시간 {1}분|||{0}時間{1}分|||{0}h {1}m
+{0}분|||{0}分|||{0}m
+최근 방송|||最近の配信|||Latest stream
+대체로 쉬는 날|||主な休みの日|||Usual day off
+방송의 {0}%는 {1}지만, {2} 방송 때 {3}배 더 많이 봐요|||配信の{0}%は{1}ですが、{2}の配信では視聴者が{3}倍に増えます|||{0}% of streams are {1}, but {2} streams get {3}× more viewers
+주로 {0} 방송을 해요|||主に{0}を配信しています|||Mostly streams {0}
+콘텐츠|||配信内容|||Content
+방송 시간 비중|||配信時間の割合|||Share of stream time
+평소 대비|||普段と比べて|||Vs. usual
+{0}시간|||{0}時間|||{0}h
+배|||倍|||×
+비슷|||同程度|||Similar
+평소 = 이 채널의 최근 30일 평균 시청자({0}명)|||普段 = このチャンネルの直近30日の平均視聴者（{0}人）|||Usual = this channel's 30-day average viewers ({0})
+공식 링크|||公式リンク|||Official links
+방송 보러 가기|||配信を見る|||Watch streams
+공지·일정|||お知らせ・予定|||News & schedule
+소식|||お知らせ|||Updates
+바로가기|||開く|||Open
+상세 보기|||詳細|||Details
+방송 기록|||配信記録|||Stream records
+이 플랫폼은 아직 방송 기록을 모으지 않아요. 치지직·SOOP 채널의 방송을 기록하고 있어요.|||このプラットフォームの配信記録はまだ集めていません。CHZZK・SOOPのチャンネルを記録しています。|||We don't collect stream records for this platform yet. We record CHZZK and SOOP channels.
+데뷔 이야기|||デビューの話|||Debut story
+최근 방송 기록|||最近の配信記録|||Recent stream records
+최근 30일 동안 {0}번, 모두 {1}시간 방송했어요.|||直近30日間で{0}回、合計{1}時間配信しました。|||Streamed {0} times for {1} hours in the last 30 days.
+평균 시청자는 {0}명, 가장 많을 때는 {1}명이었어요.|||平均視聴者は{0}人、最も多い時は{1}人でした。|||Average viewers were {0}, with a peak of {1}.
+가장 많이 한 콘텐츠는 「{0}」({1}%)예요.|||最も多く配信した内容は「{0}」（{1}%）です。|||Most streamed content was “{0}” ({1}%).
+버튜버 DB|||VTuber DB|||VTuber DB
+버튜버 DB · 데뷔일·소속·방송 기록|||VTuber DB・デビュー日・所属・配信記録|||VTuber DB · Debuts, agencies and stream records
+VDébut에 등록된 버튜버를 한곳에 모았어요. 데뷔일, 소속, 주로 하는 방송과 방송 기록을 보고 마음에 드는 버튜버를 찾아보세요.|||VDébutに登録されたVTuberを一か所に集めました。デビュー日、所属、主な配信内容や配信記録を見て、気になるVTuberを見つけてください。|||Every VTuber registered on VDébut, in one place. Check debut dates, agencies, what they stream and their stream records to find someone you'll love.
+이번 주 데뷔 일정|||今週のデビュー日程|||This week's debuts
+{0} ~ {1}, 한국 시간 기준으로 {2}명이 데뷔해요.|||{0}〜{1}（韓国時間）に{2}人がデビューします。|||{2} VTubers debut between {0} and {1} (Korean time).
+이번 주에는 아직 등록된 데뷔 일정이 없어요. 데뷔 캘린더에서 다른 주 일정을 살펴보세요.|||今週はまだ登録されたデビュー日程がありません。デビューカレンダーで他の週の日程をご覧ください。|||No debuts are registered for this week yet. Check other weeks on the debut calendar.
+다음 주 데뷔 예정|||来週のデビュー予定|||Debuting next week
+{0} ~ {1}에 {2}명이 데뷔할 예정이에요.|||{0}〜{1}に{2}人がデビュー予定です。|||{2} VTubers are scheduled to debut between {0} and {1}.
+최근 데뷔한 버튜버|||最近デビューしたVTuber|||Recently debuted VTubers
+지난 2주 동안 첫 방송을 시작한 버튜버예요.|||この2週間で初配信を迎えたVTuberです。|||VTubers who held their first stream in the past two weeks.
+외부 링크와 책임 범위|||外部リンクと責任の範囲|||External links and responsibility
+운영 주체|||運営者|||Operator
+왜 만들었나요|||なぜ作ったのか|||Why we built it
+정보는 어디에서 오나요|||情報の出どころ|||Where the information comes from
+공개 기준|||公開基準|||Publishing standards
+운영|||運営|||Operation
+VDébut은 회원가입 없이 쓰는 서비스라, 꼭 필요한 정보만 받아요. 어떤 정보를 왜 받는지, 얼마나 보관하고 어떻게 지우는지 아래에 정리했어요.|||VDébutは会員登録なしで使えるサービスなので、本当に必要な情報だけを受け取ります。どんな情報をなぜ受け取るのか、どのくらい保管し、どう削除するのかを以下にまとめました。|||VDébut works without sign-up, so we only collect what we truly need. Below we explain what we collect and why, how long we keep it, and how we delete it.
+어떤 정보를, 왜 받나요|||どんな情報を、なぜ受け取るのか|||What we collect and why
+문의할 때: 문의 유형, 문의 내용, 관련 페이지 주소, 연락 이메일(선택)을 받아요. 문의에 답하는 데만 써요.|||お問い合わせのとき：お問い合わせの種類、内容、関連ページのURL、連絡用メール（任意）を受け取ります。お問い合わせへの回答にだけ使います。|||When you contact us: the inquiry type, your message, the related page address and a contact email (optional). We use them only to answer you.
+데뷔 일정·소개를 등록할 때: 활동명, 소개, 방송 채널, 데뷔 일정, 이미지·영상 주소, 신청자 구분(본인·소속사·팬), 연락 이메일(선택)을 받아요. 검토해서 소개를 공개하고, 필요하면 연락드리는 데 써요. 연락 이메일은 공개 소개에 표시하지 않아요.|||デビュー日程・紹介を登録するとき：活動名、紹介、配信チャンネル、デビュー日程、画像・動画のURL、申請者区分（本人・事務所・ファン）、連絡用メール（任意）を受け取ります。確認したうえで紹介を公開し、必要なときにご連絡するために使います。連絡用メールは公開する紹介には表示しません。|||When you register a debut or profile: activity name, introduction, broadcast channel, debut schedule, image and video addresses, who is applying (the VTuber, an agency or a fan) and a contact email (optional). We use them to review and publish the profile and to contact you if needed. Contact emails are never shown on public profiles.
+사이트를 이용할 때 자동으로: 접속 IP 주소, 브라우저·기기 정보, 방문한 페이지와 시간, 쿠키가 처리돼요. 접수 남용을 막고, 방문 현황을 살피고, 광고를 보여 주는 데 써요. 접속 IP 주소는 그대로 저장하지 않고 해시 값으로 바꿔 저장해요.|||サイトを利用するとき自動的に：アクセスIPアドレス、ブラウザ・端末の情報、閲覧したページと時刻、Cookieが処理されます。受付の乱用防止、アクセス状況の確認、広告の表示に使います。アクセスIPアドレスはそのまま保存せず、ハッシュ値に変えて保存します。|||Automatically when you use the site: your IP address, browser and device information, pages visited and times, and cookies. We use them to prevent abuse of submissions, understand visits and show ads. We never store your IP address as is; we store a hashed value instead.
+이용자의 브라우저에만 저장: 언어 설정, 관심 목록, 문의 답변을 확인하는 확인 키는 쓰고 있는 브라우저에 저장돼요. 확인 키는 서버에 원래 값이 아니라 해시로만 저장해요.|||ご利用のブラウザにだけ保存：言語設定、お気に入りリスト、お問い合わせの回答を確認する確認キーは、お使いのブラウザに保存されます。確認キーはサーバーには元の値ではなくハッシュでのみ保存します。|||Stored only in your browser: your language setting, favorites list and the access key for checking replies are saved in the browser you use. On our server the access key is stored only as a hash, never the original.
+얼마나 보관하나요|||どのくらい保管するのか|||How long we keep it
+문의: 답변이 끝나고 1년이 지나면 문의 내용과 연락 이메일을 모두 지워요.|||お問い合わせ：回答が終わってから1年が過ぎると、お問い合わせの内容と連絡用メールをすべて削除します。|||Inquiries: one year after we finish replying, we delete both the message and the contact email.
+등록 신청: 공개된 소개는 공개하는 동안 보관하고, 삭제를 요청하시면 바로 지워요. 신청서에 적은 연락 이메일과 접속 정보 해시는 검토가 끝나고 1년이 지나면 지워요.|||登録申請：公開した紹介は公開している間保管し、削除のご依頼があればすぐに削除します。申請書の連絡用メールとアクセス情報のハッシュは、確認が終わってから1年が過ぎると削除します。|||Registrations: published profiles are kept while they are public and deleted right away on request. The contact email and access hash on the application are deleted one year after review.
+방문 분석과 광고 쿠키: Google Analytics와 Google AdSense가 정한 보관 기간을 따라요. 쿠키는 브라우저에서 언제든 지울 수 있어요.|||アクセス解析と広告Cookie：Google AnalyticsとGoogle AdSenseが定める保管期間に従います。Cookieはブラウザからいつでも削除できます。|||Analytics and ad cookies: these follow the retention periods set by Google Analytics and Google AdSense. You can delete cookies in your browser at any time.
+다른 법률에서 보관하라고 정한 정보가 있으면 그 기간 동안만 따로 보관해요.|||他の法律で保管が義務付けられている情報がある場合は、その期間だけ別に保管します。|||If another law requires us to keep some information, we keep it separately only for that period.
+어떻게 지우나요|||どう削除するのか|||How we delete it
+보관 기간이 지난 정보는 매시간 도는 자동 정리 작업이 데이터베이스에서 지워요. 지운 정보는 되살릴 수 없어요. 종이 문서로는 개인정보를 받지 않아요.|||保管期間が過ぎた情報は、毎時動く自動整理処理がデータベースから削除します。削除した情報は復元できません。紙の書類では個人情報を受け取りません。|||Information past its retention period is removed from the database by an automatic cleanup that runs every hour. Deleted information cannot be recovered. We do not collect personal information on paper.
+다른 곳에 주나요|||他の人に渡しますか|||Do we share it?
+받은 개인정보를 다른 회사나 사람에게 팔거나 넘기지 않아요. 법률에 따라 수사기관 등이 정해진 절차로 요청하는 경우만 예외예요.|||受け取った個人情報を他の会社や人に売ったり渡したりしません。法律に基づき捜査機関などが定められた手続きで求める場合だけが例外です。|||We never sell or hand over your personal information to other companies or people. The only exception is when authorities request it through procedures set by law.
+맡기는 일과 해외로 가는 정보|||委託と海外への移転|||Service providers and overseas transfers
+VDébut은 아래 해외 서비스를 이용해 사이트를 운영해요. 사이트를 이용하는 순간 네트워크를 통해 정보가 전달돼요. 개인정보 보호법 제28조의8에 따라 이렇게 알려 드려요.|||VDébutは以下の海外サービスを使ってサイトを運営しています。サイトを利用した時点でネットワークを通じて情報が送られます。韓国の個人情報保護法第28条の8に基づきお知らせします。|||VDébut runs on the overseas services below. Information is sent over the network at the moment you use the site. We disclose this under Article 28-8 of Korea's Personal Information Protection Act.
+Cloudflare, Inc. (미국): 사이트 운영과 데이터 저장을 맡고 있어요. 문의·등록 정보와 접속 정보가 전달되며, 위의 보관 기간 동안 보관돼요. 문의: privacy@cloudflare.com|||Cloudflare, Inc.（米国）：サイトの運営とデータ保存を担っています。お問い合わせ・登録情報とアクセス情報が送られ、上記の保管期間の間保管されます。問い合わせ先：privacy@cloudflare.com|||Cloudflare, Inc. (USA): runs the site and stores its data. Inquiry and registration information and access information are sent there and kept for the retention periods above. Contact: privacy@cloudflare.com
+Google LLC (미국): 방문 분석(Google Analytics), 광고(Google AdSense), 글꼴(Google Fonts), 유튜브 영상 재생을 제공해요. 방문 기록, 기기·브라우저 정보, 쿠키, 접속 IP 주소가 전달되며, Google이 정한 기간 동안 보관돼요.|||Google LLC（米国）：アクセス解析（Google Analytics）、広告（Google AdSense）、フォント（Google Fonts）、YouTube動画の再生を提供しています。閲覧記録、端末・ブラウザの情報、Cookie、アクセスIPアドレスが送られ、Googleが定める期間保管されます。|||Google LLC (USA): provides analytics (Google Analytics), ads (Google AdSense), fonts (Google Fonts) and YouTube video playback. Visit records, device and browser information, cookies and IP addresses are sent there and kept for the periods Google sets.
+해외 전달을 원하지 않으시면 브라우저에서 쿠키를 막거나 아래 광고 설정에서 맞춤 광고를 끌 수 있어요. 그래도 사이트는 그대로 쓸 수 있어요. 다만 사이트 운영(Cloudflare)은 거부하면 사이트를 열 수 없어요.|||海外への送信を望まない場合は、ブラウザでCookieをブロックするか、下の広告設定でパーソナライズ広告をオフにできます。それでもサイトはそのまま使えます。ただし、サイト運営（Cloudflare）を拒否するとサイトを開けません。|||If you do not want information sent overseas, you can block cookies in your browser or turn off personalized ads in the ad settings below, and the site will still work. Refusing the hosting service (Cloudflare), however, means the site cannot load.
+쿠키와 맞춤 광고|||Cookieとパーソナライズ広告|||Cookies and personalized ads
+쿠키는 사이트가 브라우저에 남기는 작은 기록이에요. VDébut은 방문 분석과 광고를 위해 쿠키를 써요. 소개 페이지에서 유튜브·치지직·SOOP 영상을 재생하면, 영상을 제공하는 각 플랫폼이 자체 쿠키를 쓸 수 있어요. 영상은 재생 버튼을 누르기 전에는 불러오지 않아요.|||Cookieは、サイトがブラウザに残す小さな記録です。VDébutはアクセス解析と広告のためにCookieを使います。紹介ページでYouTube・CHZZK・SOOPの動画を再生すると、動画を提供する各プラットフォームが独自のCookieを使うことがあります。動画は再生ボタンを押すまで読み込みません。|||A cookie is a small record a site leaves in your browser. VDébut uses cookies for analytics and ads. If you play a YouTube, CHZZK or SOOP video on a profile page, the platform providing the video may use its own cookies. Videos are not loaded until you press play.
+VDébut은 Google AdSense로 광고를 보여 줄 수 있어요. Google을 포함한 제3자 광고 사업자는 쿠키를 사용해 이 사이트와 다른 사이트에 방문한 기록을 바탕으로 광고를 보여 줄 수 있어요. 이렇게 관심사에 맞춘 광고를 위해 방문 기록(행태정보)이 처리돼요.|||VDébutはGoogle AdSenseで広告を表示することがあります。Googleを含む第三者配信事業者は、Cookieを使用して、このサイトや他のサイトへの過去のアクセス情報に基づいて広告を配信することがあります。このように関心に合わせた広告のために閲覧記録（行動情報）が処理されます。|||VDébut may show ads through Google AdSense. Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this site and other sites. Your browsing history (behavioral information) is processed this way to show ads that match your interests.
+맞춤 광고는 Google 광고 설정에서 끌 수 있고, 다른 광고 사업자의 맞춤 광고 쿠키는 aboutads.info에서 거부할 수 있어요. 끄면 관심사와 상관없는 일반 광고가 보여요.|||パーソナライズ広告はGoogleの広告設定でオフにでき、他の広告事業者のパーソナライズ広告Cookieはaboutads.infoで拒否できます。オフにすると、関心とは関係のない一般的な広告が表示されます。|||You can turn off personalized ads in Google's Ads Settings, and opt out of other vendors' personalized-ad cookies at aboutads.info. When turned off, you will see general ads unrelated to your interests.
+쿠키를 아예 막으려면 브라우저 설정에서 할 수 있어요. 크롬: 설정 > 개인정보 보호 및 보안 > 서드파티 쿠키. 사파리: 설정 > 개인정보 보호 > 모든 쿠키 차단. 엣지: 설정 > 쿠키 및 사이트 권한.|||Cookieを完全にブロックしたい場合はブラウザの設定で行えます。Chrome：設定 > プライバシーとセキュリティ > サードパーティCookie。Safari：設定 > プライバシー > すべてのCookieをブロック。Edge：設定 > Cookieとサイトのアクセス許可。|||To block cookies entirely, use your browser settings. Chrome: Settings > Privacy and security > Third-party cookies. Safari: Settings > Privacy > Block all cookies. Edge: Settings > Cookies and site permissions.
+14세 미만 이용자|||14歳未満の利用者|||Users under 14
+VDébut은 14세 미만 어린이의 개인정보를 일부러 받지 않아요. 14세 미만이라면 보호자(법정대리인)와 함께 신청해 주세요. 보호자 동의 없이 받은 사실을 알게 되면 바로 지워요.|||VDébutは14歳未満の子どもの個人情報を意図して受け取りません。14歳未満の方は保護者（法定代理人）と一緒に申請してください。保護者の同意なしに受け取ったことが分かった場合はすぐに削除します。|||VDébut does not knowingly collect personal information from children under 14. If you are under 14, please apply together with a parent or legal guardian. If we learn we received information without a guardian's consent, we delete it right away.
+내 정보는 내가 정해요|||自分の情報は自分で決められます|||You decide about your information
+내 정보를 보여 달라고(열람), 고쳐 달라고(정정), 지워 달라고(삭제), 그만 쓰라고(처리정지) 언제든 요청할 수 있어요. 대리인을 통해서도 요청할 수 있어요.|||自分の情報の閲覧、訂正、削除、利用停止をいつでも求めることができます。代理人を通じて求めることもできます。|||You can ask at any time to see (access), fix (correct), delete or stop using (suspend processing) your information. You can also ask through a representative.
+문의 화면이나 이메일로 요청해 주세요. 본인이 맞는지 확인한 뒤 10일 안에 처리 결과를 알려 드려요. 법률에 따라 요청을 들어드리기 어려운 경우에는 그 이유를 알려 드려요.|||お問い合わせ画面かメールでご依頼ください。ご本人であることを確認したうえで、10日以内に結果をお知らせします。法律によりお応えできない場合は、その理由をお知らせします。|||Send your request through the contact page or by email. After confirming it is you, we will tell you the result within 10 days. If the law prevents us from granting a request, we will tell you why.
+정보를 지키는 방법|||情報を守る方法|||How we protect information
+사이트와 주고받는 모든 정보는 암호화된 연결(HTTPS)로 전달돼요.|||サイトとやり取りするすべての情報は、暗号化された接続（HTTPS）で送られます。|||Everything exchanged with the site travels over an encrypted connection (HTTPS).
+확인 키는 원래 값으로 되돌릴 수 없는 해시로, 접속 IP 주소는 그대로 두지 않고 해시 값으로 바꿔 저장해요.|||確認キーは元の値に戻せないハッシュで、アクセスIPアドレスはそのまま残さずハッシュ値に変えて保存します。|||Access keys are stored as hashes that cannot be turned back into the original, and IP addresses are never kept as is but stored as hashed values.
+문의·신청 정보는 운영자만 로그인해서 볼 수 있고, 로그인은 8시간이 지나면 자동으로 끝나요.|||お問い合わせ・申請の情報は運営者だけがログインして見ることができ、ログインは8時間たつと自動的に終了します。|||Only the operator can log in to view inquiries and applications, and logins end automatically after 8 hours.
+VDébut은 사업자 등록이 없는 개인이 운영하는 독립 서비스예요.|||VDébutは事業者登録のない個人が運営する独立したサービスです。|||VDébut is an independent service run by an individual without a business registration.
+개인정보 보호책임자: VDébut 운영자 (이메일 ru_0120@naver.com). 개인정보에 관한 문의, 불만, 피해 구제 요청은 이 이메일이나 문의 화면으로 보내 주세요. 확인하는 대로 처리해 드려요.|||個人情報保護責任者：VDébut運営者（メール ru_0120@naver.com）。個人情報に関するお問い合わせ、苦情、被害救済のご依頼は、このメールかお問い合わせ画面からお送りください。確認しだい対応します。|||Privacy officer: VDébut operator (email ru_0120@naver.com). Please send questions, complaints or requests for remedies about personal information to this email or through the contact page. We will handle them as soon as we see them.
+도움받을 수 있는 곳|||相談できる窓口|||Where to get help
+VDébut의 답변이 만족스럽지 않거나 개인정보 침해로 도움이 필요하면 아래 기관에 문의할 수 있어요.|||VDébutの回答にご満足いただけない場合や、個人情報の侵害で助けが必要な場合は、以下の機関に相談できます（韓国の機関です）。|||If you are not satisfied with our answer or need help with a privacy violation, you can contact the Korean agencies below.
+개인정보침해신고센터 (국번 없이 118) · 개인정보분쟁조정위원회 (1833-6972) · 대검찰청 (국번 없이 1301) · 경찰청 (국번 없이 182)|||個人情報侵害申告センター（118）・個人情報紛争調停委員会（1833-6972）・大検察庁（1301）・警察庁（182）|||Personal Information Infringement Report Center (118) · Personal Information Dispute Mediation Committee (1833-6972) · Supreme Prosecutors' Office (1301) · Korean National Police Agency (182)
+개인정보침해신고센터|||個人情報侵害申告センター|||Personal Information Infringement Report Center
+개인정보분쟁조정위원회|||個人情報紛争調停委員会|||Personal Information Dispute Mediation Committee
+대검찰청|||大検察庁|||Supreme Prosecutors' Office
+경찰청 사이버수사국|||警察庁サイバー捜査局|||Korean National Police Agency Cyber Bureau
+바뀌면 알려 드려요|||変更があればお知らせします|||We'll tell you about changes
+앞으로 이 방침이 바뀌면 시행 7일 전부터 이 페이지에 바뀐 내용을 알려 드려요.|||今後この方針を変更する場合は、施行の7日前からこのページで変更内容をお知らせします。|||If this policy changes in the future, we will post the changes on this page starting 7 days before they take effect.
+이 개인정보처리방침은 2026년 11월 17일부터 시행해요. 이전 방침은 2026년 11월 12일부터 11월 16일까지 적용됐어요.|||このプライバシーポリシーは2026年11月17日から施行します。以前の方針は2026年11月12日から11月16日まで適用されました。|||This privacy policy takes effect on November 17, 2026. The previous policy applied from November 12 to November 16, 2026.
+이 약관은요|||この規約について|||About these terms
+VDébut을 이용하는 모든 분에게 적용되는 약속이에요. 회원가입 없이 누구나 쓸 수 있고, 사이트를 이용하면 이 약관에 동의한 것으로 봐요.|||VDébutを利用するすべての方に適用される約束です。会員登録なしで誰でも使え、サイトを利用するとこの規約に同意したものとみなします。|||These terms apply to everyone who uses VDébut. Anyone can use it without signing up, and using the site means you agree to these terms.
+VDébut이 하는 일|||VDébutがしていること|||What VDébut does
+버튜버 데뷔 일정을 모은 캘린더, 버튜버 소개, 치지직·SOOP 방송 통계, 데뷔·소개 등록과 문의 접수를 무료로 제공해요. 운영 비용을 위해 광고가 보일 수 있어요.|||VTuberのデビュー日程を集めたカレンダー、VTuberの紹介、CHZZK・SOOPの配信統計、デビュー・紹介の登録とお問い合わせの受付を無料で提供しています。運営費のために広告が表示されることがあります。|||We offer, free of charge, a calendar of VTuber debuts, VTuber profiles, CHZZK and SOOP broadcast statistics, and debut/profile registration and inquiries. Ads may be shown to cover running costs.
+정보는 어디에서 가져오나요|||情報はどこから持ってくるのか|||Where our information comes from
+데뷔 일정과 소개: 버튜버 본인, 소속사, 팬이 등록하고, 운영자가 공식 방송 채널과 데뷔 공지로 확인한 뒤 공개해요.|||デビュー日程と紹介：VTuber本人、事務所、ファンが登録し、運営者が公式の配信チャンネルとデビュー告知で確認してから公開します。|||Debut schedules and profiles: submitted by VTubers, agencies or fans, and published after the operator checks the official channel and debut announcement.
+채널 정보: 채널 이름과 프로필 이미지는 치지직·SOOP 채널 페이지에, 팔로워 수는 치지직 채널 페이지에 누구나 볼 수 있게 공개된 정보를 가져와요. 영상은 유튜브·치지직·SOOP의 링크와 각 플랫폼의 재생 화면으로만 보여 드려요.|||チャンネル情報：チャンネル名とプロフィール画像はCHZZK・SOOPのチャンネルページで、フォロワー数はCHZZKのチャンネルページで誰でも見られるよう公開されている情報を取得しています。動画はYouTube・CHZZK・SOOPのリンクと各プラットフォームの再生画面でのみ表示します。|||Channel information: channel names and profile images come from public CHZZK and SOOP channel pages, and follower counts from public CHZZK channel pages. Videos are shown only as links and in each platform’s own player (YouTube, CHZZK, SOOP).
+방송 통계: 치지직(네이버)과 SOOP 웹사이트에 누구나 볼 수 있게 공개된 라이브 방송 정보(방송 제목, 카테고리, 태그, 시청자 수 중 플랫폼이 공개하는 항목)를 10분마다 가져와 계산해요. 치지직은 시청자가 많은 순으로 상위 100개 방송을, SOOP은 VDébut에 등록된 채널의 방송을 모아요. 비공개 정보나 로그인이 필요한 정보는 가져오지 않아요.|||配信統計：CHZZK（NAVER）とSOOPのウェブサイトで誰でも見られるよう公開されているライブ配信の情報（配信タイトル、カテゴリー、タグ、視聴者数のうちプラットフォームが公開している項目）を10分ごとに取得して計算しています。CHZZKは視聴者数の多い順に上位100件の配信を、SOOPはVDébutに登録されたチャンネルの配信を集めます。非公開の情報やログインが必要な情報は取得しません。|||Broadcast statistics: every 10 minutes we take the live broadcast information anyone can see on the CHZZK (NAVER) and SOOP websites (stream title, category, tags and viewer count, as far as each platform publishes them) and calculate from it. For CHZZK we collect the top 100 broadcasts by viewers; for SOOP, broadcasts from channels registered on VDébut. We never take private information or anything that requires logging in.
+VDébut은 네이버(치지직), SOOP, Google(YouTube)과 제휴하거나 승인받은 서비스가 아니에요. 각 플랫폼의 이름과 로고는 해당 회사의 상표예요.|||VDébutはNAVER（CHZZK）、SOOP、Google（YouTube）と提携したり承認を受けたりしたサービスではありません。各プラットフォームの名称とロゴは各社の商標です。|||VDébut is not affiliated with or endorsed by NAVER (CHZZK), SOOP or Google (YouTube). Each platform's name and logo are trademarks of their respective companies.
+등록한 콘텐츠의 권리|||登録したコンテンツの権利|||Rights to content you register
+등록한 소개글·이미지·영상의 권리는 등록한 분(또는 원래 권리자)에게 있어요. 등록하시면 VDébut이 이 콘텐츠를 사이트에 공개하고, 화면에 맞게 줄이거나 다른 언어로 번역해 보여 줄 수 있도록 허락하는 것으로 봐요.|||登録した紹介文・画像・動画の権利は、登録した方（または元の権利者）にあります。登録すると、VDébutがそのコンテンツをサイトで公開し、画面に合わせて短くしたり他の言語に翻訳したりして表示することを許可したものとみなします。|||Rights to the introductions, images and videos you register stay with you (or the original rights holder). By registering, you allow VDébut to publish that content on the site and to shorten or translate it to fit the page.
+다른 사람의 이미지나 글을 등록하려면 사용 권한이 있어야 해요. 삭제를 요청하시면 확인 후 지워요.|||他の人の画像や文章を登録するには使用権限が必要です。削除のご依頼があれば、確認のうえ削除します。|||You need permission to register someone else's images or text. If you ask us to delete something, we will check and delete it.
+등록 신청은 운영자가 검토한 뒤 공개해요. 사실이 아닌 정보, 사칭, 다른 사람의 권리를 침해하는 콘텐츠는 보완을 요청하거나, 공개하지 않거나, 지울 수 있어요.|||登録申請は運営者が確認してから公開します。事実ではない情報、なりすまし、他の人の権利を侵害するコンテンツは、補完をお願いしたり、公開しなかったり、削除したりすることがあります。|||The operator reviews every registration before publishing it. Untrue information, impersonation or content that infringes others' rights may be sent back for changes, left unpublished or deleted.
+이런 행동은 안 돼요|||このような行為は禁止です|||What's not allowed
+다른 사람이나 버튜버를 사칭하는 것, 사실이 아닌 정보를 등록하는 것, 다른 사람의 권리를 침해하는 것, 자동화 프로그램으로 대량 요청을 보내 서비스를 방해하는 것, 악성 코드를 올리는 것은 금지예요. 이런 경우 접수를 제한하거나 콘텐츠를 지울 수 있어요.|||他の人やVTuberになりすますこと、事実ではない情報を登録すること、他の人の権利を侵害すること、自動化プログラムで大量のリクエストを送りサービスを妨害すること、悪意のあるコードをアップロードすることは禁止です。その場合は受付を制限したり、コンテンツを削除したりすることがあります。|||Impersonating others or VTubers, registering untrue information, infringing others' rights, disrupting the service with automated bulk requests and uploading malicious code are not allowed. In those cases we may limit submissions or delete content.
+권리 침해 신고와 임시 조치|||権利侵害の申告と一時措置|||Reporting rights violations and temporary measures
+내 저작물이나 초상, 명예 등이 침해됐다면 문의 화면에서 '이미지·소개글 권리 침해'나 '사칭·채널 정보 오류'를 골라 신고해 주세요. 해당 페이지 주소와 권리자임을 확인할 수 있는 자료를 함께 보내 주세요.|||ご自身の著作物や肖像、名誉などが侵害された場合は、お問い合わせ画面で「画像・紹介文の権利侵害」または「なりすまし・チャンネル情報の誤り」を選んで申告してください。該当ページのURLと、権利者であることを確認できる資料を一緒にお送りください。|||If your work, likeness or reputation has been violated, report it on the contact page by choosing 'Image/text rights violation' or 'Impersonation/channel error'. Include the page address and something that shows you are the rights holder.
+확인되면 지체 없이 지우거나 고쳐요. 권리 침해인지 판단하기 어렵거나 다툼이 있으면 최대 30일 동안 해당 콘텐츠를 잠시 내리는 임시 조치를 할 수 있어요(정보통신망법 제44조의2). 저작권 침해는 저작권법 제103조의 절차를 따라요. 조치한 사실은 신고한 분과 등록한 분에게 알려 드리고, 등록한 분은 다시 게시해 달라고 요청할 수 있어요.|||確認できればすぐに削除または修正します。権利侵害かどうかの判断が難しい場合や争いがある場合は、最大30日間そのコンテンツを一時的に非公開にする一時措置を行うことがあります（韓国の情報通信網法第44条の2）。著作権侵害は韓国の著作権法第103条の手続きに従います。措置の内容は申告した方と登録した方にお知らせし、登録した方は再掲載を求めることができます。|||Once confirmed, we delete or fix it without delay. If it is hard to judge or the parties disagree, we may temporarily take the content down for up to 30 days (Article 44-2 of Korea's Network Act). Copyright claims follow the procedure in Article 103 of Korea's Copyright Act. We inform both the reporter and the registrant, and the registrant may ask for the content to be reposted.
+방송 일정은 바뀌거나 미뤄지거나 취소될 수 있어요. 최신 일정은 버튜버의 공지에서 함께 확인해 주세요.|||配信日程は変更・延期・中止されることがあります。最新の日程はVTuberの告知もあわせてご確認ください。|||Broadcast schedules can change, be postponed or be cancelled. Please also check the VTuber's own announcements for the latest schedule.
+방송 통계는 참고 자료예요|||配信統計は参考資料です|||Broadcast statistics are for reference
+방송 통계는 10분 간격으로 모은 공개 정보로 계산한 참고 자료예요. 수집 사이에 일어난 변화나 플랫폼이 공개하지 않는 정보는 반영되지 않아서, 플랫폼의 공식 수치와 다를 수 있어요.|||配信統計は10分間隔で集めた公開情報から計算した参考資料です。収集の間に起きた変化やプラットフォームが公開していない情報は反映されないため、プラットフォームの公式な数値と異なることがあります。|||Broadcast statistics are reference figures calculated from public information collected every 10 minutes. Changes between collections and information the platforms do not publish are not reflected, so figures may differ from the platforms' official numbers.
+광고|||広告|||Ads
+사이트에 Google AdSense 광고가 보일 수 있어요. 광고 내용과 광고에서 연결되는 상품·서비스는 광고주의 책임이에요. 돈을 받고 보여 주는 소개나 순서는 반드시 '광고'로 표시해요. 표시 없이 공개 여부나 순서를 바꾸지 않아요.|||サイトにはGoogle AdSenseの広告が表示されることがあります。広告の内容や広告からつながる商品・サービスは広告主の責任です。報酬を受けて表示する紹介や表示順には、必ず「広告」と表示します。表示なしに公開可否や表示順を変えることはありません。|||Google AdSense ads may appear on the site. Advertisers are responsible for their ads and the products or services they link to. Any profile or placement shown in exchange for payment is always labeled 'Ad'. We never change whether or in what order profiles are shown without that label.
+VDébut은 방송 채널, 데뷔 공지, 영상 같은 외부 사이트로 연결해요. 외부 사이트의 내용과 운영은 그 사이트의 책임이에요.|||VDébutは配信チャンネル、デビュー告知、動画などの外部サイトにリンクしています。外部サイトの内容と運営はそのサイトの責任です。|||VDébut links to external sites such as broadcast channels, debut announcements and videos. Each external site is responsible for its own content and operation.
+정확한 정보를 드리려고 노력하지만, 등록 정보와 통계가 언제나 완전하다고 보장하지는 못해요. 틀린 정보를 발견하면 문의 화면으로 알려 주세요. 확인 후 고칠게요. VDébut의 고의나 중대한 과실로 생긴 손해가 아니라면 VDébut은 책임지지 않아요.|||正確な情報をお届けするよう努めていますが、登録情報や統計が常に完全であることは保証できません。誤った情報を見つけたらお問い合わせ画面からお知らせください。確認して修正します。VDébutの故意または重大な過失による損害でない限り、VDébutは責任を負いません。|||We try hard to give accurate information, but we cannot guarantee that registered information and statistics are always complete. If you find an error, let us know through the contact page and we will check and fix it. VDébut is not liable for damages unless they result from its intent or gross negligence.
+서비스 변경과 중단|||サービスの変更と終了|||Changes to and ending the service
+기능은 운영 상황에 따라 바뀌거나 중단될 수 있어요. 서비스를 종료하게 되면 최소 30일 전에 사이트에 알려 드려요.|||機能は運営状況により変更・終了することがあります。サービスを終了する場合は、少なくとも30日前にサイトでお知らせします。|||Features may change or end depending on operations. If we ever end the service, we will announce it on the site at least 30 days in advance.
+약관이 바뀔 때|||規約が変わるとき|||When these terms change
+약관을 바꾸면 시행 7일 전부터 이 페이지에 바뀐 내용과 시행일을 알려 드려요. 이용하시는 분께 불리하게 바뀌는 경우에는 30일 전부터 알려 드려요.|||規約を変更する場合は、施行の7日前からこのページで変更内容と施行日をお知らせします。利用者に不利な変更の場合は30日前からお知らせします。|||If we change these terms, we will post the changes and the effective date on this page 7 days in advance, or 30 days in advance if the change is unfavorable to users.
+분쟁 해결|||紛争の解決|||Resolving disputes
+문제가 생기면 먼저 문의 화면으로 알려 주세요. 원만하게 해결하도록 노력할게요. 이 약관은 대한민국 법을 따르며, 소송이 필요한 경우 민사소송법에 따른 관할 법원에서 다뤄요.|||問題が起きたら、まずお問い合わせ画面からお知らせください。円満に解決できるよう努めます。この規約は大韓民国の法律に従い、訴訟が必要な場合は民事訴訟法に基づく管轄裁判所で扱います。|||If a problem comes up, please tell us through the contact page first and we will do our best to resolve it amicably. These terms are governed by the laws of the Republic of Korea, and any lawsuit will be handled by the competent court under the Civil Procedure Act.
+이 이용약관은 2026년 11월 17일부터 시행해요.|||この利用規約は2026年11月17日から施行します。|||These terms take effect on November 17, 2026.
+이런 걸 물어보실 수 있어요|||こんなことをお問い合わせいただけます|||What you can ask us about
+데뷔 일정이나 소개가 틀렸을 때, 내 소개를 지우고 싶을 때, 등록 신청이 어떻게 됐는지 궁금할 때 알려 주세요. 사칭이나 채널 정보 오류, 이미지·소개글 권리 침해, 부적절한 콘텐츠 신고도 받아요. 이런 기능이 있으면 좋겠다는 제안도 반가워요.|||デビュー日程や紹介が間違っているとき、自分の紹介を削除したいとき、登録申請がどうなったか知りたいときにお知らせください。なりすましやチャンネル情報の誤り、画像・紹介文の権利侵害、不適切なコンテンツの報告も受け付けています。こんな機能があればというご提案も歓迎です。|||Let us know when a debut schedule or profile is wrong, when you want your profile removed, or when you want to know what happened to your registration. We also take reports of impersonation, channel errors, image or text rights issues and inappropriate content. Ideas for new features are welcome too.
+보내는 방법|||送り方|||How to send it
+문의 양식으로 보내면 비공개 확인 키를 드려요. 이 키로 접수 상태 확인 화면에서 답변을 볼 수 있어요. 양식이 불편하면 이메일로 보내셔도 괜찮아요.|||お問い合わせフォームで送ると非公開の確認キーをお渡しします。このキーで受付状況の確認画面から回答を見ることができます。フォームが使いにくければメールでも大丈夫です。|||Send it with the contact form and you’ll get a private access key. Use it on the request status page to see our reply. Email works too if the form is inconvenient.
+이렇게 써 주시면 빨라요|||こう書いていただくと早く対応できます|||This helps us respond faster
+고칠 페이지 주소와, 확인할 수 있는 공식 출처(방송국 공지, 공식 SNS 글 등)를 함께 적어 주세요. 신고에 필요 없는 개인정보는 적지 않으셔도 돼요.|||修正が必要なページのURLと、確認できる公式の出典（配信チャンネルの告知、公式SNSの投稿など）を一緒に書いてください。報告に必要のない個人情報は書かなくて大丈夫です。|||Include the address of the page to fix and an official source we can check (a channel notice, an official social media post, etc.). You don't need to include personal information the report doesn't need.
+이렇게 처리해요|||このように対応します|||How we handle it
+운영자가 공식 채널과 공지로 내용을 확인한 뒤 반영해요. 본인 확인이 필요하면 공식 채널로 확인하는 방법을 안내해 드려요. 결과는 확인 키 화면이나 답장 이메일로 알려 드려요.|||運営者が公式チャンネルと告知で内容を確認してから反映します。本人確認が必要な場合は、公式チャンネルで確認する方法をご案内します。結果は確認キーの画面か返信メールでお知らせします。|||The operator checks the details against official channels and announcements before making changes. If we need to confirm your identity, we'll explain how to do it through your official channel. We'll share the result on the access key page or by reply email.
+누가 답하나요|||誰が答えるのか|||Who answers
+VDébut은 개인이 운영하는 독립 서비스예요. 운영자가 직접 읽고 답해요. 이메일: ru_0120@naver.com|||VDébutは個人が運営する独立したサービスです。運営者が直接読んでお答えします。メール：ru_0120@naver.com|||VDébut is an independent service run by an individual. The operator reads and answers every message personally. Email: ru_0120@naver.com
+새 버튜버의 데뷔 소식은 방송국 공지와 SNS에 흩어져 있어요. 그래서 팬은 첫 방송을 놓치기 쉽고, 신입 버튜버는 첫 시청자를 만나기 어려워요. 데뷔 일정과 소개를 한곳에 모아 이 첫 만남을 돕고 싶어서 만들었어요.|||新人VTuberのデビュー情報は、配信チャンネルの告知やSNSに散らばっています。そのためファンは初配信を見逃しやすく、新人VTuberは最初の視聴者に出会いにくいのです。デビュー日程と紹介を一か所に集めて、この最初の出会いを手助けしたくて作りました。|||News of new VTuber debuts is scattered across channel notices and social media. Fans easily miss first streams, and new VTubers struggle to meet their first viewers. We built VDébut to gather debut schedules and profiles in one place and help that first meeting happen.
+데뷔 일정과 소개는 버튜버 본인, 소속사, 팬이 등록해 주세요. 운영자가 공식 방송 채널과 데뷔 공지를 직접 확인한 뒤 공개하고, 소개에는 공식 출처 링크를 함께 달아요.|||デビュー日程と紹介は、VTuber本人、事務所、ファンが登録してください。運営者が公式の配信チャンネルとデビュー告知を直接確認してから公開し、紹介には公式の出典リンクを添えます。|||Debut schedules and profiles are registered by VTubers, agencies and fans. The operator checks the official channel and debut announcement before publishing, and each profile links to its official sources.
+채널 이름과 프로필 이미지는 치지직·SOOP 채널 페이지에, 팔로워 수는 치지직 채널 페이지에 공개된 정보를 가져와요.|||チャンネル名とプロフィール画像はCHZZK・SOOPのチャンネルページで、フォロワー数はCHZZKのチャンネルページで公開されている情報を取得しています。|||Channel names and profile images come from public CHZZK and SOOP channel pages, and follower counts from public CHZZK channel pages.
+방송 통계는 치지직(네이버)과 SOOP 웹사이트에 공개된 라이브 방송 정보(방송 제목, 카테고리, 태그, 시청자 수)를 10분마다 모아 계산해요. 치지직은 시청자가 많은 순으로 상위 100개 방송을, SOOP은 VDébut에 등록된 채널의 방송을 모아요. 계산 방법은 방송 통계의 집계 기준 페이지에 자세히 적어 두었어요.|||配信統計は、CHZZK（NAVER）とSOOPのウェブサイトで公開されているライブ配信の情報（配信タイトル、カテゴリー、タグ、視聴者数）を10分ごとに集めて計算しています。CHZZKは視聴者数の多い順に上位100件の配信を、SOOPはVDébutに登録されたチャンネルの配信を集めます。計算方法は配信統計の集計基準ページに詳しく書いています。|||Broadcast statistics are calculated from the live broadcast information published on the CHZZK (NAVER) and SOOP websites (stream title, category, tags, viewer count), collected every 10 minutes. For CHZZK we collect the top 100 broadcasts by viewers; for SOOP, broadcasts from channels registered on VDébut. The method is explained in detail on the statistics methodology page.
+VDébut은 치지직, SOOP, YouTube와 제휴한 서비스가 아니에요. 공개된 정보를 모아 보기 쉽게 정리하는 독립 서비스예요.|||VDébutはCHZZK、SOOP、YouTubeと提携したサービスではありません。公開されている情報を集めて見やすく整理する独立したサービスです。|||VDébut is not affiliated with CHZZK, SOOP or YouTube. It is an independent service that gathers public information and organizes it so it's easy to read.
+공식 채널로 확인할 수 없는 정보, 사칭, 다른 사람의 권리를 침해하는 이미지나 글은 공개하지 않아요. 일정이 바뀌었거나 틀린 정보가 있으면 문의 화면으로 알려 주세요. 확인하고 바로 고칠게요.|||公式チャンネルで確認できない情報、なりすまし、他の人の権利を侵害する画像や文章は公開しません。日程が変わったり間違った情報があったりしたら、お問い合わせ画面からお知らせください。確認してすぐに修正します。|||We don't publish information that can't be confirmed through official channels, impersonation, or images and text that infringe others' rights. If a schedule changes or something is wrong, tell us through the contact page and we'll check and fix it right away.
+누가 운영하나요|||誰が運営しているのか|||Who runs it
+VDébut은 개인이 운영하는 독립 서비스예요. 운영 비용을 위해 광고가 보일 수 있어요. 돈을 받고 보여 주는 소개나 순서는 반드시 '광고'로 표시하고, 표시 없이 공개 여부나 순서를 바꾸지 않아요.|||VDébutは個人が運営する独立したサービスです。運営費のために広告が表示されることがあります。報酬を受けて表示する紹介や表示順には必ず「広告」と表示し、表示なしに公開可否や表示順を変えることはありません。|||VDébut is an independent service run by an individual. Ads may appear to cover running costs. Any profile or placement shown in exchange for payment is always labeled 'Ad', and we never change whether or in what order profiles are shown without that label.
+4h 이상|||4h以上|||4h+
+SOOP에서 데뷔 공지 보기|||SOOPでデビュー告知を見る|||See the debut notice on SOOP
+X에 올리기|||Xに投稿|||Post on X
+X에서 데뷔 공지 보기|||Xでデビュー告知を見る|||See the debut notice on X
+YouTube에서 데뷔 공지 보기|||YouTubeでデビュー告知を見る|||See the debut notice on YouTube
+{0} {1} 소속 {2} 버튜버예요.|||{0}は{1}所属の{2} VTuberです。|||{0} is a {2} VTuber with {1}.
+{0} — 데뷔일·방송 기록 | VDébut|||{0} — デビュー日・配信記録 | VDébut|||{0} — debut date & stream record | VDébut
+{0} 공식 홈페이지에서 데뷔 공지 보기|||{0}公式サイトでデビュー告知を見る|||See the debut notice on the {0} website
+{0} 다시보기|||{0} アーカイブ|||{0} replay
+{0} 데뷔 예정이에요|||{0}にデビュー予定です|||Debuting on {0}
+{0} 방송 때 평소보다 {1}배 더 많이 봐요|||{0}の配信は普段の{1}倍見られています|||{0} streams draw {1}× the usual viewers
+{0} 방송이 {1}보다 {2} 더 길고, 시청자도 {3}배 많아요.|||{0}の配信は{1}より{2}長く、視聴者も{3}倍です。|||{0} streams run {2} longer than {1} ones, with {3}× the viewers.
+{0} 방송이 {1}보다 {2} 더 길어요.|||{0}の配信は{1}より{2}長いです。|||{0} streams run {2} longer than {1} ones.
+{0} 방송이 {1}보다 {2} 더 길어요. 시청자는 {3}에 {4}배 많아요.|||{0}の配信は{1}より{2}長いです。視聴者は{3}に{4}倍多いです。|||{0} streams run {2} longer than {1} ones. Viewers are {4}× higher on {3}.
+{0} 소개 페이지 공유하기|||{0}の紹介ページを共有|||Share {0}'s page
+{0} 채널 가기|||{0}チャンネルへ|||Go to {0} channel
+{0} 채널 미리 가기|||{0}チャンネルを先に見る|||Visit the {0} channel early
+{0}~{1}시|||{0}〜{1}時|||{0}:00–{1}:00
+{0}명이 보고 있어요|||{0}人が視聴中|||{0} watching now
+{0}번 방송 · {1}시간 · 공개 방송 기록 기준|||{0}回配信 · {1}時間 · 公開配信記録より|||{0} streams · {1} h · from public stream records
+{0}시간 {1}분 남았어요. 채널을 미리 팔로우해 두면 좋아요.|||あと{0}時間{1}分です。チャンネルを先にフォローしておきましょう。|||{0} h {1} min to go. Follow the channel ahead of time.
+{0}에 첫 방송을 해요|||{0}に初配信です|||First stream on {0}
+{0}에서 더 보기|||{0}でもっと見る|||More on {0}
+{0}에서 방송 보기|||{0}で配信を見る|||Watch on {0}
+{0}요일은 보통 쉬어요|||{0}曜日はたいてい休みです|||Usually off on {0}
+{0}일 전|||{0}日前|||{0} days ago
+{0}주|||{0}週目|||Week {0}
+{0}주 전|||{0}週間前|||{0} weeks ago
+가장 길게 쉰 기간|||最長の休み|||Longest break
+공식 팬카페에서 데뷔 공지 보기|||公式ファンカフェでデビュー告知を見る|||See the debut notice on the fan cafe
+공식 홈페이지에서 데뷔 공지 보기|||公式サイトでデビュー告知を見る|||See the debut notice on the official website
+공유|||共有|||Share
+관심 목록에 담아 두면 일정이 정해졌을 때 다시 찾기 쉬워요.|||お気に入りに入れておくと、日程が決まったときに見つけやすいです。|||Save it to find the date easily once it's set.
+관심 목록에 담았어요. 데뷔 일정은 관심 목록에서 다시 볼 수 있어요.|||お気に入りに追加しました。デビュー日程はお気に入りから確認できます。|||Saved. You can find the debut date in your favorites.
+데뷔 준비 중|||デビュー準備中|||Getting ready to debut
+데뷔 후 열려요|||デビュー後に公開|||Opens after debut
+데뷔까지 D-{0}|||デビューまでD-{0}|||D-{0} to debut
+둘째 주|||2週目|||Week 2
+등록 정보|||登録情報|||Registered info
+링크 복사|||リンクをコピー|||Copy link
+링크를 보내면 이름과 데뷔 정보가 담긴 카드로 보여요.|||リンクを送ると、名前とデビュー情報のカードで表示されます。|||Shared links show a card with the name and debut info.
+링크를 복사하지 못했어요. 주소창의 주소를 복사해 주세요.|||リンクをコピーできませんでした。アドレスバーのURLをコピーしてください。|||Couldn't copy the link. Please copy it from the address bar.
+링크를 복사했어요|||リンクをコピーしました|||Link copied
+마지막 방송은 {0}였어요|||最後の配信は{0}でした|||Last stream: {0}
+마지막으로 쉰 날|||最後の休み|||Last day off
+방송 요약, 방송 패턴, 콘텐츠별 반응이 이곳에 차례로 보여요.|||配信まとめ・配信パターン・コンテンツ別の反応が順に表示されます。|||Stream summary, patterns and content reactions will appear here.
+보통 {0}요일 {1}시쯤 방송해요.|||たいてい{0}曜日の{1}時ごろに配信します。|||Usually streams on {0} around {1}:00.
+분|||分|||min
+쉰 날|||休み|||Day off
+시간대별 방송|||時間帯別の配信|||Streams by hour
+시청자는 {0}에 {1}배 많아요.|||視聴者は{0}に{1}倍多いです。|||Viewers are {1}× higher on {0}.
+안내|||お知らせ|||Note
+어제|||昨日|||Yesterday
+어제 {0}|||昨日 {0}|||yesterday {0}
+영상으로 먼저 만나 보세요|||まずは動画で会ってみましょう|||Meet them on video first
+오늘 {0}|||今日 {0}|||today {0}
+오늘 {0}에 첫 방송을 해요|||今日{0}に初配信です|||First stream today at {0}
+오늘 데뷔해요|||今日デビュー|||Debuting today
+일 방송 / {0}일|||日配信 / {0}日|||days streamed / {0}
+일정이나 소개가 바뀌었다면 알려 주세요. 공식 채널로 확인한 뒤 고칠게요.|||日程や紹介が変わったら教えてください。公式チャンネルで確認して直します。|||If the schedule or profile changed, let us know. We'll check official channels and fix it.
+일째|||日目|||days
+주 7일 중|||週7日のうち|||of 7 days
+주 평균|||週平均|||weekly avg
+주로 방송하는 때|||主な配信時間|||Usual stream time
+주말|||週末|||weekends
+주말 (토·일)|||週末(土・日)|||Weekends (Sat–Sun)
+지금 방송 중|||配信中|||Live now
+지금은 방송하지 않아요|||今は配信していません|||Not live now
+진할수록 오래 방송했어요|||濃いほど長く配信|||Darker = longer
+첫 만남 전에 미리 만나 보세요|||デビュー前に会ってみましょう|||Meet them before the debut
+첫 방송|||初配信|||First stream
+첫 방송이 끝나면 방송 기록이 쌓이기 시작해요.|||初配信が終わると配信記録がたまり始めます。|||Stream records start after the first stream.
+최고 {0}명 · 30일|||最高{0}人 · 30日|||Peak {0} · 30 days
+최근 30일|||直近30日|||Last 30 days
+최근 4주|||直近4週|||Last 4 weeks
+최근 4주 날짜별 방송 시간|||直近4週の日別配信時間|||Daily stream time, last 4 weeks
+최근 4주 방송 달력|||直近4週の配信カレンダー|||Stream calendar, last 4 weeks
+최근 7일 방송|||直近7日の配信|||Streams, last 7 days
+최근 {0}일 동안 {1}번 방송했어요|||直近{0}日で{1}回配信しました|||{1} streams in the last {0} days
+최근 {0}일은 {1}와 {2} 방송을 반반씩 했어요|||直近{0}日は{1}と{2}を半々で配信しました|||Last {0} days: half {1}, half {2}
+최근 {0}일은 주로 {1} 방송을 했어요|||直近{0}日は主に{1}を配信しました|||Last {0} days: mostly {1}
+최근 주|||直近の週|||Latest week
+치지직에서 데뷔 공지 보기|||CHZZKでデビュー告知を見る|||See the debut notice on CHZZK
+평일|||平日|||weekdays
+평일 (월~금)|||平日(月〜金)|||Weekdays (Mon–Fri)
+평일과 주말의 방송 길이와 시청자가 비슷해요.|||平日と週末の配信時間と視聴者は同じくらいです。|||Weekday and weekend streams are similar in length and viewers.
+평일엔 주 {0}일, 주말엔 주 {1}일 방송해요|||平日は週{0}日、週末は週{1}日配信|||Streams {0} weekdays and {1} weekend days a week
+프로필 정보 펼치기|||プロフィールを開く|||Show profile info
+한 주에 쉬는 날|||週の休み|||Days off per week
+채널 미리 보기|||チャンネルを見る|||Preview the channel
+최근 4주 동안 평일엔 주 {0}일, 주말엔 주 {1}일 방송했어요.|||直近4週間、平日は週{0}日、週末は週{1}日配信しました。|||Over the last 4 weeks: {0} weekdays and {1} weekend days a week.
+{0}요일은 보통 쉬었어요.|||{0}曜日はたいてい休みでした。|||Usually off on {0}.
 `.trim().split('\n');
 
 export const PORTAL_TRANSLATIONS: Record<string, readonly [string, string]> = { ...PROFILE_CONTENT_TRANSLATIONS, ...Object.fromEntries(rows.map((row) => {

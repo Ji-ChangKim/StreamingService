@@ -27,20 +27,40 @@ async function claimCollection(db: D1Database, platform: CollectedPlatform, sche
   return result.meta.changes ? claim : null;
 }
 
+// 태그 열(마이그레이션 0064)이 있는지 확인한다. 배포와 마이그레이션 적용 순서가 달라도 수집이 멈추지 않게 한다.
+let tagColumnCheck: { ready: boolean; at: number } | null = null;
+export async function snapshotTagsReady(db: D1Database): Promise<boolean> {
+  if (tagColumnCheck && Date.now() - tagColumnCheck.at < 10 * 60000) return tagColumnCheck.ready;
+  let ready = false;
+  try { await db.prepare('SELECT tags FROM analytics_broadcast_snapshots LIMIT 0').all(); ready = true; } catch { ready = false; }
+  tagColumnCheck = { ready, at: Date.now() };
+  return ready;
+}
+export function resetSnapshotTagsCheck(): void { tagColumnCheck = null; }
+
+// 태그는 띄어쓰기를 정리한 최대 10개만 저장한다.
+function storedTags(tags: unknown): string[] | null {
+  if (!Array.isArray(tags)) return null;
+  const clean = [...new Set(tags.filter((tag): tag is string => typeof tag === 'string').map((tag) => tag.trim().replace(/^#/, '').slice(0, 40)).filter(Boolean))].slice(0, 10);
+  return clean.length ? clean : null;
+}
+
 // 방송 행과 회차 합계를 하나의 트랜잭션으로 저장해 중간 결과가 공개되지 않게 한다.
 async function saveCollection(db: D1Database, claim: CollectionClaim, result: StatisticsSourceResult): Promise<CollectionResult> {
   const { source, lives } = result;
   const state = source.state === 'available' ? 'available' : source.state === 'partial' ? 'partial' : 'unavailable';
   const usable = state !== 'unavailable';
+  const withTags = await snapshotTagsReady(db);
+  const rows = usable ? lives.map((live) => ({ ...live, tags: withTags ? storedTags(live.tags) : undefined })) : [];
   const statements = [
     db.prepare(`INSERT INTO analytics_broadcast_snapshots
-      (run_id, stream_id, channel_key, channel_name, channel_url, image_url, live_url, title, category_id, category_name, viewers, started_at)
+      (run_id, stream_id, channel_key, channel_name, channel_url, image_url, live_url, title, category_id, category_name, viewers, started_at${withTags ? ', tags' : ''})
       SELECT ?, json_extract(value, '$.streamId'), json_extract(value, '$.channelKey'), json_extract(value, '$.channelName'),
         json_extract(value, '$.channelUrl'), json_extract(value, '$.imageUrl'), json_extract(value, '$.liveUrl'),
         json_extract(value, '$.title'), json_extract(value, '$.categoryId'), json_extract(value, '$.categoryName'),
-        json_extract(value, '$.viewers'), json_extract(value, '$.startedAt')
+        json_extract(value, '$.viewers'), json_extract(value, '$.startedAt')${withTags ? `, json_extract(value, '$.tags')` : ''}
       FROM json_each(?) WHERE EXISTS (SELECT 1 FROM analytics_broadcast_runs WHERE run_id=? AND attempt_id=? AND state='running')`)
-      .bind(claim.runId, JSON.stringify(usable ? lives : []), claim.runId, claim.attemptId),
+      .bind(claim.runId, JSON.stringify(rows), claim.runId, claim.attemptId),
     db.prepare(`UPDATE analytics_broadcast_runs SET completed_at=?, observed_at=?, state=?, scope=?, checked_channels=?,
       viewer_total=?, channel_total=?, error_code=? WHERE run_id=? AND attempt_id=? AND state='running'`)
       .bind(new Date().toISOString(), source.observedAt, state, source.scope, source.checkedChannels,
@@ -72,10 +92,13 @@ async function collectPlatform(db: D1Database, platform: CollectedPlatform, slot
   }
 }
 
-// 대시보드의 최대 조회 기간에 맞춰 수집 자료를 90일 보관한다. 한 번에 최대 100회차를 정리한다.
+// 대시보드의 최대 조회 기간에 맞춰 수집 자료를 90일 보관한다.
+// 무료 플랜의 하루 쓰기 한도(10만 행)를 지키려고 한 시간에 최대 12회차만 지운다. 수집 속도(10분마다 2개 플랫폼 = 시간당 12회차)와 같아
+// 평소에는 하루 수집량만큼만 지우고, 밀린 기록이 있어도 한 번에 몰아 지우지 않는다(회차 하나 = 스냅숏 약 100~150행 연쇄 삭제).
+export const PRUNE_RUNS_PER_HOUR = 12;
 export async function pruneStatisticsCollections(db: D1Database, now = Date.now()): Promise<void> {
   await db.prepare(`DELETE FROM analytics_broadcast_runs WHERE run_id IN
-    (SELECT run_id FROM analytics_broadcast_runs WHERE scheduled_at < ? ORDER BY scheduled_at LIMIT 100)`)
+    (SELECT run_id FROM analytics_broadcast_runs WHERE scheduled_at < ? ORDER BY scheduled_at LIMIT ${PRUNE_RUNS_PER_HOUR})`)
     .bind(new Date(now - 90 * 24 * 3600000).toISOString()).run();
 }
 

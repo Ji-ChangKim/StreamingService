@@ -10,7 +10,8 @@ export function activityStreamerPath(channel: string): string {
 // 알 수 없는 통계 주소를 전체 통계 화면으로 바꾸지 않는다.
 export function isActivityPath(path: string): boolean {
   path = sitePath(path);
-  if (['/analytics', '/analytics/chzzk', '/analytics/soop'].includes(path)) return true;
+  if (['/analytics', '/analytics/chzzk', '/analytics/soop', '/analytics/method'].includes(path)) return true;
+  if (/^\/analytics\/(game|tag)\/[^/]{1,240}$/.test(path)) return true;
   if (!path.startsWith('/analytics/streamer/')) return false;
   try { return /^(CHZZK:[a-f0-9]{32}|SOOP:[a-z0-9_]{1,50})$/i.test(decodeURIComponent(path.slice('/analytics/streamer/'.length))); }
   catch { return false; }
@@ -33,5 +34,6 @@ export function activitySeo(filters: ActivityFilters, data: BroadcastActivity | 
 // 검색 결과와 임의 필터 조합은 별도 검색 문서로 색인하지 않는다.
 export function activityNoindex(url: URL, data: BroadcastActivity | null): boolean {
   return !data || !isActivityPath(url.pathname) || url.hostname !== 'vdebut.live' || [...url.searchParams.keys()].some(key => !['name', 'back', 'returnTo', 'lang', 'gclid', 'fbclid'].includes(key) && !key.startsWith('utm_'))
-    || Boolean(url.pathname.includes('/streamer/') && !data?.summary.broadcasts);
+    // 스트리머별 통계는 수집 기록을 같은 틀로 보여 주는 페이지라 검색에 노출하지 않는다. 방문자는 계속 볼 수 있다.
+    || url.pathname.includes('/streamer/') || /^\/analytics\/(game|tag)\//.test(url.pathname);
 }

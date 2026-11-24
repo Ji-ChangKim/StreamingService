@@ -116,21 +116,36 @@ export async function searchStatisticsStreamers(
 
   const allStreamers = Array.from(map.values());
 
-  // 4. 지능형 정렬: 완전 일치 > VDébut 등록 채널 > 현재 LIVE > 가나다순
+  // 4. 방송 통계 기록: 최근 30일 정각 회차에 잡힌 방송 수를 붙인다(검색 결과에서 '조회 내역'이 있는 채널을 앞에).
+  const keys = [...new Set(allStreamers.map((s) => s.channelKey).filter((k): k is string => Boolean(k)))].slice(0, 60);
+  if (keys.length) {
+    try {
+      const since = new Date(Date.now() - 30 * 86400000).toISOString();
+      // 채널 키 색인(대소문자 무시, 0063)으로 검색된 채널의 기록만 읽는다. lower()를 씌우면 색인을 못 써 30일 기록 전체를 훑는다.
+      const rows = await db.prepare(`SELECT s.channel_key COLLATE NOCASE AS channelKey, COUNT(DISTINCT s.stream_id) AS broadcasts
+        FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id = s.run_id
+        WHERE s.channel_key COLLATE NOCASE IN (${keys.map(() => '?').join(',')})
+          AND r.state IN ('available','partial') AND substr(r.scheduled_at, 15, 2) = '00' AND r.scheduled_at >= ?
+        GROUP BY channelKey`).bind(...keys, since).all<{ channelKey: string; broadcasts: number }>();
+      const recorded = new Map((rows.results || []).map((row) => [row.channelKey.toLowerCase(), row.broadcasts]));
+      for (const s of allStreamers) s.recordedBroadcasts = s.channelKey ? recorded.get(s.channelKey.toLowerCase()) || 0 : 0;
+    } catch (err) {
+      console.warn('[searchStatisticsStreamers] record lookup failed:', err);
+    }
+  }
+
+  // 5. 정렬: 통계 기록 있음 > 이름 완전 일치 > VDébut 소개 등록 > 팔로워 많은 순 > 방송 중 > 가나다순.
+  //    팬·사칭 계정은 보통 기록·팔로워가 없어 자연스럽게 뒤로 밀린다.
+  const score = (s: StatisticsStreamer) => [
+    (s.recordedBroadcasts || 0) > 0 ? 1 : 0,
+    normalizeStreamerQuery(s.name) === query ? 1 : 0,
+    s.isRegistered && s.profileSlug ? 1 : s.isRegistered ? 0.5 : 0,
+    s.followerCount || 0,
+    s.isLive ? 1 : 0,
+  ];
   allStreamers.sort((a, b) => {
-    const aExact = normalizeStreamerQuery(a.name) === query;
-    const bExact = normalizeStreamerQuery(b.name) === query;
-    if (aExact && !bExact) return -1;
-    if (!aExact && bExact) return 1;
-
-    // VDébut 등록 스트리머 우선
-    if (a.isRegistered && !b.isRegistered) return -1;
-    if (!a.isRegistered && b.isRegistered) return 1;
-
-    // 현재 LIVE 스트리머 우선
-    if (a.isLive && !b.isLive) return -1;
-    if (!a.isLive && b.isLive) return 1;
-
+    const sa = score(a), sb = score(b);
+    for (let i = 0; i < sa.length; i += 1) if (sa[i] !== sb[i]) return sb[i] - sa[i];
     return a.name.localeCompare(b.name, 'ko');
   });
 

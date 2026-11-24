@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>방송 통계 집계 기준</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#FBFAF7}
+a{color:#2F5D7C;text-decoration:none}a:hover{color:#22475F}
+</style>
+</helmet>
+<div style="min-height: 100%; background: #FBFAF7; font-family: Inter, 'Noto Sans KR', sans-serif; color: #1F2328; font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased">
+  <header style="background: #FFFFFF; border-bottom: 1px solid #E4E0D8">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 0 32px; height: 72px; display: flex; align-items: center; gap: 40px; flex-wrap: wrap">
+      <a href="#" style="font-size: 24px; font-weight: 700; color: #1F2328; letter-spacing: -0.02em">VDébut</a>
+      <nav aria-label="주요 메뉴" style="display: flex; gap: 28px; font-size: 15px; font-weight: 600">
+        <a href="#" style="color: #57524C">데뷔 캘린더</a>
+        <a href="#" style="color: #57524C">버튜버 탐색</a>
+        <a href="Main.dc.html" aria-current="page" style="color: #2F5D7C; border-bottom: 2px solid #2F5D7C; padding-bottom: 4px">방송 통계</a>
+      </nav>
+    </div>
+  </header>
+
+  <main style="max-width: 880px; margin: 0 auto; padding: 24px 32px 80px; display: flex; flex-direction: column; gap: 44px">
+    <nav aria-label="경로" style="font-size: 13px; color: #6B6560"><a href="Main.dc.html">방송 통계</a> / 집계 기준</nav>
+    <h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.03em">집계 기준</h1>
+
+    <section aria-labelledby="collect" style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 12px">
+      <h2 id="collect" style="margin: 0; font-size: 17px; font-weight: 700">어떻게 모으나요</h2>
+      <dl style="margin: 0; display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 12px 20px; font-size: 15px; line-height: 1.6">
+        <dt style="font-weight: 700">대상 플랫폼</dt><dd style="margin: 0; color: #3D3A36">치지직, SOOP</dd>
+        <dt style="font-weight: 700">출처</dt><dd style="margin: 0; color: #3D3A36">각 플랫폼이 공개한 공식 API의 방송 목록</dd>
+        <dt style="font-weight: 700">범위</dt><dd style="margin: 0; color: #3D3A36">플랫폼마다 <strong>시청자가 많은 순 상위 100개 방송</strong>. 두 플랫폼을 같은 기준으로 모아 비교해요.</dd>
+        <dt style="font-weight: 700">주기</dt><dd style="margin: 0; color: #3D3A36"><strong>1시간마다, 매시 정각</strong>. 페이지를 열어 두어도 정각이 지나면 새 집계로 바뀌어요.</dd>
+        <dt style="font-weight: 700">마지막 집계</dt><dd style="margin: 0; color: #3D3A36">11월 16일 오후 9시 (한국 시간)</dd>
+        <dt style="font-weight: 700">보관</dt><dd style="margin: 0; color: #3D3A36">최근 90일</dd>
+      </dl>
+    </section>
+
+    <section aria-labelledby="terms" style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 12px">
+      <h2 id="terms" style="margin: 0; font-size: 17px; font-weight: 700">숫자의 뜻</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.6">
+        <tbody>
+          <sc-for list="{{terms}}" as="t" hint-placeholder-count="10">
+            <tr style="border-top: 1px solid #EFECE6; vertical-align: top">
+              <th scope="row" style="padding: 12px 16px 12px 0; text-align: left; width: 150px; font-weight: 700">{{t.name}}</th>
+              <td style="padding: 12px 0; color: #3D3A36">{{t.desc}}</td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </section>
+
+    <section aria-labelledby="rank" style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 12px">
+      <h2 id="rank" style="margin: 0; font-size: 17px; font-weight: 700">순위는 어떻게 정하나요</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.6">
+        <thead><tr style="text-align: left; color: #57524C; font-size: 12px; border-bottom: 1px solid #E4E0D8"><th scope="col" style="padding: 8px 12px 8px 0">순위</th><th scope="col" style="padding: 8px 12px">기준</th><th scope="col" style="padding: 8px 12px">순위에 오르는 조건</th><th scope="col" style="padding: 8px 0">갱신</th></tr></thead>
+        <tbody>
+          <sc-for list="{{ranks}}" as="r" hint-placeholder-count="5">
+            <tr style="border-bottom: 1px solid #EFECE6; vertical-align: top">
+              <th scope="row" style="padding: 12px 12px 12px 0; text-align: left; font-weight: 700">{{r.name}}</th>
+              <td style="padding: 12px; color: #3D3A36">{{r.by}}</td>
+              <td style="padding: 12px; color: #3D3A36">{{r.cond}}</td>
+              <td style="padding: 12px 0; color: #3D3A36; white-space: nowrap">{{r.when}}</td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+      <p style="margin: 0; font-size: 14px; color: #3D3A36">점수가 같으면 방송 수가 많거나 방송 시간이 긴 쪽이 앞서요. 집계가 80% 미만으로 모인 기간은 순위를 발표하지 않아요.</p>
+    </section>
+
+    <section aria-labelledby="class" style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 14px; font-size: 15px; line-height: 1.7; color: #3D3A36">
+      <h2 id="class" style="margin: 0; font-size: 17px; font-weight: 700; color: #1F2328">분류 기준</h2>
+      <div><h3 style="margin: 0 0 4px; font-size: 16px; color: #1F2328">게임</h3><p style="margin: 0">플랫폼이 정한 분류를 따라요. 치지직은 카테고리 종류가 '게임'인 방송, SOOP은 '게임' 분류 아래 카테고리의 방송이에요. 같은 게임은 플랫폼이 달라도 하나로 묶어요. '종합 게임'처럼 특정 게임이 아닌 분류는 게임 순위에서 빼요.</p></div>
+      <div><h3 style="margin: 0 0 4px; font-size: 16px; color: #1F2328">게임 외 콘텐츠</h3><p style="margin: 0">토크, 노래, 먹방, 그림 등 게임이 아닌 방송은 따로 모아 보여 줘요.</p></div>
+      <div><h3 style="margin: 0 0 4px; font-size: 16px; color: #1F2328">태그</h3><p style="margin: 0">방송인이 직접 단 태그를 그대로 모아요. 지금은 치지직 방송 태그만 집계해요.</p></div>
+      <div><h3 style="margin: 0 0 4px; font-size: 16px; color: #1F2328">버튜버</h3><p style="margin: 0">VDébut에 소개가 등록된 버튜버의 방송 채널만 '버튜버만 보기'에 들어가요.</p></div>
+      <div><h3 style="margin: 0 0 4px; font-size: 16px; color: #1F2328">소속</h3><p style="margin: 0">공식 소속이 확인된 채널만 플랫폼 옆에 소속을 함께 적어요. 예: SOOP / 소속 이름</p></div>
+      <div><h3 style="margin: 0 0 4px; font-size: 16px; color: #1F2328">시간</h3><p style="margin: 0">모든 날짜와 시각은 한국 시간이에요. 한 주는 월요일 0시부터 일요일 밤 12시까지예요.</p></div>
+    </section>
+
+    <section aria-labelledby="limit" style="border-top: 1px solid #D9D4CA; padding: 16px 0 4px; display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 1.7; color: #3D3A36">
+      <h2 id="limit" style="margin: 0; font-size: 17px; font-weight: 700; color: #1F2328">알아 두면 좋은 점</h2>
+      <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px">
+        <li>상위 100개 밖에 있던 시간의 방송은 기록되지 않아요. 그래서 채널 페이지의 방송 시간은 '기록된 방송 시간'이에요.</li>
+        <li>시청자 수는 매시 정각 값만 기록해요. 방송 시작 시각은 플랫폼이 알려 준 시각을 따라요.</li>
+        <li>플랫폼이 잠시 응답하지 않은 시간은 계산에서 빼고, 그래프에서는 선을 끊어 표시해요.</li>
+        <li>시청자 수는 각 플랫폼이 공개한 동시 시청자 수예요. 플랫폼마다 세는 방식이 다를 수 있어요.</li>
+      </ul>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const terms = [
+      ['플랫폼 시청자', '그 시각 상위 100개 방송의 시청자를 모두 더한 수예요.'],
+      ['평소', '최근 4주 같은 요일, 같은 시각 값의 가운데 값이에요. 4주 중 3주 이상 기록이 있을 때만 비교해요.'],
+      ['1,000명 이상 방송', '그 시각 시청자가 1,000명 이상인 방송의 수예요.'],
+      ['방송 수', '그 시각 같은 게임을 하고 있는 방송의 수예요.'],
+      ['방송당 시청자', '게임 시청자를 방송 수로 나눈 값이에요. 방송이 2개 이상인 게임만 계산해요.'],
+      ['경쟁', '방송당 시청자를 같은 시각 모든 게임의 가운데 값과 비교해요. 1.5배 이상이면 여유, 0.67배 이하면 혼잡, 그 사이는 보통이에요.'],
+      ['평균 시청자', '방송하는 동안 매시 정각에 확인한 시청자 수의 평균이에요.'],
+      ['최고 시청자', '기간 안에 확인한 시청자 수 중 가장 큰 값이에요.'],
+      ['방송 시간', '방송이 시작된 시각부터 마지막으로 확인된 시각까지예요.'],
+      ['팔로워', '치지직이 공개한 팔로워 수예요. 하루 한 번 갱신해요. SOOP은 공개 정보가 없어 표시하지 않아요.'],
+      ['태그 방송 수', '그 시각 이 태그를 단 방송의 수예요. 한 채널은 한 번만 세요. 띄어쓰기와 대소문자만 다른 태그는 같은 태그로 봐요.'],
+      ['오늘 최고', '오늘 0시부터 지금까지 정각마다 확인한 값 중 가장 큰 값이에요. 정각이 지나면 함께 바뀌어요.'],
+      ['태그 시청자', '그 시각 이 태그를 단 방송의 시청자를 더한 수예요. 한 방송에 태그가 여러 개면 각 태그에 모두 더해져요.'],
+    ].map(([name, desc]) => ({ name, desc }));
+    const ranks = [
+      ['실시간 채널 순위', '정각 기준 시청자 수', '정각에 방송 중', '매시 정각'],
+      ['인기 게임 순위', '게임 시청자 (실시간 또는 7일 평균)', '게임으로 분류된 방송', '지금은 매시 정각, 7일은 매일 오전 6시'],
+      ['급상승 게임', '지난 7일 시청자가 그 전 7일보다 늘어난 비율', '30% 이상 늘고, 7일 평균 시청자 1,000명 이상', '매일 오전 6시'],
+      ['게임별 상위 채널', '그 게임 방송의 7일 평균 시청자', '그 게임 방송 1시간 이상', '매일 오전 6시'],
+      ['채널 평균 시청자', '기간 평균 시청자', '기간 내 기록된 방송 3시간 이상', '매일 오전 6시'],
+    ].map(([name, by, cond, when]) => ({ name, by, cond, when }));
+    return { terms, ranks };
+  }
+}
+</script>
+</body>
+</html>

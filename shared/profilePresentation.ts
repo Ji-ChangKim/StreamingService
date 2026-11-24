@@ -97,3 +97,16 @@ function profileDebutOrder(profile: PortalProfile): number {
 export function profileLinkKey(value: string): string {
   try { const url = new URL(portalWebUrl(value)); [...url.searchParams.keys()].filter((key) => key.startsWith('utm_')).forEach((key) => url.searchParams.delete(key)); return `${url.hostname.replace(/^www\./, '')}${url.pathname.replace(/\/$/, '')}${url.search}`; } catch { return ''; }
 }
+
+// 이름 끝 글자 받침에 맞춘 주제 조사(한국어 화면만). 한글이 아니면 '은(는)' 대신 조사 없이 쓴다.
+export function topicName(name: string, language: string): string {
+  if (language !== 'ko') return name;
+  const code = name.trim().charCodeAt(name.trim().length - 1) - 0xAC00;
+  if (code < 0 || code > 11171) return `${name}은(는)`;
+  return `${name}${code % 28 ? '은' : '는'}`;
+}
+
+// 주요 콘텐츠 태그: '버튜버'처럼 모두에게 붙는 태그는 뺀다(문장이 "버튜버 방송을 주로 해요"가 되지 않게).
+export function contentTags(profile: { tags?: string[] }): string[] {
+  return (profile.tags || []).filter((tag) => !/^(버튜버|vtuber|v튜버)$/i.test(tag.trim()));
+}

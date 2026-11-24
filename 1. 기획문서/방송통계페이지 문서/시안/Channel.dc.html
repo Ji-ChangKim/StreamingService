@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>채널 페이지 — 디자인 시스템 규격</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="./ds.css">
+</helmet>
+<div class="vd">
+  <header class="hdr"><div class="hdr-in"><b>VDébut</b><nav><a href="#">데뷔 캘린더</a><a href="#">버튜버 탐색</a><a class="on" href="Main.dc.html">방송 통계</a></nav></div></header>
+  <main class="pg">
+    <nav class="crumb"><a href="Main.dc.html">방송 통계</a> / 채널</nav>
+    <section class="dhero">
+      <span class="av lg"></span>
+      <div class="id">
+        <span class="eyebrow">CHANNEL</span>
+        <h1>코가네 랑</h1>
+        <span class="plat" style="font-size:13px"><img src="/_blob/af83299f810965a478532a41f1074b69" alt="">치지직 / 스텔라이브</span>
+        <span style="font-size:12px;color:#6A778B">팔로워 145,400명</span>
+      </div>
+      <div class="acts">
+        <span class="live"><i></i>방송 중 · 6,317명 · 토크</span>
+        <div><button class="btn">방송 보기</button><a class="official" href="#" aria-label="치지직 공식 채널 열기"><img src="/_blob/66c17cfa33a68a0a5c5de687c856671a" alt="치지직"></a><button class="btn">소개 보기</button></div>
+      </div>
+    </section>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <span style="font-size:12px;color:#8593A8">오늘 오후 9시 30분 기준</span>
+      <div class="seg"><sc-for list="{{periods}}" as="p" hint-placeholder-count="3"><button type="button" aria-pressed="{{p.on}}" onClick="{{p.pick}}">{{p.label}}</button></sc-for></div>
+    </div>
+
+    <section class="kpis" aria-label="기간 요약">
+      <article class="panel kpi hero"><span class="lab">평균 시청자</span><div><span class="num">6,176</span><span class="unit">명</span></div><span class="chip down">앞 30일보다 ▼ 8%</span>
+        <svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:100%;height:36px;display:block" aria-hidden="true"><polygon points="0,30 0,20 10,18 20,21 30,14 40,19 50,16 60,8 70,15 80,17 90,13 100,16 100,30" fill="#DBE7FB"></polygon><polyline points="0,20 10,18 20,21 30,14 40,19 50,16 60,8 70,15 80,17 90,13 100,16" fill="none" stroke="#2563EB" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg></article>
+      <article class="panel kpi"><span class="lab">최고 시청자</span><div><span class="num">46,001</span><span class="unit">명</span></div><p class="sub">10월 17일 방송</p></article>
+      <article class="panel kpi"><span class="lab">기록된 방송 시간</span><div><span class="num">201</span><span class="unit">시간</span></div><span class="chip up">앞 30일보다 ▲ 6%</span></article>
+      <article class="panel kpi"><span class="lab">방송 횟수</span><div><span class="num">26</span><span class="unit">회</span></div><p class="sub">한 번에 평균 <b>7시간 40분</b></p></article>
+    </section>
+
+    <div class="grid3">
+      <section class="panel">
+        <div class="sec-h"><div><span class="eyebrow">시청자 추이</span><h2>10월 17일 합방에서 가장 많이 봤어요 · 하루 평균 21,250명</h2></div></div>
+        <div class="legend"><span><i class="dot" style="background:#2563EB"></i>하루 평균</span><span><i style="width:16px;border-top:2px solid #19263B;display:inline-block"></i>하루 최고</span></div>
+        <div class="chart" style="height:200px">
+          <sc-for list="{{trend.bars}}" as="b" hint-placeholder-count="30"><span><i style="{{b}}"></i></span></sc-for>
+          <svg viewBox="0 0 3000 100" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible"><polyline points="{{trend.line}}" fill="none" stroke="#19263B" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>
+        </div>
+        <div class="xl"><sc-for list="{{trend.labels}}" as="l" hint-placeholder-count="30"><span>{{l}}</span></sc-for></div>
+      </section>
+      <section class="panel brief">
+        <div><span class="eyebrow">무엇을 방송하나</span><h2 class="ph2">방송 시간의 30%를 「마인크래프트」에 썼어요</h2></div>
+        <div>
+          <div class="share"><i style="width:30%;background:#2563EB"></i><i style="width:15%;background:#5B8DEF"></i><i style="width:12%;background:#8FB1F2"></i><i style="width:10%;background:#BCD0F7"></i><i style="width:33%;background:#F1F5F9"></i></div>
+          <div class="slegend" style="margin:0"><span><i class="dot" style="background:#2563EB"></i>마인크래프트 <b>30%</b></span><span><i class="dot" style="background:#5B8DEF"></i>토크 <b>15%</b></span><span><i class="dot" style="background:#8FB1F2"></i>점프 킹 <b>12%</b></span><span><i class="dot" style="background:#BCD0F7"></i>시시포스 <b>10%</b></span><span><i class="dot" style="background:#F1F5F9"></i>기타 <b>33%</b></span></div>
+        </div>
+        <div class="blk"><h3>콘텐츠별 평균 시청자</h3><ol class="mini"><li><a href="Game.dc.html"><span>1.</span>더 게임 오브 시시포스</a><b>9,194명</b></li><li><a href="Game.dc.html"><span>2.</span>점프 킹</a><b>6,993명</b></li><li><a href="Game.dc.html"><span>3.</span>마인크래프트</a><b>6,616명</b></li><li><span><span>4.</span>토크</span><b>5,801명</b></li></ol></div>
+      </section>
+    </div>
+
+    <div class="grid2">
+      <section class="panel">
+        <div class="sec-h" style="margin-bottom:16px"><div><span class="eyebrow">자주 쓰는 태그</span><h2>#버츄얼 태그를 가장 자주 달았어요</h2></div></div>
+        <ul class="tags"><li><a href="Tag.dc.html">#버츄얼 <small>24회 · 평균 6,210명</small></a></li><li><a href="Tag.dc.html">#스텔라이브 <small>24회</small></a></li><li><a href="Tag.dc.html">#마크 <small>9회 · 평균 6,616명</small></a></li><li><a href="Tag.dc.html">#합방 <small>4회 · 평균 12,040명</small></a></li></ul>
+      </section>
+      <section class="panel">
+        <div class="sec-h" style="margin-bottom:16px"><div><span class="eyebrow">채널 정보</span><h2>방송 습관</h2></div></div>
+        <ul class="kv"><li><span>주로 방송하는 요일</span><b>토·일요일</b></li><li><span>주로 방송하는 시간</span><b>19~22시</b></li><li><span>한 번에 평균</span><b>7시간 40분</b></li></ul>
+      </section>
+    </div>
+
+    <section class="panel">
+      <div class="sec-h"><div><span class="eyebrow">방송 시간대</span><h2>주로 토·일요일, 19~22시에 방송해요</h2></div></div>
+      <div class="heat">
+        <div class="heat-row"><span></span><sc-for list="{{hours}}" as="h" hint-placeholder-count="24"><span style="text-align:center">{{h}}</span></sc-for></div>
+        <sc-for list="{{heat}}" as="row" hint-placeholder-count="7"><div class="heat-row"><b>{{row.day}}</b><sc-for list="{{row.cells}}" as="c" hint-placeholder-count="24"><i style="{{c}}"></i></sc-for></div></sc-for>
+      </div>
+      <div class="scale"><span>적음</span><i style="background:#EEF4FF"></i><i style="background:#C9DAFB"></i><i style="background:#8FB1F2"></i><i style="background:#4A7FE0"></i><i style="background:#1D4FB8"></i><span>많음</span></div>
+    </section>
+
+    <section class="panel">
+      <div class="sec-h"><div><span class="eyebrow">방송 기록</span><h2>최근 30일 26번 방송했어요</h2></div></div>
+      <table class="table"><thead><tr><th>날짜</th><th>제목</th><th>게임</th><th class="n">방송 시간</th><th class="n">평균</th><th class="n">최고</th></tr></thead>
+        <tbody><sc-for list="{{log}}" as="r" hint-placeholder-count="6"><tr><td>{{r.d}}</td><td style="color:#19263B">{{r.t}}</td><td><a href="Game.dc.html">{{r.g}}</a></td><td class="n">{{r.m}}</td><td class="n">{{r.a}}</td><td class="n">{{r.p}}</td></tr></sc-for></tbody></table>
+      <div style="text-align:center;margin-top:16px"><button class="btn">20개 더 보기</button></div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2700}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { days: 30 }; }
+  renderVals() {
+    const periods = [[7, '7일'], [30, '30일'], [90, '90일']].map(([d, label]) => ({ label, on: this.state.days === d, pick: () => this.setState({ days: d }) }));
+    const avg = [5.2, 4.1, null, 6.0, 4.8, 21.2, 5.6, null, 4.4, 5.1, 6.2, null, 3.9, 4.6, 5.3, 6.1, null, 5.8, 12.8, 5.0, 4.2, null, 3.3, 5.5, 4.0, null, 3.6, 6.6, 3.1, 6.3];
+    const peak = avg.map((x) => (x == null ? null : x * 1.45));
+    const trend = {
+      bars: avg.map((x) => `height:${x == null ? 0 : x / 32 * 88}%;max-width:16px;background:#2563EB`),
+      line: peak.map((x, i) => (x == null ? null : `${i * 100 + 50},${(100 - x / 32 * 88).toFixed(1)}`)).filter(Boolean).join(' '),
+      labels: avg.map((_, i) => ((29 - i) % 7 === 0 ? ['10/18', '10/25', '11/01', '11/08', '11/15'][Math.floor(i / 7)] || '11/16' : '')),
+    };
+    const scale = ['#EEF4FF', '#C9DAFB', '#8FB1F2', '#4A7FE0', '#1D4FB8'];
+    const hours = Array.from({ length: 24 }, (_, h) => (h % 3 === 0 ? String(h) : ''));
+    const heat = ['월', '화', '수', '목', '금', '토', '일'].map((day, d) => ({ day, cells: Array.from({ length: 24 }, (_, h) => {
+      const wk = d >= 5; const on = h >= 19 && h <= 23; const v = on ? (wk ? 4 : 2) : h >= 0 && h <= 1 ? (wk ? 3 : 1) : h >= 14 && h <= 18 ? (wk ? 2 : 1) : 0;
+      return `background:${v ? scale[v] : '#F1F5FC'}`; }) }));
+    const log = [['11월 16일 (일)', '랑이와찌', '토크', '1시간', '6,317명', '6,317명'], ['11월 15일 (토)', '건실한 호랑이', '포테이토 플리즈', '7시간 50분', '3,035명', '3,596명'], ['11월 14일 (금)', '7부 네모호랑이', '마인크래프트', '11시간 10분', '5,993명', '9,294명'], ['11월 12일 (수)', '건실하게 굴파는 호랑이', '마인크래프트', '15시간 40분', '4,188명', '6,215명'], ['11월 11일 (화)', '가래떡데이', '마인크래프트', '11시간 40분', '3,967명', '5,090명'], ['11월 9일 (일)', '랑이와찌', '마인크래프트', '1시간 30분', '5,836명', '7,402명']].map(([d, t, g, m, a, p]) => ({ d, t, g, m, a, p }));
+    return { periods, trend, hours, heat, log };
+  }
+}
+</script>
+</body>
+</html>

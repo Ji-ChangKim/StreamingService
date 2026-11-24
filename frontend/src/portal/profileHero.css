@@ -1,0 +1,86 @@
+/* 버튜버 상세 위쪽(최종 후보 시안 ⑨·⑪). 한국어 어절 단위 줄바꿈. */
+.vd-hero{--ink:#0F172A;--sub:#475569;--muted:#94A3B8;--line:#E2E8F0;--soft:#F1F5F9;--blue:#2563EB;--new:#EEF4FF;
+  background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px 26px 0;margin-bottom:24px;word-break:keep-all;overflow-wrap:break-word;color:var(--ink)}
+.vd-hero-top{display:flex;gap:22px;align-items:center}
+.vd-hero-avwrap{position:relative;flex:none}
+.vd-hero-av{width:104px;height:104px;border-radius:24px;object-fit:cover;display:block;background:var(--soft)}
+.vd-hero-avwrap.is-live .vd-hero-av{box-shadow:0 0 0 3px #fff,0 0 0 5px #EF4444}
+.vd-hero-avwrap b{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);background:#EF4444;color:#fff;font-size:10px;font-weight:800;letter-spacing:.06em;padding:2px 7px;border-radius:6px}
+.vd-hero-id{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.vd-hero-name{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.vd-hero-name h1{margin:0 4px 0 0;font-size:30px;font-weight:800;letter-spacing:-.01em;line-height:1.25}
+.vd-hero-meta{margin:0;font-size:14px;color:var(--sub);display:flex;gap:6px;flex-wrap:wrap}
+.vd-hero-meta .dot{color:#CBD5E1}
+.vd-icon-btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;height:34px;min-width:34px;padding:0;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--sub);font-size:13px;font-weight:600;cursor:pointer}
+.vd-icon-btn.txt{padding:0 11px}
+.vd-icon-btn.saved{color:#E11D48;border-color:#FECDD3;background:#FFF1F2}
+.vd-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:14px;font-weight:700;text-decoration:none;cursor:pointer;white-space:nowrap}
+.vd-btn img{width:20px;height:20px;border-radius:5px;object-fit:contain;background:#fff}
+.vd-btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.vd-btn:focus-visible,.vd-icon-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* 상태 카드 */
+.vd-status{width:380px;flex:none;border-radius:16px;padding:18px;border:1px solid var(--line);background:var(--soft);display:flex;flex-direction:column}
+.vd-status .lbl{font-size:12px;font-weight:700;color:var(--sub);display:flex;align-items:center;gap:6px}
+.vd-status .lbl i{width:8px;height:8px;border-radius:50%;background:#94A3B8;display:inline-block}
+.vd-status .ttl{font-size:15px;font-weight:700;margin:8px 0 4px;line-height:1.45;text-wrap:pretty}
+.vd-status .sub{font-size:13px;color:var(--sub);margin:0 0 14px;line-height:1.6;text-wrap:pretty}
+.vd-status .ttl+.vd-btn,.vd-status .ttl+.vd-two{margin-top:10px}
+.vd-status>.vd-btn{width:100%}
+.vd-status.live{background:#FFF7F7;border-color:#FECACA}
+.vd-status.live .lbl{color:#B91C1C}.vd-status.live .lbl i{background:#EF4444}
+.vd-status.pre{background:linear-gradient(135deg,#EEF4FF,#F5F3FF);border-color:#C7D2FE}
+.vd-status.pre .lbl{color:var(--blue)}.vd-status.pre .lbl i{background:var(--blue)}
+.vd-count{display:flex;gap:6px;margin:10px 0 14px}
+.vd-count div{flex:1;background:#fff;border-radius:10px;padding:8px 0;text-align:center;font-size:11px;color:var(--muted)}
+.vd-count b{display:block;font-size:22px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.vd-two{display:grid;grid-template-columns:1fr auto;gap:8px}
+
+/* 핵심 숫자 */
+.vd-kpis{display:grid;grid-template-columns:repeat(4,1fr);margin-top:24px;border-top:1px solid var(--line)}
+.vd-kpis[data-count="3"]{grid-template-columns:repeat(3,1fr)}.vd-kpis[data-count="2"]{grid-template-columns:repeat(2,1fr)}.vd-kpis[data-count="1"]{grid-template-columns:1fr}
+.vd-kpis>div{padding:18px 20px;min-width:0}
+.vd-kpis>div:first-child{padding-left:0}
+.vd-kpis>div+div{border-left:1px solid var(--line)}
+.vd-kpis span{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+.vd-kpis b{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.vd-kpis b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+.vd-kpis em{display:block;font-style:normal;font-size:12px;color:var(--muted);margin-top:4px}
+
+/* 공유 */
+.vd-share{position:relative}
+.vd-share-pop{position:absolute;top:42px;left:0;z-index:20;width:340px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 32px rgba(15,23,42,.12);padding:18px;display:flex;flex-direction:column;gap:10px}
+.vd-share-pop .h{margin:0;font-size:15px;font-weight:700}
+.vd-share-pop .s{margin:-6px 0 2px;font-size:12px;color:var(--muted)}
+.vd-share-pop .url{display:flex;gap:8px}
+.vd-share-pop .url span{flex:1;min-width:0;height:44px;border:1px solid var(--line);border-radius:10px;padding:0 12px;display:flex;align-items:center;font-size:13px;color:var(--sub);background:var(--soft);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+
+/* 모바일: 공식 링크 + 프로필 정보(펼치기)를 탭보다 위에 */
+.vd-mobile-links{display:none}
+.vd-mobile-links details summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:10px;padding:13px 16px;border-top:1px solid var(--line);font-size:13px;font-weight:700;color:var(--blue)}
+.vd-mobile-links details summary::-webkit-details-marker{display:none}
+.vd-mobile-links details summary small{font-weight:500;color:var(--muted);font-size:12px}
+.vd-mobile-links details[open] summary small{display:none}
+.vd-mobile-links .spec-panel{border:0;border-radius:0;padding:0 16px 12px}
+
+@container (max-width:1050px){
+  .vd-status{width:320px}
+}
+@container (max-width:760px){
+  .vd-hero{padding:18px 16px 0;border-radius:18px;margin-bottom:14px}
+  .vd-hero-top{flex-wrap:wrap;gap:14px}
+  .vd-hero-av{width:72px;height:72px;border-radius:18px}
+  .vd-hero-name h1{font-size:24px}
+  .vd-hero-name .vd-icon-btn.txt{padding:0;width:34px;font-size:0;gap:0}
+  .vd-share-pop{width:min(340px,calc(100vw - 32px));left:auto;right:0}
+  .vd-status{width:100%;padding:16px}
+  .vd-kpis,.vd-kpis[data-count="3"]{grid-template-columns:1fr 1fr;margin-top:18px}
+  .vd-kpis>div{padding:14px 0}
+  .vd-kpis>div+div{border-left:0}
+  .vd-kpis>div:nth-child(even){padding-left:14px;border-left:1px solid var(--line)}
+  .vd-kpis>div:nth-child(n+3){border-top:1px solid var(--line)}
+  .vd-kpis b{font-size:20px}
+  .vd-mobile-links{display:block;background:#fff;border:1px solid #E2E8F0;border-radius:14px;margin-bottom:14px;overflow:hidden}
+  .vd-mobile-links>.vd-ins-links{border:0;padding:14px 16px 12px;border-radius:0}
+  .wiki-aside .spec-panel:not(.vd-keep),.wiki-aside .vd-ins-links{display:none}
+}

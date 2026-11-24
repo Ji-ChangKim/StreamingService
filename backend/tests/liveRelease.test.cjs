@@ -59,7 +59,10 @@ test('운영·개발·비공개·잘못된 URL의 셸과 검색 설정을 분리
   try {
     for (const route of ['/', '/upload', '/creators', '/creators/register', '/about', '/guide', '/contact', '/privacy', '/terms', '/analytics', '/analytics/chzzk', '/analytics/soop']) {
       const response = await call(route); const html = await response.text();
-      assert.equal(response.status, 200, route); if (!route.startsWith('/analytics')) assert.match(html, /content="index, follow"/);
+      assert.equal(response.status, 200, route);
+      // 입력 화면은 짧은 양식이라 검색 제외·링크 따라가기(기획 41 A2), 나머지 안내 화면은 검색 허용.
+      const form = route === '/upload' || route === '/creators/register';
+      if (!route.startsWith('/analytics')) assert.match(html, form ? /content="noindex, follow"/ : /content="index, follow"/, route);
       assert.doesNotMatch(html, /gtm\.js|GTM-KWX992HR/); assert.match(html, /G-LS6E68YC5K/); assert.doesNotMatch(html, /dev\.vdebut\.live/);
       assert.match(html, /portal-main-/, route);
       if (!route.startsWith('/analytics')) assert.equal(response.headers.get('X-Robots-Tag'), null);
@@ -80,8 +83,10 @@ test('운영·개발·비공개·잘못된 URL의 셸과 검색 설정을 분리
     const devAnalyticsHtml = await devAnalytics.text();
     assert.equal(devAnalytics.status, 200);
     assert.match(devAnalytics.headers.get('X-Robots-Tag'), /noindex/);
-    assert.match(devAnalyticsHtml, /<title>치지직·SOOP 방송 활동 통계/);
-    assert.match(devAnalyticsHtml, /id="activity-bootstrap"/);
+    assert.match(devAnalyticsHtml, /<title>방송 통계 · 치지직·SOOP 실시간 시청자와 인기 게임 순위/);
+    // 새 통계 첫 화면은 예전 대시보드 자료(activity-bootstrap) 대신 글로 된 요약을 싣는다.
+    assert.match(devAnalyticsHtml, /<h1>방송 통계<\/h1>/);
+    assert.doesNotMatch(devAnalyticsHtml, /id="activity-bootstrap"/);
     assert.doesNotMatch(devAnalyticsHtml, /페이지를 찾을 수 없어요|GTM-KWX992HR/);
     assert.equal((await call('/missing-page')).status, 404); assert.equal((await call('/creator/missing')).status, 404);
     assert.equal((await call('/analytics/missing', {}, 'dev.vdebut.live')).status, 404);
@@ -151,7 +156,7 @@ test('새 등록은 기존 CMS 목록·삭제·소개 URL·사이트맵까지 �
     const token = 'local-admin';
     const hash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))).toString('hex');
     db.sqlite.prepare('INSERT INTO portal_sessions VALUES(?,?)').run(hash, Date.now() + 60000);
-    const body = { countryCode: 'KR', requesterRole: 'SELF', kind: 'DEBUT', displayName: '테스트 <script>홍보</script>', description: '게임 & 노래 "소개"', platform: 'CHZZK', channelUrl: 'https://chzzk.naver.com/' + 'a'.repeat(32), dateState: 'FIXED', debutDate: '2026-10-20', debutTime: '20:00', timezone: 'Asia/Seoul', contactEmail: 'private@example.com' };
+    const body = { countryCode: 'KR', requesterRole: 'SELF', kind: 'DEBUT', displayName: '테스트 <script>홍보</script>', description: '게임 & 노래 "소개" — 매주 금요일 밤 팬들과 함께 종합 게임과 신곡 커버를 진행합니다. 주말에는 시청자와 함께 노래 신청을 받고, 평일 저녁에는 공포 게임과 협동 게임을 번갈아 합니다. 데뷔 첫 주에는 매일 방송할 예정이에요. 방송이 끝나면 다시보기와 짧은 클립을 정리해 팬카페에 올립니다.', platform: 'CHZZK', channelUrl: 'https://chzzk.naver.com/' + 'a'.repeat(32), dateState: 'FIXED', debutDate: '2026-10-20', debutTime: '20:00', timezone: 'Asia/Seoul', contactEmail: 'private@example.com' };
     const registered = await (await call('/api/v1/portal/requests', { method: 'POST', body: JSON.stringify(body) })).json();
     const result = await (await call(`/api/v1/portal/admin/requests/${registered.id}/decision`, { method: 'POST', headers: { 'X-Admin-Key': token }, body: JSON.stringify({ status: 'APPROVED', contentChecked: true }) })).json();
     assert.ok(result.slug);
@@ -196,5 +201,40 @@ test('공개 소개 목록은 60초 캐시, 정적 이미지는 30일 캐시를 
     assert.equal(list.headers.get('cache-control'), 'public, max-age=60');
     const image = await call('/images/spotlight_stage_bg.webp');
     assert.match(image.headers.get('cache-control') || '', /max-age=2592000/);
+  } finally { db.sqlite.close(); }
+});
+
+test('준비 안 된 SOOP 통계는 검색·사이트맵에서 빼고, 집계 기준은 싣고, 게임·태그 화면은 자기 제목과 검색 제외 메타를 쓴다', async () => {
+  const { db, call } = await setup();
+  try {
+    const soop = await call('/analytics/soop');
+    const soopHtml = await soop.text();
+    assert.equal(soop.status, 200);
+    assert.match(soop.headers.get('X-Robots-Tag') || '', /noindex/);
+    assert.match(soopHtml, /<meta name="robots" content="noindex,follow">/);
+    const sitemap = await (await call('/sitemap.xml')).text();
+    assert.match(sitemap, /<loc>https:\/\/vdebut.live\/analytics\/method<\/loc>/);
+    assert.doesNotMatch(sitemap, /<loc>https:\/\/vdebut.live\/analytics\/soop<\/loc>/);
+    const game = await call(`/analytics/game/${encodeURIComponent('리그 오브 레전드')}`);
+    const gameHtml = await game.text();
+    assert.match(gameHtml, /<title>리그 오브 레전드 방송 통계/);
+    assert.match(gameHtml, /<meta name="robots" content="noindex,follow">/);
+    assert.doesNotMatch(gameHtml, /<title>신규 버튜버 데뷔 캘린더/);
+    const tagHtml = await (await call(`/analytics/tag/${encodeURIComponent('버튜버')}`)).text();
+    assert.match(tagHtml, /<title>#버튜버 태그 방송 통계/);
+  } finally { db.sqlite.close(); }
+});
+
+test('채널 통계 첫 HTML은 예전 활동 집계 없이 이름만 확인하고, 기록·등록·이름이 없으면 404', async () => {
+  const { db, call } = await setup();
+  try {
+    const key = `CHZZK:${'e'.repeat(32)}`;
+    assert.equal((await call(`/analytics/streamer/${encodeURIComponent(key)}`)).status, 404);
+    const named = await call(`/analytics/streamer/${encodeURIComponent(key)}?name=${encodeURIComponent('테스트 채널')}`);
+    const html = await named.text();
+    assert.equal(named.status, 200);
+    assert.match(html, /<title>테스트 채널 방송 통계 · 치지직/);
+    assert.match(named.headers.get('X-Robots-Tag') || '', /noindex/);
+    assert.doesNotMatch(html, /id="activity-bootstrap"/);
   } finally { db.sqlite.close(); }
 });
