@@ -4,11 +4,11 @@ import { activityStreamerPath } from '../../../../../shared/activitySeo';
 import { PlatformIcon } from './boardParts';
 
 // 스트리머 검색: 입력하면 검색창 바로 아래에 결과 목록을 펼친다.
-// withTags: '#'로 시작하면 태그 검색(같은 이름의 게임이 있으면 게임 페이지도 함께). 게임 페이지 오른쪽 위 검색에서 쓴다.
+// withTags: '#'로 시작하면 태그 검색(같은 이름의 게임이 있으면 게임 페이지도 함께). 게임 이름은 방송 통계의 지금·오늘·7일 게임 목록에서 찾는다. 게임 페이지 오른쪽 위 검색에서 쓴다.
 type TagOption = { kind: 'game' | 'tag'; name: string };
 const squash = (text: string) => text.normalize('NFKC').replace(/^#/, '').replace(/\s+/g, '').toLowerCase();
 let gameNames: Promise<string[]> | null = null;
-const loadGameNames = () => (gameNames ??= fetch('/api/analytics/board?platform=ALL').then((r) => (r.ok ? r.json() : { games: [] })).then((b: { games?: Array<{ name: string }> }) => (b.games || []).map((g) => g.name)).catch(() => []));
+const loadGameNames = () => (gameNames ??= fetch('/api/analytics/board?platform=ALL').then((r) => (r.ok ? r.json() : { games: [] })).then((b: { games?: Record<string, Array<{ name: string }>> }) => [...new Set(Object.values(b.games || {}).flat().map((g) => g.name))]).catch(() => []));
 export function StreamerSearch({ onNavigate, withTags = false, className = '' }: { onNavigate: (path: string) => void; withTags?: boolean; className?: string }) {
   const [query, setQuery] = useState('');
   const [items, setItems] = useState<StatisticsStreamer[]>([]);
