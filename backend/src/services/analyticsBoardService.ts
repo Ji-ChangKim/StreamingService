@@ -624,12 +624,13 @@ const MONDAY0 = (iso: string) => (kstWeekday(iso) + 6) % 7;
 export function gameGuideFrom(rows: SnapshotRow[], slots: string[], now: number): Omit<GameGuide, 'newcomers' | 'alternatives'> {
   const cell = () => Array.from({ length: 7 }, () => Array.from({ length: 24 }, () => 0));
   const slotCount = cell(), sumV = cell(), sumN = cell();
+  const lists = Array.from({ length: 7 }, () => Array.from({ length: 24 }, () => [] as number[]));
   for (const slot of slots) slotCount[MONDAY0(slot)][kstHour(slot)] += 1;
   const channelsByDay = new Map<string, Set<string>>();
   const bySlot = new Map<string, { v: number; n: number }>();
   for (const row of rows) {
     const at = row.scheduled_at as string;
-    sumV[MONDAY0(at)][kstHour(at)] += row.viewers; sumN[MONDAY0(at)][kstHour(at)] += 1;
+    sumV[MONDAY0(at)][kstHour(at)] += row.viewers; sumN[MONDAY0(at)][kstHour(at)] += 1; lists[MONDAY0(at)][kstHour(at)].push(row.viewers);
     const day = kstDate(at); const set = channelsByDay.get(day) || new Set<string>(); set.add(row.channel_key.toLowerCase()); channelsByDay.set(day, set);
     const entry = bySlot.get(at) || { v: 0, n: 0 }; entry.v += row.viewers; entry.n += 1; bySlot.set(at, entry);
   }
@@ -637,12 +638,15 @@ export function gameGuideFrom(rows: SnapshotRow[], slots: string[], now: number)
   const viewers = sumV.map((row, d) => row.map((v, h) => Math.round(avg(v, slotCount[d][h]))));
   const broadcasts = sumN.map((row, d) => row.map((n, h) => Math.round(avg(n, slotCount[d][h]) * 10) / 10));
   // 방송이 평균 3개 미만인 칸은 방송 1개당 시청자가 크게 흔들리므로 비운다.
-  const per = sumV.map((row, d) => row.map((v, h) => (broadcasts[d][h] >= 3 && sumN[d][h] ? Math.round(v / sumN[d][h]) : null)));
+  // 방송 1개당 시청자는 가운데 값(중앙값)으로 본다. 대회·공식 방송 같은 큰 방송 하나가 숫자를 끌어올리지 않게(신입 기준).
+  const per = lists.map((row, d) => row.map((list, h) => (broadcasts[d][h] >= 3 && list.length ? Math.round(median(list) as number) : null)));
+  // 지금 경쟁 비교용 평균(지금 숫자가 평균이라 같은 기준으로 비교한다).
+  const perMean = sumV.map((row, d) => row.map((v, h) => (broadcasts[d][h] >= 3 && sumN[d][h] ? Math.round(v / sumN[d][h]) : null)));
   const windows: GameGuideSlot[] = [];
   for (let d = 0; d < 7; d += 1) for (let h = 0; h <= 21; h += 1) {
     if ([0, 1, 2].some((i) => per[d][h + i] === null)) continue;
-    const v = [0, 1, 2].reduce((s, i) => s + sumV[d][h + i], 0), n = [0, 1, 2].reduce((s, i) => s + sumN[d][h + i], 0);
-    windows.push({ day: d, start: h, per: Math.round(v / n), broadcasts: Math.round([0, 1, 2].reduce((s, i) => s + broadcasts[d][h + i], 0) / 3 * 10) / 10, viewers: Math.round([0, 1, 2].reduce((s, i) => s + viewers[d][h + i], 0) / 3), note: '' });
+    // 구간 값 = 세 칸 가운데 값의 평균(한 칸만 좋은 구간이 이웃 구간까지 끌어올리지 않게).
+    windows.push({ day: d, start: h, per: Math.round([0, 1, 2].reduce((sum, i) => sum + (per[d][h + i] as number), 0) / 3), broadcasts: Math.round([0, 1, 2].reduce((s, i) => s + broadcasts[d][h + i], 0) / 3 * 10) / 10, viewers: Math.round([0, 1, 2].reduce((s, i) => s + viewers[d][h + i], 0) / 3), note: '' });
   }
   windows.sort((a, b) => b.per - a.per);
   const best: GameGuideSlot[] = [];
@@ -665,7 +669,7 @@ export function gameGuideFrom(rows: SnapshotRow[], slots: string[], now: number)
   const nowISO = new Date(now).toISOString();
   return {
     heat: { viewers, broadcasts, per }, best, busiest: top && top.v > 0 ? { day: top.d, hour: top.h } : null,
-    usualPer: per[MONDAY0(nowISO)][kstHour(nowISO)], trend,
+    usualPer: perMean[MONDAY0(nowISO)][kstHour(nowISO)], trend,
     recordDays: channelsByDay.size, dailyChannels: Math.round([...channelsByDay.values()].reduce((s, set) => s + set.size, 0) / 28 * 10) / 10,
   };
 }
@@ -720,7 +724,7 @@ export async function readGameNewcomers(db: D1Database, target: string, profiles
   const all = [...people.values()].flatMap((p) => p.avgs);
   const list = [...people.entries()].map(([key, p]) => { const prof = byKey.get(key)!; return { slug: prof.slug, name: prof.displayName, imageUrl: prof.avatarUrl || '', debutAt: prof.startAtUtc || `${prof.debutDate}T00:00:00+09:00`, streams: p.streams, avgViewers: p.avgs.length ? Math.round(p.avgs.reduce((a, b) => a + b, 0) / p.avgs.length) : null }; })
     .sort((a, b) => b.streams - a.streams || (b.avgViewers || 0) - (a.avgViewers || 0)).slice(0, 6);
-  return { people: people.size, streams: [...people.values()].reduce((s, p) => s + p.streams, 0), avgViewers: all.length ? Math.round(all.reduce((a, b) => a + b, 0) / all.length) : null, minutes: [...people.values()].reduce((s, p) => s + p.minutes, 0), list };
+  return { people: people.size, streams: [...people.values()].reduce((s, p) => s + p.streams, 0), avgViewers: all.length ? Math.round(median(all) as number) : null, minutes: [...people.values()].reduce((s, p) => s + p.minutes, 0), list };
 }
 
 // 같은 시간 다른 게임: 1위 구간(요일·3시간)의 최근 4주 정각 기록. 평균 방송 2개 이상인 게임만, 최대 5개(이 게임 포함).
@@ -729,12 +733,12 @@ export async function readGameAlternatives(db: D1Database, target: string, slot:
   if (!picked.length) return null;
   const result = await db.prepare(`SELECT s.category_name, s.viewers FROM analytics_broadcast_snapshots s JOIN analytics_broadcast_runs r ON r.run_id = s.run_id
     WHERE ${HOURLY} AND r.platform = 'CHZZK' AND r.scheduled_at IN (${inList(picked)})`).bind(...picked).all<{ category_name: string; viewers: number }>();
-  const games = new Map<string, { v: number; n: number }>();
+  const games = new Map<string, number[]>();
   for (const row of result.results || []) {
     if (NOT_A_GAME_TITLE.test(row.category_name.trim()) || !isGameCategory(row.category_name)) continue;
-    const name = gameName(row.category_name); const e = games.get(name) || { v: 0, n: 0 }; e.v += row.viewers; e.n += 1; games.set(name, e);
+    const name = gameName(row.category_name); const list = games.get(name) || []; list.push(row.viewers); games.set(name, list);
   }
-  const rowsOut = [...games.entries()].map(([name, e]) => ({ name, per: Math.round(e.v / e.n), broadcasts: Math.round(e.n / picked.length * 10) / 10 })).filter((g) => g.broadcasts >= 2);
+  const rowsOut = [...games.entries()].map(([name, list]) => ({ name, per: Math.round(median(list) as number), broadcasts: Math.round(list.length / picked.length * 10) / 10 })).filter((g) => g.broadcasts >= 2);
   const mid = median(rowsOut.map((g) => g.per)) || 0;
   const label = (per: number): Competition => (!mid ? '보통' : per >= mid * 1.2 ? '여유' : per <= mid * 0.8 ? '혼잡' : '보통');
   const sorted = rowsOut.sort((a, b) => b.per - a.per);

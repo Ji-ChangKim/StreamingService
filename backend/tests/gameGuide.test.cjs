@@ -51,3 +51,19 @@ test('결론 문장: 평일 같은 시간이면 "평일 오후 2~5시"로 묶고
   assert.equal(text.hourRange(21), '밤 9~12시');
   assert.equal(text.slotLabel(1, 14), '화 오후 2~5시');
 });
+
+test('큰 방송 하나가 덜 붐비는 시간을 차지하지 않는다(가운데 값)', () => {
+  const { slots, rows, now } = fixture();
+  // 월 오전 8~10시에 대회 방송 하나(시청자 9만) + 작은 방송 3개(시청자 50)
+  const extra = [];
+  for (const at of slots) {
+    const k = new Date(Date.parse(at) + 9 * 3600000); const h = k.getUTCHours(); const wd = (k.getUTCDay() + 6) % 7;
+    if (wd === 0 && h >= 8 && h <= 10) {
+      extra.push({ platform: 'CHZZK', channel_key: 'CHZZK:' + 'e'.repeat(32), channel_name: 'e', category_name: '리그 오브 레전드', viewers: 90000, scheduled_at: at });
+      for (let j = 0; j < 3; j += 1) extra.push({ platform: 'CHZZK', channel_key: 'CHZZK:' + String(90 + j).padStart(32, '0'), channel_name: 's', category_name: '리그 오브 레전드', viewers: 50, scheduled_at: at });
+    }
+  }
+  const g = board.gameGuideFrom([...rows.filter((r) => { const k = new Date(Date.parse(r.scheduled_at) + 9 * 3600000); return !((k.getUTCDay() + 6) % 7 === 0 && k.getUTCHours() >= 8 && k.getUTCHours() <= 10); }), ...extra], slots, now);
+  assert.ok(g.heat.per[0][9] <= 100); // 평균이면 2만 명이 넘지만 가운데 값은 50
+  assert.ok(!g.best.some((b) => b.day === 0 && b.start >= 6 && b.start <= 10));
+});

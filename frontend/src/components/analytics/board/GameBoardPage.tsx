@@ -38,8 +38,8 @@ function When({ guide }: { guide: GameGuide }) {
         return <i key={`${d}-${h}`} className={pick ? 'pick' : ''} title={`${GUIDE_DAYS[d]} ${h}시 · ${v === null ? '방송 3개 미만' : `${label} ${num(v)}${unit}`}`} style={{ background: v ? scale[step(v)] : 'var(--ab-track)' }} />;
       })])}
     </div></div>
-    <div className="gg-scale">적음{scale.map((c) => <i key={c} style={{ background: c }} />)}많음 · {mode === 'per' ? '방송 1개당 시청자 = 그 시간 시청자 ÷ 방송 수' : `시간당 평균 ${label}`}</div>
-    <p className="gg-note">{mode === 'per' ? '진할수록 방송 하나가 나눠 갖는 시청자가 많아요. 방송이 3개 미만인 시간은 숫자가 흔들려서 회색으로 둬요.' : '최근 4주 같은 요일·시간의 평균이에요.'}</p>
+    <div className="gg-scale">적음{scale.map((c) => <i key={c} style={{ background: c }} />)}많음 · {mode === 'per' ? '방송 1개당 시청자 = 그 시간 방송들의 가운데 값' : `시간당 평균 ${label}`}</div>
+    <p className="gg-note">{mode === 'per' ? '진할수록 보통 방송 하나가 받는 시청자가 많아요. 대회·공식 방송 같은 큰 방송 하나가 숫자를 끌어올리지 않게 가운데 값을 써요. 방송이 3개 미만인 시간은 회색이에요.' : '최근 4주 같은 요일·시간의 평균이에요.'}</p>
   </section>;
 }
 
@@ -48,7 +48,7 @@ function Newcomers({ data, onNavigate }: { data: NonNullable<GameGuide['newcomer
   return <section className="ab-section gg-sec" aria-labelledby="gg-new">
     <span className="gg-label"><b>NEWCOMER</b>데뷔 90일 이내 버튜버 · 최근 30일</span>
     <h2 id="gg-new">신입 버튜버 {data.people}명이 이 게임으로 방송했어요</h2>
-    <div className="gg-sum"><div>신입 방송<b>{num(data.streams)}회</b></div><div>방송 평균 시청자<b>{data.avgViewers === null ? '—' : `${num(data.avgViewers)}명`}</b></div><div>이 게임 방송 시간<b>{num(Math.round(data.minutes / 60))}시간</b></div></div>
+    <div className="gg-sum"><div>신입 방송<b>{num(data.streams)}회</b></div><div>방송 시청자(가운데 값)<b>{data.avgViewers === null ? '—' : `${num(data.avgViewers)}명`}</b></div><div>이 게임 방송 시간<b>{num(Math.round(data.minutes / 60))}시간</b></div></div>
     <div className="gg-people">{data.list.map((p) => <a key={p.slug} className="gg-person" {...linkProps(`/creator/${encodeURIComponent(p.slug)}`, onNavigate)}>
       {p.imageUrl ? <img src={p.imageUrl} alt="" loading="lazy" decoding="async" /> : <span className="ph" aria-hidden="true" />}
       <span className="x"><b>{p.name}<em>신입</em></b><small>데뷔 {days(p.debutAt)}일째 · 이 게임 {p.streams}회</small></span>
@@ -83,7 +83,7 @@ function Alternatives({ data, onNavigate }: { data: NonNullable<GameGuide['alter
     <h2 id="gg-alt">같은 시간, 다른 게임은 어떨까요</h2>
     <table className="gg-alt"><thead><tr><th>게임</th><th className="r">방송 1개당</th><th className="r">방송 수</th><th className="r">경쟁</th></tr></thead>
       <tbody>{data.games.map((g) => <tr key={g.name} className={g.self ? 'me' : ''}><td>{g.self ? g.name : <a {...linkProps(gamePath(g.name), onNavigate)}>{g.name}</a>}</td><td className="r">{num(g.per)}명</td><td className="r">{g.broadcasts}개</td><td className="r"><span className={`gg-comp ${g.competition === '여유' ? '' : g.competition === '혼잡' ? 'busy' : 'mid'}`}>{g.competition}</span></td></tr>)}</tbody></table>
-    <p className="gg-note">같은 시간대의 다른 게임과 비교해요. 방송 1개당 시청자가 많고 방송이 적을수록 "여유"예요. 시간당 방송이 2개 이상인 게임만 보여요.</p>
+    <p className="gg-note">같은 시간대의 다른 게임과 비교해요(방송 1개당 시청자는 가운데 값). 방송 1개당 시청자가 많을수록 "여유"예요. 시간당 방송이 2개 이상인 게임만 보여요.</p>
   </section>;
 }
 

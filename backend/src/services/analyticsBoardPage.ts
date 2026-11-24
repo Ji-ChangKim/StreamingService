@@ -64,11 +64,11 @@ export function gameInitialBody(board: AnalyticsGameBoard): string {
   const parts: string[] = [`<h1>${esc(board.name)} 방송 통계</h1>`];
   const lede = g ? gameLede(g) : null;
   parts.push(`<p>${esc(lede || gamePageDescription(board.name))}</p>`);
-  if (board.now.broadcasts) parts.push(`<p>${esc(`지금 방송 ${won(board.now.broadcasts)}개에 ${won(board.now.viewers)}명이 보고 있어요.${board.now.perBroadcast ? ` 방송 1개당 시청자는 ${won(board.now.perBroadcast)}명이고, 같은 시간 평소와 비교한 경쟁은 ${board.now.competition}이에요.` : ''}`)}</p>`);
-  if (g?.best.length) parts.push(`<section><h2>덜 붐비는 시간 TOP ${g.best.length}</h2><ol>${g.best.map((b) => `<li>${esc(`${slotLabel(b.day, b.start)} — 방송 1개당 ${won(b.per)}명, 방송 ${b.broadcasts}개${b.note ? `. ${b.note}` : ''}`)}</li>`).join('')}</ol><p>방송 1개당 시청자 = 그 시간 시청자 ÷ 방송 수. 방송이 3개 미만인 시간은 빼고 계산해요.</p></section>`);
+  if (board.now.broadcasts) parts.push(`<p>${esc(`지금 방송 ${won(board.now.broadcasts)}개에 ${won(board.now.viewers)}명이 보고 있어요.${board.now.perBroadcast ? ` 방송 1개당 시청자는 ${won(board.now.perBroadcast)}명이고, 같은 시간 평소와 비교한 경쟁은 ${board.now.competition}${board.now.competition === '여유' ? '예요' : '이에요'}.` : ''}`)}</p>`);
+  if (g?.best.length) parts.push(`<section><h2>덜 붐비는 시간 TOP ${g.best.length}</h2><ol>${g.best.map((b) => `<li>${esc(`${slotLabel(b.day, b.start)} — 방송 1개당 ${won(b.per)}명, 방송 ${b.broadcasts}개${b.note ? `. ${b.note}` : ''}`)}</li>`).join('')}</ol><p>방송 1개당 시청자는 그 시간 방송들의 가운데 값이에요. 큰 방송 하나가 숫자를 끌어올리지 않게 했고, 방송이 3개 미만인 시간은 빼고 계산해요.</p></section>`);
   if (g?.newcomers) {
     const n = g.newcomers;
-    parts.push(`<section><h2>신입 버튜버는 이 게임을 어떻게 하고 있나요</h2><p>${esc(`최근 30일 동안 데뷔 90일 이내 버튜버 ${n.people}명이 이 게임으로 ${n.streams}번 방송했어요.${n.avgViewers !== null ? ` 방송 평균 시청자는 ${won(n.avgViewers)}명이에요.` : ''}`)}</p><ul>${n.list.map((p) => `<li><a href="/creator/${encodeURIComponent(p.slug)}">${esc(p.name)}</a> — 이 게임 ${p.streams}회${p.avgViewers !== null ? `, 평균 ${won(p.avgViewers)}명` : ''}</li>`).join('')}</ul></section>`);
+    parts.push(`<section><h2>신입 버튜버는 이 게임을 어떻게 하고 있나요</h2><p>${esc(`최근 30일 동안 데뷔 90일 이내 버튜버 ${n.people}명이 이 게임으로 ${n.streams}번 방송했어요.${n.avgViewers !== null ? ` 방송 시청자의 가운데 값은 ${won(n.avgViewers)}명이에요.` : ''}`)}</p><ul>${n.list.map((p) => `<li><a href="/creator/${encodeURIComponent(p.slug)}">${esc(p.name)}</a> — 이 게임 ${p.streams}회${p.avgViewers !== null ? `, 평균 ${won(p.avgViewers)}명` : ''}</li>`).join('')}</ul></section>`);
   }
   if (g?.alternatives) parts.push(`<section><h2>${esc(slotLabel(g.alternatives.day, g.alternatives.start))}, 다른 게임은</h2><ul>${g.alternatives.games.map((x) => `<li>${esc(`${x.name} — 방송 1개당 ${won(x.per)}명, 방송 ${x.broadcasts}개, 경쟁 ${x.competition}`)}</li>`).join('')}</ul></section>`);
   if (board.top.length) parts.push(`<section><h2>이 게임에서 시청자가 많은 채널</h2><ol>${board.top.slice(0, 5).map((t) => `<li>${esc(`${t.name} — 이 게임 방송 평균 ${won(t.avg)}명`)}</li>`).join('')}</ol></section>`);
